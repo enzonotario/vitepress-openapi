@@ -1,0 +1,47 @@
+{
+  "name": "vitepress-theme-openapi",
+  "version": "0.0.2-alpha.1",
+  "scripts": {
+    "build": "rimraf dist && vite build",
+    "dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@iconify/vue": "^4.0.2",
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@amoutonbrady/lz-string": "^0.1.0",
+    "@antfu/eslint-config": "^0.35.3",
+    "@iconify/vue": "^4.1.1",
+    "@types/node": "^18.17.1",
+    "@vitejs/plugin-vue": "^2.3.4",
+    "autoprefixer": "^10.4.14",
+    "eslint": "8.22.0",
+    "postcss": "^8.4.32",
+    "rimraf": "^5.0.5",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3",
+    "vite": "^4.5.1",
+    "vitepress": "1.0.0-rc.32",
+    "vue": "^3.3.13",
+    "vue-i18n": "^9.8.0",
+    "vue-tsc": "^1.8.26"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "types": "./dist/types/index.d.ts",
+  "main": "./dist/vitepress-theme-openapi.es.js",
+  "module": "./dist/vitepress-theme-openapi.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vitepress-theme-openapi.es.js",
+      "require": "./dist/vitepress-theme-openapi.umd.js"
+    },
+    "./dist/style.css": "./dist/style.css"
+  }
+}
