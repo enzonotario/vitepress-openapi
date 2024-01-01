@@ -111,6 +111,11 @@ export function useOpenapi() {
     }, [])
   }
 
+  function getOperationCodeSamples(operationId) {
+    const operation = getOperation(operationId)
+    return operation['x-codeSamples'] || operation['x-code-samples'] || []
+  }
+
   return {
     json,
     setSpec,
@@ -121,5 +126,6 @@ export function useOpenapi() {
     propertiesTypesJson,
     propertiesAsJson,
     getTags,
+    getOperationCodeSamples,
   }
 }
