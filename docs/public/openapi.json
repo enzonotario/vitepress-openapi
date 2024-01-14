@@ -41,6 +41,66 @@
         "operationId": "get-feriados"
       }
     },
+    "/v1/cotizaciones/dolares/{casa}": {
+      "get": {
+        "summary": "Cotizaciones del dólar",
+        "tags": [
+          "Datos"
+        ],
+        "description": "Devuelve las cotizaciones del dólar de la casa de cambio especificada, para la fecha especificada (en formato ISO 8601).",
+        "parameters": [
+          {
+            "name": "casa",
+            "in": "path",
+            "description": "Casa de cambio",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "oficial",
+                "blue",
+                "bolsa",
+                "mayorista",
+                "solidario",
+                "turista"
+              ]
+            }
+          },
+          {
+            "name": "fecha",
+            "in": "query",
+            "description": "Fecha de la cotización",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de cotizaciones del dólar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Cotizacion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-cotizaciones-dolares",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \n \"http://localhost:5173/v1/cotizaciones/dolares/{casa}?fecha={fecha}\" \n -H \"x-api-key: {apikey}\""
+          }
+        ]
+      }
+    },
     "/v1/estado": {
       "get": {
         "summary": "Estado de la API",
@@ -104,7 +164,46 @@
             "aleatorio": 1234
           }
         }
+      },
+      "Cotizacion": {
+        "title": "Cotizacion",
+        "type": "object",
+        "properties": {
+          "moneda": {
+            "type": "string"
+          },
+          "casa": {
+            "type": "string"
+          },
+          "fecha": {
+            "type": "string"
+          },
+          "compra": {
+            "type": "number"
+          },
+          "venta": {
+            "type": "number"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "compra": 123.45,
+            "venta": 123.45
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "x-api-key": {
+        "name": "apiKey",
+        "type": "apiKey",
+        "in": "header"
       }
     }
-  }
+  },
+  "security": [
+    {
+      "x-api-key": []
+    }
+  ]
 }

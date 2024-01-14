@@ -18,6 +18,8 @@ const operation = openapi.getOperation(props.id)
 
 const operationPath = openapi.getOperationPath(props.id)
 
+const operationParameters = openapi.getOperationParameters(props.id)
+
 const baseUrl = openapi.getBaseUrl()
 
 const schemas = openapi.getSchemas()
@@ -41,15 +43,37 @@ const schema = Object.values(schemas).find(schema => schema.title === schemaTitl
       <div class="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="flex flex-col">
           <div class="flex flex-col space-y-4">
-            <slot name="description" :operation="operation" :method="props.method" :base-url="baseUrl" :path="operationPath" />
+            <slot name="description"
+                  :operation="operation"
+                  :method="props.method"
+                  :base-url="baseUrl"
+                  :path="operationPath" />
           </div>
+
+          <slot
+              v-if="operationParameters.length"
+              name="parameters"
+              :operation="operation"
+              :method="props.method"
+              :base-url="baseUrl"
+              :path="operationPath"
+              :parameters="operationParameters" />
 
           <slot name="responses" :schema="schema" :responses="operation.responses" :response-type="responseType" />
         </div>
 
         <div class="flex flex-col">
+          <slot name="end-top"
+                :operation-id="props.id"
+                :operation="operation"
+                :method="props.method"
+                :base-url="baseUrl"
+                :path="operationPath" />
+
           <div class="sticky top-[100px] inset-x-0 flex flex-col sm:px-6">
-            <slot name="try-it" :operation-id="props.id" :method="props.method" />
+            <slot name="try-it"
+                  :operation-id="props.id"
+                  :method="props.method" />
           </div>
         </div>
       </div>

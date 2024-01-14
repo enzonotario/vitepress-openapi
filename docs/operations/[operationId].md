@@ -28,6 +28,14 @@ const operationId = route.data.params.operationId
 
 </template>
 
+<template #parameters="parameters">
+
+## {{ $t('Parameters') }}
+
+<Parameters :operation-id="operationId" :parameters="parameters.parameters" />
+
+</template>
+
 <template #responses="responses">
 
 ## {{ $t('Response') }}

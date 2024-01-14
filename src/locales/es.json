@@ -3,5 +3,9 @@
   "Try it out": "Probar",
   "Loading...": "Cargando...",
   "Samples": "Ejemplos",
-  "Response time": "Tiempo de respuesta"
+  "Response time": "Tiempo de respuesta",
+  "Parameters": "Parámetros",
+  "Path Parameters": "Path Parameters",
+  "Query Parameters": "Query Parameters",
+  "Required": "Requerido"
 }

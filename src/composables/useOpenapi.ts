@@ -19,6 +19,11 @@ export function useOpenapi() {
     return Object.keys(json.paths).find(path => json.paths[path].get.operationId === operationId)
   }
 
+  function getOperationParameters(operationId) {
+    const operation = getOperation(operationId)
+    return operation.parameters || []
+  }
+
   function getBaseUrl() {
     if (!json.servers)
       return ''
@@ -116,11 +121,16 @@ export function useOpenapi() {
     return operation['x-codeSamples'] || operation['x-code-samples'] || []
   }
 
+  function getSecuritySchemes() {
+    return json.components.securitySchemes
+  }
+
   return {
     json,
     setSpec,
     getOperation,
     getOperationPath,
+    getOperationParameters,
     getBaseUrl,
     getSchemas,
     propertiesTypesJson,
