@@ -1,5 +1,7 @@
 <script setup>
 import { useOpenapi } from '../composables/useOpenapi'
+import { codeToHtml } from 'shikiji'
+import { ref, onMounted, useSlots } from "vue";
 
 const props = defineProps({
   schema: {
@@ -14,11 +16,30 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  isDark: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+const slots = useSlots()
 
 const responsesCodes = Object.keys(props.responses)
 
-const schemaJson = useOpenapi().propertiesTypesJson(props.schema, props.responseType)
+const schemaJson = ref(useOpenapi().propertiesTypesJson(props.schema, props.responseType))
+
+onMounted(async () => {
+  if (schemaJson.value) {
+    schemaJson.value = await codeToHtml(schemaJson.value, {
+      lang: 'json',
+      theme: props.isDark ? 'vitesse-dark' : 'vitesse-light',
+    })
+  }
+})
+
+function hasSlot(name) {
+  return slots[name] !== undefined
+}
 </script>
 
 <template>
@@ -42,6 +63,8 @@ const schemaJson = useOpenapi().propertiesTypesJson(props.schema, props.response
       <slot name="body" :response-type="responseType" :schema="props.schema" />
 
       <slot name="example" :json="schemaJson" />
+
+      <div v-if="!hasSlot('example')" v-html="schemaJson" class="p-2 border border-gray-200 dark:border-gray-700 rounded" />
     </div>
   </div>
 </template>

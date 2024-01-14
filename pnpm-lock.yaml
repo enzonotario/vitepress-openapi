@@ -32,6 +32,9 @@ devDependencies:
   rimraf:
     specifier: ^5.0.5
     version: 5.0.5
+  shikiji:
+    specifier: 0.10.0-beta.1
+    version: 0.10.0-beta.1
   tailwindcss:
     specifier: ^3.4.0
     version: 3.4.0
@@ -3955,10 +3958,20 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /shikiji-core@0.10.0-beta.1:
+    resolution: {integrity: sha512-u7rlf6PEtUCnjmuuVbt9HPEhvt+pcLkIin2yijCZAthPA7+nzUB+ourl9y/dg7AnhLssZU6LNIHZ4i3++/sj0g==}
+    dev: true
+
   /shikiji-transformers@0.9.2:
     resolution: {integrity: sha512-WEBeNm+oUL/4OTENjnZ5G29ErNM2cPGJHRRhqjwoTFkHnsJsACtTluTaYjPEppCl46Vo3M4TV9GwrMxz2WeCSg==}
     dependencies:
       shikiji: 0.9.2
+    dev: true
+
+  /shikiji@0.10.0-beta.1:
+    resolution: {integrity: sha512-MP1366ldLpuq+iQstEto/p5dRV1gA2BChkVdz6HydgChfEebIA8BDREBF3BY5YhWwnU/o1u0N96N5erxe6P3Cw==}
+    dependencies:
+      shikiji-core: 0.10.0-beta.1
     dev: true
 
   /shikiji@0.9.2:

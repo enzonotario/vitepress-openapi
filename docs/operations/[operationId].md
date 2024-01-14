@@ -5,9 +5,11 @@ title: vitepress-theme-openapi
 ---
 
 <script setup lang="ts">
-import { useRoute } from 'vitepress'
+import { useRoute, useData } from 'vitepress'
 
 const route = useRoute()
+
+const { isDark } = useData()
 
 const operationId = route.data.params.operationId
 </script>
@@ -40,19 +42,11 @@ const operationId = route.data.params.operationId
 
 ## {{ $t('Response') }}
 
-<Responses :responses="responses.responses" :schema="responses.schema" :responseType="responses.responseType">
+<Responses :responses="responses.responses" :schema="responses.schema" :responseType="responses.responseType" :isDark="isDark">
 
 <template #body="body">
 
 <ResponseBody :schema="body.schema" :responseType="body.responseType" />
-
-</template>
-
-<template #example="example">
-
-```json-vue
-{{ example.json }}
-```
 
 </template>
 
