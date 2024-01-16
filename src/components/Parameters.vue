@@ -19,16 +19,20 @@ const queryParameters = props.parameters.filter(parameter => parameter.in === 'q
 
 <template>
   <div class="flex flex-col">
-    <h3>
-      {{ $t('Path Parameters') }}
-    </h3>
+    <div v-if="pathParameters.length" class="space-y-4">
+      <h3>
+        {{ $t('Path Parameters') }}
+      </h3>
 
-    <Parameter v-for="parameter in pathParameters" :key="parameter.name" :parameter="parameter" />
+      <Parameter v-for="parameter in pathParameters" :key="parameter.name" :parameter="parameter" />
+    </div>
 
-    <h3>
-      {{ $t('Query Parameters') }}
-    </h3>
+    <div v-if="queryParameters.length" class="space-y-4">
+      <h3>
+        {{ $t('Query Parameters') }}
+      </h3>
 
-    <Parameter v-for="parameter in queryParameters" :key="parameter.name" :parameter="parameter" />
+      <Parameter v-for="parameter in queryParameters" :key="parameter.name" :parameter="parameter" />
+    </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 {
   "name": "vitepress-theme-openapi",
-  "version": "0.0.2-alpha.10",
+  "version": "0.0.2-alpha.11",
   "scripts": {
     "build": "rimraf dist && vite build",
     "dev": "vitepress dev docs",

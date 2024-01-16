@@ -16,13 +16,26 @@
     }
   ],
   "paths": {
-    "/v1/feriados": {
+    "/v1/feriados/{año}": {
       "get": {
         "summary": "Feriados",
         "tags": [
           "Datos"
         ],
-        "description": "",
+        "description": "Devuelve los feriados del año indicado (o del año actual si no se especifica).",
+        "parameters": [
+          {
+            "name": "año",
+            "in": "path",
+            "description": "Año de consulta",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 2016,
+              "maximum": 2025
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Devuelve los feriados del año actual",
@@ -38,16 +51,72 @@
             }
           }
         },
-        "operationId": "get-feriados"
+        "operationId": "get-feriados",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"http://localhost:5173/v1/feriados/{año}\" \n -H \"x-argentinadatos-key: {apikey}\""
+          }
+        ]
       }
     },
     "/v1/cotizaciones/dolares/{casa}": {
       "get": {
-        "summary": "Cotizaciones del dólar",
+        "summary": "Dólares por casa",
         "tags": [
-          "Datos"
+          "Cotizaciones históricas"
         ],
-        "description": "Devuelve las cotizaciones del dólar de la casa de cambio especificada, para la fecha especificada (en formato ISO 8601).",
+        "description": "Devuelve las cotizaciones del dólar de la casa de cambio especificada.",
+        "parameters": [
+          {
+            "name": "casa",
+            "in": "path",
+            "description": "Casa de cambio",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "oficial",
+                "blue",
+                "bolsa",
+                "mayorista",
+                "solidario",
+                "turista"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de cotizaciones del dólar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Cotizacion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-cotizaciones-dolares-casa",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"http://localhost:5173/v1/cotizaciones/dolares/{casa}?fecha={fecha}\" \n -H \"x-argentinadatos-key: {apikey}\""
+          }
+        ]
+      }
+    },
+    "/v1/cotizaciones/dolares/{casa}/{fecha}": {
+      "get": {
+        "summary": "Dólar por casa y fecha",
+        "tags": [
+          "Cotizaciones históricas"
+        ],
+        "description": "Devuelve la cotización del dólar de la casa de cambio especificada en la fecha indicada.",
         "parameters": [
           {
             "name": "casa",
@@ -68,9 +137,9 @@
           },
           {
             "name": "fecha",
-            "in": "query",
-            "description": "Fecha de la cotización",
-            "required": false,
+            "in": "path",
+            "description": "Fecha de consulta",
+            "required": true,
             "schema": {
               "type": "string",
               "format": "date"
@@ -83,20 +152,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Cotizacion"
-                  }
+                  "$ref": "#/components/schemas/Cotizacion"
                 }
               }
             }
           }
         },
-        "operationId": "get-cotizaciones-dolares",
+        "operationId": "get-cotizaciones-dolares-casa-fecha",
         "x-code-samples": [
           {
             "lang": "curl",
-            "source": "curl -X GET \n \"http://localhost:5173/v1/cotizaciones/dolares/{casa}?fecha={fecha}\" \n -H \"x-api-key: {apikey}\""
+            "source": "curl -X GET \\\n \"http://localhost:5173/v1/cotizaciones/dolares/{casa}?fecha={fecha}\" \n -H \"x-argentinadatos-key: {apikey}\""
           }
         ]
       }
@@ -119,7 +185,13 @@
             }
           }
         },
-        "operationId": "get-estado"
+        "operationId": "get-estado",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"http://localhost:5173/v1/estado\""
+          }
+        ]
       }
     }
   },
@@ -194,7 +266,7 @@
       }
     },
     "securitySchemes": {
-      "x-api-key": {
+      "x-argentinadatos-key": {
         "name": "apiKey",
         "type": "apiKey",
         "in": "header"
@@ -203,7 +275,7 @@
   },
   "security": [
     {
-      "x-api-key": []
+      "x-argentinadatos-key": []
     }
   ]
 }
