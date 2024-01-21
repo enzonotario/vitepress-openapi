@@ -24,8 +24,6 @@ const operationId = route.data.params.operationId
 
 <template #description="description">
 
-<OperationEndpoint :method="description.method" :path="description.path" :baseUrl="description.baseUrl" />
-
 <div v-if="description.operation.description" class="description" v-html="description.operation.description" />
 
 </template>
@@ -56,17 +54,7 @@ const operationId = route.data.params.operationId
 
 <template #try-it="tryIt">
 
-<TryItButton :operation-id="tryIt.operationId" :method="tryIt.method">
-
-<template #response="response">
-
-```json-vue
-{{ response.response }}
-```
-
-</template>
-
-</TryItButton>
+<TryWithVariables :operation-id="tryIt.operationId" :method="tryIt.method" :path="tryIt.path" :baseUrl="tryIt.baseUrl" :isDark="isDark" />
 
 </template>
 

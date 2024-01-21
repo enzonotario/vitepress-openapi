@@ -7,5 +7,8 @@
   "Parameters": "Parameters",
   "Path Parameters": "Path Parameters",
   "Query Parameters": "Query Parameters",
-  "Required": "Required"
+  "Required": "Required",
+  "Key": "Key",
+  "Value": "Value",
+  "Variables": "Variables"
 }

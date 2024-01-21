@@ -70,10 +70,12 @@ const schema = Object.values(schemas).find(schema => schema.title === schemaTitl
                 :base-url="baseUrl"
                 :path="operationPath" />
 
-          <div class="sticky top-[100px] inset-x-0 flex flex-col sm:px-6">
+          <div class="sticky top-[100px] inset-x-0 flex flex-col sm:px-6 space-y-4">
             <slot name="try-it"
                   :operation-id="props.id"
-                  :method="props.method" />
+                  :path="operationPath"
+                  :method="props.method"
+                  :base-url="baseUrl" />
           </div>
         </div>
       </div>

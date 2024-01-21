@@ -19,10 +19,7 @@ export function useSidebar() {
     }
   }
 
-  function generateSidebarGroup(tag, text) {
-    if (!text)
-      text = tag
-
+  function generateSidebarGroup(tag: string, text?: string) {
     const sidebarGroupElements = Object.keys(openapi.json.paths)
       .filter((path) => {
         const { tags } = openapi.json.paths[path][METHOD_GET]
@@ -40,7 +37,7 @@ export function useSidebar() {
 
   function generateSidebarGroups() {
     return openapi.getTags().map((tag) => {
-      return generateSidebarGroup(tag)
+      return generateSidebarGroup(tag, tag)
     })
   }
 

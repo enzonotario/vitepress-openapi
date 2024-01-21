@@ -11,7 +11,15 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  requestUrl: {
+    type: String,
+  },
 })
+
+const emits = defineEmits([
+  'response',
+  'loading',
+])
 
 const openapi = useOpenapi()
 
@@ -19,7 +27,7 @@ const operationPath = openapi.getOperationPath(props.operationId)
 
 const baseUrl = openapi.getBaseUrl()
 
-const requestUrl = `${baseUrl}${operationPath}`
+const defaultRequestUrl = `${baseUrl}${operationPath}`
 
 const response = ref(null)
 
@@ -34,13 +42,10 @@ async function tryIt() {
   try {
     responseTime.value = null
     response.value = '{}'
-    loading.value = true
+    setLoading(true)
 
-    const data = await fetch(requestUrl, {
+    const data = await fetch(props.requestUrl ?? defaultRequestUrl, {
       method: props.method.toUpperCase(),
-      headers: {
-        'Content-Type': 'application/json',
-      },
     })
 
     response.value = await data.json()
@@ -49,10 +54,11 @@ async function tryIt() {
     response.value = error
   }
   finally {
-    loading.value = false
+    setLoading(false)
     const end = performance.now()
     responseTime.value = (end - start).toFixed(2)
-    loading.value = false
+
+    emits('response', response.value)
   }
 }
 
@@ -64,6 +70,11 @@ function trackTryIt() {
     })
   }
   catch (error) { }
+}
+
+function setLoading(value) {
+  loading.value = value
+  emits('loading', value)
 }
 </script>
 

@@ -5,6 +5,8 @@ import Responses from './Responses.vue'
 import TryItButton from './TryItButton.vue'
 import Parameter from './Parameter.vue'
 import Parameters from './Parameters.vue'
+import RequestParameters from './RequestParameters.vue'
+import TryWithVariables from './TryWithVariables.vue'
 
 export {
   Operation,
@@ -14,4 +16,6 @@ export {
   TryItButton,
   Parameter,
   Parameters,
+  RequestParameters,
+  TryWithVariables,
 }

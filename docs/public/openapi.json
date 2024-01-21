@@ -33,7 +33,8 @@
               "type": "integer",
               "minimum": 2016,
               "maximum": 2025
-            }
+            },
+            "example": 2024
           }
         ],
         "responses": {
@@ -55,7 +56,7 @@
         "x-code-samples": [
           {
             "lang": "curl",
-            "source": "curl -X GET \\\n \"http://localhost:5173/v1/feriados/{año}\" \n -H \"x-argentinadatos-key: {apikey}\""
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/feriados/{año}\""
           }
         ]
       }
@@ -83,7 +84,8 @@
                 "solidario",
                 "turista"
               ]
-            }
+            },
+            "example": "blue"
           }
         ],
         "responses": {
@@ -105,7 +107,7 @@
         "x-code-samples": [
           {
             "lang": "curl",
-            "source": "curl -X GET \\\n \"http://localhost:5173/v1/cotizaciones/dolares/{casa}?fecha={fecha}\" \n -H \"x-argentinadatos-key: {apikey}\""
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/cotizaciones/dolares/{casa}\""
           }
         ]
       }
@@ -133,7 +135,8 @@
                 "solidario",
                 "turista"
               ]
-            }
+            },
+            "example": "blue"
           },
           {
             "name": "fecha",
@@ -143,7 +146,8 @@
             "schema": {
               "type": "string",
               "format": "date"
-            }
+            },
+            "example": "2024/01/01"
           }
         ],
         "responses": {
@@ -162,7 +166,7 @@
         "x-code-samples": [
           {
             "lang": "curl",
-            "source": "curl -X GET \\\n \"http://localhost:5173/v1/cotizaciones/dolares/{casa}?fecha={fecha}\" \n -H \"x-argentinadatos-key: {apikey}\""
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/cotizaciones/dolares/{casa}/{fecha}\""
           }
         ]
       }
@@ -189,7 +193,7 @@
         "x-code-samples": [
           {
             "lang": "curl",
-            "source": "curl -X GET \\\n \"http://localhost:5173/v1/estado\""
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/estado\""
           }
         ]
       }
@@ -264,18 +268,6 @@
           }
         }
       }
-    },
-    "securitySchemes": {
-      "x-argentinadatos-key": {
-        "name": "apiKey",
-        "type": "apiKey",
-        "in": "header"
-      }
     }
-  },
-  "security": [
-    {
-      "x-argentinadatos-key": []
-    }
-  ]
+  }
 }

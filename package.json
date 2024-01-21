@@ -1,6 +1,6 @@
 {
   "name": "vitepress-theme-openapi",
-  "version": "0.0.2-alpha.11",
+  "version": "0.0.2-alpha.18",
   "scripts": {
     "build": "rimraf dist && vite build",
     "dev": "vitepress dev docs",
@@ -9,7 +9,6 @@
   },
   "type": "module",
   "peerDependencies": {
-    "@iconify/vue": "^4.0.2",
     "vue": "^3.2.25"
   },
   "devDependencies": {

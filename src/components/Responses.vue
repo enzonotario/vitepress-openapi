@@ -32,7 +32,7 @@ onMounted(async () => {
   if (schemaJson.value) {
     schemaJson.value = await codeToHtml(schemaJson.value, {
       lang: 'json',
-      theme: props.isDark ? 'vitesse-dark' : 'vitesse-light',
+      theme: props.isDark ? 'github-dark' : 'github-light',
     })
   }
 })

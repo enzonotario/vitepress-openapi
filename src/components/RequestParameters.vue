@@ -1,0 +1,116 @@
+<script setup lang="ts">
+import {defineEmits, defineProps, ref, watch} from 'vue'
+import {useOpenapi} from '../composables/useOpenapi'
+
+const props = defineProps({
+  operationId: {
+    type: String,
+    required: true,
+  },
+  method: {
+    type: String,
+    required: true,
+  },
+  requestUrl: {
+    type: String,
+  },
+})
+
+const emits = defineEmits([
+  'update:requestUrl',
+])
+
+const openapi = useOpenapi()
+
+const baseUrl = openapi.getBaseUrl()
+
+const path = openapi.getOperationPath(props.operationId)
+
+const parameters = openapi.getOperationParameters(props.operationId)
+
+const pathParameters = parameters.filter(parameter => parameter.in === 'path')
+
+const queryParameters = parameters.filter(parameter => parameter.in === 'query')
+
+const variables = ref({
+  ...pathParameters.reduce((acc, parameter) => {
+    acc[parameter.name] = parameter.example ?? parameter.schema?.example ?? ''
+    return acc
+  }, {}),
+  ...queryParameters.reduce((acc, parameter) => {
+    acc[parameter.name] = parameter.example ?? parameter.schema?.example ?? ''
+    return acc
+  }, {}),
+})
+
+function buildRequestUrl() {
+  let requestPath = path
+
+  for (const [key, value] of Object.entries(variables.value)) {
+    if (!pathParameters.find(parameter => parameter.name === key))
+      continue
+
+    requestPath = requestPath.replace(`{${key}}`, value)
+    console.log(requestPath)
+  }
+
+  const url = new URL(requestPath, baseUrl)
+
+  for (const [key, value] of Object.entries(variables.value)) {
+    if (pathParameters.find(parameter => parameter.name === key))
+      continue
+    url.searchParams.set(key, value)
+  }
+
+  emits('update:requestUrl', url.toString())
+
+  return url.toString()
+}
+
+watch(variables, buildRequestUrl, { deep: true, immediate: true })
+
+function inputType(parameter)  {
+  if (parameter.schema.type === 'integer')
+    return 'number'
+
+  return parameter.schema.type
+}
+</script>
+
+<template>
+  <div class="flex flex-col space-y-2">
+    <div v-if="pathParameters.length" class="space-y-4">
+      <h4>
+        {{ $t('Variables') }}
+      </h4>
+
+      <!-- Inputs -->
+      <div class="flex flex-col space-y-2">
+        <div class="flex flex-row gap-2">
+          <div class="w-1/2 flex justify-start">
+            <span class="text-xs text-gray-700 dark:text-gray-300 uppercase">{{ $t('Key') }}</span>
+          </div>
+          <div class="w-1/2 flex justify-start">
+            <span class="text-xs text-gray-700 dark:text-gray-300 uppercase">{{ $t('Value') }}</span>
+          </div>
+        </div>
+
+        <div v-for="parameter in pathParameters" :key="parameter.name" class="flex flex-row gap-2">
+          <div class="w-1/2 flex flex-row items-center space-x-2">
+            <span class="text-sm font-bold">{{ parameter.name }}</span>
+            <span v-if="parameter.required" class="text-sm text-red-500">*</span>
+          </div>
+          <div class="w-1/2 flex flex-row items-center space-x-2">
+            <input
+              v-model="variables[parameter.name]"
+              :type="inputType(parameter)"
+              :placeholder="parameter.example ?? parameter.schema?.example ?? ''"
+              class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-2 py-1"
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
