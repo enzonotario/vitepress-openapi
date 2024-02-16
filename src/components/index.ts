@@ -7,6 +7,7 @@ import Parameter from './Parameter.vue'
 import Parameters from './Parameters.vue'
 import RequestParameters from './RequestParameters.vue'
 import TryWithVariables from './TryWithVariables.vue'
+import RequestParameterInput from './RequestParameterInput.vue'
 
 export {
   Operation,
@@ -18,4 +19,5 @@ export {
   Parameters,
   RequestParameters,
   TryWithVariables,
+  RequestParameterInput,
 }

@@ -68,13 +68,6 @@ function buildRequestUrl() {
 }
 
 watch(variables, buildRequestUrl, { deep: true, immediate: true })
-
-function inputType(parameter)  {
-  if (parameter.schema.type === 'integer')
-    return 'number'
-
-  return parameter.schema.type
-}
 </script>
 
 <template>
@@ -101,16 +94,10 @@ function inputType(parameter)  {
             <span v-if="parameter.required" class="text-sm text-red-500">*</span>
           </div>
           <div class="w-1/2 flex flex-row items-center space-x-2">
-            <input
-              v-model="variables[parameter.name]"
-              :type="inputType(parameter)"
-              :placeholder="parameter.example ?? parameter.schema?.example ?? ''"
-              class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-2 py-1"
-            >
+            <RequestParameterInput v-model="variables[parameter.name]" :parameter="parameter" />
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
