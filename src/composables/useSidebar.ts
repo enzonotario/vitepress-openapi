@@ -19,11 +19,14 @@ export function useSidebar() {
     }
   }
 
-  function generateSidebarGroup(tag: string, text?: string) {
+  function generateSidebarGroup(tag: string|string[], text?: string) {
+    const includeTags = Array.isArray(tag) ? tag : [tag]
+
     const sidebarGroupElements = Object.keys(openapi.json.paths)
       .filter((path) => {
         const { tags } = openapi.json.paths[path][METHOD_GET]
-        return tags?.includes(tag)
+
+        return includeTags.every((tag) => tags.includes(tag))
       })
       .map((path) => {
         return generateSidebarItem(METHOD_GET, path)
