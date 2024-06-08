@@ -1,11 +1,12 @@
 {
   "name": "vitepress-theme-openapi",
-  "version": "0.0.2-alpha.21",
+  "version": "0.0.3-alpha.4",
   "scripts": {
     "build": "rimraf dist && vite build",
     "dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "docs:serve": "vitepress serve docs",
+    "prepublishOnly": "pnpm run build"
   },
   "type": "module",
   "peerDependencies": {
@@ -15,6 +16,7 @@
     "@amoutonbrady/lz-string": "^0.1.0",
     "@antfu/eslint-config": "^0.35.3",
     "@iconify/vue": "^4.1.1",
+    "@sindresorhus/slugify": "^2.2.1",
     "@types/node": "^18.17.1",
     "@vitejs/plugin-vue": "^2.3.4",
     "autoprefixer": "^10.4.14",

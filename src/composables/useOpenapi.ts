@@ -1,44 +1,44 @@
-let json = {}
+let spec: any = {}
 
 export function useOpenapi() {
-  function setSpec(spec) {
-    json = spec
+  function setSpec(value: any) {
+    spec = value
   }
 
-  function getOperation(operationId) {
-    if (!json.paths)
+  function getOperation(operationId: string) {
+    if (!spec.paths)
       return null
 
-    return Object.values(json.paths).find(path => path.get.operationId === operationId).get
+    return Object.values(spec.paths).find(path => path.get.operationId === operationId).get
   }
 
-  function getOperationPath(operationId) {
-    if (!json.paths)
+  function getOperationPath(operationId: string) {
+    if (!spec.paths)
       return null
 
-    return Object.keys(json.paths).find(path => json.paths[path].get.operationId === operationId)
+    return Object.keys(spec.paths).find(path => spec.paths[path].get.operationId === operationId)
   }
 
-  function getOperationParameters(operationId) {
+  function getOperationParameters(operationId: string) {
     const operation = getOperation(operationId)
     return operation.parameters || []
   }
 
   function getBaseUrl() {
-    if (!json.servers)
+    if (!spec.servers)
       return ''
 
-    return json.servers[0].url
+    return spec.servers[0].url
   }
 
   function getSchemas() {
-    if (!json.components)
+    if (!spec.components)
       return {}
 
-    return json.components.schemas
+    return spec.components.schemas
   }
 
-  function propertiesTypesJson(schema, responseType) {
+  function propertiesTypesJson(schema: any, responseType: string) {
     const body = {}
 
     const propertiesKeys = Object.keys(schema.properties)
@@ -58,7 +58,7 @@ export function useOpenapi() {
     )
   }
 
-  function propertiesAsJson(schema, responseType) {
+  function propertiesAsJson(schema: any, responseType: string) {
     const body = {}
 
     const propertiesKeys = Object.keys(schema.properties)
@@ -97,8 +97,11 @@ export function useOpenapi() {
     )
   }
 
-  function getTags() {
-    return Object.values(json.paths).reduce((tags, path) => {
+  function getTags(): string[] {
+    if (!spec?.paths)
+      return []
+
+    return Object.values(spec.paths).reduce((tags, path) => {
       if (!path.get)
         return tags
 
@@ -116,17 +119,17 @@ export function useOpenapi() {
     }, [])
   }
 
-  function getOperationCodeSamples(operationId) {
+  function getOperationCodeSamples(operationId: string) {
     const operation = getOperation(operationId)
     return operation['x-codeSamples'] || operation['x-code-samples'] || []
   }
 
   function getSecuritySchemes() {
-    return json.components.securitySchemes
+    return spec.components.securitySchemes
   }
 
   return {
-    json,
+    spec,
     setSpec,
     getOperation,
     getOperationPath,

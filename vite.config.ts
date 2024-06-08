@@ -6,6 +6,11 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
+  resolve: {
+    alias: {
+      'vitepress-theme-openapi': resolve(__dirname, 'src'),
+    },
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),

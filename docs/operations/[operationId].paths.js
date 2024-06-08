@@ -4,6 +4,10 @@ export default {
   paths() {
     const openapi = useOpenapi()
 
+    if (!openapi?.json?.paths) {
+      return []
+    }
+
     return Object.keys(openapi.json.paths)
       .map((path) => {
         const { operationId } = openapi.json.paths[path].get

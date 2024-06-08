@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {defineEmits, defineProps, ref, watch} from 'vue'
-import {useOpenapi} from '../composables/useOpenapi'
+import {useOpenapi} from 'vitepress-theme-openapi/composables/useOpenapi'
 
 const props = defineProps({
   operationId: {
@@ -51,7 +51,6 @@ function buildRequestUrl() {
       continue
 
     requestPath = requestPath.replace(`{${key}}`, value)
-    console.log(requestPath)
   }
 
   const url = new URL(requestPath, baseUrl)

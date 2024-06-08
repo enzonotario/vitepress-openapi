@@ -1,5 +1,5 @@
 <script setup>
-import { useOpenapi } from '../composables/useOpenapi'
+import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
 
 const props = defineProps({
   id: {

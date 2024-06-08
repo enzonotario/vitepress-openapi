@@ -6,9 +6,13 @@ export function useSidebar() {
   const openapi = useOpenapi()
 
   function generateSidebarItem(method, path) {
-    const { operationId, summary } = openapi.json.paths[path].get
+    if (!openapi?.spec?.paths?.[path]?.[method]) {
+        return null
+    }
 
-    const sidebarTitle = openapi.json.paths[path].get['x-sidebar-title'] || summary
+    const { operationId, summary } = openapi.spec.paths[path].get
+
+    const sidebarTitle = openapi.spec.paths[path].get['x-sidebar-title'] || summary
 
     return {
       text: `<span class="SidebarItem">
@@ -20,11 +24,15 @@ export function useSidebar() {
   }
 
   function generateSidebarGroup(tag: string|string[], text?: string) {
+    if (!openapi?.spec?.paths) {
+        return []
+    }
+
     const includeTags = Array.isArray(tag) ? tag : [tag]
 
-    const sidebarGroupElements = Object.keys(openapi.json.paths)
+    const sidebarGroupElements = Object.keys(openapi.spec.paths)
       .filter((path) => {
-        const { tags } = openapi.json.paths[path][METHOD_GET]
+        const { tags } = openapi.spec.paths[path][METHOD_GET]
 
         return includeTags.every((tag) => tags.includes(tag))
       })
@@ -39,6 +47,10 @@ export function useSidebar() {
   }
 
   function generateSidebarGroups() {
+    if (!openapi?.spec?.paths) {
+        return []
+    }
+
     return openapi.getTags().map((tag) => {
       return generateSidebarGroup(tag, tag)
     })

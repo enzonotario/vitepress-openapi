@@ -1,23 +1,31 @@
-import Operation from './Operation.vue'
-import OperationEndpoint from './OperationEndpoint.vue'
-import ResponseBody from './ResponseBody.vue'
-import Responses from './Responses.vue'
-import TryItButton from './TryItButton.vue'
-import Parameter from './Parameter.vue'
-import Parameters from './Parameters.vue'
-import RequestParameters from './RequestParameters.vue'
-import TryWithVariables from './TryWithVariables.vue'
-import RequestParameterInput from './RequestParameterInput.vue'
+import OASpec from './Common/OASpec.vue'
+import OAOperation from './Common/OAOperation.vue'
+import OAHeading from './Common/OAHeading.vue'
+import OAFooter from './Common/OAFooter.vue'
+import Path from './Path/Path.vue'
+import PathEndpoint from './Path/PathEndpoint.vue'
+import ResponseBody from './Response/ResponseBody.vue'
+import Responses from './Response/Responses.vue'
+import Parameter from './Parameter/Parameter.vue'
+import Parameters from './Parameter/Parameters.vue'
+import TryItButton from './Try/TryItButton.vue'
+import TryWithVariables from './Try/TryWithVariables.vue'
+import RequestParameters from './Try/RequestParameters.vue'
+import RequestParameterInput from './Try/RequestParameterInput.vue'
 
 export {
-  Operation,
+  OASpec,
+  OAOperation,
+  OAHeading,
+  OAFooter,
+  Path,
+  PathEndpoint,
   ResponseBody,
-  OperationEndpoint,
   Responses,
-  TryItButton,
   Parameter,
   Parameters,
-  RequestParameters,
+  TryItButton,
   TryWithVariables,
+  RequestParameters,
   RequestParameterInput,
 }

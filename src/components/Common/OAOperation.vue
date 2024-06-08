@@ -1,0 +1,102 @@
+<script setup>
+import {computed, useSlots} from "vue";
+
+const props = defineProps({
+  operationId: {
+    type: String,
+    required: true,
+  },
+  method: {
+    type: String,
+    default: 'GET',
+  },
+  isDark: {
+    type: Boolean,
+    default: false,
+  },
+  prefixHeadings: {
+    // Whether to add prefixes to component headings (for the One Page view)
+    type: Boolean,
+    default: false,
+  },
+  hideDefaultFooter: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const slots = useSlots()
+
+const headingPrefix = computed(() => {
+  if (!props.prefixHeadings) {
+    return null
+  }
+
+  return props.operationId
+})
+
+function hasSlot(name) {
+  return slots[name] !== undefined
+}
+</script>
+
+<template>
+  <Path :method="method" :id="operationId">
+    <template v-if="hasSlot('header')" #header="header">
+      <slot name="header" v-bind="header" />
+    </template>
+    <template v-else #header="header">
+      <OAHeading level="h1" :prefix="headingPrefix">{{ header.operation.summary }}</OAHeading>
+    </template>
+
+    <template v-if="hasSlot('description')" #description="description">
+      <slot name="description" v-bind="description" />
+    </template>
+    <template v-else #description="description">
+      <div class="description" v-html="description.operation.description"/>
+    </template>
+
+    <template v-if="hasSlot('parameters')" #parameters="parameters">
+      <slot name="parameters" v-bind="parameters" />
+    </template>
+    <template v-else #parameters="parameters">
+      <OAHeading level="h2" :prefix="headingPrefix">{{ $t('Parameters') }}</OAHeading>
+
+      <Parameters :operation-id="operationId" :parameters="parameters.parameters"/>
+    </template>
+
+    <template v-if="hasSlot('responses')" #responses="responses">
+      <slot name="responses" v-bind="responses" />
+    </template>
+    <template v-else #responses="responses">
+      <OAHeading level="h2" :prefix="headingPrefix">{{ $t('Response') }}</OAHeading>
+
+      <Responses :responses="responses.responses"
+                 :schema="responses.schema"
+                 :responseType="responses.responseType"
+                 :isDark="isDark">
+        <template #body="body">
+          <ResponseBody :schema="body.schema" :responseType="body.responseType"/>
+        </template>
+      </Responses>
+    </template>
+
+    <template v-if="hasSlot('try-it')" #try-it="tryIt">
+      <slot name="try-it" v-bind="tryIt" />
+    </template>
+    <template v-else #try-it="tryIt">
+      <TryWithVariables :operation-id="tryIt.operationId"
+                        :method="tryIt.method"
+                        :path="tryIt.path"
+                        :baseUrl="tryIt.baseUrl"
+                        :isDark="isDark"/>
+    </template>
+
+    <template v-if="hasSlot('footer')" #footer="footer">
+      <slot name="footer" v-bind="footer" />
+    </template>
+    <template v-else-if="!hideDefaultFooter" #footer="footer">
+      <OAFooter />
+    </template>
+  </Path>
+</template>

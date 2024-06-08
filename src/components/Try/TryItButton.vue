@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useOpenapi } from '../composables/useOpenapi'
+import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
 
 const props = defineProps({
   operationId: {

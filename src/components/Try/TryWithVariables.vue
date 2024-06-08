@@ -23,6 +23,10 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  hideEndpoint: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const requestUrl = ref(props.requestUrl ?? `${props.baseUrl}${props.path}`)
@@ -66,7 +70,7 @@ watch(requestUrl, () => {
 
 <template>
   <div class="flex flex-col space-y-2">
-    <OperationEndpoint :method="props.method" :path="props.path" :baseUrl="props.baseUrl" hide-base-url />
+    <PathEndpoint v-if="!props.hideEndpoint" :method="props.method" :path="props.path" :baseUrl="props.baseUrl" hide-base-url />
 
     <RequestParameters v-model:request-url="requestUrl" :operation-id="props.operationId" :method="props.method" :baseUrl="props.baseUrl" :path="props.path" />
 
