@@ -1,0 +1,29 @@
+{
+  "name": "vitepress-theme-openapi-docs",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.35.3",
+    "@iconify/vue": "^4.1.2",
+    "@types/node": "^18.17.1",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "autoprefixer": "^10.4.19",
+    "eslint": "8.22.0",
+    "postcss": "^8.4.38",
+    "rimraf": "^5.0.5",
+    "shikiji": "0.10.2",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.3.3",
+    "vite": "^5.3.1",
+    "vitepress": "1.2.3",
+    "vitepress-theme-openapi": "0.0.3-alpha.4",
+    "vue": "^3.4.29",
+    "vue-i18n": "^9.13.1",
+    "vue-tsc": "^2.0.21"
+  }
+}

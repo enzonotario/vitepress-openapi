@@ -5,5 +5,7 @@ dist-ssr
 *.local
 dev/.vitepress/cache
 dev/.vitepress/.temp
+docs/.vitepress/cache
+docs/.vitepress/.temp
 types
 .idea

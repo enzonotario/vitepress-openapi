@@ -4,8 +4,7 @@
   "scripts": {
     "build": "rimraf dist && vite build",
     "dev": "vitepress dev dev",
-    "docs:build": "vitepress build dev",
-    "docs:serve": "vitepress serve dev",
+    "docs:build": "cd docs && npm run build",
     "prepublishOnly": "pnpm run build"
   },
   "type": "module",
