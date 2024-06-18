@@ -27,10 +27,10 @@ export default defineConfigWithTheme({
   },
   vite: {
     resolve: {
-      alias: {
-        'vitepress-theme-openapi': resolve(__dirname, '../../src'),
-      },
-      dedupe: ['vue'], // avoid error when using dependencies that also use Vue
+      // alias: {
+      //   'vitepress-theme-openapi': resolve(__dirname, '../../src'),
+      // },
+      // dedupe: ['vue'], // avoid error when using dependencies that also use Vue
     },
   },
 })
