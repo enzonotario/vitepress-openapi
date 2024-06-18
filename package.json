@@ -3,9 +3,9 @@
   "version": "0.0.3-alpha.4",
   "scripts": {
     "build": "rimraf dist && vite build",
-    "dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs",
+    "dev": "vitepress dev dev",
+    "docs:build": "vitepress build dev",
+    "docs:serve": "vitepress serve dev",
     "prepublishOnly": "pnpm run build"
   },
   "type": "module",

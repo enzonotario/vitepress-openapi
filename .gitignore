@@ -3,7 +3,7 @@ node_modules
 dist
 dist-ssr
 *.local
-docs/.vitepress/cache
-docs/.vitepress/.temp
+dev/.vitepress/cache
+dev/.vitepress/.temp
 types
 .idea
