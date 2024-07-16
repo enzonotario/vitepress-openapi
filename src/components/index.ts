@@ -12,6 +12,7 @@ import TryItButton from './Try/TryItButton.vue'
 import TryWithVariables from './Try/TryWithVariables.vue'
 import RequestParameters from './Try/RequestParameters.vue'
 import RequestParameterInput from './Try/RequestParameterInput.vue'
+import OACodeSamples from "./Sample/OACodeSamples.vue";
 
 export {
   OASpec,
@@ -28,4 +29,5 @@ export {
   TryWithVariables,
   RequestParameters,
   RequestParameterInput,
+  OACodeSamples,
 }

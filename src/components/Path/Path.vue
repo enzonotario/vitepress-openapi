@@ -76,6 +76,13 @@ const schema = Object.values(schemas).find(schema => schema.title === schemaTitl
                   :path="operationPath"
                   :method="props.method"
                   :base-url="baseUrl" />
+
+            <slot name="code-samples"
+                  :operation-id="props.id"
+                  :operation="operation"
+                  :method="props.method"
+                  :base-url="baseUrl"
+                  :path="operationPath" />
           </div>
         </div>
       </div>

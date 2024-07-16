@@ -92,6 +92,16 @@ function hasSlot(name) {
                         :isDark="isDark"/>
     </template>
 
+    <template v-if="hasSlot('code-samples')" #code-samples="codeSamples">
+      <slot name="code-samples" v-bind="codeSamples" />
+    </template>
+    <template v-else #code-samples="codeSamples">
+      <OAHeading level="h2" :prefix="headingPrefix">{{ $t('Samples') }}</OAHeading>
+
+      <OACodeSamples :operation-id="codeSamples.operationId"
+                     :is-dark="isDark" />
+    </template>
+
     <template v-if="hasSlot('footer')" #footer="footer">
       <slot name="footer" v-bind="footer" />
     </template>

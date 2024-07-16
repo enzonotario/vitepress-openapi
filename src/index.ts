@@ -29,7 +29,8 @@ export const theme = {
     })
     app.use(i18n)
 
-    for (const key in components)
+    for (const key in components) {
       app.component(key, components[key])
+    }
   },
 } as VPTheme
