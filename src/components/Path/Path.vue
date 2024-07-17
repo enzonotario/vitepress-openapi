@@ -1,5 +1,6 @@
 <script setup>
 import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
+import { computed } from "vue";
 
 const props = defineProps({
   id: {
@@ -28,11 +29,21 @@ const response200 = operation.responses['200']
 
 const responseType = response200.content['application/json'].schema.items ? 'array' : 'object'
 
-const schemaTitle = (responseType === 'array' ? response200.content['application/json'].schema.items : response200.content['application/json'].schema)
-  .$ref.split('/')
-  .pop()
+const primitiveSchemasTypes = ['string', 'number', 'integer', 'boolean', 'array', 'object']
 
-const schema = Object.values(schemas).find(schema => schema.title === schemaTitle)
+const schema = computed(() => {
+  const responseSchema = operation.responses['200'].content['application/json'].schema
+
+  if (responseType === 'array') {
+    return responseSchema.items
+  }
+
+  if (primitiveSchemasTypes.includes(responseSchema.type)) {
+    return responseSchema.type
+  }
+
+  return schemas[responseSchema.$ref.split('/').pop()]
+})
 </script>
 
 <template>

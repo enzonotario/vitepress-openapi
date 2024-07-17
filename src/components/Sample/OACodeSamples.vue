@@ -30,7 +30,9 @@ const samples = useCodeSamples().getCodeSamples(props.operationId)
       </div>
 
       <div class="blocks">
-        <OACodeBlock v-for="(sample, key) in samples" :key="key" :code="sample.source"
+        <OACodeBlock v-for="(sample, key) in samples"
+                     :key="key"
+                     :code="sample.source"
                      :lang="sample.lang"
                      :label="sample.label"
                      :is-dark="props.isDark"

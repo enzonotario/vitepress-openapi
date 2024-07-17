@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { computed, defineProps, ref } from 'vue'
 
 const props = defineProps({
   operationId: {
@@ -32,7 +32,9 @@ const requestUrl = ref(props.requestUrl ?? `${props.baseUrl}${props.path}`)
 
 const loading = ref(false)
 
-const curl = `curl -X ${props.method.toUpperCase()} \\\n ${requestUrl.value}`
+const curl = computed(() => {
+  return `curl -X ${props.method.toUpperCase()} \\\n ${requestUrl.value}`
+})
 </script>
 
 <template>

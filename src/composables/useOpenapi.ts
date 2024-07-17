@@ -39,6 +39,14 @@ export function useOpenapi() {
   }
 
   function propertiesTypesJson(schema: any, responseType: string) {
+    if (!schema?.properties) {
+      return JSON.stringify(
+        schema,
+        null,
+        2,
+      )
+    }
+
     const body = {}
 
     const propertiesKeys = Object.keys(schema.properties)
