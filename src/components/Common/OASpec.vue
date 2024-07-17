@@ -18,9 +18,7 @@ const openapi = useOpenapi()
                  :operation-id="path.get.operationId"
                  :isDark="isDark"
                  prefix-headings
-                 hide-default-footer
-    />
-
+                 hide-default-footer />
     <OAFooter />
   </div>
 </template>

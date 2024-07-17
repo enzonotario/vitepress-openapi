@@ -51,8 +51,7 @@ const curl = computed(() => {
                      lang="json"
                      label="JSON"
                      :is-dark="props.isDark"
-                     :disable-html-transform="response.response.length > 1000"/>
-        />
+                     :disable-html-transform="response.response.length > 1000" />
       </template>
     </TryItButton>
   </div>
