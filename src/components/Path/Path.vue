@@ -35,6 +35,10 @@ const schema = computed(() => {
   const responseSchema = operation.responses['200'].content['application/json'].schema
 
   if (responseType === 'array') {
+    if (responseSchema.items.$ref) {
+      return schemas[responseSchema.items.$ref.split('/').pop()]
+    }
+
     return responseSchema.items
   }
 
