@@ -47,6 +47,15 @@ export function useOpenapi() {
       )
     }
 
+
+    return JSON.stringify(
+        propertiesTypesJsonRecursive(schema, responseType),
+      null,
+      2,
+    )
+  }
+
+  function propertiesTypesJsonRecursive(schema: any, responseType: string) {
     const body = {}
 
     const propertiesKeys = Object.keys(schema.properties)
@@ -54,17 +63,12 @@ export function useOpenapi() {
     propertiesKeys.forEach((key) => {
       const property = schema.properties[key]
 
-      const { type } = property
+      const {type} = property
 
-      body[key] = type
+      body[key] = type === 'object' ? propertiesTypesJsonRecursive(property, type) : type
     })
 
-    return JSON.stringify(
-      responseType === 'array' ? [body] : body,
-      null,
-      2,
-    )
-  }
+    return responseType === 'array' ? [body] : body  }
 
   function propertiesAsJson(schema: any, responseType: string) {
     const body = {}
@@ -145,6 +149,7 @@ export function useOpenapi() {
     getBaseUrl,
     getSchemas,
     propertiesTypesJson,
+    propertiesTypesJsonRecursive,
     propertiesAsJson,
     getTags,
     getOperationCodeSamples,
