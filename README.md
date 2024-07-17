@@ -6,6 +6,7 @@ A VitePress theme for OpenAPI documentation.
 
 - [DolarApi.com](https://dolarapi.com/)
 - [ArgentinaDatos](https://argentinadatos.com/)
+- [CriptoYa API](https://docs.criptoya.com/)
 
 ## Getting Started
 
