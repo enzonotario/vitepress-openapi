@@ -45,7 +45,7 @@ const curl = computed(() => {
 
     <OACodeBlock :code="curl" lang="bash" label="cURL" :is-dark="props.isDark" />
 
-    <TryItButton :request-url="requestUrl" :operation-id="props.operationId" :method="props.method" @loading="loading = $event">
+    <TryItButton :request-url="requestUrl" :operation-id="props.operationId" :method="props.method" :is-dark="props.isDark" @loading="loading = $event">
       <template #response="response">
         <OACodeBlock :code="JSON.stringify(response.response, null, 2)"
                      lang="json"

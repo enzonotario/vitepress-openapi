@@ -14,6 +14,10 @@ const props = defineProps({
   requestUrl: {
     type: String,
   },
+  isDark: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emits = defineEmits([
@@ -98,7 +102,7 @@ function setLoading(value) {
         </div>
 
         <div class="flex flex-col max-h-96 overflow-y-auto">
-          <slot name="response" :response="response" />
+          <slot name="response" :response="response" :is-dark="props.isDark" />
         </div>
       </details>
     </div>
