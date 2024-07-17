@@ -40,3 +40,14 @@
 .pager-link.next .title .SidebarItem {
     @apply justify-end;
 }
+
+/*
+  Code blocks
+ */
+.shiki.vitesse-light,
+.shiki.vitesse-dark,
+.shiki.github-light,
+.shiki.github-dark
+{
+    @apply bg-transparent !important;
+}

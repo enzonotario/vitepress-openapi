@@ -1,7 +1,6 @@
 <script setup>
 import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
-import { codeToHtml } from 'shikiji'
-import { ref, onMounted, useSlots } from "vue";
+import { ref, useSlots } from "vue";
 
 const props = defineProps({
   schema: {
@@ -27,15 +26,6 @@ const slots = useSlots()
 const responsesCodes = Object.keys(props.responses)
 
 const schemaJson = ref(useOpenapi().propertiesTypesJson(props.schema, props.responseType))
-
-onMounted(async () => {
-  if (schemaJson.value) {
-    schemaJson.value = await codeToHtml(schemaJson.value, {
-      lang: 'json',
-      theme: props.isDark ? 'github-dark' : 'github-light',
-    })
-  }
-})
 
 function hasSlot(name) {
   return slots[name] !== undefined
@@ -64,7 +54,7 @@ function hasSlot(name) {
 
       <slot name="example" :json="schemaJson" />
 
-      <div v-if="!hasSlot('example')" v-html="schemaJson" class="p-2 border border-gray-200 dark:border-gray-700 rounded" />
+      <OACodeBlock v-if="!hasSlot('example')" :code="schemaJson" lang="json" label="JSON" :is-dark="isDark" />
     </div>
   </div>
 </template>

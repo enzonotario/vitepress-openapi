@@ -1,6 +1,5 @@
 <script setup>
 import { useCodeSamples } from "../../composables/useCodeSamples";
-import { ref, watch } from "vue";
 
 const props = defineProps({
   operationId: {
@@ -17,21 +16,12 @@ const props = defineProps({
   },
 })
 
-const samples = ref(null)
-
-watch(() => props.isDark, async () => {
-  samples.value = await useCodeSamples().getCodeSamples(props.operationId, {
-    theme: props.isDark ? 'vitesse-dark' : 'vitesse-light',
-  })
-}, {
-  immediate: true,
-})
+const samples = useCodeSamples().getCodeSamples(props.operationId)
 </script>
 
 <template>
   <div>
-    <div v-if="samples"
-         class="vp-code-group vp-adaptive-theme">
+    <div class="vp-code-group vp-adaptive-theme">
       <div class="tabs">
         <template v-for="(sample, key) in samples">
           <input type="radio" :name="`group-${props.operationId}`" :id="`tab-${props.operationId}-${key}`" :checked="key === 'curl'">
@@ -40,25 +30,12 @@ watch(() => props.isDark, async () => {
       </div>
 
       <div class="blocks">
-        <div v-for="(sample, key) in samples" :key="key"
-             class="vp-adaptive-theme"
-             :class="[
-                 `language-${sample.lang}`,
-                 { 'active': key === 'curl' }
-             ]"
-        >
-          <button title="Copy Code" class="copy"></button>
-          <span class="lang">{{ sample.lang }}</span>
-          <div v-if="sample.html" v-html="sample.html" class="code"></div>
-        </div>
+        <OACodeBlock v-for="(sample, key) in samples" :key="key" :code="sample.source"
+                     :lang="sample.lang"
+                     :label="sample.label"
+                     :is-dark="props.isDark"
+                     :class="{ 'active': key === 'curl' }" />
       </div>
     </div>
-
   </div>
 </template>
-
-<style>
-.shiki.vitesse-light {
-  @apply bg-transparent !important;
-}
-</style>

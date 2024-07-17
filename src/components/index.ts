@@ -2,6 +2,7 @@ import OASpec from './Common/OASpec.vue'
 import OAOperation from './Common/OAOperation.vue'
 import OAHeading from './Common/OAHeading.vue'
 import OAFooter from './Common/OAFooter.vue'
+import OACodeBlock from './Common/OACodeBlock.vue'
 import Path from './Path/Path.vue'
 import PathEndpoint from './Path/PathEndpoint.vue'
 import ResponseBody from './Response/ResponseBody.vue'
@@ -19,6 +20,7 @@ export {
   OAOperation,
   OAHeading,
   OAFooter,
+  OACodeBlock,
   Path,
   PathEndpoint,
   ResponseBody,

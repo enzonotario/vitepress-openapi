@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {defineProps, ref, watch} from 'vue'
-import {codeToHtml} from 'shikiji'
+import { defineProps, ref } from 'vue'
 
 const props = defineProps({
   operationId: {
@@ -31,41 +30,9 @@ const props = defineProps({
 
 const requestUrl = ref(props.requestUrl ?? `${props.baseUrl}${props.path}`)
 
-const html = ref(null)
-
-const responseHtml = ref(null)
-
-const theme = props.isDark ? 'github-dark' : 'github-light'
-
 const loading = ref(false)
 
-async function setupCodeSample() {
-  const curl = `curl -X ${props.method.toUpperCase()} \\\n ${requestUrl.value}`
-
-  html.value = await codeToHtml(curl, {
-    lang: 'bash',
-    theme,
-  })
-}
-
-async function formatResponse(response) {
-  // If the response is too large, don't format it
-  if (response.length > 1000) {
-    responseHtml.value = JSON.stringify(response, null, 2)
-    return
-  }
-
-  responseHtml.value = await codeToHtml(JSON.stringify(response, null, 2), {
-    lang: 'json',
-    theme,
-  })
-}
-
-watch(requestUrl, () => {
-  setupCodeSample()
-}, {
-  immediate: true,
-})
+const curl = `curl -X ${props.method.toUpperCase()} \\\n ${requestUrl.value}`
 </script>
 
 <template>
@@ -74,11 +41,16 @@ watch(requestUrl, () => {
 
     <RequestParameters v-model:request-url="requestUrl" :operation-id="props.operationId" :method="props.method" :baseUrl="props.baseUrl" :path="props.path" />
 
-    <pre v-if="html" class="p-2 border border-gray-200 dark:border-gray-700 rounded overflow-x-auto" v-html="html" />
+    <OACodeBlock :code="curl" lang="bash" label="cURL" :is-dark="props.isDark" />
 
-    <TryItButton :request-url="requestUrl" :operation-id="props.operationId" :method="props.method" @response="formatResponse" @loading="loading = $event">
+    <TryItButton :request-url="requestUrl" :operation-id="props.operationId" :method="props.method" @loading="loading = $event">
       <template #response="response">
-        <pre class="p-2 border border-gray-200 dark:border-gray-700 rounded overflow-x-auto" v-html="loading ? 'Cargando... ' : responseHtml" />
+        <OACodeBlock :code="JSON.stringify(response.response, null, 2)"
+                     lang="json"
+                     label="JSON"
+                     :is-dark="props.isDark"
+                     :disable-html-transform="response.response.length > 1000"/>
+        />
       </template>
     </TryItButton>
   </div>

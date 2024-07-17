@@ -89,7 +89,7 @@ function hasSlot(name) {
                         :method="tryIt.method"
                         :path="tryIt.path"
                         :baseUrl="tryIt.baseUrl"
-                        :isDark="isDark"/>
+                        :is-dark="isDark"/>
     </template>
 
     <template v-if="hasSlot('code-samples')" #code-samples="codeSamples">
