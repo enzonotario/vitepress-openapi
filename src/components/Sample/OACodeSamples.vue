@@ -1,5 +1,5 @@
 <script setup>
-import { useCodeSamples } from "../../composables/useCodeSamples";
+import { generateCodeSamples } from "../../utils/generateCodeSamples";
 
 const props = defineProps({
   operationId: {
@@ -16,7 +16,7 @@ const props = defineProps({
   },
 })
 
-const samples = useCodeSamples().getCodeSamples(props.operationId)
+const samples = generateCodeSamples(props.operationId)
 </script>
 
 <template>
