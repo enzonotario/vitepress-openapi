@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateResponseSchema > should handle arrays 1`] = `
+{
+  "properties": {
+    "entidad": {
+      "type": "string",
+    },
+    "rendimientos": {
+      "properties": {
+        "id": {
+          "type": "string",
+        },
+        "name": {
+          "type": "string",
+        },
+      },
+      "type": "array",
+    },
+  },
+  "type": "array",
+}
+`;
