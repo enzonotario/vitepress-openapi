@@ -1,13 +1,23 @@
 {
   "name": "vitepress-theme-openapi",
-  "version": "0.0.3-alpha.9",
+  "version": "0.0.3-alpha.10",
+  "type": "module",
+  "homepage": "https://vitepress-theme-openapi.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enzonotario/vitepress-theme-openapi.git"
+  },
+  "keywords": [
+    "vitepress",
+    "theme",
+    "openapi"
+  ],
   "scripts": {
     "build": "rimraf dist && vite build",
     "dev": "vitepress dev dev",
     "docs:build": "cd docs && npm run build",
     "prepublishOnly": "pnpm run build"
   },
-  "type": "module",
   "peerDependencies": {
     "vue": "^3.4.29"
   },
@@ -45,5 +55,6 @@
       "require": "./dist/vitepress-theme-openapi.umd.js"
     },
     "./dist/style.css": "./dist/style.css"
-  }
+  },
+  "packageManager": "pnpm@9.1.1"
 }
