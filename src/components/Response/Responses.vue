@@ -54,7 +54,7 @@ function hasSlot(name) {
 
       <slot name="example" :json="schemaJson" />
 
-      <OACodeBlock v-if="!hasSlot('example')" :code="schemaJson" lang="json" label="JSON" :is-dark="isDark" />
+      <OACodeBlock v-if="!hasSlot('example')" :code="schemaJson" lang="json" label="JSON" :is-dark="isDark" class="max-h-96" />
     </div>
   </div>
 </template>
