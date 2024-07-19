@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
+import { Button } from 'vitepress-theme-openapi/components/ui/button'
 
 const props = defineProps({
   operationId: {
@@ -84,12 +85,9 @@ function setLoading(value) {
 
 <template>
   <div class="flex flex-col space-y-4">
-    <button
-      class="bg-black text-white hover:bg-gray-800 dark:text-black dark:bg-white dark:hover:bg-gray-200 font-bold py-2 px-4 rounded"
-      @click="tryIt"
-    >
+    <Button @click="tryIt">
       {{ $t('Try it out') }}
-    </button>
+    </Button>
 
     <div v-if="response || loading" class="flex flex-col">
       <details class="flex flex-col" open>

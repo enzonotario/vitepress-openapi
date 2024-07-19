@@ -714,7 +714,7 @@
             "type": "number"
           },
           "horizonte": {
-            "type": "enum",
+            "type": "string",
             "enum": [
               "corto",
               "medio",

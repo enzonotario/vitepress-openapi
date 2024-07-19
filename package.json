@@ -21,6 +21,15 @@
   "peerDependencies": {
     "vue": "^3.4.29"
   },
+  "dependencies": {
+    "@vueuse/core": "^10.11.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-vue-next": "^0.411.0",
+    "radix-vue": "^1.9.1",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7"
+  },
   "devDependencies": {
     "@amoutonbrady/lz-string": "^0.1.0",
     "@antfu/eslint-config": "^0.35.3",

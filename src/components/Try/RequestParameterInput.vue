@@ -1,6 +1,14 @@
 <script setup lang="ts">
-import {defineEmits, defineProps, ref, watch} from 'vue'
-import {useOpenapi} from 'vitepress-theme-openapi/composables/useOpenapi'
+import { defineEmits, defineProps, onMounted } from 'vue'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'vitepress-theme-openapi/components/ui/select'
+import { Input } from 'vitepress-theme-openapi/components/ui/input'
 
 const props = defineProps({
   parameter: {
@@ -17,38 +25,43 @@ const emits = defineEmits([
   'update:modelValue',
 ])
 
-const inputType = (parameter) => {
+const inputType = (parameter: any) => {
   if (parameter.schema?.type === 'integer') return 'number'
   if (parameter.schema?.type === 'number') return 'number'
   return 'text'
 }
+
+onMounted(() => {
+  if (props.parameter.schema?.enum) {
+    emits('update:modelValue', props.parameter.example ?? props.parameter.schema.enum[0])
+  }
+})
 </script>
 
 <template>
   <div class="flex flex-col space-y-2">
-    <input
+    <Input
         v-if="['string', 'number', 'integer'].includes(parameter.schema?.type) && !parameter.schema?.enum"
         :value="modelValue"
         :type="inputType(parameter)"
         :placeholder="parameter.example ?? parameter.schema?.example ?? ''"
-        class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-2 py-1"
-        @input="emits('update:modelValue', $event.target.value)"
-    >
+        class="bg-gray-100 dark:bg-gray-800"
+        @update:modelValue="emits('update:modelValue', $event)"
+    ></Input>
 
-    <select
-        v-if="parameter.schema?.enum"
-        :value="modelValue"
-        class="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded px-2 py-1"
-        @input="emits('update:modelValue', $event.target.value)"
-    >
-      <option
-          v-for="enumValue in parameter.schema.enum"
-          :key="enumValue"
-          :value="enumValue"
-          :selected="enumValue === parameter.example"
-      >
-        {{ enumValue }}
-      </option>
-    </select>
+    <Select v-if="parameter.schema?.enum" @update:modelValue="emits('update:modelValue', $event)">
+      <SelectTrigger class="bg-gray-100 dark:bg-gray-800">
+        <SelectValue placeholder="Seleccionar..." />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectItem v-for="enumValue in parameter.schema.enum"
+                      :key="enumValue"
+                      :value="enumValue">
+            {{ enumValue }}
+          </SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   </div>
 </template>

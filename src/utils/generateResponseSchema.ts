@@ -10,11 +10,6 @@ export function generateResponseSchema(schemas: any, operation: any) {
 }
 
 function generateSchemaRecursive(responseSchema: any, schemas: any, responseType: any) {
-  console.log('---',{
-    responseSchema,
-    schemas,
-    responseType
-  })
   if (responseSchema.type === 'array') {
     if (responseSchema.items.$ref) {
       return generateSchemaRecursive(resolveRef(responseSchema.items.$ref, schemas), schemas, 'array');
