@@ -45,7 +45,7 @@ function hasSlot(name) {
         <span class="text-gray-800 dark:text-gray-200 text-lg">{{ responses[responseCode].description }}</span>
       </div>
 
-      <div class="flex flex-row items-center text-xs space-x-2">
+      <div v-if="responses[responseCode]?.content" class="flex flex-row items-center text-xs space-x-2">
         <span class="text-gray-600 dark:text-gray-400">Content-Type:</span>
         <span class="text-gray-800 dark:text-gray-200">{{ Object.keys(responses[responseCode].content)[0] }}</span>
       </div>
