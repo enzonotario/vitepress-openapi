@@ -1,11 +1,9 @@
 import { resolve } from 'node:path'
-import { useOpenapi, useSidebar } from 'vitepress-theme-openapi'
+import { useSidebar } from 'vitepress-theme-openapi'
 import { defineConfigWithTheme } from 'vitepress'
 import spec from '../public/openapi.json' assert { type: 'json' }
 
-const openapi = useOpenapi()
-openapi.setSpec(spec)
-const sidebar = useSidebar()
+const sidebar = useSidebar({ spec })
 
 export default defineConfigWithTheme({
   title: 'vitepress-theme-openapi',

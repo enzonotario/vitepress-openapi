@@ -3,8 +3,7 @@ import spec from '../public/openapi.json' assert { type: 'json' }
 
 export default {
     paths() {
-        const openapi = useOpenapi()
-        openapi.setSpec(spec)
+        const openapi = useOpenapi({ spec })
 
         if (!openapi?.spec?.paths) {
             return []

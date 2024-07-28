@@ -1,22 +1,26 @@
-let spec: any = {}
+let innerSpec: any = {}
 
-export function useOpenapi() {
+export function useOpenapi({ spec } = { spec: null }) {
+  if (spec) {
+    setSpec(spec)
+  }
+
   function setSpec(value: any) {
-    spec = value
+    innerSpec = value
   }
 
   function getOperation(operationId: string) {
-    if (!spec.paths)
+    if (!innerSpec.paths)
       return null
 
-    return Object.values(spec.paths).find(path => path.get.operationId === operationId).get
+    return Object.values(innerSpec.paths).find(path => path.get.operationId === operationId).get
   }
 
   function getOperationPath(operationId: string) {
-    if (!spec.paths)
+    if (!innerSpec.paths)
       return null
 
-    return Object.keys(spec.paths).find(path => spec.paths[path].get.operationId === operationId)
+    return Object.keys(innerSpec.paths).find(path => innerSpec.paths[path].get.operationId === operationId)
   }
 
   function getOperationParameters(operationId: string) {
@@ -25,17 +29,17 @@ export function useOpenapi() {
   }
 
   function getBaseUrl() {
-    if (!spec.servers)
+    if (!innerSpec.servers)
       return ''
 
-    return spec.servers[0].url
+    return innerSpec.servers[0].url
   }
 
   function getSchemas() {
-    if (!spec.components)
+    if (!innerSpec.components)
       return {}
 
-    return spec.components.schemas
+    return innerSpec.components.schemas
   }
 
   function propertiesTypesJson(schema: any, responseType: string) {
@@ -110,10 +114,10 @@ export function useOpenapi() {
   }
 
   function getTags(): string[] {
-    if (!spec?.paths)
+    if (!innerSpec?.paths)
       return []
 
-    return Object.values(spec.paths).reduce((tags, path) => {
+    return Object.values(innerSpec.paths).reduce((tags, path) => {
       if (!path.get)
         return tags
 
@@ -137,11 +141,11 @@ export function useOpenapi() {
   }
 
   function getSecuritySchemes() {
-    return spec.components.securitySchemes
+    return innerSpec.components.securitySchemes
   }
 
   return {
-    spec,
+    spec: innerSpec,
     setSpec,
     getOperation,
     getOperationPath,
