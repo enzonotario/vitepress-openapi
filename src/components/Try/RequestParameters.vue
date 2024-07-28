@@ -47,8 +47,13 @@ function buildRequestUrl() {
   let requestPath = path
 
   for (const [key, value] of Object.entries(variables.value)) {
-    if (!pathParameters.find(parameter => parameter.name === key))
+    if (!pathParameters.find(parameter => parameter.name === key)) {
       continue
+    }
+
+    if (!value) {
+      continue
+    }
 
     requestPath = requestPath.replace(`{${key}}`, value)
   }
@@ -56,8 +61,14 @@ function buildRequestUrl() {
   const url = new URL(requestPath, baseUrl)
 
   for (const [key, value] of Object.entries(variables.value)) {
-    if (pathParameters.find(parameter => parameter.name === key))
+    if (pathParameters.find(parameter => parameter.name === key)) {
       continue
+    }
+
+    if (!value) {
+      continue
+    }
+
     url.searchParams.set(key, value)
   }
 
@@ -76,7 +87,6 @@ watch(variables, buildRequestUrl, { deep: true, immediate: true })
         {{ $t('Variables') }}
       </h4>
 
-      <!-- Inputs -->
       <div class="flex flex-col space-y-2">
         <div class="flex flex-row gap-2">
           <div class="w-1/2 flex justify-start">
@@ -87,7 +97,7 @@ watch(variables, buildRequestUrl, { deep: true, immediate: true })
           </div>
         </div>
 
-        <div v-for="parameter in pathParameters" :key="parameter.name" class="flex flex-row gap-2">
+        <div v-for="parameter in [...pathParameters, ...queryParameters]" :key="parameter.name" class="flex flex-row gap-2">
           <div class="w-1/2 flex flex-row items-center space-x-2">
             <span class="text-sm font-bold">{{ parameter.name }}</span>
             <span v-if="parameter.required" class="text-sm text-red-500">*</span>
