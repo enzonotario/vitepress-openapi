@@ -69,7 +69,7 @@ function hasSlot(name) {
       <slot name="responses" v-bind="responses" />
     </template>
     <template v-else #responses="responses">
-      <OAHeading level="h2" :prefix="headingPrefix">{{ $t('Response') }}</OAHeading>
+      <OAHeading level="h2" :prefix="headingPrefix">{{ $t('Responses') }}</OAHeading>
 
       <Responses :responses="responses.responses"
                  :schema="responses.schema"
