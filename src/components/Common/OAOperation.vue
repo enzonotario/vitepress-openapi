@@ -1,5 +1,5 @@
 <script setup>
-import {computed, useSlots} from "vue";
+import { computed, useSlots } from 'vue'
 
 const props = defineProps({
   operationId: {
@@ -41,42 +41,50 @@ function hasSlot(name) {
 </script>
 
 <template>
-  <Path :method="method" :id="operationId">
+  <Path :id="operationId" :method="method">
     <template v-if="hasSlot('header')" #header="header">
       <slot name="header" v-bind="header" />
     </template>
     <template v-else #header="header">
-      <OAHeading level="h1" :prefix="headingPrefix">{{ header.operation.summary }}</OAHeading>
+      <OAHeading level="h1" :prefix="headingPrefix">
+        {{ header.operation.summary }}
+      </OAHeading>
     </template>
 
     <template v-if="hasSlot('description')" #description="description">
       <slot name="description" v-bind="description" />
     </template>
     <template v-else #description="description">
-      <div class="description" v-html="description.operation.description"/>
+      <div class="description" v-html="description.operation.description" />
     </template>
 
     <template v-if="hasSlot('parameters')" #parameters="parameters">
       <slot name="parameters" v-bind="parameters" />
     </template>
     <template v-else #parameters="parameters">
-      <OAHeading level="h2" :prefix="headingPrefix">{{ $t('Parameters') }}</OAHeading>
+      <OAHeading level="h2" :prefix="headingPrefix">
+        {{ $t('Parameters') }}
+      </OAHeading>
 
-      <Parameters :operation-id="operationId" :parameters="parameters.parameters"/>
+      <Parameters :operation-id="operationId" :parameters="parameters.parameters" />
     </template>
 
     <template v-if="hasSlot('responses')" #responses="responses">
       <slot name="responses" v-bind="responses" />
     </template>
     <template v-else #responses="responses">
-      <OAHeading level="h2" :prefix="headingPrefix">{{ $t('Responses') }}</OAHeading>
+      <OAHeading level="h2" :prefix="headingPrefix">
+        {{ $t('Responses') }}
+      </OAHeading>
 
-      <Responses :responses="responses.responses"
-                 :schema="responses.schema"
-                 :responseType="responses.responseType"
-                 :isDark="isDark">
+      <Responses
+        :responses="responses.responses"
+        :schema="responses.schema"
+        :response-type="responses.responseType"
+        :is-dark="isDark"
+      >
         <template #body="body">
-          <ResponseBody :schema="body.schema" :responseType="body.responseType"/>
+          <ResponseBody :schema="body.schema" :response-type="body.responseType" />
         </template>
       </Responses>
     </template>
@@ -85,21 +93,27 @@ function hasSlot(name) {
       <slot name="try-it" v-bind="tryIt" />
     </template>
     <template v-else #try-it="tryIt">
-      <TryWithVariables :operation-id="tryIt.operationId"
-                        :method="tryIt.method"
-                        :path="tryIt.path"
-                        :baseUrl="tryIt.baseUrl"
-                        :is-dark="isDark"/>
+      <TryWithVariables
+        :operation-id="tryIt.operationId"
+        :method="tryIt.method"
+        :path="tryIt.path"
+        :base-url="tryIt.baseUrl"
+        :is-dark="isDark"
+      />
     </template>
 
     <template v-if="hasSlot('code-samples')" #code-samples="codeSamples">
       <slot name="code-samples" v-bind="codeSamples" />
     </template>
     <template v-else #code-samples="codeSamples">
-      <OAHeading level="h2" :prefix="headingPrefix">{{ $t('Samples') }}</OAHeading>
+      <OAHeading level="h2" :prefix="headingPrefix">
+        {{ $t('Samples') }}
+      </OAHeading>
 
-      <OACodeSamples :operation-id="codeSamples.operationId"
-                     :is-dark="isDark" />
+      <OACodeSamples
+        :operation-id="codeSamples.operationId"
+        :is-dark="isDark"
+      />
     </template>
 
     <template v-if="hasSlot('footer')" #footer="footer">

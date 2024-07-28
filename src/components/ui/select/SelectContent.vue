@@ -8,8 +8,8 @@ import {
   SelectViewport,
   useForwardPropsEmits,
 } from 'radix-vue'
-import { SelectScrollDownButton, SelectScrollUpButton } from '.'
 import { cn } from 'vitepress-theme-openapi/lib/utils'
+import { SelectScrollDownButton, SelectScrollUpButton } from '.'
 
 defineOptions({
   inheritAttrs: false,

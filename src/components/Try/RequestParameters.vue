@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {defineEmits, defineProps, ref, watch} from 'vue'
-import {useOpenapi} from 'vitepress-theme-openapi/composables/useOpenapi'
+import { defineEmits, defineProps, ref, watch } from 'vue'
+import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
 
 const props = defineProps({
   operationId: {

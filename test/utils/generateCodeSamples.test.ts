@@ -1,12 +1,11 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { generateCodeSamples } from './src/utils/generateCodeSamples'
-import * as openapiModule from 'vitepress-theme-openapi'
 
 // Mock the useOpenapi hook
 vi.mock('vitepress-theme-openapi', () => ({
   useOpenapi: vi.fn(() => ({
     getBaseUrl: () => 'https://api.example.com',
-    getOperationPath: (operationId) => `/path/${operationId}`,
+    getOperationPath: operationId => `/path/${operationId}`,
   })),
 }))
 

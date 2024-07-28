@@ -1,7 +1,8 @@
 {
   "name": "vitepress-theme-openapi",
-  "version": "0.0.3-alpha.14",
   "type": "module",
+  "version": "0.0.3-alpha.14",
+  "packageManager": "pnpm@9.1.1",
   "homepage": "https://vitepress-theme-openapi.vercel.app/",
   "repository": {
     "type": "git",
@@ -11,6 +12,20 @@
     "vitepress",
     "theme",
     "openapi"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/vitepress-theme-openapi.es.js",
+      "require": "./dist/vitepress-theme-openapi.umd.js"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "main": "./dist/vitepress-theme-openapi.es.js",
+  "module": "./dist/vitepress-theme-openapi.es.js",
+  "types": "./dist/types/index.d.ts",
+  "files": [
+    "dist",
+    "src"
   ],
   "scripts": {
     "build": "rimraf dist && vite build",
@@ -52,20 +67,5 @@
     "vue": "^3.4.29",
     "vue-i18n": "^9.13.1",
     "vue-tsc": "^2.0.21"
-  },
-  "files": [
-    "src",
-    "dist"
-  ],
-  "types": "./dist/types/index.d.ts",
-  "main": "./dist/vitepress-theme-openapi.es.js",
-  "module": "./dist/vitepress-theme-openapi.es.js",
-  "exports": {
-    ".": {
-      "import": "./dist/vitepress-theme-openapi.es.js",
-      "require": "./dist/vitepress-theme-openapi.umd.js"
-    },
-    "./dist/style.css": "./dist/style.css"
-  },
-  "packageManager": "pnpm@9.1.1"
+  }
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { codeToHtml } from 'shikiji'
-import { ref, watch } from "vue";
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   code: {
@@ -44,14 +44,13 @@ watch(
     immediate: true,
   },
 )
-
 </script>
 
 <template>
   <div class="vp-adaptive-theme" :class="[`language-${props.lang}`]">
-    <button title="Copy Code" class="copy"></button>
+    <button title="Copy Code" class="copy" />
     <span class="lang">{{ props.label }}</span>
-    <div v-if="html && !props.disableHtmlTransform" v-html="html" class="vp-adaptive-theme"></div>
+    <div v-if="html && !props.disableHtmlTransform" class="vp-adaptive-theme" v-html="html" />
     <pre v-else>{{ props.code }}</pre>
   </div>
 </template>

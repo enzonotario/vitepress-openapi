@@ -1,12 +1,12 @@
 {
   "name": "vitepress-theme-openapi-docs",
+  "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
     "preview": "vitepress preview"
   },
-  "type": "module",
   "devDependencies": {
     "@antfu/eslint-config": "^0.35.3",
     "@iconify/vue": "^4.1.2",

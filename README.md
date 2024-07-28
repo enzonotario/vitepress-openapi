@@ -1,6 +1,6 @@
 # vitepress-theme-openapi
 
-A VitePress theme for OpenAPI documentation. 
+A VitePress theme for OpenAPI documentation.
 
 ## Demo
 
@@ -143,4 +143,3 @@ module.exports = {
 ## License
 
 [MIT License](./LICENSE) © 2023-present [Enzo Notario](https://github.com/enzonotario).
-

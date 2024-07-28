@@ -1,7 +1,6 @@
 <script setup>
 import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
-import { computed } from "vue";
-import { generateResponseSchema } from "vitepress-theme-openapi/utils/generateResponseSchema";
+import { generateResponseSchema } from 'vitepress-theme-openapi/utils/generateResponseSchema'
 
 const props = defineProps({
   id: {
@@ -41,56 +40,67 @@ const schema = generateResponseSchema(schemas, operation)
       <div class="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="flex flex-col">
           <div class="flex flex-col space-y-4">
-            <slot name="description"
-                  :operation="operation"
-                  :method="props.method"
-                  :base-url="baseUrl"
-                  :path="operationPath" />
-          </div>
-
-          <slot
-              v-if="operationParameters.length"
-              name="parameters"
+            <slot
+              name="description"
               :operation="operation"
               :method="props.method"
               :base-url="baseUrl"
               :path="operationPath"
-              :parameters="operationParameters" />
+            />
+          </div>
+
+          <slot
+            v-if="operationParameters.length"
+            name="parameters"
+            :operation="operation"
+            :method="props.method"
+            :base-url="baseUrl"
+            :path="operationPath"
+            :parameters="operationParameters"
+          />
 
           <slot name="responses" :schema="schema" :responses="operation.responses" :response-type="responseType" />
         </div>
 
         <div class="flex flex-col">
-          <slot name="end-top"
-                :operation-id="props.id"
-                :operation="operation"
-                :method="props.method"
-                :base-url="baseUrl"
-                :path="operationPath" />
-
-          <div class="sticky top-[100px] inset-x-0 flex flex-col sm:px-6 space-y-4">
-            <slot name="try-it"
-                  :operation-id="props.id"
-                  :path="operationPath"
-                  :method="props.method"
-                  :base-url="baseUrl" />
-
-            <slot name="code-samples"
-                  :operation-id="props.id"
-                  :operation="operation"
-                  :method="props.method"
-                  :base-url="baseUrl"
-                  :path="operationPath" />
-          </div>
-        </div>
-      </div>
-
-      <slot name="footer"
+          <slot
+            name="end-top"
             :operation-id="props.id"
             :operation="operation"
             :method="props.method"
             :base-url="baseUrl"
-            :path="operationPath" />
+            :path="operationPath"
+          />
+
+          <div class="sticky top-[100px] inset-x-0 flex flex-col sm:px-6 space-y-4">
+            <slot
+              name="try-it"
+              :operation-id="props.id"
+              :path="operationPath"
+              :method="props.method"
+              :base-url="baseUrl"
+            />
+
+            <slot
+              name="code-samples"
+              :operation-id="props.id"
+              :operation="operation"
+              :method="props.method"
+              :base-url="baseUrl"
+              :path="operationPath"
+            />
+          </div>
+        </div>
+      </div>
+
+      <slot
+        name="footer"
+        :operation-id="props.id"
+        :operation="operation"
+        :method="props.method"
+        :base-url="baseUrl"
+        :path="operationPath"
+      />
     </div>
   </div>
 </template>

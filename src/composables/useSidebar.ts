@@ -7,7 +7,7 @@ export function useSidebar() {
 
   function generateSidebarItem(method, path) {
     if (!openapi?.spec?.paths?.[path]?.[method]) {
-        return null
+      return null
     }
 
     const { operationId, summary } = openapi.spec.paths[path].get
@@ -23,9 +23,9 @@ export function useSidebar() {
     }
   }
 
-  function generateSidebarGroup(tag: string|string[], text?: string) {
+  function generateSidebarGroup(tag: string | string[], text?: string) {
     if (!openapi?.spec?.paths) {
-        return []
+      return []
     }
 
     const includeTags = Array.isArray(tag) ? tag : [tag]
@@ -34,7 +34,7 @@ export function useSidebar() {
       .filter((path) => {
         const { tags } = openapi.spec.paths[path][METHOD_GET]
 
-        return includeTags.every((tag) => tags.includes(tag))
+        return includeTags.every(tag => tags.includes(tag))
       })
       .map((path) => {
         return generateSidebarItem(METHOD_GET, path)
@@ -48,7 +48,7 @@ export function useSidebar() {
 
   function generateSidebarGroups() {
     if (!openapi?.spec?.paths) {
-        return []
+      return []
     }
 
     return openapi.getTags().map((tag) => {

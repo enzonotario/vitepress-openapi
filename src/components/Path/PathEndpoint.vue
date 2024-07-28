@@ -31,7 +31,9 @@ const props = defineProps({
         'bg-red-200 text-red-800 dark:bg-red-800 dark:text-red-200': props.method === 'DELETE',
       }"
       class="px-2 py-1 rounded"
-    >{{ props.method }}</Badge>
+    >
+      {{ props.method }}
+    </Badge>
     <span class="text-gray-600 dark:text-gray-400 inline-flex items-center">
       <span v-if="!props.hideBaseUrl" class="hidden md:inline-block">{{ props.baseUrl }}</span>
       <span class="text-gray-800 dark:text-gray-200 font-bold select-all">{{ props.path }}</span>

@@ -25,9 +25,11 @@ const emits = defineEmits([
   'update:modelValue',
 ])
 
-const inputType = (parameter: any) => {
-  if (parameter.schema?.type === 'integer') return 'number'
-  if (parameter.schema?.type === 'number') return 'number'
+function inputType(parameter: any) {
+  if (parameter.schema?.type === 'integer')
+    return 'number'
+  if (parameter.schema?.type === 'number')
+    return 'number'
   return 'text'
 }
 
@@ -41,23 +43,25 @@ onMounted(() => {
 <template>
   <div class="flex flex-col space-y-2">
     <Input
-        v-if="['string', 'number', 'integer'].includes(parameter.schema?.type) && !parameter.schema?.enum"
-        :value="modelValue"
-        :type="inputType(parameter)"
-        :placeholder="parameter.example ?? parameter.schema?.example ?? ''"
-        class="bg-gray-100 dark:bg-gray-800"
-        @update:modelValue="emits('update:modelValue', $event)"
-    ></Input>
+      v-if="['string', 'number', 'integer'].includes(parameter.schema?.type) && !parameter.schema?.enum"
+      :value="modelValue"
+      :type="inputType(parameter)"
+      :placeholder="parameter.example ?? parameter.schema?.example ?? ''"
+      class="bg-gray-100 dark:bg-gray-800"
+      @update:model-value="emits('update:modelValue', $event)"
+    />
 
-    <Select v-if="parameter.schema?.enum" @update:modelValue="emits('update:modelValue', $event)">
+    <Select v-if="parameter.schema?.enum" @update:model-value="emits('update:modelValue', $event)">
       <SelectTrigger class="bg-gray-100 dark:bg-gray-800">
         <SelectValue placeholder="Seleccionar..." />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem v-for="enumValue in parameter.schema.enum"
-                      :key="enumValue"
-                      :value="enumValue">
+          <SelectItem
+            v-for="enumValue in parameter.schema.enum"
+            :key="enumValue"
+            :value="enumValue"
+          >
             {{ enumValue }}
           </SelectItem>
         </SelectGroup>

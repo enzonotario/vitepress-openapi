@@ -1,8 +1,8 @@
 <script setup>
 import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
-import { ref, useSlots } from "vue";
+import { ref, useSlots } from 'vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
-import {TabsIndicator} from 'radix-vue'
+import { TabsIndicator } from 'radix-vue'
 
 const props = defineProps({
   schema: {
@@ -38,12 +38,13 @@ function hasSlot(name) {
   <div class="flex flex-col">
     <Tabs :default-value="responsesCodes[0]" class="rounded border dark:border-gray-700">
       <TabsList class="relative flex flex-row justify-start rounded-t rounded-b-none p-0">
-        <TabsIndicator class="absolute left-0 h-[2px] bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded-full transition-[width,transform] duration-300 bg-black dark:bg-white">
-        </TabsIndicator>
-        <TabsTrigger v-for="responseCode in responsesCodes"
-                     :key="responseCode"
-                     :value="responseCode"
-                     class="h-full">
+        <TabsIndicator class="absolute left-0 h-[2px] bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded-full transition-[width,transform] duration-300 bg-black dark:bg-white" />
+        <TabsTrigger
+          v-for="responseCode in responsesCodes"
+          :key="responseCode"
+          :value="responseCode"
+          class="h-full"
+        >
           {{ responseCode }}
         </TabsTrigger>
       </TabsList>

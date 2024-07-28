@@ -1,6 +1,6 @@
 <script setup>
 import slugify from '@sindresorhus/slugify'
-import {computed, useSlots} from 'vue'
+import { computed, useSlots } from 'vue'
 
 const props = defineProps({
   level: {
@@ -13,13 +13,18 @@ const props = defineProps({
   },
 })
 
-const getSlotChildrenText = children => children.map(node => {
-  if (!node.children || typeof node.children === 'string') return node.children || ''
-  else if (Array.isArray(node.children)) return getSlotChildrenText(node.children)
-  else if (node.children.default) return getSlotChildrenText(node.children.default())
-}).join('')
+function getSlotChildrenText(children) {
+  return children.map((node) => {
+    if (!node.children || typeof node.children === 'string')
+      return node.children || ''
+    else if (Array.isArray(node.children))
+      return getSlotChildrenText(node.children)
+    else if (node.children.default)
+      return getSlotChildrenText(node.children.default())
+  }).join('')
+}
 
-const slots  = useSlots()
+const slots = useSlots()
 
 const defaultSlot = slots.default
 
@@ -30,7 +35,7 @@ const slotText = computed(() => {
 const id = computed(() => {
   const value = props.prefix ? `${props.prefix}-${slotText.value}` : slotText.value
 
-  return slugify(value, {decamelize: false})
+  return slugify(value, { decamelize: false })
 })
 </script>
 

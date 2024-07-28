@@ -47,9 +47,8 @@ export function useOpenapi() {
       )
     }
 
-
     return JSON.stringify(
-        propertiesTypesJsonRecursive(schema, responseType),
+      propertiesTypesJsonRecursive(schema, responseType),
       null,
       2,
     )
@@ -63,12 +62,13 @@ export function useOpenapi() {
     propertiesKeys.forEach((key) => {
       const property = schema.properties[key]
 
-      const {type} = property
+      const { type } = property
 
       body[key] = type === 'object' ? propertiesTypesJsonRecursive(property, type) : type
     })
 
-    return responseType === 'array' ? [body] : body  }
+    return responseType === 'array' ? [body] : body
+  }
 
   function propertiesAsJson(schema: any, responseType: string) {
     const body = {}

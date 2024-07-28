@@ -16,7 +16,7 @@ const { isDark } = useData()
 
 <div class="p-3 bg-gray-100">
 <p>Description content</p>
-</div>  
+</div>
 
 </template>
 

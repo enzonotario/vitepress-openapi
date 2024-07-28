@@ -1,18 +1,18 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { generateResponseSchema } from '../../src/utils/generateResponseSchema'
 
 describe('generateResponseSchema', () => {
   it('simple case', () => {
     const operation = {
       responses: {
-        '200': {
+        200: {
           content: {
             'application/json': {
-              schema: { type: 'string' }
-            }
-          }
-        }
-      }
+              schema: { type: 'string' },
+            },
+          },
+        },
+      },
     }
     const result = generateResponseSchema({}, operation)
     expect(result).toEqual({ type: 'string' })
@@ -23,27 +23,27 @@ describe('generateResponseSchema', () => {
       Item: {
         type: 'object',
         properties: {
-          id: { type: 'string' }
-        }
-      }
+          id: { type: 'string' },
+        },
+      },
     }
     const operation = {
       responses: {
-        '200': {
+        200: {
           content: {
             'application/json': {
-              schema: { $ref: '#/Item' }
-            }
-          }
-        }
-      }
+              schema: { $ref: '#/Item' },
+            },
+          },
+        },
+      },
     }
     const result = generateResponseSchema(schemas, operation)
     expect(result).toEqual({
       type: 'object',
       properties: {
-        id: { type: 'string' }
-      }
+        id: { type: 'string' },
+      },
     })
   })
 
@@ -52,26 +52,26 @@ describe('generateResponseSchema', () => {
       Parent: {
         type: 'object',
         properties: {
-          child: { $ref: '#/Child' }
-        }
+          child: { $ref: '#/Child' },
+        },
       },
       Child: {
         type: 'object',
         properties: {
-          id: { type: 'string' }
-        }
-      }
+          id: { type: 'string' },
+        },
+      },
     }
     const operation = {
       responses: {
-        '200': {
+        200: {
           content: {
             'application/json': {
-              schema: { $ref: '#/Parent' }
-            }
-          }
-        }
-      }
+              schema: { $ref: '#/Parent' },
+            },
+          },
+        },
+      },
     }
     const result = generateResponseSchema(schemas, operation)
     expect(result).toEqual({
@@ -80,10 +80,10 @@ describe('generateResponseSchema', () => {
         child: {
           type: 'object',
           properties: {
-            id: { type: 'string' }
-          }
-        }
-      }
+            id: { type: 'string' },
+          },
+        },
+      },
     })
   })
 
@@ -92,20 +92,20 @@ describe('generateResponseSchema', () => {
       Recursive: {
         type: 'object',
         properties: {
-          self: { $ref: '#/Recursive' }
-        }
-      }
+          self: { $ref: '#/Recursive' },
+        },
+      },
     }
     const operation = {
       responses: {
-        '200': {
+        200: {
           content: {
             'application/json': {
-              schema: { $ref: '#/Recursive' }
-            }
-          }
-        }
-      }
+              schema: { $ref: '#/Recursive' },
+            },
+          },
+        },
+      },
     }
     const result = generateResponseSchema(schemas, operation)
     expect(result).toEqual({
@@ -117,10 +117,10 @@ describe('generateResponseSchema', () => {
             self: {
               // Test should verify that this does not cause infinite recursion
               // and that some form of recursion handling is implemented.
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     })
   })
 
@@ -128,14 +128,14 @@ describe('generateResponseSchema', () => {
     const schemas = {}
     const operation = {
       responses: {
-        '200': {
+        200: {
           content: {
             'application/json': {
-              schema: { $ref: '#/NonExistent' }
-            }
-          }
-        }
-      }
+              schema: { $ref: '#/NonExistent' },
+            },
+          },
+        },
+      },
     }
     const result = generateResponseSchema(schemas, operation)
     expect(result).toBeUndefined()
@@ -144,22 +144,22 @@ describe('generateResponseSchema', () => {
   it('correctly handles array of primitives', () => {
     const operation = {
       responses: {
-        '200': {
+        200: {
           content: {
             'application/json': {
               schema: {
                 type: 'array',
-                items: { type: 'string' }
-              }
-            }
-          }
-        }
-      }
+                items: { type: 'string' },
+              },
+            },
+          },
+        },
+      },
     }
     const result = generateResponseSchema({}, operation)
     expect(result).toEqual({
       type: 'array',
-      items: { type: 'string' }
+      items: { type: 'string' },
     })
   })
 
@@ -168,30 +168,30 @@ describe('generateResponseSchema', () => {
       Item: {
         type: 'object',
         properties: {
-          id: { type: 'string' }
-        }
-      }
+          id: { type: 'string' },
+        },
+      },
     }
     const operation = {
       responses: {
-        '200': {
+        200: {
           content: {
             'application/json': {
               schema: {
                 type: 'array',
-                items: { $ref: '#/Item' }
-              }
-            }
-          }
-        }
-      }
+                items: { $ref: '#/Item' },
+              },
+            },
+          },
+        },
+      },
     }
     const result = generateResponseSchema(schemas, operation)
     expect(result).toEqual({
       type: 'array',
       properties: {
-        id: { type: 'string' }
-      }
+        id: { type: 'string' },
+      },
     })
   })
 })

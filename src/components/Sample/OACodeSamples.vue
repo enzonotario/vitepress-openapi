@@ -1,5 +1,5 @@
 <script setup>
-import { generateCodeSamples } from "../../utils/generateCodeSamples";
+import { generateCodeSamples } from '../../utils/generateCodeSamples'
 
 const props = defineProps({
   operationId: {
@@ -24,19 +24,21 @@ const samples = generateCodeSamples(props.operationId)
     <div class="vp-code-group vp-adaptive-theme">
       <div class="tabs">
         <template v-for="(sample, key) in samples">
-          <input type="radio" :name="`group-${props.operationId}`" :id="`tab-${props.operationId}-${key}`" :checked="key === 'curl'">
+          <input :id="`tab-${props.operationId}-${key}`" type="radio" :name="`group-${props.operationId}`" :checked="key === 'curl'">
           <label :for="`tab-${props.operationId}-${key}`">{{ sample.label || sample.lang }}</label>
         </template>
       </div>
 
       <div class="blocks">
-        <OACodeBlock v-for="(sample, key) in samples"
-                     :key="key"
-                     :code="sample.source"
-                     :lang="sample.lang"
-                     :label="sample.label"
-                     :is-dark="props.isDark"
-                     :class="{ 'active': key === 'curl' }" />
+        <OACodeBlock
+          v-for="(sample, key) in samples"
+          :key="key"
+          :code="sample.source"
+          :lang="sample.lang"
+          :label="sample.label"
+          :is-dark="props.isDark"
+          :class="{ active: key === 'curl' }"
+        />
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
-import { resolve } from 'path'
-import { useSidebar, useOpenapi } from 'vitepress-theme-openapi'
+import { resolve } from 'node:path'
+import { useOpenapi, useSidebar } from 'vitepress-theme-openapi'
 import { defineConfigWithTheme } from 'vitepress'
 import spec from '../public/openapi.json' assert { type: 'json' }
 
@@ -22,7 +22,7 @@ export default defineConfigWithTheme({
       {
         text: 'With Footer',
         link: '/with-footer',
-      }
+      },
     ],
   },
   vite: {
