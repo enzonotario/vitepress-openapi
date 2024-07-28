@@ -3,9 +3,9 @@ import { useSidebar, useOpenapi } from 'vitepress-theme-openapi'
 import { defineConfigWithTheme } from 'vitepress'
 import spec from '../public/openapi.json' assert { type: 'json' }
 
-// const openapi = useOpenapi()
-// openapi.setSpec(spec)
-// const sidebar = useSidebar()
+const openapi = useOpenapi()
+openapi.setSpec(spec)
+const sidebar = useSidebar()
 
 export default defineConfigWithTheme({
   title: 'vitepress-theme-openapi',
@@ -14,7 +14,7 @@ export default defineConfigWithTheme({
     repo: 'https://github.com/enzonotario/vitepress-theme-openapi',
     outline: [1, 3],
     sidebar: [
-    //   ...sidebar.generateSidebarGroups(),
+      ...sidebar.generateSidebarGroups(),
       {
         text: 'One Page',
         link: '/one-page',
