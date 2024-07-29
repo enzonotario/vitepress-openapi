@@ -2,12 +2,8 @@ import { useOpenapi } from './useOpenapi'
 
 const METHOD_GET = 'get'
 
-export function useSidebar({ spec } = {}) {
-  const openapi = useOpenapi()
-
-  if (spec) {
-    openapi.setSpec(spec)
-  }
+export function useSidebar({ spec } = { spec: null }) {
+  const openapi = useOpenapi({ spec })
 
   function generateSidebarItem(method, path) {
     if (!openapi?.spec?.paths?.[path]?.[method]) {
