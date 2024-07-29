@@ -19,12 +19,12 @@ const props = defineProps({
       <div v-for="(property, name) in props.schema.properties" :key="name" class="flex flex-col text-sm">
         <div class="flex flex-row space-x-4 text-sm">
           <span class="font-bold">{{ name }}</span>
-          <span class="text-gray-600 dark:text-gray-400">{{ property.type }}</span>
+          <span class="text-gray-600 dark:text-gray-400">{{ property?.type }}</span>
           <span class="flex-grow" />
           <span class="text-red-800 dark:text-red-200">{{ props.schema.required && props.schema.required.includes(name) ? 'required' : '' }}</span>
         </div>
 
-        <ResponseBody v-if="property.type === 'array'" :schema="property" :response-type="property.type" class="pl-4" />
+        <ResponseBody v-if="property?.type === 'array'" :schema="property" :response-type="property.type" class="pl-4" />
       </div>
     </div>
   </div>

@@ -1,5 +1,7 @@
 let innerSpec: any = {}
 
+const httpVerbs = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head'];
+
 export function useOpenapi({ spec } = { spec: null }) {
   if (spec) {
     setSpec(spec)
@@ -10,19 +12,34 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function getOperation(operationId: string) {
-    if (!innerSpec.paths)
+    if (!innerSpec.paths) {
       return null
+    }
 
-    return Object.values(innerSpec.paths).find(path => path.get.operationId === operationId).get
+    for (const path of Object.values(innerSpec.paths)) {
+      for (const verb of httpVerbs) {
+        if (path[verb]?.operationId === operationId) {
+          return path[verb];
+        }
+      }
+    }
+
+    return null;
   }
 
   function getOperationPath(operationId: string) {
-    if (!innerSpec.paths)
-      return null
+    if (!innerSpec.paths) return null;
 
-    return Object.keys(innerSpec.paths).find(path => innerSpec.paths[path].get.operationId === operationId)
+    for (const [path, methods] of Object.entries(innerSpec.paths)) {
+      for (const verb of httpVerbs) {
+        if (methods[verb]?.operationId === operationId) {
+          return path;
+        }
+      }
+    }
+
+    return null;
   }
-
   function getOperationParameters(operationId: string) {
     const operation = getOperation(operationId)
     return operation.parameters || []
@@ -65,6 +82,10 @@ export function useOpenapi({ spec } = { spec: null }) {
 
     propertiesKeys.forEach((key) => {
       const property = schema.properties[key]
+
+      if (!property) {
+        return
+      }
 
       const { type } = property
 

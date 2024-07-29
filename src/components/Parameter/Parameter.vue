@@ -18,8 +18,9 @@ const props = defineProps({
     </div>
     <div class="flex flex-col space-y-2">
       <div class="flex flex-row items-center space-x-2">
-        <span class="text-sm font-bold">Type</span>
-        <span class="text-sm text-gray-600 dark:text-gray-300">
+        <span v-if="props?.parameter?.schema?.type" class="text-sm font-bold">Type</span>
+
+        <span v-if="props?.parameter?.schema?.type" class="text-sm text-gray-600 dark:text-gray-300">
           {{ props.parameter.schema.type }}
         </span>
 

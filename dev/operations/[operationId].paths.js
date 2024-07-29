@@ -9,16 +9,21 @@ export default {
             return []
         }
 
+        const httpVerbs = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head']
+
         return Object.keys(openapi.spec.paths)
-            .map((path) => {
-                const { operationId } = openapi.spec.paths[path].get
-                const summary = openapi.spec.paths[path].get.summary
-                return {
-                    params: {
-                        operationId,
-                        pageTitle: `${summary} - vitepress-theme-openapi`,
-                    },
-                }
+            .flatMap((path) => {
+                return httpVerbs
+                    .filter((verb) => openapi.spec.paths[path][verb])
+                    .map((verb) => {
+                        const { operationId, summary } = openapi.spec.paths[path][verb]
+                        return {
+                            params: {
+                                operationId,
+                                pageTitle: `${summary} - vitepress-theme-openapi`,
+                            },
+                        }
+                    })
             })
     },
 }

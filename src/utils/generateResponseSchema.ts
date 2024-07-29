@@ -1,11 +1,11 @@
 const primitiveSchemasTypes = ['string', 'number', 'integer', 'boolean', 'array', 'object']
 
 export function generateResponseSchema(schemas: any, operation: any) {
-  const responseSchema = operation.responses['200'].content['application/json'].schema
-  const responseType = responseSchema.type
+  const responseSchema = operation?.responses['200']?.content['application/json']?.schema
+  const responseType = responseSchema?.type
   return generateSchemaRecursive({
     ...responseSchema,
-    type: responseSchema.type ?? 'object',
+    type: responseSchema?.type ?? 'object',
   }, schemas, responseType)
 }
 
