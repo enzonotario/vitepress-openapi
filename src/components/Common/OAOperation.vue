@@ -41,7 +41,7 @@ function hasSlot(name) {
 </script>
 
 <template>
-  <Path :id="operationId" :method="method">
+  <Path v-if="operationId" :id="operationId" :method="method">
     <template v-if="hasSlot('header')" #header="header">
       <slot name="header" v-bind="header" />
     </template>
