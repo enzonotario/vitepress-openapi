@@ -52,7 +52,7 @@ onMounted(() => {
     />
 
     <Select v-if="parameter.schema?.enum" @update:model-value="emits('update:modelValue', $event)">
-      <SelectTrigger class="bg-muted">
+      <SelectTrigger>
         <SelectValue :placeholder="parameter.example ?? parameter.schema?.example ?? 'Seleccionar...'" />
       </SelectTrigger>
       <SelectContent>
