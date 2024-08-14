@@ -27,7 +27,7 @@ const schemas = openapi.getSchemas()
 
 const response200 = operation.responses['200']
 
-const responseType = response200?.content['application/json']?.schema?.items ? 'array' : 'object'
+const responseType = response200?.content && response200?.content['application/json']?.schema?.items ? 'array' : 'object'
 
 const schema = generateResponseSchema(schemas, operation)
 </script>
