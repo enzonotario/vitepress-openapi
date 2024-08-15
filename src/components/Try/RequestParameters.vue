@@ -82,7 +82,10 @@ watch(variables, buildRequestUrl, { deep: true, immediate: true })
 
 <template>
   <div class="flex flex-col space-y-2">
-    <div v-if="pathParameters.length" class="space-y-4">
+    <div
+      v-if="pathParameters.length"
+      class="space-y-4"
+    >
       <h4>
         {{ $t('Variables') }}
       </h4>
@@ -97,13 +100,24 @@ watch(variables, buildRequestUrl, { deep: true, immediate: true })
           </div>
         </div>
 
-        <div v-for="parameter in [...pathParameters, ...queryParameters]" :key="parameter.name" class="flex flex-row gap-2">
+        <div
+          v-for="parameter in [...pathParameters, ...queryParameters]"
+          :key="parameter.name"
+          class="flex flex-row gap-2"
+        >
           <div class="w-1/2 flex flex-row items-center space-x-2">
             <span class="text-sm font-bold">{{ parameter.name }}</span>
-            <span v-if="parameter.required" class="text-sm text-red-500">*</span>
+            <span
+              v-if="parameter.required"
+              class="text-sm text-red-500"
+            >*</span>
           </div>
           <div class="w-1/2 flex flex-row items-center space-x-2">
-            <RequestParameterInput v-model="variables[parameter.name]" :parameter="parameter" class="w-full" />
+            <RequestParameterInput
+              v-model="variables[parameter.name]"
+              :parameter="parameter"
+              class="w-full"
+            />
           </div>
         </div>
       </div>

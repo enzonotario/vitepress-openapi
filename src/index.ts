@@ -18,7 +18,7 @@ interface VPTheme {
 }
 
 export const theme = {
-  enhanceApp({ app, router, siteData }) {
+  enhanceApp({ app }) {
     const i18n = VueI18n.createI18n({
       locale: 'es',
       fallbackLocale: 'en',
@@ -30,6 +30,7 @@ export const theme = {
     app.use(i18n)
 
     for (const key in components) {
+      // @ts-ignore
       app.component(key, components[key])
     }
   },

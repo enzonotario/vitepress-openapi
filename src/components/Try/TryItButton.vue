@@ -89,18 +89,31 @@ function setLoading(value) {
       {{ $t('Try it out') }}
     </Button>
 
-    <div v-if="response || loading" class="flex flex-col">
-      <details class="flex flex-col" open>
+    <div
+      v-if="response || loading"
+      class="flex flex-col"
+    >
+      <details
+        class="flex flex-col"
+        open
+      >
         <summary class="my-0! text-lg font-bold cursor-pointer">
           {{ loading ? $t('Loading...') : $t('Response') }}
         </summary>
 
-        <div v-if="response" class="text-sm text-gray-500">
+        <div
+          v-if="response"
+          class="text-sm text-gray-500"
+        >
           {{ $t('Response time') }}: {{ loading ? $t('Loading...') : `${responseTime}ms` }}
         </div>
 
         <div class="flex flex-col max-h-96 overflow-y-auto">
-          <slot name="response" :response="response" :is-dark="props.isDark" />
+          <slot
+            name="response"
+            :response="response"
+            :is-dark="props.isDark"
+          />
         </div>
       </details>
     </div>

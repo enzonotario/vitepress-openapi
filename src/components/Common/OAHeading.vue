@@ -40,9 +40,17 @@ const id = computed(() => {
 </script>
 
 <template>
-  <component :is="level" :id="id" tabindex="-1">
+  <component
+    :is="level"
+    :id="id"
+    tabindex="-1"
+  >
     <slot />
 
-    <a class="header-anchor" :href="`#${id}`" :aria-label="`Permalink to ${slotText}`">&#8203;</a>
+    <a
+      class="header-anchor"
+      :href="`#${id}`"
+      :aria-label="`Permalink to ${slotText}`"
+    >&#8203;</a>
   </component>
 </template>

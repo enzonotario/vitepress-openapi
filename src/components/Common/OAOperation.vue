@@ -41,39 +41,94 @@ function hasSlot(name) {
 </script>
 
 <template>
-  <Path v-if="operationId" :id="operationId" :method="method">
-    <template v-if="hasSlot('header')" #header="header">
-      <slot name="header" v-bind="header" />
+  <Path
+    v-if="operationId"
+    :id="operationId"
+    :method="method"
+  >
+    <template
+      v-if="hasSlot('header')"
+      #header="header"
+    >
+      <slot
+        name="header"
+        v-bind="header"
+      />
     </template>
-    <template v-else #header="header">
-      <OAHeading level="h1" :prefix="headingPrefix">
+    <template
+      v-else
+      #header="header"
+    >
+      <OAHeading
+        level="h1"
+        :prefix="headingPrefix"
+      >
         {{ header.operation.summary }}
       </OAHeading>
     </template>
 
-    <template v-if="hasSlot('description')" #description="description">
-      <slot name="description" v-bind="description" />
+    <template
+      v-if="hasSlot('description')"
+      #description="description"
+    >
+      <slot
+        name="description"
+        v-bind="description"
+      />
     </template>
-    <template v-else #description="description">
-      <div class="description" v-html="description.operation.description" />
+    <template
+      v-else
+      #description="description"
+    >
+      <div
+        class="description"
+        v-html="description.operation.description"
+      />
     </template>
 
-    <template v-if="hasSlot('parameters')" #parameters="parameters">
-      <slot name="parameters" v-bind="parameters" />
+    <template
+      v-if="hasSlot('parameters')"
+      #parameters="parameters"
+    >
+      <slot
+        name="parameters"
+        v-bind="parameters"
+      />
     </template>
-    <template v-else #parameters="parameters">
-      <OAHeading level="h2" :prefix="headingPrefix">
+    <template
+      v-else
+      #parameters="parameters"
+    >
+      <OAHeading
+        level="h2"
+        :prefix="headingPrefix"
+      >
         {{ $t('Parameters') }}
       </OAHeading>
 
-      <Parameters :operation-id="operationId" :parameters="parameters.parameters" />
+      <Parameters
+        :operation-id="operationId"
+        :parameters="parameters.parameters"
+      />
     </template>
 
-    <template v-if="hasSlot('responses')" #responses="responses">
-      <slot name="responses" v-bind="responses" />
+    <template
+      v-if="hasSlot('responses')"
+      #responses="responses"
+    >
+      <slot
+        name="responses"
+        v-bind="responses"
+      />
     </template>
-    <template v-else #responses="responses">
-      <OAHeading level="h2" :prefix="headingPrefix">
+    <template
+      v-else
+      #responses="responses"
+    >
+      <OAHeading
+        level="h2"
+        :prefix="headingPrefix"
+      >
         {{ $t('Responses') }}
       </OAHeading>
 
@@ -84,15 +139,27 @@ function hasSlot(name) {
         :is-dark="isDark"
       >
         <template #body="body">
-          <ResponseBody :schema="body.schema" :response-type="body.responseType" />
+          <ResponseBody
+            :schema="body.schema"
+            :response-type="body.responseType"
+          />
         </template>
       </Responses>
     </template>
 
-    <template v-if="hasSlot('try-it')" #try-it="tryIt">
-      <slot name="try-it" v-bind="tryIt" />
+    <template
+      v-if="hasSlot('try-it')"
+      #try-it="tryIt"
+    >
+      <slot
+        name="try-it"
+        v-bind="tryIt"
+      />
     </template>
-    <template v-else #try-it="tryIt">
+    <template
+      v-else
+      #try-it="tryIt"
+    >
       <TryWithVariables
         :operation-id="tryIt.operationId"
         :method="tryIt.method"
@@ -102,11 +169,23 @@ function hasSlot(name) {
       />
     </template>
 
-    <template v-if="hasSlot('code-samples')" #code-samples="codeSamples">
-      <slot name="code-samples" v-bind="codeSamples" />
+    <template
+      v-if="hasSlot('code-samples')"
+      #code-samples="codeSamples"
+    >
+      <slot
+        name="code-samples"
+        v-bind="codeSamples"
+      />
     </template>
-    <template v-else #code-samples="codeSamples">
-      <OAHeading level="h2" :prefix="headingPrefix">
+    <template
+      v-else
+      #code-samples="codeSamples"
+    >
+      <OAHeading
+        level="h2"
+        :prefix="headingPrefix"
+      >
         {{ $t('Samples') }}
       </OAHeading>
 
@@ -116,10 +195,19 @@ function hasSlot(name) {
       />
     </template>
 
-    <template v-if="hasSlot('footer')" #footer="footer">
-      <slot name="footer" v-bind="footer" />
+    <template
+      v-if="hasSlot('footer')"
+      #footer="footer"
+    >
+      <slot
+        name="footer"
+        v-bind="footer"
+      />
     </template>
-    <template v-else-if="!hideDefaultFooter" #footer="footer">
+    <template
+      v-else-if="!hideDefaultFooter"
+      #footer="footer"
+    >
       <OAFooter />
     </template>
   </Path>

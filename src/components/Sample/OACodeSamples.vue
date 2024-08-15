@@ -24,7 +24,12 @@ const samples = generateCodeSamples(props.operationId)
     <div class="vp-code-group vp-adaptive-theme">
       <div class="tabs">
         <template v-for="(sample, key) in samples">
-          <input :id="`tab-${props.operationId}-${key}`" type="radio" :name="`group-${props.operationId}`" :checked="key === 'curl'">
+          <input
+            :id="`tab-${props.operationId}-${key}`"
+            type="radio"
+            :name="`group-${props.operationId}`"
+            :checked="key === 'curl'"
+          >
           <label :for="`tab-${props.operationId}-${key}`">{{ sample.label || sample.lang }}</label>
         </template>
       </div>

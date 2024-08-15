@@ -47,10 +47,20 @@ watch(
 </script>
 
 <template>
-  <div class="vp-adaptive-theme" :class="[`language-${props.lang}`]">
-    <button title="Copy Code" class="copy" />
+  <div
+    class="vp-adaptive-theme"
+    :class="[`language-${props.lang}`]"
+  >
+    <button
+      title="Copy Code"
+      class="copy"
+    />
     <span class="lang">{{ props.label }}</span>
-    <div v-if="html && !props.disableHtmlTransform" class="vp-adaptive-theme" v-html="html" />
+    <div
+      v-if="html && !props.disableHtmlTransform"
+      class="vp-adaptive-theme"
+      v-html="html"
+    />
     <pre v-else>{{ props.code }}</pre>
   </div>
 </template>

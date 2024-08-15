@@ -39,13 +39,36 @@ const curl = computed(() => {
 
 <template>
   <div class="flex flex-col space-y-2">
-    <PathEndpoint v-if="!props.hideEndpoint" :method="props.method" :path="props.path" :base-url="props.baseUrl" hide-base-url />
+    <PathEndpoint
+      v-if="!props.hideEndpoint"
+      :method="props.method"
+      :path="props.path"
+      :base-url="props.baseUrl"
+      hide-base-url
+    />
 
-    <RequestParameters v-model:request-url="requestUrl" :operation-id="props.operationId" :method="props.method" :base-url="props.baseUrl" :path="props.path" />
+    <RequestParameters
+      v-model:request-url="requestUrl"
+      :operation-id="props.operationId"
+      :method="props.method"
+      :base-url="props.baseUrl"
+      :path="props.path"
+    />
 
-    <OACodeBlock :code="curl" lang="bash" label="cURL" :is-dark="props.isDark" />
+    <OACodeBlock
+      :code="curl"
+      lang="bash"
+      label="cURL"
+      :is-dark="props.isDark"
+    />
 
-    <TryItButton :request-url="requestUrl" :operation-id="props.operationId" :method="props.method" :is-dark="props.isDark" @loading="loading = $event">
+    <TryItButton
+      :request-url="requestUrl"
+      :operation-id="props.operationId"
+      :method="props.method"
+      :is-dark="props.isDark"
+      @loading="loading = $event"
+    >
       <template #response="response">
         <OACodeBlock
           :code="JSON.stringify(response.response, null, 2)"

@@ -35,7 +35,10 @@ const props = defineProps({
       {{ props.method }}
     </Badge>
     <span class="text-gray-600 dark:text-gray-400 inline-flex items-center">
-      <span v-if="!props.hideBaseUrl" class="hidden md:inline-block">{{ props.baseUrl }}</span>
+      <span
+        v-if="!props.hideBaseUrl"
+        class="hidden md:inline-block"
+      >{{ props.baseUrl }}</span>
       <span class="text-gray-800 dark:text-gray-200 font-bold select-all">{{ props.path }}</span>
     </span>
   </div>

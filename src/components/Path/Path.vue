@@ -34,8 +34,17 @@ const schema = generateResponseSchema(schemas, operation)
 
 <template>
   <div>
-    <div v-if="operation" class="flex flex-col space-y-8">
-      <slot name="header" :operation="operation" :method="props.method" :base-url="baseUrl" :path="operationPath" />
+    <div
+      v-if="operation"
+      class="flex flex-col space-y-8"
+    >
+      <slot
+        name="header"
+        :operation="operation"
+        :method="props.method"
+        :base-url="baseUrl"
+        :path="operationPath"
+      />
 
       <div class="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="flex flex-col">
@@ -59,7 +68,12 @@ const schema = generateResponseSchema(schemas, operation)
             :parameters="operationParameters"
           />
 
-          <slot name="responses" :schema="schema" :responses="operation.responses" :response-type="responseType" />
+          <slot
+            name="responses"
+            :schema="schema"
+            :responses="operation.responses"
+            :response-type="responseType"
+          />
         </div>
 
         <div class="flex flex-col">
