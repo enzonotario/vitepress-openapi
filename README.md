@@ -42,7 +42,7 @@ In your `.vitepress/theme/index.js`:
 
 ```js
 import DefaultTheme from 'vitepress/theme'
-import { theme, useOpenapi } from 'vitepress-theme-openapi'
+import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
 import type { Theme } from 'vitepress'
 import spec from '../../public/openapi.json' assert {type: 'json'}
 
@@ -51,12 +51,16 @@ import 'vitepress-theme-openapi/dist/style.css'
 export default {
     ...DefaultTheme,
     async enhanceApp({ app, router, siteData  }) {
-        // Use the theme.
-        theme.enhanceApp({ app })
-
         // Set the OpenAPI specification.
         const openapi = useOpenapi()
         openapi.setSpec(spec)
+
+        // Setup Theme
+        const themeConfig = useTheme()
+        themeConfig.setLocale('en') // en or es
+        
+        // Use the theme.
+        theme.enhanceApp({ app })
     }
 } satisfies Theme
 ```

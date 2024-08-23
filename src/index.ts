@@ -4,12 +4,14 @@ import * as VueI18n from 'vue-i18n'
 import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
 import type { Awaitable } from 'vitepress'
+import { useTheme } from './composables/useTheme'
 import * as components from './components'
 import es from './locales/es.json'
 import en from './locales/en.json'
 
 export { useSidebar } from './composables/useSidebar'
 export { useOpenapi } from './composables/useOpenapi'
+export { useTheme } from './composables/useTheme'
 
 interface VPTheme {
   Layout: Component
@@ -19,8 +21,10 @@ interface VPTheme {
 
 export const theme = {
   enhanceApp({ app }) {
+    const themeConfig = useTheme()
+
     const i18n = VueI18n.createI18n({
-      locale: 'es',
+      locale: themeConfig.getLocale(),
       fallbackLocale: 'en',
       messages: {
         en,
@@ -30,7 +34,7 @@ export const theme = {
     app.use(i18n)
 
     for (const key in components) {
-      // @ts-ignore
+      // @ts-expect-error: no index signature
       app.component(key, components[key])
     }
   },
