@@ -43,21 +43,22 @@ In your `.vitepress/theme/index.js`:
 ```js
 import DefaultTheme from 'vitepress/theme'
 import { theme, useOpenapi } from 'vitepress-theme-openapi'
+import type { Theme } from 'vitepress'
 import spec from '../../public/openapi.json' assert {type: 'json'}
 
 import 'vitepress-theme-openapi/dist/style.css'
 
 export default {
     ...DefaultTheme,
-    async enhanceApp({ app }) {
+    async enhanceApp({ app, router, siteData  }) {
         // Use the theme.
-        app.use(theme)
+        theme.enhanceApp({ app })
 
         // Set the OpenAPI specification.
         const openapi = useOpenapi()
         openapi.setSpec(spec)
     }
-}
+} satisfies Theme
 ```
 
 Then you can create a `operations` directory with following structure:
