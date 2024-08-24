@@ -55,7 +55,7 @@ export default {
         const openapi = useOpenapi()
         openapi.setSpec(spec)
 
-        // Setup Theme
+        // Optionally, configure the theme.
         const themeConfig = useTheme()
         themeConfig.setLocale('en') // en or es
         
