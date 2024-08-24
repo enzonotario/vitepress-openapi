@@ -41,7 +41,7 @@ function hasSlot(name) {
 </script>
 
 <template>
-  <Path
+  <OAPath
     v-if="operationId"
     :id="operationId"
     :method="method"
@@ -106,7 +106,7 @@ function hasSlot(name) {
         {{ $t('Parameters') }}
       </OAHeading>
 
-      <Parameters
+      <OAParameters
         :operation-id="operationId"
         :parameters="parameters.parameters"
       />
@@ -132,19 +132,19 @@ function hasSlot(name) {
         {{ $t('Responses') }}
       </OAHeading>
 
-      <Responses
+      <OAResponses
         :responses="responses.responses"
         :schema="responses.schema"
         :response-type="responses.responseType"
         :is-dark="isDark"
       >
         <template #body="body">
-          <ResponseBody
+          <OAResponseBody
             :schema="body.schema"
             :response-type="body.responseType"
           />
         </template>
-      </Responses>
+      </OAResponses>
     </template>
 
     <template
@@ -160,7 +160,7 @@ function hasSlot(name) {
       v-else
       #try-it="tryIt"
     >
-      <TryWithVariables
+      <OATryWithVariables
         :operation-id="tryIt.operationId"
         :method="tryIt.method"
         :path="tryIt.path"
@@ -210,5 +210,5 @@ function hasSlot(name) {
     >
       <OAFooter />
     </template>
-  </Path>
+  </OAPath>
 </template>

@@ -3,16 +3,16 @@ import OAOperation from './Common/OAOperation.vue'
 import OAHeading from './Common/OAHeading.vue'
 import OAFooter from './Common/OAFooter.vue'
 import OACodeBlock from './Common/OACodeBlock.vue'
-import Path from './Path/Path.vue'
-import PathEndpoint from './Path/PathEndpoint.vue'
-import ResponseBody from './Response/ResponseBody.vue'
-import Responses from './Response/Responses.vue'
-import Parameter from './Parameter/Parameter.vue'
-import Parameters from './Parameter/Parameters.vue'
-import TryItButton from './Try/TryItButton.vue'
-import TryWithVariables from './Try/TryWithVariables.vue'
-import RequestParameters from './Try/RequestParameters.vue'
-import RequestParameterInput from './Try/RequestParameterInput.vue'
+import OAPath from './Path/OAPath.vue'
+import OAPathEndpoint from './Path/OAPathEndpoint.vue'
+import OAResponseBody from './Response/OAResponseBody.vue'
+import OAResponses from './Response/OAResponses.vue'
+import OAParameter from './Parameter/OAParameter.vue'
+import OAParameters from './Parameter/OAParameters.vue'
+import OATryItButton from './Try/OATryItButton.vue'
+import OATryWithVariables from './Try/OATryWithVariables.vue'
+import OARequestParameters from './Try/OARequestParameters.vue'
+import OARequestParameterInput from './Try/OARequestParameterInput.vue'
 import OACodeSamples from './Sample/OACodeSamples.vue'
 
 export {
@@ -21,15 +21,15 @@ export {
   OAHeading,
   OAFooter,
   OACodeBlock,
-  Path,
-  PathEndpoint,
-  ResponseBody,
-  Responses,
-  Parameter,
-  Parameters,
-  TryItButton,
-  TryWithVariables,
-  RequestParameters,
-  RequestParameterInput,
+  OAPath,
+  OAPathEndpoint,
+  OAResponseBody,
+  OAResponses,
+  OAParameter,
+  OAParameters,
+  OATryItButton,
+  OATryWithVariables,
+  OARequestParameters,
+  OARequestParameterInput,
   OACodeSamples,
 }

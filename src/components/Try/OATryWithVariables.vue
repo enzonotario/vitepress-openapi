@@ -39,7 +39,7 @@ const curl = computed(() => {
 
 <template>
   <div class="flex flex-col space-y-2">
-    <PathEndpoint
+    <OAPathEndpoint
       v-if="!props.hideEndpoint"
       :method="props.method"
       :path="props.path"
@@ -47,7 +47,7 @@ const curl = computed(() => {
       hide-base-url
     />
 
-    <RequestParameters
+    <OARequestParameters
       v-model:request-url="requestUrl"
       :operation-id="props.operationId"
       :method="props.method"
@@ -62,7 +62,7 @@ const curl = computed(() => {
       :is-dark="props.isDark"
     />
 
-    <TryItButton
+    <OATryItButton
       :request-url="requestUrl"
       :operation-id="props.operationId"
       :method="props.method"
@@ -78,6 +78,6 @@ const curl = computed(() => {
           :disable-html-transform="response.response.length > 1000"
         />
       </template>
-    </TryItButton>
+    </OATryItButton>
   </div>
 </template>

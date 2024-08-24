@@ -113,7 +113,7 @@ watch(variables, buildRequestUrl, { deep: true, immediate: true })
             >*</span>
           </div>
           <div class="w-1/2 flex flex-row items-center space-x-2">
-            <RequestParameterInput
+            <OARequestParameterInput
               v-model="variables[parameter.name]"
               :parameter="parameter"
               class="w-full"
