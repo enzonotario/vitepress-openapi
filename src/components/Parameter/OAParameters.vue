@@ -1,5 +1,5 @@
 <script setup>
-import Parameter from './Parameter.vue'
+import Parameter from './OAParameter.vue'
 
 const props = defineProps({
   operationId: {
@@ -27,7 +27,7 @@ const queryParameters = props.parameters.filter(parameter => parameter.in === 'q
         {{ $t('Path Parameters') }}
       </h3>
 
-      <Parameter
+      <OAParameter
         v-for="parameter in pathParameters"
         :key="parameter.name"
         :parameter="parameter"
@@ -42,7 +42,7 @@ const queryParameters = props.parameters.filter(parameter => parameter.in === 'q
         {{ $t('Query Parameters') }}
       </h3>
 
-      <Parameter
+      <OAParameter
         v-for="parameter in queryParameters"
         :key="parameter.name"
         :parameter="parameter"

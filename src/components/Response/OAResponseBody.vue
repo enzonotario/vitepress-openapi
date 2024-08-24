@@ -34,7 +34,7 @@ const props = defineProps({
           <span class="text-red-800 dark:text-red-200">{{ props.schema.required && props.schema.required.includes(name) ? 'required' : '' }}</span>
         </div>
 
-        <ResponseBody
+        <OAResponseBody
           v-if="property?.type === 'array'"
           :schema="property"
           :response-type="property.type"
