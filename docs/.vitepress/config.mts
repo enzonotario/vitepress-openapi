@@ -1,28 +1,24 @@
 import { defineConfig } from 'vitepress'
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'VitePress Theme OpenAPI',
   description: 'A VitePress theme for OpenAPI',
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' },
-    ],
+    nav: [],
 
-    sidebar: [
-      {
-        text: 'Examples',
-        items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' },
-        ],
-      },
-    ],
+    sidebar: [],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' },
+      { icon: 'github', link: 'https://github.com/enzonotario/vitepress-theme-openapi' },
     ],
+
+    outline: {
+      level: [1, 3],
+    },
+
+    footer: {
+      message: 'Released under the <a href="https://github.com/enzonotario/vitepress-theme-openapi/blob/main/LICENSE">MIT License</a>.',
+      copyright: 'Copyright © 2023-present <a href="https://enzonotario.me">Enzo Notario</a>',
+    },
   },
 })
