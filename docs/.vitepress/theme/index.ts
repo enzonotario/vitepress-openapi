@@ -1,6 +1,7 @@
 import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
 import DefaultTheme from 'vitepress/theme'
-import spec from '../../../docs/public/openapi.json' assert {type: 'json'}
+import spec from '../../public/openapi.json' assert {type: 'json'}
+import 'vitepress-theme-openapi/dist/style.css'
 
 export default {
   ...DefaultTheme,
@@ -8,10 +9,6 @@ export default {
     // Set the OpenAPI specification.
     const openapi = useOpenapi()
     openapi.setSpec(spec)
-
-    // Configure the theme.
-    const themeConfig = useTheme()
-    themeConfig.setLocale('es')
 
     // Use the theme.
     theme.enhanceApp({ app })

@@ -30,7 +30,6 @@
   "scripts": {
     "build": "rimraf dist && vite build",
     "dev": "vitepress dev dev",
-    "docs:build": "cd docs && npm run build",
     "prepublishOnly": "pnpm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

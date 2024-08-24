@@ -1,7 +1,7 @@
 import { resolve } from 'node:path'
 import { useSidebar } from 'vitepress-theme-openapi'
 import { defineConfigWithTheme } from 'vitepress'
-import spec from '../public/openapi.json' assert { type: 'json' }
+import spec from '../../docs/public/openapi.json' assert { type: 'json' }
 
 const sidebar = useSidebar({ spec })
 
@@ -18,8 +18,8 @@ export default defineConfigWithTheme({
         link: '/one-page',
       },
       {
-        text: 'With Footer',
-        link: '/with-footer',
+        text: 'Custom Slots',
+        link: '/custom-slots',
       },
     ],
   },

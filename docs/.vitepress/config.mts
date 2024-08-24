@@ -1,12 +1,33 @@
-import { defineConfig } from 'vitepress'
+import { defineConfigWithTheme } from 'vitepress'
+import { useSidebar } from 'vitepress-theme-openapi'
+import spec from '../public/openapi.json' assert { type: 'json' }
 
-export default defineConfig({
+const sidebar = useSidebar({ spec })
+
+export default defineConfigWithTheme({
   title: 'VitePress Theme OpenAPI',
   description: 'A VitePress theme for OpenAPI',
   themeConfig: {
     nav: [],
 
-    sidebar: [],
+    sidebar: [
+      {
+        text: 'Getting Started',
+        link: '/guide/getting-started',
+      },
+      {
+        text: 'Example',
+        items: [
+          ...sidebar.generateSidebarGroups().map((group) => ({
+            ...group,
+            items: group.items.map((item) => ({
+              ...item,
+              link: `/example${item.link}`,
+            })),
+          })),
+        ],
+      }
+    ],
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/enzonotario/vitepress-theme-openapi' },

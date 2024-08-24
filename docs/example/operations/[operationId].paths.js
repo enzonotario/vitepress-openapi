@@ -1,5 +1,5 @@
 import { useOpenapi } from 'vitepress-theme-openapi'
-import spec from '../../docs/public/openapi.json' assert { type: 'json' }
+import spec from '../../public/openapi.json' assert { type: 'json' }
 
 export default {
     paths() {
