@@ -9,6 +9,9 @@ hero:
     - theme: brand
       text: Get Started
       link: /guide/getting-started
+    - theme: alt
+      text: Example
+      link: /example/operations/listUsers
 
 features:
   - title: Internationalization (i18n) Support
