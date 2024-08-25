@@ -16,7 +16,9 @@ const props = defineProps({
     <span
       v-if="props.responseType === 'array'"
       class="font-bold text-gray-700 dark:text-gray-300"
-    >array of:</span>
+    >
+      array of:
+    </span>
 
     <div
       v-if="props.schema"

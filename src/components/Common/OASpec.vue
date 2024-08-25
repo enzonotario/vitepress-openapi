@@ -22,7 +22,6 @@ const openapi = useOpenapi()
         v-for="method in Object.keys(path)"
         :key="`${method}-${path.id}`"
         :operation-id="path[method].operationId"
-        :method="method.toUpperCase()"
         :is-dark="isDark"
         prefix-headings
         hide-default-footer

@@ -39,3 +39,5 @@ export const theme = {
     }
   },
 } as VPTheme
+
+export const httpVerbs = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head']
