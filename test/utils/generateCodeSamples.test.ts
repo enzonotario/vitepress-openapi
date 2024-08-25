@@ -1,43 +1,52 @@
-import { describe, expect, it, vi } from 'vitest'
-import { generateCodeSamples } from './src/utils/generateCodeSamples'
-
-// Mock the useOpenapi hook
-vi.mock('vitepress-theme-openapi', () => ({
-  useOpenapi: vi.fn(() => ({
-    getBaseUrl: () => 'https://api.example.com',
-    getOperationPath: operationId => `/path/${operationId}`,
-  })),
-}))
+import { describe, expect, it } from 'vitest'
+import { generateCodeSamples } from '../../src/utils/generateCodeSamples'
 
 describe('generateCodeSamples', () => {
-  it('should generate code samples for a given operationId', () => {
-    const operationId = 'testOperation'
-    const samples = generateCodeSamples(operationId)
-    expect(samples).toHaveProperty('curl')
-    expect(samples).toHaveProperty('javascript')
-    expect(samples).toHaveProperty('php')
-    expect(samples).toHaveProperty('python')
-    expect(samples.curl.source).toContain('https://api.example.com/path/testOperation')
-    expect(samples.javascript.source).toContain('https://api.example.com/path/testOperation')
-    expect(samples.php.source).toContain('https://api.example.com/path/testOperation')
-    expect(samples.python.source).toContain('https://api.example.com/path/testOperation')
+  it('generates code samples for GET method', () => {
+    const url = 'https://api.example.com/path/testOperation'
+    const method = 'GET'
+    const samples = generateCodeSamples(url, method)
+    expect(samples.curl.source).toBe(`curl -X GET ${url}`)
+    expect(samples.javascript.source).toBe(`fetch("${url}")
+  .then(response => response.json())
+  .then(data => console.log(data));`)
+    expect(samples.php.source).toBe(`file_get_contents("${url}");`)
+    expect(samples.python.source).toBe(`import requests
+response = requests.get("${url}")
+print(response.json())`)
   })
 
-  it('should handle empty operationId gracefully', () => {
-    const operationId = ''
-    const samples = generateCodeSamples(operationId)
-    expect(samples.curl.source).toContain('https://api.example.com/path/')
-    expect(samples.javascript.source).toContain('https://api.example.com/path/')
-    expect(samples.php.source).toContain('https://api.example.com/path/')
-    expect(samples.python.source).toContain('https://api.example.com/path/')
+  it('generates code samples for POST method', () => {
+    const url = 'https://api.example.com/path/testOperation'
+    const method = 'POST'
+    const samples = generateCodeSamples(url, method)
+    expect(samples.curl.source).toBe(`curl -X POST ${url}`)
+    expect(samples.javascript.source).toBe(`fetch("${url}", { method: "POST" })
+  .then(response => response.json())
+  .then(data => console.log(data));`)
+    expect(samples.php.source).toBe(`$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "${url}");
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+curl_close($ch);
+echo $response;`)
+    expect(samples.python.source).toBe(`import requests
+response = requests.post("${url}")
+print(response.json())`)
   })
 
-  it('should correctly handle special characters in operationId', () => {
-    const operationId = 'special/chars?&'
-    const samples = generateCodeSamples(operationId)
-    expect(samples.curl.source).toContain('https://api.example.com/path/special/chars?&')
-    expect(samples.javascript.source).toContain('https://api.example.com/path/special/chars?&')
-    expect(samples.php.source).toContain('https://api.example.com/path/special/chars?&')
-    expect(samples.python.source).toContain('https://api.example.com/path/special/chars?&')
+  it('handles empty URL gracefully', () => {
+    const url = ''
+    const method = 'GET'
+    const samples = generateCodeSamples(url, method)
+    expect(samples.curl.source).toBe(`curl -X GET `)
+    expect(samples.javascript.source).toBe(`fetch("")
+  .then(response => response.json())
+  .then(data => console.log(data));`)
+    expect(samples.php.source).toBe(`file_get_contents("");`)
+    expect(samples.python.source).toBe(`import requests
+response = requests.get("")
+print(response.json())`)
   })
 })

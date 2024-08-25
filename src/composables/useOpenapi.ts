@@ -1,13 +1,20 @@
-let innerSpec: any = {}
+import { httpVerbs } from 'vitepress-theme-openapi'
+import { generateMissingOperationIds } from '../utils/generateMissingOperationIds';
 
-const httpVerbs = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head'];
+type OpenAPISpec = any
+
+let innerSpec: OpenAPISpec = {}
 
 export function useOpenapi({ spec } = { spec: null }) {
-  if (spec) {
+  if (spec !== null) {
     setSpec(spec)
   }
 
-  function setSpec(value: any) {
+  function setSpec(value: OpenAPISpec) {
+    if (value?.paths) {
+      value = generateMissingOperationIds(value)
+    }
+
     innerSpec = value
   }
 
@@ -19,64 +26,91 @@ export function useOpenapi({ spec } = { spec: null }) {
     for (const path of Object.values(innerSpec.paths)) {
       for (const verb of httpVerbs) {
         if (path[verb]?.operationId === operationId) {
-          return path[verb];
+          return path[verb]
         }
       }
     }
 
-    return null;
+    return null
+  }
+
+  function getOperationMethod(operationId: string) {
+    if (!innerSpec.paths) {
+      return null
+    }
+
+    for (const path of Object.values(innerSpec.paths)) {
+      for (const verb of httpVerbs) {
+        if (path[verb]?.operationId === operationId) {
+          return verb
+        }
+      }
+    }
+
+    return null
   }
 
   function getOperationPath(operationId: string) {
-    if (!innerSpec.paths) return null;
+    if (!innerSpec.paths) return null
 
     for (const [path, methods] of Object.entries(innerSpec.paths)) {
       for (const verb of httpVerbs) {
         if (methods[verb]?.operationId === operationId) {
-          return path;
+          return path
         }
       }
     }
 
-    return null;
+    return null
   }
+
   function getOperationParameters(operationId: string) {
     const operation = getOperation(operationId)
+    if (!operation) {
+      return []
+    }
     return operation.parameters || []
   }
 
   function getBaseUrl() {
-    if (!innerSpec.servers)
+    if (!innerSpec.servers || innerSpec.servers.length === 0)
       return ''
 
     return innerSpec.servers[0].url
   }
 
   function getSchemas() {
-    if (!innerSpec.components)
+    if (!innerSpec.components || !innerSpec.components.schemas)
       return {}
 
     return innerSpec.components.schemas
   }
 
+  function getSchemaByName(schemaName: string) {
+    return getSchemas()[schemaName] || null
+  }
+
+  function getComponents() {
+    if (!innerSpec.components)
+      return {}
+
+    return innerSpec.components
+  }
+
   function propertiesTypesJson(schema: any, responseType: string) {
     if (!schema?.properties) {
-      return JSON.stringify(
-        schema,
-        null,
-        2,
-      )
+      return JSON.stringify(schema, null, 2)
     }
 
     return JSON.stringify(
-      propertiesTypesJsonRecursive(schema, responseType),
-      null,
-      2,
+        propertiesTypesJsonRecursive(schema, responseType),
+        null,
+        2,
     )
   }
 
   function propertiesTypesJsonRecursive(schema: any, responseType: string) {
-    const body = {}
+    const body: any = {}
 
     const propertiesKeys = Object.keys(schema.properties)
 
@@ -96,7 +130,7 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function propertiesAsJson(schema: any, responseType: string) {
-    const body = {}
+    const body: any = {}
 
     const propertiesKeys = Object.keys(schema.properties)
 
@@ -127,41 +161,55 @@ export function useOpenapi({ spec } = { spec: null }) {
       }
     })
 
-    return JSON.stringify(
-      responseType === 'array' ? [body] : body,
-      null,
-      2,
-    )
+    return JSON.stringify(responseType === 'array' ? [body] : body, null, 2)
   }
 
   function getTags(): string[] {
     if (!innerSpec?.paths)
       return []
 
-    return Object.values(innerSpec.paths).reduce((tags, path) => {
-      if (!path.get)
-        return tags
-
-      const { tags: pathTags } = path.get
-
-      if (!pathTags)
-        return tags
-
-      pathTags.forEach((pathTag) => {
-        if (!tags.includes(pathTag))
-          tags.push(pathTag)
-      })
-
+    return Object.values(innerSpec.paths).reduce((tags, path: any) => {
+      for (const verb of httpVerbs) {
+        if (path[verb]?.tags) {
+          path[verb].tags.forEach((tag: string) => {
+            if (!tags.includes(tag)) {
+              tags.push(tag)
+            }
+          })
+        }
+      }
       return tags
     }, [])
   }
 
   function getOperationCodeSamples(operationId: string) {
     const operation = getOperation(operationId)
+    if (!operation) {
+      return []
+    }
     return operation['x-codeSamples'] || operation['x-code-samples'] || []
   }
 
+  function getOperationResponses(operationId: string) {
+    const operation = getOperation(operationId)
+    if (!operation || !operation.responses) {
+      return {}
+    }
+    return operation.responses
+  }
+
+  function getOperationRequestBody(operationId: string) {
+    const operation = getOperation(operationId)
+    if (!operation || !operation.requestBody) {
+      return null
+    }
+    return operation.requestBody
+  }
+
   function getSecuritySchemes() {
+    if (!innerSpec.components || !innerSpec.components.securitySchemes)
+      return {}
+
     return innerSpec.components.securitySchemes
   }
 
@@ -169,14 +217,20 @@ export function useOpenapi({ spec } = { spec: null }) {
     spec: innerSpec,
     setSpec,
     getOperation,
+    getOperationMethod,
     getOperationPath,
     getOperationParameters,
     getBaseUrl,
     getSchemas,
+    getSchemaByName,
+    getComponents,
     propertiesTypesJson,
     propertiesTypesJsonRecursive,
     propertiesAsJson,
     getTags,
     getOperationCodeSamples,
+    getOperationResponses,
+    getOperationRequestBody,
+    getSecuritySchemes,
   }
 }

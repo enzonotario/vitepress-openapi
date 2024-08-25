@@ -1,26 +1,24 @@
-import { useOpenapi } from './useOpenapi'
-
-const METHOD_GET = 'get'
+import { useOpenapi, httpVerbs } from 'vitepress-theme-openapi'
 
 export function useSidebar({ spec } = { spec: null }) {
   const openapi = useOpenapi({ spec })
 
-  function generateSidebarItem(method, path) {
-    if (!openapi?.spec?.paths?.[path]?.[method]) {
+  function generateSidebarItem(method: string, path: string) {
+    const operation = openapi?.spec?.paths?.[path]?.[method]
+    if (!operation) {
       return null
     }
 
-    const { operationId, summary } = openapi.spec.paths[path].get
-
-    const sidebarTitle = openapi.spec.paths[path].get['x-sidebar-title'] || summary
+    const { operationId, summary } = operation
+    const sidebarTitle = operation['x-sidebar-title'] || summary || `${method.toUpperCase()} ${path}`
 
     return {
       text: `<span class="SidebarItem">
-    <span class="SidebarItem-badge">${method.toUpperCase()}</span>
-    <span class="SidebarItem-text">${sidebarTitle}</span>
-    </span>`,
+        <span class="SidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
+        <span class="SidebarItem-text">${sidebarTitle}</span>
+      </span>`,
       link: `/operations/${operationId}`,
-    }
+    };
   }
 
   function generateSidebarGroup(tag: string | string[], text?: string) {
@@ -31,17 +29,20 @@ export function useSidebar({ spec } = { spec: null }) {
     const includeTags = Array.isArray(tag) ? tag : [tag]
 
     const sidebarGroupElements = Object.keys(openapi.spec.paths)
-      .filter((path) => {
-        const { tags } = openapi.spec.paths[path][METHOD_GET]
-
-        return includeTags.every(tag => tags.includes(tag))
-      })
-      .map((path) => {
-        return generateSidebarItem(METHOD_GET, path)
-      })
+        .flatMap((path) => {
+          return httpVerbs
+              .map((method) => {
+                const operation = openapi.spec.paths[path][method]
+                if (operation && includeTags.every(tag => operation.tags?.includes(tag))) {
+                  return generateSidebarItem(method, path)
+                }
+                return null
+              })
+              .filter(Boolean)
+        })
 
     return {
-      text,
+      text: text || includeTags.join(', '),
       items: sidebarGroupElements,
     }
   }
@@ -51,9 +52,7 @@ export function useSidebar({ spec } = { spec: null }) {
       return []
     }
 
-    return openapi.getTags().map((tag) => {
-      return generateSidebarGroup(tag, tag)
-    })
+    return openapi.getTags().map((tag) => generateSidebarGroup(tag, tag))
   }
 
   return {

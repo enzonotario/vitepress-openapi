@@ -1,6 +1,5 @@
 <script setup>
 import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
-import { generateResponseSchema } from 'vitepress-theme-openapi/utils/generateResponseSchema'
 
 const props = defineProps({
   id: {
@@ -22,14 +21,6 @@ const operationPath = openapi.getOperationPath(props.id)
 const operationParameters = openapi.getOperationParameters(props.id)
 
 const baseUrl = openapi.getBaseUrl()
-
-const schemas = openapi.getSchemas()
-
-const response200 = operation.responses['200']
-
-const responseType = response200?.content && response200?.content['application/json']?.schema?.items ? 'array' : 'object'
-
-const schema = generateResponseSchema(schemas, operation)
 </script>
 
 <template>
@@ -69,10 +60,17 @@ const schema = generateResponseSchema(schemas, operation)
           />
 
           <slot
+            v-if="operation.requestBody"
+            name="request-body"
+            :operation="operation"
+            :method="props.method"
+            :base-url="baseUrl"
+            :path="operationPath"
+          />
+
+          <slot
             name="responses"
-            :schema="schema"
             :responses="operation.responses"
-            :response-type="responseType"
           />
         </div>
 

@@ -1,4 +1,5 @@
 <script setup>
+import { useOpenapi } from 'vitepress-theme-openapi'
 import { generateCodeSamples } from '../../utils/generateCodeSamples'
 
 const props = defineProps({
@@ -16,7 +17,11 @@ const props = defineProps({
   },
 })
 
-const samples = generateCodeSamples(props.operationId)
+const openapi = useOpenapi();
+const url = openapi.getBaseUrl() + openapi.getOperationPath(props.operationId);
+const method = openapi.getOperationMethod(props.operationId).toUpperCase();
+
+const samples = generateCodeSamples(url, method);
 </script>
 
 <template>

@@ -1,14 +1,11 @@
 <script setup>
 import { computed, useSlots } from 'vue'
+import { useOpenapi } from 'vitepress-theme-openapi';
 
 const props = defineProps({
   operationId: {
     type: String,
     required: true,
-  },
-  method: {
-    type: String,
-    default: 'GET',
   },
   isDark: {
     type: Boolean,
@@ -27,6 +24,10 @@ const props = defineProps({
 
 const slots = useSlots()
 
+const openapi = useOpenapi()
+
+const operationMethod = openapi.getOperationMethod(props.operationId).toUpperCase()
+
 const headingPrefix = computed(() => {
   if (!props.prefixHeadings) {
     return null
@@ -42,9 +43,9 @@ function hasSlot(name) {
 
 <template>
   <OAPath
-    v-if="operationId"
-    :id="operationId"
-    :method="method"
+    v-if="props.operationId"
+    :id="props.operationId"
+    :method="operationMethod"
   >
     <template
       v-if="hasSlot('header')"
@@ -107,8 +108,34 @@ function hasSlot(name) {
       </OAHeading>
 
       <OAParameters
-        :operation-id="operationId"
+        :operation-id="props.operationId"
         :parameters="parameters.parameters"
+      />
+    </template>
+
+    <template
+      v-if="hasSlot('request-body')"
+      #request-body="requestBody"
+    >
+      <slot
+        name="request-body"
+        v-bind="requestBody"
+      />
+    </template>
+    <template
+      v-else
+      #request-body="requestBody"
+    >
+      <OAHeading
+        level="h2"
+        :prefix="headingPrefix"
+      >
+        {{ $t('Request body') }}
+      </OAHeading>
+
+      <OARequestBody
+        :operation="requestBody.operation"
+        :is-dark="isDark"
       />
     </template>
 
@@ -134,7 +161,6 @@ function hasSlot(name) {
 
       <OAResponses
         :responses="responses.responses"
-        :schema="responses.schema"
         :response-type="responses.responseType"
         :is-dark="isDark"
       >

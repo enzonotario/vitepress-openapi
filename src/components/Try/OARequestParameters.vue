@@ -83,7 +83,7 @@ watch(variables, buildRequestUrl, { deep: true, immediate: true })
 <template>
   <div class="flex flex-col space-y-2">
     <div
-      v-if="pathParameters.length"
+      v-if="Object.keys(variables).length"
       class="space-y-4"
     >
       <h4>

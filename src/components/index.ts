@@ -7,6 +7,7 @@ import OAPath from './Path/OAPath.vue'
 import OAPathEndpoint from './Path/OAPathEndpoint.vue'
 import OAResponseBody from './Response/OAResponseBody.vue'
 import OAResponses from './Response/OAResponses.vue'
+import OAResponse from './Response/OAResponse.vue'
 import OAParameter from './Parameter/OAParameter.vue'
 import OAParameters from './Parameter/OAParameters.vue'
 import OATryItButton from './Try/OATryItButton.vue'
@@ -14,6 +15,7 @@ import OATryWithVariables from './Try/OATryWithVariables.vue'
 import OARequestParameters from './Try/OARequestParameters.vue'
 import OARequestParameterInput from './Try/OARequestParameterInput.vue'
 import OACodeSamples from './Sample/OACodeSamples.vue'
+import OARequestBody from './Request/OARequestBody.vue'
 
 export {
   OASpec,
@@ -25,6 +27,7 @@ export {
   OAPathEndpoint,
   OAResponseBody,
   OAResponses,
+  OAResponse,
   OAParameter,
   OAParameters,
   OATryItButton,
@@ -32,4 +35,5 @@ export {
   OARequestParameters,
   OARequestParameterInput,
   OACodeSamples,
+  OARequestBody,
 }
