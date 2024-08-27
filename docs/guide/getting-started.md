@@ -14,7 +14,7 @@ Before you begin, make sure you have the following installed:
 
 - Node.js
 - VitePress
-- OpenAPI Specification
+- OpenAPI Specification (Version 3)
 
 ## Installation
 

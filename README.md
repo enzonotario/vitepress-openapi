@@ -14,7 +14,7 @@ A VitePress theme for OpenAPI documentation.
 
 - Node.js
 - VitePress
-- OpenAPI Specification
+- OpenAPI Specification (Version 3)
 
 ### Installation
 
