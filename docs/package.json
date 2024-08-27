@@ -12,6 +12,6 @@
     "postcss": "^8.4.39",
     "tailwindcss": "^3.4.6",
     "vitepress": "^1.3.1",
-    "vitepress-theme-openapi": "0.0.3-alpha.18"
+    "vitepress-theme-openapi": "0.0.3-alpha.19"
   }
 }
