@@ -28,7 +28,9 @@ const props = defineProps({
         <span
           v-if="props?.parameter?.schema?.type"
           class="text-sm font-bold"
-        >Type</span>
+        >
+          Type
+        </span>
 
         <span
           v-if="props?.parameter?.schema?.type"
