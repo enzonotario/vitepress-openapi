@@ -11,6 +11,13 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function setSpec(value: OpenAPISpec) {
+    if (value?.openapi) {
+      if (!value.openapi.startsWith('3.')) {
+        throw new Error('Only OpenAPI 3.x is supported')
+      }
+    } else {
+      console.warn('Invalid OpenAPI spec, missing `openapi` field, no version specified ')
+    }
     if (value?.paths) {
       value = generateMissingOperationIds(value)
     }
