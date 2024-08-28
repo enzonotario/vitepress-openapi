@@ -112,6 +112,10 @@ export function useOpenapi({ spec } = { spec: null }) {
   function propertiesTypesJsonRecursive(schema: any, responseType: string) {
     const body: any = {}
 
+    if (!schema.properties) {
+      return body
+    }
+
     const propertiesKeys = Object.keys(schema.properties)
 
     propertiesKeys.forEach((key) => {

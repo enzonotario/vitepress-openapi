@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue'
+import { fetchToCurl } from 'fetch-to-curl';
 
 const props = defineProps({
   operationId: {
@@ -28,12 +29,21 @@ const props = defineProps({
   },
 })
 
-const requestUrl = ref(props.requestUrl ?? `${props.baseUrl}${props.path}`)
+const request = ref({
+  url: `${props.baseUrl}${props.path}`,
+  headers: {},
+})
 
 const loading = ref(false)
 
 const curl = computed(() => {
-  return `curl -X ${props.method.toUpperCase()} \\\n ${requestUrl.value}`
+  const curlCommand = fetchToCurl({
+    method: props.method.toUpperCase(),
+    url: request.value.url,
+    headers: request.value.headers,
+  })
+
+  return curlCommand.replace(/ -(\w) /g, ' \\\n -$1 ')
 })
 </script>
 
@@ -48,11 +58,9 @@ const curl = computed(() => {
     />
 
     <OARequestParameters
-      v-model:request-url="requestUrl"
+      v-model:request="request"
       :operation-id="props.operationId"
       :method="props.method"
-      :base-url="props.baseUrl"
-      :path="props.path"
     />
 
     <OACodeBlock
@@ -63,7 +71,7 @@ const curl = computed(() => {
     />
 
     <OATryItButton
-      :request-url="requestUrl"
+      :request="request"
       :operation-id="props.operationId"
       :method="props.method"
       :is-dark="props.isDark"

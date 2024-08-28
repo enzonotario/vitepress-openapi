@@ -31,6 +31,24 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "X-Custom-Header",
+            "in": "header",
+            "description": "Custom header for additional information",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer token for authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {

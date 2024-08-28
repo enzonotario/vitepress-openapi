@@ -12,8 +12,12 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  requestUrl: {
-    type: String,
+  request: {
+    type: Object,
+    default: () => ({
+      url: '',
+      headers: {},
+    }),
   },
   isDark: {
     type: Boolean,
@@ -49,8 +53,9 @@ async function tryIt() {
     response.value = '{}'
     setLoading(true)
 
-    const data = await fetch(props.requestUrl ?? defaultRequestUrl, {
+    const data = await fetch(props.request.url ?? defaultRequestUrl, {
       method: props.method.toUpperCase(),
+      headers: props.request.headers,
     })
 
     response.value = await data.json()
