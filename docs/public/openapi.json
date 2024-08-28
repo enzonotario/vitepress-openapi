@@ -338,204 +338,283 @@
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "Unique identifier for the user",
+            "minimum": 1
           },
           "username": {
-            "type": "string"
+            "type": "string",
+            "description": "Username of the user",
+            "minLength": 3,
+            "maxLength": 50
           },
           "firstName": {
-            "type": "string"
+            "type": "string",
+            "description": "First name of the user",
+            "minLength": 1,
+            "maxLength": 100
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "description": "Last name of the user",
+            "minLength": 1,
+            "maxLength": 100
           },
           "maidenName": {
-            "type": "string"
+            "type": "string",
+            "description": "Maiden name of the user",
+            "minLength": 1,
+            "maxLength": 100
           },
           "age": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Age of the user",
+            "minimum": 0,
+            "maximum": 120
           },
           "gender": {
-            "type": "string"
+            "type": "string",
+            "description": "Gender of the user",
+            "enum": ["male", "female", "other"]
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "Email address of the user",
+            "format": "email"
           },
           "phone": {
-            "type": "string"
+            "type": "string",
+            "description": "Phone number of the user",
+            "pattern": "^[+]?[0-9]{1,15}$"
           },
           "birthDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "Birth date of the user"
           },
           "image": {
-            "type": "string"
+            "type": "string",
+            "description": "URL to the user's profile image",
+            "format": "uri"
           },
           "bloodGroup": {
-            "type": "string"
+            "type": "string",
+            "description": "Blood group of the user"
           },
           "height": {
             "type": "number",
-            "format": "float"
+            "format": "float",
+            "description": "Height of the user in meters",
+            "minimum": 0.5,
+            "maximum": 2.5
           },
           "weight": {
             "type": "number",
-            "format": "float"
+            "format": "float",
+            "description": "Weight of the user in kilograms",
+            "minimum": 3,
+            "maximum": 300
           },
           "eyeColor": {
-            "type": "string"
+            "type": "string",
+            "description": "Eye color of the user"
           },
           "hair": {
             "type": "object",
+            "description": "Hair details of the user",
             "properties": {
               "color": {
-                "type": "string"
+                "type": "string",
+                "description": "Hair color"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "Hair type"
               }
             }
           },
           "ip": {
-            "type": "string"
+            "type": "string",
+            "description": "IP address of the user",
+            "format": "ipv4"
           },
           "address": {
             "type": "object",
+            "description": "Address of the user",
             "properties": {
               "address": {
-                "type": "string"
+                "type": "string",
+                "description": "Street address"
               },
               "city": {
-                "type": "string"
+                "type": "string",
+                "description": "City"
               },
               "state": {
-                "type": "string"
+                "type": "string",
+                "description": "State"
               },
               "stateCode": {
-                "type": "string"
+                "type": "string",
+                "description": "State code"
               },
               "postalCode": {
-                "type": "string"
+                "type": "string",
+                "description": "Postal code"
               },
               "coordinates": {
                 "type": "object",
+                "description": "Geographical coordinates",
                 "properties": {
                   "lat": {
                     "type": "number",
-                    "format": "float"
+                    "format": "float",
+                    "description": "Latitude"
                   },
                   "lng": {
                     "type": "number",
-                    "format": "float"
+                    "format": "float",
+                    "description": "Longitude"
                   }
                 }
               },
               "country": {
-                "type": "string"
+                "type": "string",
+                "description": "Country"
               }
             }
           },
           "macAddress": {
-            "type": "string"
+            "type": "string",
+            "description": "MAC address of the user's device"
           },
           "university": {
-            "type": "string"
+            "type": "string",
+            "description": "University attended by the user"
           },
           "bank": {
             "type": "object",
+            "description": "Bank details of the user",
             "properties": {
               "cardExpire": {
-                "type": "string"
+                "type": "string",
+                "description": "Card expiration date"
               },
               "cardNumber": {
-                "type": "string"
+                "type": "string",
+                "description": "Card number"
               },
               "cardType": {
-                "type": "string"
+                "type": "string",
+                "description": "Card type"
               },
               "currency": {
-                "type": "string"
+                "type": "string",
+                "description": "Currency"
               },
               "iban": {
-                "type": "string"
+                "type": "string",
+                "description": "IBAN number"
               }
             }
           },
           "company": {
             "type": "object",
+            "description": "Company details of the user",
             "properties": {
               "department": {
-                "type": "string"
+                "type": "string",
+                "description": "Department"
               },
               "name": {
-                "type": "string"
+                "type": "string",
+                "description": "Company name"
               },
               "title": {
-                "type": "string"
+                "type": "string",
+                "description": "Job title"
               },
               "address": {
                 "type": "object",
+                "description": "Company address",
                 "properties": {
                   "address": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Street address"
                   },
                   "city": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "City"
                   },
                   "state": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "State"
                   },
                   "stateCode": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "State code"
                   },
                   "postalCode": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Postal code"
                   },
                   "coordinates": {
                     "type": "object",
+                    "description": "Geographical coordinates",
                     "properties": {
                       "lat": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "description": "Latitude"
                       },
                       "lng": {
                         "type": "number",
-                        "format": "float"
+                        "format": "float",
+                        "description": "Longitude"
                       }
                     }
                   },
                   "country": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Country"
                   }
                 }
               }
             }
           },
           "ein": {
-            "type": "string"
+            "type": "string",
+            "description": "Employer Identification Number"
           },
           "ssn": {
-            "type": "string"
+            "type": "string",
+            "description": "Social Security Number"
           },
           "userAgent": {
-            "type": "string"
+            "type": "string",
+            "description": "User agent string"
           },
           "crypto": {
             "type": "object",
+            "description": "Cryptocurrency details",
             "properties": {
               "coin": {
-                "type": "string"
+                "type": "string",
+                "description": "Cryptocurrency coin"
               },
               "wallet": {
-                "type": "string"
+                "type": "string",
+                "description": "Wallet address"
               },
               "network": {
-                "type": "string"
+                "type": "string",
+                "description": "Network type"
               }
             }
           },
           "role": {
-            "type": "string"
+            "type": "string",
+            "description": "Role of the user"
           }
         }
       },

@@ -23,14 +23,20 @@ const props = defineProps({
       <span class="font-bold">{{ props.name }}</span>
       <span class="text-gray-600 dark:text-gray-400">{{ props.property?.type }}</span>
       <span class="flex-grow" />
-      <span class="text-red-800 dark:text-red-200">{{ props.schema.required && props.schema.required.includes(name) ? 'required' : '' }}</span>
+      <span class="text-red-800 dark:text-red-200 text-xs">{{ props.schema.required && props.schema.required.includes(name) ? $t('Required') : '' }}</span>
     </div>
 
+    <div
+      v-if="props.property?.description"
+      class="text-sm text-gray-800 dark:text-gray-300"
+      v-html="props.property.description"
+    />
+
     <OASchemaBody
-      v-if="props.property?.type === 'array'"
+      v-if="[ 'object', 'array' ].includes(props.property.type)"
       :schema="props.property"
       :response-type="props.property.type"
-      class="pl-4"
+      class="pl-4 mt-1"
     />
   </div>
 </template>
