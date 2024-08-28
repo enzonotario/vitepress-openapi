@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue'
+import { fetchToCurl } from 'fetch-to-curl';
 
 const props = defineProps({
   operationId: {
@@ -36,7 +37,13 @@ const request = ref({
 const loading = ref(false)
 
 const curl = computed(() => {
-  return `curl -X ${props.method.toUpperCase()} \\\n ${request.value.url}`
+  const curlCommand = fetchToCurl({
+    method: props.method.toUpperCase(),
+    url: request.value.url,
+    headers: request.value.headers,
+  })
+
+  return curlCommand.replace(/ -(\w) /g, ' \\\n -$1 ')
 })
 </script>
 

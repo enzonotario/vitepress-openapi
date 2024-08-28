@@ -58,6 +58,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-vue": "^9.27.0",
+    "fetch-to-curl": "^0.6.0",
     "globals": "^15.9.0",
     "postcss": "^8.4.38",
     "prettier": "^3.3.3",
