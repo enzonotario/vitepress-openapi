@@ -165,7 +165,7 @@ function hasSlot(name) {
         :is-dark="isDark"
       >
         <template #body="body">
-          <OAResponseBody
+          <OASchemaBody
             :schema="body.schema"
             :response-type="body.responseType"
           />

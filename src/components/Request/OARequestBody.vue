@@ -22,6 +22,8 @@ const schemaJson = useOpenapi().propertiesTypesJson(schema, 'object');
 
 <template>
   <div>
+    <OASchemaBody :schema="schema" />
+
     <OACodeBlock
       :code="schemaJson"
       lang="json"

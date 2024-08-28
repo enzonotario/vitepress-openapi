@@ -5,7 +5,6 @@ import OAFooter from './Common/OAFooter.vue'
 import OACodeBlock from './Common/OACodeBlock.vue'
 import OAPath from './Path/OAPath.vue'
 import OAPathEndpoint from './Path/OAPathEndpoint.vue'
-import OAResponseBody from './Response/OAResponseBody.vue'
 import OAResponses from './Response/OAResponses.vue'
 import OAResponse from './Response/OAResponse.vue'
 import OAParameter from './Parameter/OAParameter.vue'
@@ -16,6 +15,8 @@ import OARequestParameters from './Try/OARequestParameters.vue'
 import OARequestParameterInput from './Try/OARequestParameterInput.vue'
 import OACodeSamples from './Sample/OACodeSamples.vue'
 import OARequestBody from './Request/OARequestBody.vue'
+import OASchemaBody from './Schema/OASchemaBody.vue'
+import OASchemaProperty from './Schema/OASchemaProperty.vue'
 
 export {
   OASpec,
@@ -25,7 +26,6 @@ export {
   OACodeBlock,
   OAPath,
   OAPathEndpoint,
-  OAResponseBody,
   OAResponses,
   OAResponse,
   OAParameter,
@@ -36,4 +36,6 @@ export {
   OARequestParameterInput,
   OACodeSamples,
   OARequestBody,
+  OASchemaBody,
+  OASchemaProperty,
 }
