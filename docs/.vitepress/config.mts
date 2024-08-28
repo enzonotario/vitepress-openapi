@@ -1,6 +1,7 @@
 import { defineConfigWithTheme } from 'vitepress'
 import { useSidebar } from 'vitepress-theme-openapi'
 import spec from '../public/openapi.json' assert { type: 'json' }
+import { resolve } from "node:path";
 
 const sidebar = useSidebar({ spec })
 
@@ -40,6 +41,13 @@ export default defineConfigWithTheme({
     footer: {
       message: 'Released under the <a href="https://github.com/enzonotario/vitepress-theme-openapi/blob/main/LICENSE">MIT License</a>.',
       copyright: 'Copyright © 2023-present <a href="https://enzonotario.me">Enzo Notario</a>',
+    },
+  },
+  vite: {
+    resolve: {
+      alias: {
+        'vitepress-theme-openapi': resolve(__dirname, '../../'),
+      },
     },
   },
 })
