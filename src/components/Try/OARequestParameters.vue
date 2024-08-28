@@ -144,7 +144,7 @@ watch(variables, buildRequest, { deep: true, immediate: true })
     </div>
 
     <div
-      v-if="Object.keys(variables).length"
+      v-if="Object.keys(queryParameters).length || Object.keys(pathParameters).length"
       class="space-y-4"
     >
       <h4>
