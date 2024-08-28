@@ -29,6 +29,7 @@
   ],
   "scripts": {
     "build": "rimraf dist && vite build",
+    "build-watch": "vite build --watch",
     "dev": "vitepress dev dev",
     "prepublishOnly": "pnpm run build",
     "lint": "eslint .",
