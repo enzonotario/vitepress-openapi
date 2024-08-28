@@ -45,7 +45,7 @@
             "name": "Authorization",
             "in": "header",
             "description": "Bearer token for authorization",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
             }

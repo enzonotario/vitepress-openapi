@@ -11,13 +11,17 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  requestUrl: {
-    type: String,
+  request: {
+    type: Object,
+    default: () => ({
+      url: '',
+      headers: {},
+    }),
   },
 })
 
 const emits = defineEmits([
-  'update:requestUrl',
+  'update:request',
 ])
 
 const openapi = useOpenapi()
@@ -28,11 +32,17 @@ const path = openapi.getOperationPath(props.operationId)
 
 const parameters = openapi.getOperationParameters(props.operationId)
 
+const headerParameters = parameters.filter(parameter => parameter.in === 'header')
+
 const pathParameters = parameters.filter(parameter => parameter.in === 'path')
 
 const queryParameters = parameters.filter(parameter => parameter.in === 'query')
 
 const variables = ref({
+  ...headerParameters.reduce((acc, parameter) => {
+    acc[parameter.name] = parameter.example ?? parameter.schema?.example ?? ''
+    return acc
+  }, {}),
   ...pathParameters.reduce((acc, parameter) => {
     acc[parameter.name] = parameter.example ?? parameter.schema?.example ?? ''
     return acc
@@ -43,7 +53,7 @@ const variables = ref({
   }, {}),
 })
 
-function buildRequestUrl() {
+function buildRequest() {
   let requestPath = path
 
   for (const [key, value] of Object.entries(variables.value)) {
@@ -61,7 +71,7 @@ function buildRequestUrl() {
   const url = new URL(requestPath, baseUrl)
 
   for (const [key, value] of Object.entries(variables.value)) {
-    if (pathParameters.find(parameter => parameter.name === key)) {
+    if (!queryParameters.find(parameter => parameter.name === key)) {
       continue
     }
 
@@ -72,16 +82,67 @@ function buildRequestUrl() {
     url.searchParams.set(key, value)
   }
 
-  emits('update:requestUrl', url.toString())
+  const headers = new Headers()
 
-  return url.toString()
+  for (const [key, value] of Object.entries(variables.value)) {
+    if (!headerParameters.find(parameter => parameter.name === key)) {
+      continue
+    }
+
+    if (!value) {
+      continue
+    }
+
+    headers.set(key, value)
+  }
+
+  const newRequest = {
+    url: url.toString(),
+    headers: Object.fromEntries(headers),
+  }
+
+  emits('update:request', newRequest)
+
+  return newRequest
 }
 
-watch(variables, buildRequestUrl, { deep: true, immediate: true })
+watch(variables, buildRequest, { deep: true, immediate: true })
 </script>
 
 <template>
-  <div class="flex flex-col space-y-2">
+  <div class="flex flex-col space-y-4">
+    <div
+      v-if="headerParameters.length"
+      class="space-y-4"
+    >
+      <h4>
+        {{ $t('Headers') }}
+      </h4>
+
+      <div class="flex flex-col space-y-2">
+        <div
+          v-for="parameter in headerParameters"
+          :key="parameter.name"
+          class="flex flex-col gap-2"
+        >
+          <div class="flex flex-row items-center space-x-2">
+            <span class="text-sm font-bold">{{ parameter.name }}</span>
+            <span
+              v-if="parameter.required"
+              class="text-sm text-red-500"
+            >*</span>
+          </div>
+          <div class="flex flex-row items-center space-x-2">
+            <OARequestParameterInput
+              v-model="variables[parameter.name]"
+              :parameter="parameter"
+              class="w-full"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div
       v-if="Object.keys(variables).length"
       class="space-y-4"

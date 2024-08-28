@@ -11,5 +11,8 @@
   "Required": "Required",
   "Key": "Key",
   "Value": "Value",
-  "Variables": "Variables"
+  "Variables": "Variables",
+  "Type": "Type",
+  "Header Parameters": "Header Parameters",
+  "Headers": "Headers"
 }

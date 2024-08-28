@@ -28,12 +28,15 @@ const props = defineProps({
   },
 })
 
-const requestUrl = ref(props.requestUrl ?? `${props.baseUrl}${props.path}`)
+const request = ref({
+  url: `${props.baseUrl}${props.path}`,
+  headers: {},
+})
 
 const loading = ref(false)
 
 const curl = computed(() => {
-  return `curl -X ${props.method.toUpperCase()} \\\n ${requestUrl.value}`
+  return `curl -X ${props.method.toUpperCase()} \\\n ${request.value.url}`
 })
 </script>
 
@@ -48,11 +51,9 @@ const curl = computed(() => {
     />
 
     <OARequestParameters
-      v-model:request-url="requestUrl"
+      v-model:request="request"
       :operation-id="props.operationId"
       :method="props.method"
-      :base-url="props.baseUrl"
-      :path="props.path"
     />
 
     <OACodeBlock
@@ -63,7 +64,7 @@ const curl = computed(() => {
     />
 
     <OATryItButton
-      :request-url="requestUrl"
+      :request="request"
       :operation-id="props.operationId"
       :method="props.method"
       :is-dark="props.isDark"

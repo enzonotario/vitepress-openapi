@@ -29,7 +29,7 @@ const props = defineProps({
           v-if="props?.parameter?.schema?.type"
           class="text-sm font-bold"
         >
-          Type
+          {{ $t('Type') }}
         </span>
 
         <span
