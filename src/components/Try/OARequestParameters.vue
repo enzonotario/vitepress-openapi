@@ -68,7 +68,7 @@ function buildRequest() {
     requestPath = requestPath.replace(`{${key}}`, value)
   }
 
-  const url = new URL(requestPath, baseUrl)
+  const url = new URL(`${baseUrl}${requestPath}`)
 
   for (const [key, value] of Object.entries(variables.value)) {
     if (!queryParameters.find(parameter => parameter.name === key)) {
