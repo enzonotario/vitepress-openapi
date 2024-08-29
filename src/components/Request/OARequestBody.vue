@@ -1,6 +1,4 @@
 <script setup>
-import { useOpenapi } from 'vitepress-theme-openapi'
-import { generateRequestBodySchema } from 'vitepress-theme-openapi/utils/generateRequestBodySchema'
 import { generateSchemaJson } from 'vitepress-theme-openapi/utils/generateSchemaJson'
 
 const props = defineProps({
@@ -14,20 +12,16 @@ const props = defineProps({
   },
 })
 
-const openapi = useOpenapi()
-
 const schema = props.operation?.requestBody?.content?.['application/json']?.schema
 
 const schemaJson = generateSchemaJson(schema)
 </script>
 
 <template>
-  <div>
-    <OASchemaTabs
-      :schema="schema"
-      :schema-json="schemaJson"
-      :is-dark="props.isDark"
-    />
-  </div>
+  <OASchemaTabs
+    :schema="schema"
+    :schema-json="schemaJson"
+    :is-dark="props.isDark"
+  />
 </template>
 

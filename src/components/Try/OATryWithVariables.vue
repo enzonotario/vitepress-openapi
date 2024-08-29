@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue'
-import { fetchToCurl } from 'fetch-to-curl';
+import fetchToCurl from 'fetch-to-curl';
 
 const props = defineProps({
   operationId: {

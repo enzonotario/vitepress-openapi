@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { useOpenapi } from './src/composables/useOpenapi'
+import { useSidebar } from './src/composables/useSidebar'
 
 const spec = {
   openapi: '3.1.0',
@@ -84,7 +85,7 @@ describe('useOpenapi with spec', () => {
   })
 
   it('returns the correct tags for getTags', () => {
-    const result = openapi.getTags()
+    const result = useSidebar().getTags()
     expect(result).toEqual([])
   })
 

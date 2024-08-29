@@ -32,8 +32,8 @@
     "build-watch": "vite build --watch",
     "dev": "vitepress dev dev",
     "prepublishOnly": "pnpm run build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "docs:dev": "vitepress dev docs",
     "docs:build": "npm run build && vitepress build docs"
   },

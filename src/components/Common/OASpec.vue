@@ -22,7 +22,7 @@ const openapi = useOpenapi()
         v-for="method in Object.keys(path)"
         :key="`${method}-${path.id}`"
         :operation-id="path[method].operationId"
-        :is-dark="isDark"
+        :is-dark="props.isDark"
         prefix-headings
         hide-default-footer
       />
