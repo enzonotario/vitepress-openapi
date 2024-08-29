@@ -3,18 +3,18 @@ import spec from '../../public/openapi.json' assert { type: 'json' }
 
 export default {
     paths() {
-        const openapi = useOpenapi({ spec })
+        const openapi = useOpenapi({ spec: rawSpec })
 
-        if (!openapi?.spec?.paths) {
+        if (!openapi?.rawSpec?.paths) {
             return []
         }
 
-        return Object.keys(openapi.spec.paths)
+        return Object.keys(openapi.rawSpec.paths)
             .flatMap((path) => {
                 return httpVerbs
-                    .filter((verb) => openapi.spec.paths[path][verb])
+                    .filter((verb) => openapi.rawSpec.paths[path][verb])
                     .map((verb) => {
-                        const { operationId, summary } = openapi.spec.paths[path][verb]
+                        const { operationId, summary } = openapi.rawSpec.paths[path][verb]
                         return {
                             params: {
                                 operationId,

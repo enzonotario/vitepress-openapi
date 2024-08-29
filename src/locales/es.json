@@ -15,5 +15,8 @@
   "Powered by": "Powered by",
   "Type": "Tipo",
   "Header Parameters": "Header Parameters",
-  "Headers": "Headers"
+  "Headers": "Headers",
+  "Request Body": "Cuerpo de la petición",
+  "Schema": "Schema",
+  "JSON": "JSON"
 }

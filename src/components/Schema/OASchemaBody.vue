@@ -6,7 +6,7 @@ const props = defineProps({
   },
   responseType: {
     type: String,
-    required: true,
+    default: 'object',
   },
 })
 </script>
@@ -22,7 +22,7 @@ const props = defineProps({
 
     <div
       v-if="props.schema"
-      class="flex flex-col pl-3 space-y-2 border-l-2 border-gray-200 dark:border-gray-800 border-l-solid"
+      class="flex flex-col pl-2 space-y-2 border-l border-gray-200 dark:border-gray-800 border-l-solid"
     >
       <OASchemaProperty
         v-for="(property, name) in props.schema.properties"

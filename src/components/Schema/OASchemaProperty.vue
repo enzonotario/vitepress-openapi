@@ -116,7 +116,7 @@ const isOpen = ref(true)
         v-if="[ 'object', 'array' ].includes(props.property.type)"
         :schema="props.property"
         :response-type="props.property.type"
-        class="pl-4 mt-1"
+        class="pl-2 mt-1"
       />
     </CollapsibleContent>
   </Collapsible>
