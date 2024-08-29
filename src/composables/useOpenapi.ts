@@ -110,77 +110,6 @@ export function useOpenapi({ spec } = { spec: null }) {
     return parsedSpec.components
   }
 
-  function propertiesTypesJson(schema: any, responseType: string) {
-    if (!schema?.properties) {
-      return JSON.stringify(schema, null, 2)
-    }
-
-    return JSON.stringify(
-        propertiesTypesJsonRecursive(schema, responseType),
-        null,
-        2,
-    )
-  }
-
-  function propertiesTypesJsonRecursive(schema: any, responseType: string) {
-    const body: any = {}
-
-    if (!schema.properties) {
-      return body
-    }
-
-    const propertiesKeys = Object.keys(schema.properties)
-
-    propertiesKeys.forEach((key) => {
-      const property = schema.properties[key]
-
-      if (!property) {
-        return
-      }
-
-      const { type } = property
-
-      body[key] = type === 'object' ? propertiesTypesJsonRecursive(property, type) : type
-    })
-
-    return responseType === 'array' ? [body] : body
-  }
-
-  function propertiesAsJson(schema: any, responseType: string) {
-    const body: any = {}
-
-    const propertiesKeys = Object.keys(schema.properties)
-
-    propertiesKeys.forEach((key) => {
-      const property = schema.properties[key]
-
-      const { type } = property
-
-      switch (type) {
-        case 'string':
-          body[key] = 'string'
-          break
-        case 'number':
-        case 'integer':
-          body[key] = 0
-          break
-        case 'boolean':
-          body[key] = true
-          break
-        case 'array':
-          body[key] = []
-          break
-        case 'object':
-          body[key] = {}
-          break
-        default:
-          body[key] = null
-      }
-    })
-
-    return JSON.stringify(responseType === 'array' ? [body] : body, null, 2)
-  }
-
   function getOperationCodeSamples(operationId: string) {
     const operation = getOperation(operationId)
     if (!operation) {
@@ -224,9 +153,6 @@ export function useOpenapi({ spec } = { spec: null }) {
     getSchemas,
     getSchemaByName,
     getComponents,
-    propertiesTypesJson,
-    propertiesTypesJsonRecursive,
-    propertiesAsJson,
     getOperationCodeSamples,
     getOperationResponses,
     getOperationRequestBody,
