@@ -42,6 +42,9 @@ importers:
       '@scalar/openapi-parser':
         specifier: ^0.7.2
         version: 0.7.2
+      '@scalar/openapi-types':
+        specifier: ^0.0.1
+        version: 0.0.1
       '@sindresorhus/slugify':
         specifier: ^2.2.1
         version: 2.2.1
@@ -568,6 +571,10 @@ packages:
 
   '@scalar/openapi-parser@0.7.2':
     resolution: {integrity: sha512-kgzFox4KzC3NLrOZeT9m/iQ2VMNvL7JNz8ec+hz0sYulvMtYQ1qTqEyjQjALyCDzmzrSJA11Vg8JMMHDw3AA7A==}
+    engines: {node: '>=18'}
+
+  '@scalar/openapi-types@0.0.1':
+    resolution: {integrity: sha512-qMcUrhe+JRXlI9VGWcY/xGHkGplHdZ5UdGFXJ0q9e20gFVk2HMApE98Mo2iUp42Gff0xHIcNHaEQKAhdfW3R2Q==}
     engines: {node: '>=18'}
 
   '@shikijs/core@1.10.3':
@@ -2418,6 +2425,8 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 4.0.0
       yaml: 2.4.5
+
+  '@scalar/openapi-types@0.0.1': {}
 
   '@shikijs/core@1.10.3':
     dependencies:

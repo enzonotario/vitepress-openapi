@@ -54,6 +54,7 @@
     "@eslint/js": "^9.9.0",
     "@iconify/vue": "^4.1.2",
     "@scalar/openapi-parser": "^0.7.2",
+    "@scalar/openapi-types": "^0.0.1",
     "@sindresorhus/slugify": "^2.2.1",
     "@types/node": "^18.17.1",
     "@vitejs/plugin-vue": "^5.0.5",

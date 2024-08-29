@@ -12,7 +12,7 @@ const { isDark } = useData()
 
 const openapi = useOpenapi()
 
-const operations = openapi.spec.paths
+const operations = openapi.rawSpec.paths
 
 const operationId = Object.keys(operations).length > 0 
     ? operations[Object.keys(operations)[0]].get.operationId 

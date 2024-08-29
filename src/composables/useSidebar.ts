@@ -4,7 +4,7 @@ export function useSidebar({ spec } = { spec: null }) {
   const openapi = useOpenapi({ spec })
 
   function generateSidebarItem(method: string, path: string) {
-    const operation = openapi?.spec?.paths?.[path]?.[method]
+    const operation = openapi?.rawSpec?.paths?.[path]?.[method]
     if (!operation) {
       return null
     }
@@ -22,17 +22,17 @@ export function useSidebar({ spec } = { spec: null }) {
   }
 
   function generateSidebarGroup(tag: string | string[], text?: string) {
-    if (!openapi?.spec?.paths) {
+    if (!openapi?.rawSpec?.paths) {
       return []
     }
 
     const includeTags = Array.isArray(tag) ? tag : [tag]
 
-    const sidebarGroupElements = Object.keys(openapi.spec.paths)
+    const sidebarGroupElements = Object.keys(openapi.rawSpec.paths)
         .flatMap((path) => {
           return httpVerbs
               .map((method) => {
-                const operation = openapi.spec.paths[path][method]
+                const operation = openapi.rawSpec.paths[path][method]
                 if (operation && includeTags.every(tag => operation.tags?.includes(tag))) {
                   return generateSidebarItem(method, path)
                 }
@@ -48,11 +48,30 @@ export function useSidebar({ spec } = { spec: null }) {
   }
 
   function generateSidebarGroups() {
-    if (!openapi?.spec?.paths) {
+    if (!openapi?.rawSpec?.paths) {
       return []
     }
 
-    return openapi.getTags().map((tag) => generateSidebarGroup(tag, tag))
+    return getTags().map((tag) => generateSidebarGroup(tag, tag))
+  }
+
+  function getTags(): string[] {
+    if (!openapi?.rawSpec?.paths) {
+      return []
+    }
+
+    return Object.values(openapi?.rawSpec?.paths).reduce((tags, path: any) => {
+      for (const verb of httpVerbs) {
+        if (path[verb]?.tags) {
+          path[verb].tags.forEach((tag: string) => {
+            if (!tags.includes(tag)) {
+              tags.push(tag)
+            }
+          })
+        }
+      }
+      return tags
+    }, [])
   }
 
   return {

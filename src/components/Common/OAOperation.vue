@@ -130,7 +130,7 @@ function hasSlot(name) {
         level="h2"
         :prefix="headingPrefix"
       >
-        {{ $t('Request body') }}
+        {{ $t('Request Body') }}
       </OAHeading>
 
       <OARequestBody
@@ -163,14 +163,7 @@ function hasSlot(name) {
         :responses="responses.responses"
         :response-type="responses.responseType"
         :is-dark="isDark"
-      >
-        <template #body="body">
-          <OASchemaBody
-            :schema="body.schema"
-            :response-type="body.responseType"
-          />
-        </template>
-      </OAResponses>
+      />
     </template>
 
     <template

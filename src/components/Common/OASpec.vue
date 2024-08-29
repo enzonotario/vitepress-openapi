@@ -14,7 +14,7 @@ const openapi = useOpenapi()
 <template>
   <div class="flex flex-col space-y-10">
     <div
-      v-for="path in openapi.spec.paths"
+      v-for="path in openapi.rawSpec.paths"
       :key="path.id"
       class="flex flex-col space-y-10"
     >
