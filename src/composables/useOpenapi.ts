@@ -1,5 +1,6 @@
 import { httpVerbs } from 'vitepress-theme-openapi'
 import { generateMissingOperationIds } from '../utils/generateMissingOperationIds';
+import { dereference } from '@scalar/openapi-parser'
 
 type OpenAPISpec = any
 
@@ -10,7 +11,7 @@ export function useOpenapi({ spec } = { spec: null }) {
     setSpec(spec)
   }
 
-  function setSpec(value: OpenAPISpec) {
+  async function setSpec(value: OpenAPISpec) {
     if (value?.openapi) {
       if (!value.openapi.startsWith('3.')) {
         throw new Error('Only OpenAPI 3.x is supported')
@@ -22,7 +23,9 @@ export function useOpenapi({ spec } = { spec: null }) {
       value = generateMissingOperationIds(value)
     }
 
-    innerSpec = value
+    const parsed = await dereference(value)
+
+    innerSpec = parsed.schema
   }
 
   function getOperation(operationId: string) {
