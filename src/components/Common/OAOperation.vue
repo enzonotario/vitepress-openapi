@@ -26,7 +26,7 @@ const slots = useSlots()
 
 const openapi = useOpenapi()
 
-const operationMethod = openapi.getOperationMethod(props.operationId).toUpperCase()
+const operationMethod = openapi.getOperationMethod(props.operationId)?.toUpperCase()
 
 const headingPrefix = computed(() => {
   if (!props.prefixHeadings) {
@@ -43,7 +43,7 @@ function hasSlot(name) {
 
 <template>
   <OAPath
-    v-if="props.operationId"
+    v-if="props.operationId && operationMethod"
     :id="props.operationId"
     :method="operationMethod"
   >

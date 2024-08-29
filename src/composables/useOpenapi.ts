@@ -99,46 +99,12 @@ export function useOpenapi({ spec } = { spec: null }) {
     return parsedSpec.components.schemas
   }
 
-  function getSchemaByName(schemaName: string) {
-    return getSchemas()[schemaName] || null
-  }
-
-  function getComponents() {
-    if (!parsedSpec.components)
-      return {}
-
-    return parsedSpec.components
-  }
-
   function getOperationCodeSamples(operationId: string) {
     const operation = getOperation(operationId)
     if (!operation) {
       return []
     }
     return operation['x-codeSamples'] || operation['x-code-samples'] || []
-  }
-
-  function getOperationResponses(operationId: string) {
-    const operation = getOperation(operationId)
-    if (!operation || !operation.responses) {
-      return {}
-    }
-    return operation.responses
-  }
-
-  function getOperationRequestBody(operationId: string) {
-    const operation = getOperation(operationId)
-    if (!operation || !operation.requestBody) {
-      return null
-    }
-    return operation.requestBody
-  }
-
-  function getSecuritySchemes() {
-    if (!parsedSpec.components || !parsedSpec.components.securitySchemes)
-      return {}
-
-    return parsedSpec.components.securitySchemes
   }
 
   return {
@@ -151,11 +117,6 @@ export function useOpenapi({ spec } = { spec: null }) {
     getOperationParameters,
     getBaseUrl,
     getSchemas,
-    getSchemaByName,
-    getComponents,
     getOperationCodeSamples,
-    getOperationResponses,
-    getOperationRequestBody,
-    getSecuritySchemes,
   }
 }

@@ -16,7 +16,7 @@ const props = defineProps({
 
 const openapi = useOpenapi()
 
-const schema = generateRequestBodySchema(openapi.getSchemas(), props.operation.requestBody)
+const schema = props.operation?.requestBody?.content?.['application/json']?.schema
 
 const schemaJson = generateSchemaJson(schema)
 </script>
