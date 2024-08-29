@@ -3,12 +3,7 @@ import { resolveRef } from './resolveRef';
 const primitiveSchemasTypes = ['string', 'number', 'integer', 'boolean', 'array', 'object']
 
 export function generateResponseSchema(schemas: any, response: any) {
-  const responseSchema = response?.content?.['application/json']?.schema
-  const responseType = responseSchema?.type ?? 'object'
-  return generateSchemaRecursive({
-    ...responseSchema,
-    type: responseType,
-  }, schemas, responseType)
+  return response?.content?.['application/json']?.schema
 }
 
 function generateSchemaRecursive(responseSchema: any, schemas: any, responseType: any) {

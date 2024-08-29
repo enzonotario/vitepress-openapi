@@ -1,7 +1,6 @@
 <script setup>
-import { defineProps, ref } from 'vue'
-import { useOpenapi } from 'vitepress-theme-openapi'
-import { generateResponseSchema } from 'vitepress-theme-openapi/utils/generateResponseSchema'
+import { defineProps } from 'vue'
+import { generateSchemaJson } from 'vitepress-theme-openapi/utils/generateSchemaJson'
 
 const props = defineProps({
   responses: {
@@ -18,17 +17,11 @@ const props = defineProps({
   },
 })
 
-const openapi = useOpenapi()
-
-const schemas = openapi.getSchemas()
-
 const response = props.responses[props.responseCode]
 
-const responseType = response?.content && response?.content['application/json']?.schema?.items ? 'array' : 'object'
+const schema = response?.content?.['application/json']?.schema
 
-const schema = generateResponseSchema(schemas, response)
-
-const schemaJson = ref(useOpenapi().propertiesTypesJson(schema, responseType))
+const schemaJson = generateSchemaJson(schema)
 </script>
 
 <template>
@@ -44,6 +37,7 @@ const schemaJson = ref(useOpenapi().propertiesTypesJson(schema, responseType))
     </div>
 
     <OASchemaTabs
+      v-if="schema"
       :schema="schema"
       :schema-json="schemaJson"
       :is-dark="props.isDark"

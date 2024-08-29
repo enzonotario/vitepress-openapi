@@ -30,13 +30,13 @@ const isOpen = ref(true)
 <template>
   <Collapsible
     v-model:open="isOpen"
-    :disabled="!props.property?.properties"
+    :disabled="!['object', 'array'].includes(props.property.type)"
   >
     <CollapsibleTrigger class="w-full">
       <div class="flex flex-col text-start space-y-1 group">
         <div class="flex flex-row items-center text-sm">
           <div
-            v-if="props.property?.properties"
+            v-if="['object', 'array'].includes(props.property.type)"
             class="flex-shrink-0 w-4 h-4"
           >
             <svg
@@ -82,9 +82,9 @@ const isOpen = ref(true)
         />
 
         <div
-          v-for="(key, idx) in Object.keys(props.property).filter(k => ![ 'type', 'description', 'properties', 'required' ].includes(k))"
+          v-for="(key, idx) in Object.keys(props.property).filter(k => ![ 'type', 'description', 'properties', 'required', 'items' ].includes(k))"
           :key="idx"
-          class="flex flex-row items-center space-x-2"
+          class="flex flex-row flex-wrap items-center gap-2"
         >
           <span class="text-xs text-gray-600 dark:text-gray-300">
             {{ titleCase(key) }}
