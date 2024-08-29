@@ -370,7 +370,8 @@
             "type": "integer",
             "description": "Age of the user",
             "minimum": 0,
-            "maximum": 120
+            "maximum": 120,
+            "default": 18
           },
           "gender": {
             "type": "string",

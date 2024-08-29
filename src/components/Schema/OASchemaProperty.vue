@@ -1,11 +1,13 @@
 <script setup>
+import { ref } from 'vue'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from 'vitepress-theme-openapi/components/ui/collapsible'
+import { Badge } from 'vitepress-theme-openapi/components/ui/badge'
+import { titleCase } from 'scule'
 import OASchemaBody from './OASchemaBody.vue'
-import { ref } from 'vue'
 
 const props = defineProps({
   property: {
@@ -31,7 +33,7 @@ const isOpen = ref(true)
     :disabled="!props.property?.properties"
   >
     <CollapsibleTrigger class="w-full">
-      <div class="flex flex-col text-start">
+      <div class="flex flex-col text-start space-y-1">
         <div class="flex flex-row space-x-4 text-sm">
           <span class="font-bold">{{ props.name }}</span>
           <span class="text-gray-600 dark:text-gray-400">{{ props.property?.type }}</span>
@@ -44,6 +46,35 @@ const isOpen = ref(true)
           class="text-sm text-gray-800 dark:text-gray-300"
           v-html="props.property.description"
         />
+
+        <div
+          v-for="(key, idx) in Object.keys(props.property).filter(k => ![ 'type', 'description', 'properties', 'required' ].includes(k))"
+          :key="idx"
+          class="flex flex-row items-center space-x-2"
+        >
+          <span class="text-xs text-gray-600 dark:text-gray-300">
+            {{ titleCase(key) }}
+          </span>
+
+          <template v-if="Array.isArray(props.property[key])">
+            <Badge
+              v-for="(value, idx) in props.property[key]"
+              :key="idx"
+              variant="outline"
+              class="bg-muted rounded text-xs px-1"
+            >
+              {{ value }}
+            </Badge>
+          </template>
+          <template v-else>
+            <Badge
+              variant="outline"
+              class="bg-muted rounded text-xs px-1"
+            >
+              {{ props.property[key] }}
+            </Badge>
+          </template>
+        </div>
       </div>
     </CollapsibleTrigger>
     <CollapsibleContent>
