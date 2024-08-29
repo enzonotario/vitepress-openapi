@@ -34,7 +34,9 @@ const props = defineProps({
       <span
         v-if="!props.hideBaseUrl"
         class="hidden md:inline-block"
-      >{{ props.baseUrl }}</span>
+      >
+        {{ props.baseUrl }}
+      </span>
       <span class="text-gray-800 dark:text-gray-200 font-bold select-all">{{ props.path }}</span>
     </span>
   </div>

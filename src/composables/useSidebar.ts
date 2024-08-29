@@ -78,5 +78,6 @@ export function useSidebar({ spec } = { spec: null }) {
     generateSidebarItem,
     generateSidebarGroup,
     generateSidebarGroups,
+    getTags,
   }
 }
