@@ -36,9 +36,18 @@ function propertiesTypesJsonRecursive(schema: any) {
         properties[key] = true
         break
       case 'array':
+        if (property.items) {
+          properties[key] = [propertiesTypesJsonRecursive(property.items)]
+          break
+        }
+
         properties[key] = []
         break
       case 'object':
+        if (property.properties) {
+          properties[key] = propertiesTypesJsonRecursive(property)
+          break
+        }
         properties[key] = {}
         break
       default:
