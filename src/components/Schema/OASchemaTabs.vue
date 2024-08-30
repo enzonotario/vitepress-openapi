@@ -1,9 +1,10 @@
 <script setup>
+import { computed, ref } from 'vue';
+import { TabsIndicator } from 'radix-vue'
 import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
-import { TabsIndicator } from 'radix-vue'
-import { generateSchemaJson } from 'vitepress-theme-openapi/utils/generateSchemaJson';
-import { computed, ref } from 'vue';
+import { generateSchemaJson } from 'vitepress-theme-openapi/utils/generateSchemaJson'
+import { hasExample } from 'vitepress-theme-openapi/utils/hasExample'
 
 const props = defineProps({
   schema: {
@@ -23,6 +24,8 @@ const useExample = ref(true)
 const schemaJson = computed(() => {
   return generateSchemaJson(props.schema, useExample.value)
 })
+
+const schemaHasExample = hasExample(props.schema)
 
 const checkboxId = `useExample-${Math.random().toString(36).substring(7)}`
 </script>
@@ -58,8 +61,10 @@ const checkboxId = `useExample-${Math.random().toString(36).substring(7)}`
       class="mt-0 p-2"
     >
       <div class="relative flex flex-col">
-        <!--      useExample checkbox-->
-        <div class="absolute right-14 top-4 z-10">
+        <div
+          v-if="schemaHasExample"
+          class="absolute right-14 top-4 z-10"
+        >
           <input
             :id="checkboxId"
             v-model="useExample"
