@@ -8,7 +8,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="flex flex-col p-3 space-y-2 rounded bg-muted">
+  <div class="flex flex-col p-3 gap-2 rounded bg-muted">
     <div class="flex flex-col space-y-2">
       <div class="flex flex-row items-center space-x-2">
         <span class="text-sm font-bold">{{ props.parameter.name }}</span>

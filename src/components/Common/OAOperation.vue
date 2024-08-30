@@ -88,6 +88,34 @@ function hasSlot(name) {
     </template>
 
     <template
+      v-if="hasSlot('security')"
+      #security="security"
+    >
+      <slot
+        name="security"
+        v-bind="security"
+      />
+    </template>
+    <template
+      v-else
+      #security="security"
+    >
+      <OAHeading
+        level="h2"
+        :prefix="headingPrefix"
+      >
+        {{ $t('Security') }}
+      </OAHeading>
+
+      <OASecurity
+        :operation-id="security.operationId"
+        :method="security.method"
+        :path="security.path"
+        :security-schemes="security.securitySchemes"
+      />
+    </template>
+
+    <template
       v-if="hasSlot('parameters')"
       #parameters="parameters"
     >

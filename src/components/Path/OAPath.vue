@@ -21,6 +21,8 @@ const operationPath = openapi.getOperationPath(props.id)
 const operationParameters = openapi.getOperationParameters(props.id)
 
 const baseUrl = openapi.getBaseUrl()
+
+const securitySchemes = openapi.getSecuritySchemes()
 </script>
 
 <template>
@@ -48,6 +50,16 @@ const baseUrl = openapi.getBaseUrl()
               :path="operationPath"
             />
           </div>
+
+          <slot
+            v-if="Object.keys(securitySchemes).length"
+            name="security"
+            :operation="operation"
+            :method="props.method"
+            :base-url="baseUrl"
+            :path="operationPath"
+            :security-schemes="securitySchemes"
+          />
 
           <slot
             v-if="operationParameters.length"
