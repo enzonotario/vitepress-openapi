@@ -43,9 +43,9 @@ In your .vitepress/theme/index.js, import the theme and configure it as follows:
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
-import {theme, useOpenapi, useTheme} from 'vitepress-theme-openapi'
-import type {Theme} from 'vitepress'
-import spec from '../../public/openapi.json' assert {type: 'json'}
+import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
+import type { Theme } from 'vitepress'
+import spec from '../../public/openapi.json' assert { type: 'json' }
 
 import 'vitepress-theme-openapi/dist/style.css'
 
@@ -72,7 +72,7 @@ To document your API operations, create an operations directory inside docs with
 
 ```
 /docs
-├── operations
+├── /operations
 │   ├── [operationId].md
 │   └── [operationId].paths.js
 ```
@@ -102,7 +102,7 @@ const operationId = route.data.params.operationId
 Example of `[operationId].paths.js`:
 
 ```ts
-import {useOpenapi} from 'vitepress-theme-openapi'
+import { useOpenapi } from 'vitepress-theme-openapi'
 
 export default {
     paths() {
@@ -132,8 +132,8 @@ To automatically generate sidebar items, you can use the useSidebar function. Co
 follows:
 
 ```ts
-import {useSidebar, useOpenapi} from 'vitepress-theme-openapi'
-import spec from '../public/openapi.json' assert {type: 'json'}
+import { useSidebar, useOpenapi } from 'vitepress-theme-openapi'
+import spec from '../public/openapi.json' assert { type: 'json' }
 
 const openapi = useOpenapi()
 openapi.setSpec(spec)
