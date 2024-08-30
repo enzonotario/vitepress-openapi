@@ -17,6 +17,8 @@ import OACodeSamples from './Sample/OACodeSamples.vue'
 import OARequestBody from './Request/OARequestBody.vue'
 import OASchemaBody from './Schema/OASchemaBody.vue'
 import OASchemaProperty from './Schema/OASchemaProperty.vue'
+import OASchemaPrimitiveProperty from './Schema/OASchemaPrimitiveProperty.vue'
+import OASchemaPropertyAttributes from './Schema/OASchemaPropertyAttributes.vue'
 import OASchemaTabs from './Schema/OASchemaTabs.vue'
 
 export {
@@ -39,5 +41,7 @@ export {
   OARequestBody,
   OASchemaBody,
   OASchemaProperty,
+  OASchemaPrimitiveProperty,
+  OASchemaPropertyAttributes,
   OASchemaTabs,
 }

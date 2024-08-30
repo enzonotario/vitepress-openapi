@@ -5,12 +5,18 @@ const props = defineProps({
     required: true,
   },
 })
+
+const primitiveSchemasTypes = ['string', 'number', 'integer', 'boolean']
 </script>
 
 <template>
   <div class="flex flex-col">
+    <div v-if="primitiveSchemasTypes.includes(props.schema.type)">
+      <OASchemaPrimitiveProperty :property="props.schema" />
+    </div>
+
     <div
-      v-if="props.schema?.properties"
+      v-else-if="props.schema?.properties"
       class="flex flex-col pl-2 space-y-2 border-l border-gray-200 dark:border-gray-800 border-l-solid"
     >
       <OASchemaProperty
