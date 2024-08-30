@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue'
-import fetchToCurl from 'fetch-to-curl';
+import fetchToCurl from 'vitepress-theme-openapi/utils/fetchToCurl';
+import { useOpenapi } from 'vitepress-theme-openapi';
+import { propertiesTypesJsonRecursive } from 'vitepress-theme-openapi/utils/generateSchemaJson';
 
 const props = defineProps({
   operationId: {
@@ -36,14 +38,21 @@ const request = ref({
 
 const loading = ref(false)
 
+const openapi = useOpenapi()
+
+const operation = openapi.getOperation(props.operationId)
+
+const schemaJson = propertiesTypesJsonRecursive(operation.requestBody?.content?.['application/json']?.schema)
+
 const curl = computed(() => {
   const curlCommand = fetchToCurl({
     method: props.method.toUpperCase(),
     url: request.value.url,
     headers: request.value.headers,
+    body: schemaJson ? JSON.stringify(schemaJson, null, 2) : undefined,
   })
 
-  return curlCommand.replace(/ -(\w) /g, ' \\\n -$1 ')
+  return curlCommand
 })
 </script>
 
