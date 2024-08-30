@@ -6,7 +6,7 @@ export function generateSchemaJson(schema: any) {
   )
 }
 
-function propertiesTypesJsonRecursive(schema: any) {
+export function propertiesTypesJsonRecursive(schema: any) {
   if (schema?.items) {
     return [propertiesTypesJsonRecursive(schema.items)]
   }
@@ -22,7 +22,12 @@ function propertiesTypesJsonRecursive(schema: any) {
   propertiesKeys.forEach((key) => {
     const property = schema.properties[key]
 
-    const { type } = property
+    const { type, example } = property
+
+    if (example) {
+      properties[key] = example
+      return
+    }
 
     switch (type) {
       case 'string':
