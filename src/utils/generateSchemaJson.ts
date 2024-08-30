@@ -1,14 +1,14 @@
-export function generateSchemaJson(schema: any) {
+export function generateSchemaJson(schema: any, useExample = false) {
   return JSON.stringify(
-      propertiesTypesJsonRecursive(schema),
+      propertiesTypesJsonRecursive(schema, useExample),
       null,
       2,
   )
 }
 
-export function propertiesTypesJsonRecursive(schema: any) {
+export function propertiesTypesJsonRecursive(schema: any, useExample = false) {
   if (schema?.items) {
-    return [propertiesTypesJsonRecursive(schema.items)]
+    return [propertiesTypesJsonRecursive(schema.items, useExample)]
   }
 
   if (!schema?.properties) {
@@ -24,7 +24,7 @@ export function propertiesTypesJsonRecursive(schema: any) {
 
     const { type, example } = property
 
-    if (example) {
+    if (useExample && example) {
       properties[key] = example
       return
     }
@@ -42,7 +42,7 @@ export function propertiesTypesJsonRecursive(schema: any) {
         break
       case 'array':
         if (property.items) {
-          properties[key] = [propertiesTypesJsonRecursive(property.items)]
+          properties[key] = [propertiesTypesJsonRecursive(property.items, useExample)]
           break
         }
 
@@ -50,7 +50,7 @@ export function propertiesTypesJsonRecursive(schema: any) {
         break
       case 'object':
         if (property.properties) {
-          properties[key] = propertiesTypesJsonRecursive(property)
+          properties[key] = propertiesTypesJsonRecursive(property, useExample)
           break
         }
         properties[key] = {}
