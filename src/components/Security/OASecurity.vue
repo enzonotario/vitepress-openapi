@@ -2,18 +2,6 @@
 import { defineProps } from 'vue'
 
 const props = defineProps({
-  operationId: {
-    type: String,
-    required: true,
-  },
-  method: {
-    type: String,
-    required: true,
-  },
-  path: {
-    type: String,
-    required: true,
-  },
   securitySchemes: {
     type: Object,
     required: true,
@@ -24,7 +12,7 @@ const props = defineProps({
 <template>
   <div class="space-y-4">
     <div
-      v-for="(scheme, name) in securitySchemes"
+      v-for="(scheme, name) in props.securitySchemes"
       :key="name"
       class="flex flex-col p-3 gap-2 rounded bg-muted"
     >
