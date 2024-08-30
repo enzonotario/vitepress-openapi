@@ -3,7 +3,7 @@ import { generateMissingOperationIds } from '../utils/generateMissingOperationId
 import { dereference } from '@scalar/openapi-parser'
 import type { OpenAPI } from '@scalar/openapi-types'
 
-let rawSpec: any = {}
+let json: any = {}
 
 let parsedSpec: OpenAPI = {}
 
@@ -24,7 +24,7 @@ export function useOpenapi({ spec } = { spec: null }) {
       value = generateMissingOperationIds(value)
     }
 
-    rawSpec = value
+    json = value
 
     const parsed = await dereference(value)
 
@@ -116,7 +116,7 @@ export function useOpenapi({ spec } = { spec: null }) {
 
   return {
     spec: parsedSpec,
-    rawSpec,
+    json,
     setSpec,
     getOperation,
     getOperationMethod,
