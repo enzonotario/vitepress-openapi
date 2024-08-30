@@ -1,3 +1,8 @@
+/**
+ * Based on [fetch-to-curl](https://github.com/leoek/fetch-to-curl]
+ * @author [leoek](https://github.com/leoek)
+ */
+
 export const generateMethod = (options: any): string => {
   const method = options.method;
   if (!method) return '';
