@@ -28,9 +28,13 @@ const openapi = useOpenapi()
 
 const baseUrl = openapi.getBaseUrl()
 
+const operation = openapi.getOperation(props.operationId)
+
 const path = openapi.getOperationPath(props.operationId)
 
 const parameters = openapi.getOperationParameters(props.operationId)
+
+const securitySchemes = openapi.getSecuritySchemes()
 
 const headerParameters = parameters.filter(parameter => parameter.in === 'header')
 
@@ -51,6 +55,25 @@ const variables = ref({
     acc[parameter.name] = parameter.example ?? parameter.schema?.example ?? ''
     return acc
   }, {}),
+})
+
+const auth = ref({
+  ...Object.fromEntries(
+    Object.entries(securitySchemes).map(([name, scheme]) => {
+      switch (scheme.type) {
+        case 'http':
+          return [name, scheme.scheme === 'basic' ? 'Basic Auth' : 'Bearer Token']
+        case 'apiKey':
+          return [name, scheme.name]
+        case 'openIdConnect':
+          return [name, 'OpenID Connect']
+        case 'oauth2':
+          return [name, 'OAuth2 Token']
+        default:
+          return [name, '']
+      }
+    }),
+  ),
 })
 
 function buildRequest() {
@@ -96,6 +119,27 @@ function buildRequest() {
     headers.set(key, value)
   }
 
+  for (const [key, value] of Object.entries(auth.value)) {
+    if (!securitySchemes[key]) {
+      continue
+    }
+
+    switch (securitySchemes[key].type) {
+      case 'http':
+        headers.set('Authorization', `${securitySchemes[key].scheme === 'basic' ? 'Basic' : 'Bearer'} ${value}`)
+        break
+      case 'apiKey':
+        headers.set(securitySchemes[key].name, value)
+        break
+      case 'openIdConnect':
+        headers.set('Authorization', `Bearer ${value}`)
+        break
+      case 'oauth2':
+        headers.set('Authorization', `Bearer ${value}`)
+        break
+    }
+  }
+
   const newRequest = {
     url: url.toString(),
     headers: Object.fromEntries(headers),
@@ -106,11 +150,39 @@ function buildRequest() {
   return newRequest
 }
 
-watch(variables, buildRequest, { deep: true, immediate: true })
+watch([variables, auth], buildRequest, { deep: true, immediate: true })
 </script>
 
 <template>
   <div class="flex flex-col space-y-4">
+    <div
+      v-if="Object.keys(securitySchemes).length"
+      class="space-y-4"
+    >
+      <h4>
+        {{ $t('Security') }}
+      </h4>
+
+      <div class="flex flex-col space-y-2">
+        <div
+          v-for="(scheme, name) in securitySchemes"
+          :key="name"
+          class="flex flex-col gap-2"
+        >
+          <div class="flex flex-row items-center space-x-2">
+            <span class="text-sm font-bold">{{ name }}</span>
+          </div>
+          <div class="flex flex-row items-center space-x-2">
+            <OARequestSecurityInput
+              v-model="auth[name]"
+              :scheme="scheme"
+              class="w-full"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div
       v-if="headerParameters.length"
       class="space-y-4"
