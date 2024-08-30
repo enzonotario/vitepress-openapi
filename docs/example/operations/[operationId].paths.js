@@ -5,16 +5,16 @@ export default {
     paths() {
         const openapi = useOpenapi({ spec })
 
-        if (!openapi?.rawSpec?.paths) {
+        if (!openapi?.json?.paths) {
             return []
         }
 
-        return Object.keys(openapi.rawSpec.paths)
+        return Object.keys(openapi.json.paths)
             .flatMap((path) => {
                 return httpVerbs
-                    .filter((verb) => openapi.rawSpec.paths[path][verb])
+                    .filter((verb) => openapi.json.paths[path][verb])
                     .map((verb) => {
-                        const { operationId, summary } = openapi.rawSpec.paths[path][verb]
+                        const { operationId, summary } = openapi.json.paths[path][verb]
                         return {
                             params: {
                                 operationId,

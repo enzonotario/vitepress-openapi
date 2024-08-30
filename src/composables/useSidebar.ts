@@ -4,7 +4,7 @@ export function useSidebar({ spec } = { spec: null }) {
   const openapi = useOpenapi({ spec })
 
   function generateSidebarItem(method: string, path: string) {
-    const operation = openapi?.rawSpec?.paths?.[path]?.[method]
+    const operation = openapi?.json?.paths?.[path]?.[method]
     if (!operation) {
       return null
     }
@@ -21,19 +21,20 @@ export function useSidebar({ spec } = { spec: null }) {
     };
   }
 
-  function generateSidebarGroup(tag: string | string[], text?: string) {
-    if (!openapi?.rawSpec?.paths) {
+  function generateSidebarGroup(tag: string | string[], text?: string, addedOperations = new Set()) {
+    if (!openapi?.json?.paths) {
       return []
     }
 
     const includeTags = Array.isArray(tag) ? tag : [tag]
 
-    const sidebarGroupElements = Object.keys(openapi.rawSpec.paths)
+    const sidebarGroupElements = Object.keys(openapi.json.paths)
         .flatMap((path) => {
           return httpVerbs
               .map((method) => {
-                const operation = openapi.rawSpec.paths[path][method]
-                if (operation && includeTags.every(tag => operation.tags?.includes(tag))) {
+                const operation = openapi.json.paths[path][method]
+                if (operation && !addedOperations.has(operation.operationId) && (includeTags.length === 0 || includeTags.every(tag => operation.tags?.includes(tag)))) {
+                  addedOperations.add(operation.operationId)
                   return generateSidebarItem(method, path)
                 }
                 return null
@@ -42,25 +43,35 @@ export function useSidebar({ spec } = { spec: null }) {
         })
 
     return {
-      text: text || includeTags.join(', '),
+      text: text || includeTags.join(', ') || '',
       items: sidebarGroupElements,
     }
   }
 
   function generateSidebarGroups() {
-    if (!openapi?.rawSpec?.paths) {
+    if (!openapi?.json?.paths) {
       return []
     }
 
-    return getTags().map((tag) => generateSidebarGroup(tag, tag))
+    const tags = getTags()
+    const addedOperations = new Set()
+    const groups = tags.map((tag) => generateSidebarGroup(tag, tag, addedOperations))
+
+    // Add a group for operations without tags
+    const noTagGroup = generateSidebarGroup([], '', addedOperations)
+    if (noTagGroup.items.length > 0) {
+      groups.push(noTagGroup)
+    }
+
+    return groups
   }
 
   function getTags(): string[] {
-    if (!openapi?.rawSpec?.paths) {
+    if (!openapi?.json?.paths) {
       return []
     }
 
-    return Object.values(openapi?.rawSpec?.paths).reduce((tags, path: any) => {
+    return Object.values(openapi?.json?.paths).reduce((tags, path: any) => {
       for (const verb of httpVerbs) {
         if (path[verb]?.tags) {
           path[verb].tags.forEach((tag: string) => {
