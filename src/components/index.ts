@@ -13,6 +13,7 @@ import OATryItButton from './Try/OATryItButton.vue'
 import OATryWithVariables from './Try/OATryWithVariables.vue'
 import OARequestParameters from './Try/OARequestParameters.vue'
 import OARequestParameterInput from './Try/OARequestParameterInput.vue'
+import OARequestSecurityInput from './Try/OARequestSecurityInput.vue'
 import OACodeSamples from './Sample/OACodeSamples.vue'
 import OARequestBody from './Request/OARequestBody.vue'
 import OASchemaBody from './Schema/OASchemaBody.vue'
@@ -37,6 +38,7 @@ export {
   OATryWithVariables,
   OARequestParameters,
   OARequestParameterInput,
+  OARequestSecurityInput,
   OACodeSamples,
   OARequestBody,
   OASchemaBody,

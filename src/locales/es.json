@@ -18,5 +18,6 @@
   "Headers": "Headers",
   "Request Body": "Cuerpo de la petición",
   "Schema": "Schema",
-  "JSON": "JSON"
+  "JSON": "JSON",
+  "Security": "Security"
 }

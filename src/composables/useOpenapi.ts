@@ -107,6 +107,13 @@ export function useOpenapi({ spec } = { spec: null }) {
     return operation['x-codeSamples'] || operation['x-code-samples'] || []
   }
 
+  function getSecuritySchemes() {
+    if (!parsedSpec.components || !parsedSpec.components.securitySchemes)
+      return {}
+
+    return parsedSpec.components.securitySchemes
+  }
+
   return {
     spec: parsedSpec,
     rawSpec,
@@ -118,5 +125,6 @@ export function useOpenapi({ spec } = { spec: null }) {
     getBaseUrl,
     getSchemas,
     getOperationCodeSamples,
+    getSecuritySchemes,
   }
 }
