@@ -38,23 +38,17 @@ const openapi = useOpenapi()
 
 const operationMethod = openapi.getOperationMethod(props.operationId)
 
+const parsedOperation = openapi.getParsedOperation(props.operationId)
+
+const schemaJson = propertiesTypesJsonRecursive(parsedOperation.requestBody?.content?.['application/json']?.schema, true)
+
 const curl = computed(() => {
-  const parsedOperation = openapi.getParsedOperation(props.operationId)
-
-  if (!parsedOperation) {
-    return ''
-  }
-
-  const schemaJson = propertiesTypesJsonRecursive(parsedOperation.requestBody?.content?.['application/json']?.schema)
-
-  const curlCommand = fetchToCurl({
+  return fetchToCurl({
     method: operationMethod.toUpperCase(),
     url: request.value.url,
     headers: request.value.headers,
     body: schemaJson ? JSON.stringify(schemaJson, null, 2) : undefined,
   })
-
-  return curlCommand
 })
 </script>
 

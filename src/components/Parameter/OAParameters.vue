@@ -1,5 +1,5 @@
 <script setup>
-import { computed, defineProps } from 'vue'
+import { defineProps } from 'vue'
 
 const props = defineProps({
   operationId: {
@@ -12,11 +12,11 @@ const props = defineProps({
   },
 })
 
-const headerParameters = computed(() => props.parameters.filter(parameter => parameter.in === 'header'))
+const headerParameters = props.parameters.filter(parameter => parameter.in === 'header')
 
-const pathParameters = computed(() => props.parameters.filter(parameter => parameter.in === 'path'))
+const pathParameters = props.parameters.filter(parameter => parameter.in === 'path')
 
-const queryParameters = computed(() => props.parameters.filter(parameter => parameter.in === 'query'))
+const queryParameters = props.parameters.filter(parameter => parameter.in === 'query')
 </script>
 
 <template>

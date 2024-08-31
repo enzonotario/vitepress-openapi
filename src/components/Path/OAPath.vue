@@ -1,5 +1,5 @@
 <script setup>
-import { computed, defineProps } from 'vue'
+import { defineProps } from 'vue'
 import { useOpenapi } from 'vitepress-theme-openapi'
 
 const props = defineProps({
@@ -13,8 +13,6 @@ const openapi = useOpenapi()
 
 const operation = openapi.getOperation(props.id)
 
-const operationParsed = computed(() => openapi.getParsedOperation(props.id))
-
 const operationPath = openapi.getOperationPath(props.id)
 
 const operationMethod = openapi.getOperationMethod(props.id)?.toUpperCase()
@@ -23,29 +21,13 @@ const baseUrl = openapi.getBaseUrl()
 
 const securitySchemes = openapi.getSecuritySchemes()
 
-const operationParameters = computed(() => {
-  if (!operationParsed.value) {
-    return operation.parameters
-  }
+const operationParsed = openapi.getParsedOperation(props.id)
 
-  return operationParsed.value.parameters
-})
+const operationParameters = operationParsed.parameters
 
-const operationRequestBody = computed(() => {
-  if (!operationParsed.value) {
-    return operation.requestBody?.content?.['application/json']?.schema
-  }
+const operationRequestBody = operationParsed?.requestBody?.content?.['application/json']?.schema
 
-  return operationParsed.value?.requestBody?.content?.['application/json']?.schema
-})
-
-const operationResponses = computed(() => {
-  if (!operationParsed.value) {
-    return operation.responses
-  }
-
-  return operationParsed.value?.responses
-})
+const operationResponses = operationParsed?.responses
 </script>
 
 <template>
