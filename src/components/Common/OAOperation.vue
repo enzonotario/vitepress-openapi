@@ -1,6 +1,5 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { useOpenapi } from 'vitepress-theme-openapi';
 
 const props = defineProps({
   operationId: {
@@ -188,6 +187,27 @@ function hasSlot(name) {
         :responses="responses.responses"
         :response-type="responses.responseType"
         :is-dark="isDark"
+      />
+    </template>
+
+    <template
+      v-if="hasSlot('path')"
+      #path="path"
+    >
+      <slot
+        name="path"
+        v-bind="path"
+      />
+    </template>
+    <template
+      v-else
+      #path="path"
+    >
+      <OAPathEndpoint
+        :path="path.path"
+        :method="path.method"
+        :base-url="path.baseUrl"
+        :hide-base-url="path.hideBaseUrl"
       />
     </template>
 

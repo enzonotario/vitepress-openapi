@@ -2,15 +2,15 @@
 import { Badge } from 'vitepress-theme-openapi/components/ui/badge'
 
 const props = defineProps({
+  path: {
+    type: String,
+    required: true,
+  },
   method: {
     type: String,
     required: true,
   },
   baseUrl: {
-    type: String,
-    required: true,
-  },
-  path: {
     type: String,
     required: true,
   },
@@ -30,7 +30,7 @@ const props = defineProps({
     >
       {{ props.method.toUpperCase() }}
     </Badge>
-    <span class="text-gray-600 dark:text-gray-400 inline-flex items-center">
+    <span class="flex flex-row flex-shrink-0 text-gray-600 dark:text-gray-400">
       <span
         v-if="!props.hideBaseUrl"
         class="hidden md:inline-block"

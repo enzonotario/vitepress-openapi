@@ -54,14 +54,6 @@ const curl = computed(() => {
 
 <template>
   <div class="flex flex-col space-y-2">
-    <OAPathEndpoint
-      v-if="!props.hideEndpoint"
-      :method="operationMethod"
-      :path="props.path"
-      :base-url="props.baseUrl"
-      hide-base-url
-    />
-
     <OARequestParameters
       v-model:request="request"
       :operation-id="props.operationId"
