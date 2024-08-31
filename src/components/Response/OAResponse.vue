@@ -1,6 +1,5 @@
 <script setup>
 import { defineProps } from 'vue'
-import { useOpenapi } from 'vitepress-theme-openapi'
 
 const props = defineProps({
   operationId: {

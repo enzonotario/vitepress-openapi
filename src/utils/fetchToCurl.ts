@@ -7,13 +7,13 @@ export const generateMethod = (options: any): string => {
   const method = options.method;
   if (!method) return '';
   const type: { [key: string]: string } = {
-    GET: '-X GET',
-    POST: '-X POST',
-    PUT: '-X PUT',
-    PATCH: '-X PATCH',
-    DELETE: '-X DELETE',
-    HEAD: '-X HEAD',
-    OPTIONS: '-X OPTIONS'
+    GET: '-X GET ',
+    POST: '-X POST ',
+    PUT: '-X PUT ',
+    PATCH: '-X PATCH ',
+    DELETE: '-X DELETE ',
+    HEAD: '-X HEAD ',
+    OPTIONS: '-X OPTION S'
   };
   return type[method.toUpperCase()] || '';
 }
@@ -98,7 +98,7 @@ export const fetchToCurl = (requestInfo: string | { url?: string }, requestInit:
   const { body } = options;
   const headers = generateHeader(options);
 
-  let output = `curl ${generateMethod(options)} '${url}'`
+  let output = `curl ${generateMethod(options)}'${url}'`
 
   if (headers.params) {
     output += ` \\\n${headers.params}`
