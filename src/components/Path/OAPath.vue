@@ -1,6 +1,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import { useOpenapi } from 'vitepress-theme-openapi'
+import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
 
 const props = defineProps({
   id: {
@@ -8,6 +9,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const theme = useTheme()
 
 const openapi = useOpenapi()
 
@@ -50,7 +53,7 @@ const operationResponses = operationParsed?.responses
             <slot
               name="description"
               :operation="operation"
-              :method="props.method"
+              :method="operationMethod"
               :base-url="baseUrl"
               :path="operationPath"
             />
@@ -60,7 +63,7 @@ const operationResponses = operationParsed?.responses
             v-if="Object.keys(securitySchemes).length"
             name="security"
             :operation="operation"
-            :method="props.method"
+            :method="operationMethod"
             :base-url="baseUrl"
             :path="operationPath"
             :security-schemes="securitySchemes"
@@ -93,17 +96,27 @@ const operationResponses = operationParsed?.responses
             name="end-top"
             :operation-id="props.id"
             :operation="operation"
-            :method="props.method"
+            :method="operationMethod"
             :base-url="baseUrl"
             :path="operationPath"
           />
 
           <div class="sticky top-[100px] inset-x-0 flex flex-col sm:px-6 space-y-4">
             <slot
+              name="path"
+              :operation-id="props.id"
+              :operation="operation"
+              :method="operationMethod"
+              :base-url="baseUrl"
+              :path="operationPath"
+              :hide-base-url="!theme.getShowBaseURL()"
+            />
+
+            <slot
               name="try-it"
               :operation-id="props.id"
               :path="operationPath"
-              :method="props.method"
+              :method="operationMethod"
               :base-url="baseUrl"
             />
 
@@ -111,7 +124,7 @@ const operationResponses = operationParsed?.responses
               name="code-samples"
               :operation-id="props.id"
               :operation="operation"
-              :method="props.method"
+              :method="operationMethod"
               :base-url="baseUrl"
               :path="operationPath"
             />
@@ -123,7 +136,7 @@ const operationResponses = operationParsed?.responses
         name="footer"
         :operation-id="props.id"
         :operation="operation"
-        :method="props.method"
+        :method="operationMethod"
         :base-url="baseUrl"
         :path="operationPath"
       />
