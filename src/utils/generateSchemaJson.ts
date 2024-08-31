@@ -8,7 +8,7 @@ export function generateSchemaJson(schema: any, useExample = false) {
 
 export function propertiesTypesJsonRecursive(schema: any, useExample = false) {
   if (schema?.items) {
-    return [propertiesTypesJsonRecursive(schema.items, useExample)]
+    return [getPropertyValue(schema.items, useExample)]
   }
 
   if (!schema?.properties) {
@@ -21,44 +21,38 @@ export function propertiesTypesJsonRecursive(schema: any, useExample = false) {
 
   propertiesKeys.forEach((key) => {
     const property = schema.properties[key]
-
-    const { type, example } = property
-
-    if (useExample && example) {
-      properties[key] = example
-      return
-    }
-
-    switch (type) {
-      case 'string':
-        properties[key] = 'string'
-        break
-      case 'number':
-      case 'integer':
-        properties[key] = 0
-        break
-      case 'boolean':
-        properties[key] = true
-        break
-      case 'array':
-        if (property.items) {
-          properties[key] = [propertiesTypesJsonRecursive(property.items, useExample)]
-          break
-        }
-
-        properties[key] = []
-        break
-      case 'object':
-        if (property.properties) {
-          properties[key] = propertiesTypesJsonRecursive(property, useExample)
-          break
-        }
-        properties[key] = {}
-        break
-      default:
-        properties[key] = null
-    }
+    properties[key] = getPropertyValue(property, useExample)
   })
 
   return properties
+}
+
+function getPropertyValue(property: any, useExample: boolean) {
+  const { type, example } = property
+
+  if (useExample && example) {
+    return example
+  }
+
+  switch (type) {
+    case 'string':
+      return 'string'
+    case 'number':
+    case 'integer':
+      return 0
+    case 'boolean':
+      return true
+    case 'array':
+      if (property.items) {
+        return [getPropertyValue(property.items, useExample)]
+      }
+      return []
+    case 'object':
+      if (property.properties) {
+        return propertiesTypesJsonRecursive(property, useExample)
+      }
+      return {}
+    default:
+      return null
+  }
 }

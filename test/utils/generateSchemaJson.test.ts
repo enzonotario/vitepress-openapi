@@ -67,7 +67,7 @@ describe('generateSchemaJson', () => {
       }
     }
     const result = generateSchemaJson(schema)
-    expect(result).toBe(JSON.stringify({ tags: [ { type: 'string' } ] }, null, 2))
+    expect(result).toBe(JSON.stringify({ tags: [ 'string' ] }, null, 2))
   })
 
   it('generates JSON for schema with mixed properties', () => {
@@ -98,5 +98,45 @@ describe('generateSchemaJson', () => {
     const schema = null
     const result = generateSchemaJson(schema)
     expect(result).toBe('null')
+  })
+
+  it('generates JSON for schema with array of strings using example', () => {
+    const schema = {
+      properties: {
+        dates: {
+          type: 'array',
+          description: 'List of dates',
+          items: {
+            type: 'string',
+            example: '2020-01-01',
+            format: 'date'
+          },
+        },
+      },
+    }
+    const result = generateSchemaJson(schema, true)
+    expect(result).toBe(JSON.stringify({
+        dates: [ '2020-01-01' ]
+    }, null, 2))
+  })
+
+  it('generates JSON for schema with array of strings without example', () => {
+    const schema = {
+      properties: {
+        dates: {
+          type: 'array',
+          description: 'List of dates',
+          items: {
+            type: 'string',
+            example: '2020-01-01',
+            format: 'date'
+          },
+        },
+      },
+    }
+    const result = generateSchemaJson(schema, false)
+    expect(result).toBe(JSON.stringify({
+      dates: [ 'string' ]
+    }, null, 2))
   })
 });
