@@ -33,6 +33,10 @@ export default defineConfigWithTheme({
                 text: 'Sidebar Items',
                 link: '/layouts/sidebar',
               },
+              {
+                text: 'Custom Slots',
+                link: '/layouts/custom-slots',
+              },
             ]
           }
         ],
