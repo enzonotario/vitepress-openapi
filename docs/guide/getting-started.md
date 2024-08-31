@@ -35,24 +35,25 @@ bun install vitepress-theme-openapi
 
 ### OpenAPI Specification
 
-Place your OpenAPI specification in the public directory. For example, public/openapi.json.
+Place your OpenAPI specification in the public directory. For example, `public/openapi.json`.
 
 ### Theme Configuration
 
-In your .vitepress/theme/index.js, import the theme and configure it as follows:
+In your `.vitepress/theme/index.js`, import the theme and configure it as follows:
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
-import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
 import type { Theme } from 'vitepress'
-import spec from '../../public/openapi.json' assert { type: 'json' }
 
+import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
 import 'vitepress-theme-openapi/dist/style.css'
+
+import spec from '../public/openapi.json' assert { type: 'json' }
 
 export default {
     ...DefaultTheme,
     async enhanceApp({app, router, siteData}) {
-        // Set the OpenAPI specification
+        // Set the OpenAPI specification.
         const openapi = useOpenapi()
         openapi.setSpec(spec)
 
@@ -60,91 +61,16 @@ export default {
         const themeConfig = useTheme()
         themeConfig.setLocale('en') // en or es
 
-        // Use the theme
+        // Use the theme.
         theme.enhanceApp({app})
     }
 } satisfies Theme
 ```
 
-### Creating Operation Pages
+### Layouts
 
-To document your API operations, create an operations directory inside docs with the following structure:
+You can render the OpenAPI specification in different layouts:
 
-```
-/docs
-├── /operations
-│   ├── [operationId].md
-│   └── [operationId].paths.js
-```
-
-Example of `[operationId].md`:
-
-```markdown
----
-aside: false
-outline: false
-title: vitepress-theme-openapi
----
-
-<script setup lang="ts">
-import { useRoute, useData } from 'vitepress'
-
-const route = useRoute()
-
-const { isDark } = useData()
-
-const operationId = route.data.params.operationId
-</script>
-
-<OAOperation :operationId="operationId" :isDark="isDark" />
-```
-
-Example of `[operationId].paths.js`:
-
-```ts
-import { useOpenapi } from 'vitepress-theme-openapi'
-
-export default {
-    paths() {
-        const openapi = useOpenapi()
-
-        if (!openapi?.json?.paths) {
-            return []
-        }
-
-        return Object.keys(openapi.json.paths)
-            .map((path) => {
-                const {operationId} = openapi.json.paths[path].get
-                return {
-                    params: {
-                        operationId,
-                        pageTitle: `${openapi.getOperation(operationId).summary} - vitepress-theme-openapi`,
-                    },
-                }
-            })
-    },
-}
-```
-
-### Auto-Generating the Sidebar
-
-To automatically generate sidebar items, you can use the useSidebar function. Configure your .vitepress/config.js as
-follows:
-
-```ts
-import { useSidebar, useOpenapi } from 'vitepress-theme-openapi'
-import spec from '../public/openapi.json' assert { type: 'json' }
-
-const openapi = useOpenapi()
-openapi.setSpec(spec)
-const sidebar = useSidebar()
-
-module.exports = {
-    // ...
-    themeConfig: {
-        sidebar: [
-            ...sidebar.generateSidebarGroups(),
-        ],
-    },
-}
-```
+- [One operation per page](/layouts/one-operation.html)
+- [All operations in a single page](/layouts/all-operations.html)
+- [Sidebar items](/layouts/sidebar.html)
