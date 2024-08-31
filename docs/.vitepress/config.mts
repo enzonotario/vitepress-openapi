@@ -17,6 +17,27 @@ export default defineConfigWithTheme({
         link: '/guide/getting-started',
       },
       {
+        text: 'Layouts',
+        items: [
+          {
+            items: [
+              {
+                text: 'One Operation',
+                link: '/layouts/one-operation',
+              },
+              {
+                text: 'All Operations',
+                link: '/layouts/all-operations',
+              },
+              {
+                text: 'Sidebar Items',
+                link: '/layouts/sidebar',
+              },
+            ]
+          }
+        ],
+      },
+      {
         text: 'Example',
         items: [
           ...sidebar.generateSidebarGroups().map((group) => ({
@@ -26,8 +47,17 @@ export default defineConfigWithTheme({
               link: `/example${item.link}`,
             })),
           })),
+          {
+            text: 'Additional',
+            items: [
+              {
+                text: 'One Page',
+                link: '/example/one-page',
+              },
+            ],
+          },
         ],
-      }
+      },
     ],
 
     socialLinks: [
