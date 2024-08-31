@@ -5,7 +5,7 @@ import type { OpenAPI } from '@scalar/openapi-types'
 
 let json: any = {}
 
-let parsedSpec: OpenAPI = {}
+let parsedSpec: OpenAPI = null
 
 export function useOpenapi({ spec } = { spec: null }) {
   if (spec !== null) {
