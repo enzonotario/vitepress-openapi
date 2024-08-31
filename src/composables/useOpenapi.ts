@@ -55,14 +55,6 @@ export function useOpenapi({ spec } = { spec: null }) {
     return findOperation(json.paths, operationId)
   }
 
-  function getParsedOperation(operationId: string) {
-    if (!parsedSpec.value?.paths) {
-      return null
-    }
-
-    return findOperation(parsedSpec.value.paths, operationId)
-  }
-
   function getOperationMethod(operationId: string) {
     if (!json?.paths) {
       return null
@@ -109,6 +101,20 @@ export function useOpenapi({ spec } = { spec: null }) {
     }
 
     return json.servers[0].url
+  }
+
+  async function setParsedSpec(value: any) {
+    const parsed = await dereference(value)
+
+    parsedSpec.value = parsed.schema
+  }
+
+  function getParsedOperation(operationId: string) {
+    if (!parsedSpec.value?.paths) {
+      return null
+    }
+
+    return findOperation(parsedSpec.value.paths, operationId)
   }
 
   function getSecuritySchemes() {
