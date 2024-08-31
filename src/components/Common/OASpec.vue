@@ -26,7 +26,10 @@ const openapi = useOpenapi()
         prefix-headings
         hide-default-footer
       />
-      <OAFooter />
+
+      <hr />
     </div>
+
+    <OAFooter />
   </div>
 </template>
