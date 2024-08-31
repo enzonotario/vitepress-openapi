@@ -1,6 +1,10 @@
 <script setup>
 const props = defineProps({
-  operation: {
+  operationId: {
+    type: String,
+    required: true,
+  },
+  schema: {
     type: Object,
     required: true,
   },
@@ -9,13 +13,11 @@ const props = defineProps({
     default: false,
   },
 })
-
-const schema = props.operation?.requestBody?.content?.['application/json']?.schema
 </script>
 
 <template>
   <OASchemaTabs
-    :schema="schema"
+    :schema="props.schema"
     :is-dark="props.isDark"
   />
 </template>

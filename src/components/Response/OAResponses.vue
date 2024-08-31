@@ -1,8 +1,13 @@
 <script setup>
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
 import { TabsIndicator } from 'radix-vue'
+import { useOpenapi } from 'vitepress-theme-openapi'
 
 const props = defineProps({
+  operationId: {
+    type: String,
+    required: true,
+  },
   responses: {
     type: Object,
     required: true,
@@ -14,6 +19,8 @@ const props = defineProps({
 })
 
 const responsesCodes = Object.keys(props.responses)
+
+const openapi = useOpenapi()
 </script>
 
 <template>
@@ -38,7 +45,9 @@ const responsesCodes = Object.keys(props.responses)
         :value="responseCode"
       >
         <OAResponse
-          :responses="props.responses"
+          v-if="openapi?.spec?.value?.openapi"
+          :operation-id="props.operationId"
+          :response="props.responses[responseCode]"
           :response-code="responseCode"
           :is-dark="props.isDark"
         />

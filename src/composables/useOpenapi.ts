@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { httpVerbs } from 'vitepress-theme-openapi'
 import { generateMissingOperationIds } from '../utils/generateMissingOperationIds';
 import { dereference } from '@scalar/openapi-parser'
@@ -5,14 +6,14 @@ import type { OpenAPI } from '@scalar/openapi-types'
 
 let json: any = {}
 
-let parsedSpec: OpenAPI = null
+const parsedSpec: OpenAPI = ref(null)
 
 export function useOpenapi({ spec } = { spec: null }) {
   if (spec !== null) {
     setSpec(spec)
   }
 
-  async function setSpec(value: OpenAPISpec) {
+  function setSpec(value: OpenAPI) {
     if (value?.openapi) {
       if (!value.openapi.startsWith('3.')) {
         throw new Error('Only OpenAPI 3.x is supported')
@@ -26,33 +27,48 @@ export function useOpenapi({ spec } = { spec: null }) {
 
     json = value
 
-    const parsed = await dereference(value)
-
-    parsedSpec = parsed.schema
+    setParsedSpec(value)
   }
 
-  function getOperation(operationId: string) {
-    if (!parsedSpec.paths) {
-      return null
-    }
+  async function setParsedSpec(value: any) {
+    const parsed = await dereference(value)
 
-    for (const path of Object.values(parsedSpec.paths)) {
+    parsedSpec.value = parsed.schema
+  }
+
+  function findOperation(paths: any, operationId: string) {
+    for (const path of Object.values(paths)) {
       for (const verb of httpVerbs) {
         if (path[verb]?.operationId === operationId) {
           return path[verb]
         }
       }
     }
-
     return null
   }
 
-  function getOperationMethod(operationId: string) {
-    if (!parsedSpec.paths) {
+  function getOperation(operationId: string) {
+    if (!json?.paths) {
       return null
     }
 
-    for (const path of Object.values(parsedSpec.paths)) {
+    return findOperation(json.paths, operationId)
+  }
+
+  function getParsedOperation(operationId: string) {
+    if (!parsedSpec.value?.paths) {
+      return null
+    }
+
+    return findOperation(parsedSpec.value.paths, operationId)
+  }
+
+  function getOperationMethod(operationId: string) {
+    if (!json?.paths) {
+      return null
+    }
+
+    for (const path of Object.values(json.paths)) {
       for (const verb of httpVerbs) {
         if (path[verb]?.operationId === operationId) {
           return verb
@@ -64,9 +80,11 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function getOperationPath(operationId: string) {
-    if (!parsedSpec.paths) return null
+    if (!json?.paths) {
+      return null
+    }
 
-    for (const [path, methods] of Object.entries(parsedSpec.paths)) {
+    for (const [path, methods] of Object.entries(json.paths)) {
       for (const verb of httpVerbs) {
         if (methods[verb]?.operationId === operationId) {
           return path
@@ -86,32 +104,19 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function getBaseUrl() {
-    if (!parsedSpec.servers || parsedSpec.servers.length === 0)
+    if (!json?.servers || json.servers.length === 0) {
       return ''
-
-    return parsedSpec.servers[0].url
-  }
-
-  function getSchemas() {
-    if (!parsedSpec.components || !parsedSpec.components.schemas)
-      return {}
-
-    return parsedSpec.components.schemas
-  }
-
-  function getOperationCodeSamples(operationId: string) {
-    const operation = getOperation(operationId)
-    if (!operation) {
-      return []
     }
-    return operation['x-codeSamples'] || operation['x-code-samples'] || []
+
+    return json.servers[0].url
   }
 
   function getSecuritySchemes() {
-    if (!parsedSpec.components || !parsedSpec.components.securitySchemes)
+    if (!parsedSpec.value?.components || !parsedSpec.value?.components.securitySchemes) {
       return {}
+    }
 
-    return parsedSpec.components.securitySchemes
+    return parsedSpec.value.components.securitySchemes
   }
 
   return {
@@ -119,12 +124,11 @@ export function useOpenapi({ spec } = { spec: null }) {
     json,
     setSpec,
     getOperation,
+    getParsedOperation,
     getOperationMethod,
     getOperationPath,
     getOperationParameters,
     getBaseUrl,
-    getSchemas,
-    getOperationCodeSamples,
     getSecuritySchemes,
   }
 }

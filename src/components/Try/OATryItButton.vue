@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
+import { useOpenapi } from 'vitepress-theme-openapi'
 import { Button } from 'vitepress-theme-openapi/components/ui/button'
 
 const props = defineProps({

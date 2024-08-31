@@ -9,10 +9,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  method: {
-    type: String,
-    required: true,
-  },
   baseUrl: {
     type: String,
     required: true,
@@ -40,13 +36,19 @@ const loading = ref(false)
 
 const openapi = useOpenapi()
 
-const operation = openapi.getOperation(props.operationId)
-
-const schemaJson = propertiesTypesJsonRecursive(operation.requestBody?.content?.['application/json']?.schema)
+const operationMethod = openapi.getOperationMethod(props.operationId)
 
 const curl = computed(() => {
+  const parsedOperation = openapi.getParsedOperation(props.operationId)
+
+  if (!parsedOperation) {
+    return ''
+  }
+
+  const schemaJson = propertiesTypesJsonRecursive(parsedOperation.requestBody?.content?.['application/json']?.schema)
+
   const curlCommand = fetchToCurl({
-    method: props.method.toUpperCase(),
+    method: operationMethod.toUpperCase(),
     url: request.value.url,
     headers: request.value.headers,
     body: schemaJson ? JSON.stringify(schemaJson, null, 2) : undefined,
@@ -60,7 +62,7 @@ const curl = computed(() => {
   <div class="flex flex-col space-y-2">
     <OAPathEndpoint
       v-if="!props.hideEndpoint"
-      :method="props.method"
+      :method="operationMethod"
       :path="props.path"
       :base-url="props.baseUrl"
       hide-base-url
@@ -69,7 +71,7 @@ const curl = computed(() => {
     <OARequestParameters
       v-model:request="request"
       :operation-id="props.operationId"
-      :method="props.method"
+      :method="operationMethod"
     />
 
     <OACodeBlock
@@ -82,7 +84,7 @@ const curl = computed(() => {
     <OATryItButton
       :request="request"
       :operation-id="props.operationId"
-      :method="props.method"
+      :method="operationMethod"
       :is-dark="props.isDark"
       @loading="loading = $event"
     >

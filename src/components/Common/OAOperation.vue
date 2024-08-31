@@ -24,10 +24,6 @@ const props = defineProps({
 
 const slots = useSlots()
 
-const openapi = useOpenapi()
-
-const operationMethod = openapi.getOperationMethod(props.operationId)?.toUpperCase()
-
 const headingPrefix = computed(() => {
   if (!props.prefixHeadings) {
     return null
@@ -43,9 +39,8 @@ function hasSlot(name) {
 
 <template>
   <OAPath
-    v-if="props.operationId && operationMethod"
+    v-if="props.operationId"
     :id="props.operationId"
-    :method="operationMethod"
   >
     <template
       v-if="hasSlot('header')"
@@ -162,7 +157,8 @@ function hasSlot(name) {
       </OAHeading>
 
       <OARequestBody
-        :operation="requestBody.operation"
+        :operation-id="requestBody.operationId"
+        :schema="requestBody.schema"
         :is-dark="isDark"
       />
     </template>
@@ -188,6 +184,7 @@ function hasSlot(name) {
       </OAHeading>
 
       <OAResponses
+        :operation-id="responses.operationId"
         :responses="responses.responses"
         :response-type="responses.responseType"
         :is-dark="isDark"
