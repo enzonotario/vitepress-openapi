@@ -1,5 +1,5 @@
 <script setup>
-import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
+import { useOpenapi } from 'vitepress-theme-openapi'
 
 const props = defineProps({
   isDark: {

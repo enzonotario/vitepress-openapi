@@ -1,12 +1,9 @@
 <script setup>
-import { useOpenapi } from 'vitepress-theme-openapi/composables/useOpenapi'
+import { computed, defineProps } from 'vue'
+import { useOpenapi } from 'vitepress-theme-openapi'
 
 const props = defineProps({
   id: {
-    type: String,
-    required: true,
-  },
-  method: {
     type: String,
     required: true,
   },
@@ -16,13 +13,39 @@ const openapi = useOpenapi()
 
 const operation = openapi.getOperation(props.id)
 
+const operationParsed = computed(() => openapi.getParsedOperation(props.id))
+
 const operationPath = openapi.getOperationPath(props.id)
 
-const operationParameters = openapi.getOperationParameters(props.id)
+const operationMethod = openapi.getOperationMethod(props.id)?.toUpperCase()
 
 const baseUrl = openapi.getBaseUrl()
 
 const securitySchemes = openapi.getSecuritySchemes()
+
+const operationParameters = computed(() => {
+  if (!operationParsed.value) {
+    return operation.parameters
+  }
+
+  return operationParsed.value.parameters
+})
+
+const operationRequestBody = computed(() => {
+  if (!operationParsed.value) {
+    return operation.requestBody?.content?.['application/json']?.schema
+  }
+
+  return operationParsed.value?.requestBody?.content?.['application/json']?.schema
+})
+
+const operationResponses = computed(() => {
+  if (!operationParsed.value) {
+    return operation.responses
+  }
+
+  return operationParsed.value?.responses
+})
 </script>
 
 <template>
@@ -34,7 +57,7 @@ const securitySchemes = openapi.getSecuritySchemes()
       <slot
         name="header"
         :operation="operation"
-        :method="props.method"
+        :method="operationMethod"
         :base-url="baseUrl"
         :path="operationPath"
       />
@@ -62,27 +85,24 @@ const securitySchemes = openapi.getSecuritySchemes()
           />
 
           <slot
-            v-if="operationParameters.length"
+            v-if="operationParameters?.length"
             name="parameters"
-            :operation="operation"
-            :method="props.method"
-            :base-url="baseUrl"
-            :path="operationPath"
+            :operation-id="props.id"
             :parameters="operationParameters"
           />
 
           <slot
-            v-if="operation.requestBody"
+            v-if="operationRequestBody"
             name="request-body"
-            :operation="operation"
-            :method="props.method"
-            :base-url="baseUrl"
-            :path="operationPath"
+            :operation-id="props.id"
+            :schema="operationRequestBody"
           />
 
           <slot
+            v-if="operationResponses"
             name="responses"
-            :responses="operation.responses"
+            :operation-id="props.id"
+            :responses="operationResponses"
           />
         </div>
 

@@ -25,18 +25,8 @@ describe('useOpenapi with no spec', () => {
     expect(result).toBe('')
   })
 
-  it('returns empty object for getSchemas when components are not defined', () => {
-    const result = openapi.getSchemas()
-    expect(result).toEqual({})
-  })
-
   it('returns empty array for getTags when paths are not defined', () => {
     const result = useSidebar().getTags()
-    expect(result).toEqual([])
-  })
-
-  it('returns empty array for getOperationCodeSamples when operation is not found', () => {
-    const result = openapi.getOperationCodeSamples('someOperationId')
     expect(result).toEqual([])
   })
 })

@@ -1,8 +1,13 @@
 <script setup>
 import { defineProps } from 'vue'
+import { useOpenapi } from 'vitepress-theme-openapi'
 
 const props = defineProps({
-  responses: {
+  operationId: {
+    type: String,
+    required: true,
+  },
+  response: {
     type: Object,
     required: true,
   },
@@ -16,21 +21,19 @@ const props = defineProps({
   },
 })
 
-const response = props.responses[props.responseCode]
-
-const schema = response?.content?.['application/json']?.schema
+const schema = props.response.content?.['application/json']?.schema
 </script>
 
 <template>
   <div class="flex flex-col space-y-4">
-    <span class="text-gray-800 dark:text-gray-200 text-lg">{{ responses[responseCode].description }}</span>
+    <span class="text-gray-800 dark:text-gray-200 text-lg">{{ props.response.description }}</span>
 
     <div
-      v-if="responses[responseCode]?.content"
+      v-if="props.response?.content"
       class="flex flex-row items-center text-xs space-x-2"
     >
       <span class="text-gray-600 dark:text-gray-400">Content-Type:</span>
-      <span class="text-gray-800 dark:text-gray-200">{{ Object.keys(responses[responseCode].content)[0] }}</span>
+      <span class="text-gray-800 dark:text-gray-200">{{ Object.keys(props.response.content)[0] }}</span>
     </div>
 
     <OASchemaTabs

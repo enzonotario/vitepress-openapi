@@ -79,18 +79,8 @@ describe('useOpenapi with spec', () => {
     expect(result).toBe('https://api.example.com')
   })
 
-  it('returns the correct schemas for getSchemas', () => {
-    const result = openapi.getSchemas()
-    expect(result).toEqual(spec.components.schemas)
-  })
-
   it('returns the correct tags for getTags', () => {
     const result = useSidebar().getTags()
     expect(result).toEqual([])
-  })
-
-  it('returns the correct code samples for getOperationCodeSamples', () => {
-    const result = openapi.getOperationCodeSamples('getUsers')
-    expect(result).toEqual(spec.paths['/users'].get['x-codeSamples'])
   })
 })
