@@ -1,19 +1,17 @@
-import { ref } from 'vue'
 import { httpVerbs } from 'vitepress-theme-openapi'
 import { generateMissingOperationIds } from '../utils/generateMissingOperationIds';
-import { dereference } from '@scalar/openapi-parser'
-import type { OpenAPI } from '@scalar/openapi-types'
+import { dereferenceSync } from '@trojs/openapi-dereference';
 
 let json: any = {}
 
-const parsedSpec: OpenAPI = ref(null)
+let parsedSpec: any = {}
 
 export function useOpenapi({ spec } = { spec: null }) {
   if (spec !== null) {
     setSpec(spec)
   }
 
-  function setSpec(value: OpenAPI) {
+  function setSpec(value: any) {
     if (value?.openapi) {
       if (!value.openapi.startsWith('3.')) {
         throw new Error('Only OpenAPI 3.x is supported')
@@ -28,12 +26,6 @@ export function useOpenapi({ spec } = { spec: null }) {
     json = value
 
     setParsedSpec(value)
-  }
-
-  async function setParsedSpec(value: any) {
-    const parsed = await dereference(value)
-
-    parsedSpec.value = parsed.schema
   }
 
   function findOperation(paths: any, operationId: string) {
@@ -103,26 +95,24 @@ export function useOpenapi({ spec } = { spec: null }) {
     return json.servers[0].url
   }
 
-  async function setParsedSpec(value: any) {
-    const parsed = await dereference(value)
-
-    parsedSpec.value = parsed.schema
+  function setParsedSpec(value: any) {
+    parsedSpec = dereferenceSync(value)
   }
 
   function getParsedOperation(operationId: string) {
-    if (!parsedSpec.value?.paths) {
+    if (!parsedSpec.paths) {
       return null
     }
 
-    return findOperation(parsedSpec.value.paths, operationId)
+    return findOperation(parsedSpec.paths, operationId)
   }
 
   function getSecuritySchemes() {
-    if (!parsedSpec.value?.components || !parsedSpec.value?.components.securitySchemes) {
+    if (!parsedSpec.components || !parsedSpec.components.securitySchemes) {
       return {}
     }
 
-    return parsedSpec.value.components.securitySchemes
+    return parsedSpec.components.securitySchemes
   }
 
   return {
