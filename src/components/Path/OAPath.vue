@@ -51,6 +51,16 @@ const operationResponses = operationParsed?.responses
         <div class="flex flex-col">
           <div class="flex flex-col space-y-4">
             <slot
+              name="path-mobile"
+              :operation-id="props.id"
+              :operation="operation"
+              :method="operationMethod"
+              :base-url="baseUrl"
+              :path="operationPath"
+              :hide-base-url="!theme.getShowBaseURL()"
+            />
+
+            <slot
               name="description"
               :operation="operation"
               :method="operationMethod"
