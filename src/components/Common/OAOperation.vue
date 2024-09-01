@@ -250,8 +250,8 @@ function hasSlot(name) {
     >
       <OATryWithVariables
         :operation-id="tryIt.operationId"
-        :method="tryIt.method"
         :path="tryIt.path"
+        :method="tryIt.method"
         :base-url="tryIt.baseUrl"
         :is-dark="isDark"
       />

@@ -32,7 +32,9 @@ const operation = openapi.getOperation(props.operationId)
 
 const path = openapi.getOperationPath(props.operationId)
 
-const parameters = openapi.getOperationParameters(props.operationId)
+const operationParsed = openapi.getParsedOperation(props.operationId)
+
+const parameters = operationParsed?.parameters ?? []
 
 const securitySchemes = openapi.getSecuritySchemes()
 
@@ -159,9 +161,9 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
       v-if="Object.keys(securitySchemes).length"
       class="space-y-4"
     >
-      <h4>
+      <h3 class="!m-0 p-0 border-0">
         {{ $t('Security') }}
-      </h4>
+      </h3>
 
       <div class="flex flex-col space-y-2">
         <div
@@ -187,9 +189,9 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
       v-if="headerParameters.length"
       class="space-y-4"
     >
-      <h4>
+      <h3 class="!m-0 p-0 border-0">
         {{ $t('Headers') }}
-      </h4>
+      </h3>
 
       <div class="flex flex-col space-y-2">
         <div
@@ -219,9 +221,9 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
       v-if="Object.keys(queryParameters).length || Object.keys(pathParameters).length"
       class="space-y-4"
     >
-      <h4>
+      <h3 class="!m-0 p-0 border-0">
         {{ $t('Variables') }}
-      </h4>
+      </h3>
 
       <div class="flex flex-col space-y-2">
         <div class="flex flex-row gap-2">
