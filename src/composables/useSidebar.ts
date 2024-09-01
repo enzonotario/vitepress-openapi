@@ -13,9 +13,9 @@ export function useSidebar({ spec } = { spec: null }) {
     const sidebarTitle = operation['x-sidebar-title'] || summary || `${method.toUpperCase()} ${path}`
 
     return {
-      text: `<span class="SidebarItem">
-        <span class="SidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
-        <span class="SidebarItem-text">${sidebarTitle}</span>
+      text: `<span class="OASidebarItem">
+        <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
+        <span class="OASidebarItem-text">${sidebarTitle}</span>
       </span>`,
       link: `/operations/${operationId}`,
     };
