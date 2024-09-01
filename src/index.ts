@@ -1,17 +1,22 @@
-import 'tailwindcss/tailwind.css'
-import './style.css'
+import { useTheme } from './composables/useTheme'
+import { useShiki } from './composables/useShiki'
+import * as components from './components'
+
 import * as VueI18n from 'vue-i18n'
+import es from './locales/es.json'
+import en from './locales/en.json'
+
 import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
 import type { Awaitable } from 'vitepress'
-import { useTheme } from './composables/useTheme'
-import * as components from './components'
-import es from './locales/es.json'
-import en from './locales/en.json'
+
+import 'tailwindcss/tailwind.css'
+import './style.css'
 
 export { useSidebar } from './composables/useSidebar'
 export { useOpenapi } from './composables/useOpenapi'
 export { useTheme } from './composables/useTheme'
+export { useShiki } from './composables/useShiki'
 
 interface VPTheme {
   Layout: Component
@@ -37,6 +42,8 @@ export const theme = {
       // @ts-expect-error: no index signature
       app.component(key, components[key])
     }
+
+    useShiki().initShiki();
   },
 } as VPTheme
 

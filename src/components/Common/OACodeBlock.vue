@@ -1,6 +1,6 @@
 <script setup>
-import { codeToHtml } from 'shikiji'
 import { ref, watch } from 'vue'
+import { useShiki } from 'vitepress-theme-openapi/composables/useShiki'
 import VueJsonPretty from 'vue-json-pretty';
 import 'vue-json-pretty/lib/styles.css';
 
@@ -29,6 +29,8 @@ const props = defineProps({
 
 const html = ref(null)
 
+const shiki = useShiki()
+
 watch(
   [() => props.code, () => props.lang, () => props.isDark],
   async () => {
@@ -37,11 +39,11 @@ watch(
     }
 
     if (props.disableHtmlTransform) {
-      html.value = props.code
+      html.value = `<pre><code>${props.code}</code></pre>`
       return
     }
 
-    html.value = await codeToHtml(props.code, {
+    html.value = shiki.renderShiki(props.code, {
       lang: props.lang,
       theme: props.isDark ? 'vitesse-dark' : 'vitesse-light',
     })
