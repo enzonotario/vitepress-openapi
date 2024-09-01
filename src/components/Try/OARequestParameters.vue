@@ -156,16 +156,17 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
 </script>
 
 <template>
-  <div class="flex flex-col space-y-4">
-    <div
+  <div class="flex flex-col">
+    <details
       v-if="Object.keys(securitySchemes).length"
-      class="space-y-4"
+      open
+      class="flex flex-col"
     >
-      <h3 class="!m-0 p-0 border-0">
+      <summary class="my-0! text-lg font-bold cursor-pointer">
         {{ $t('Security') }}
-      </h3>
+      </summary>
 
-      <div class="flex flex-col space-y-2">
+      <div class="flex flex-col">
         <div
           v-for="(scheme, name) in securitySchemes"
           :key="name"
@@ -183,17 +184,18 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
           </div>
         </div>
       </div>
-    </div>
+    </details>
 
-    <div
+    <details
       v-if="headerParameters.length"
-      class="space-y-4"
+      open
+      class="flex flex-col"
     >
-      <h3 class="!m-0 p-0 border-0">
+      <summary class="my-0! text-lg font-bold cursor-pointer">
         {{ $t('Headers') }}
-      </h3>
+      </summary>
 
-      <div class="flex flex-col space-y-2">
+      <div class="flex flex-col">
         <div
           v-for="parameter in headerParameters"
           :key="parameter.name"
@@ -215,15 +217,16 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
           </div>
         </div>
       </div>
-    </div>
+    </details>
 
-    <div
+    <details
       v-if="Object.keys(queryParameters).length || Object.keys(pathParameters).length"
-      class="space-y-4"
+      open
+      class="flex flex-col"
     >
-      <h3 class="!m-0 p-0 border-0">
+      <summary class="my-0! text-lg font-bold cursor-pointer">
         {{ $t('Variables') }}
-      </h3>
+      </summary>
 
       <div class="flex flex-col space-y-2">
         <div class="flex flex-row gap-2">
@@ -256,6 +259,6 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
           </div>
         </div>
       </div>
-    </div>
+    </details>
   </div>
 </template>

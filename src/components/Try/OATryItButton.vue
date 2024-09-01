@@ -89,7 +89,7 @@ function setLoading(value) {
 </script>
 
 <template>
-  <div class="flex flex-col space-y-4">
+  <div class="flex flex-col">
     <Button @click="tryIt">
       {{ $t('Try it out') }}
     </Button>

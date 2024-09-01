@@ -1,6 +1,8 @@
 <script setup>
 import { codeToHtml } from 'shikiji'
 import { ref, watch } from 'vue'
+import VueJsonPretty from 'vue-json-pretty';
+import 'vue-json-pretty/lib/styles.css';
 
 const props = defineProps({
   code: {
@@ -30,6 +32,10 @@ const html = ref(null)
 watch(
   [() => props.code, () => props.lang, () => props.isDark],
   async () => {
+    if (props.lang === 'json') {
+      return
+    }
+
     if (props.disableHtmlTransform) {
       html.value = props.code
       return
@@ -48,7 +54,7 @@ watch(
 
 <template>
   <div
-    class="vp-adaptive-theme"
+    class="vp-adaptive-theme min-h-16"
     :class="[`language-${props.lang}`]"
   >
     <button
@@ -56,11 +62,21 @@ watch(
       class="copy"
     />
     <span class="lang">{{ props.label }}</span>
+
+    <vue-json-pretty
+      v-if="props.lang === 'json' && !props.disableHtmlTransform"
+      :data="JSON.parse(props.code)"
+      :theme="props.isDark ? 'dark' : 'light'"
+      show-icon
+      class="p-2"
+    />
+
     <div
-      v-if="html && !props.disableHtmlTransform"
+      v-else-if="html && !props.disableHtmlTransform"
       class="vp-adaptive-theme"
       v-html="html"
     />
+
     <pre v-else>{{ props.code }}</pre>
   </div>
 </template>

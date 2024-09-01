@@ -7,13 +7,13 @@ export const generateMethod = (options: any): string => {
   const method = options.method;
   if (!method) return '';
   const type: { [key: string]: string } = {
-    GET: '-X GET ',
-    POST: '-X POST ',
-    PUT: '-X PUT ',
-    PATCH: '-X PATCH ',
-    DELETE: '-X DELETE ',
-    HEAD: '-X HEAD ',
-    OPTIONS: '-X OPTION S'
+    GET: '-X GET \\\n',
+    POST: '-X POST \\\n',
+    PUT: '-X PUT \\\n',
+    PATCH: '-X PATCH \\\n',
+    DELETE: '-X DELETE \\\n',
+    HEAD: '-X HEAD \\\n',
+    OPTIONS: '-X OPTIONS\\\n '
   };
   return type[method.toUpperCase()] || '';
 }
