@@ -200,6 +200,7 @@ function hasSlot(name) {
       <OAHeading
         level="h2"
         :prefix="headingPrefix"
+        class="z-10"
       >
         {{ $t('Responses') }}
       </OAHeading>
