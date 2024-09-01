@@ -17,6 +17,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  method: {
+    type: String,
+    required: true,
+  },
   isDark: {
     type: Boolean,
     required: true,
@@ -36,15 +40,13 @@ const loading = ref(false)
 
 const openapi = useOpenapi()
 
-const operationMethod = openapi.getOperationMethod(props.operationId)
-
 const parsedOperation = openapi.getParsedOperation(props.operationId)
 
 const schemaJson = propertiesTypesJsonRecursive(parsedOperation.requestBody?.content?.['application/json']?.schema, true)
 
 const curl = computed(() => {
   return fetchToCurl({
-    method: operationMethod.toUpperCase(),
+    method: props.method.toUpperCase(),
     url: request.value.url,
     headers: request.value.headers,
     body: schemaJson ? JSON.stringify(schemaJson, null, 2) : undefined,
@@ -57,7 +59,7 @@ const curl = computed(() => {
     <OARequestParameters
       v-model:request="request"
       :operation-id="props.operationId"
-      :method="operationMethod"
+      :method="props.method"
     />
 
     <OACodeBlock
@@ -70,7 +72,7 @@ const curl = computed(() => {
     <OATryItButton
       :request="request"
       :operation-id="props.operationId"
-      :method="operationMethod"
+      :method="props.method"
       :is-dark="props.isDark"
       @loading="loading = $event"
     >

@@ -200,6 +200,7 @@ function hasSlot(name) {
       <OAHeading
         level="h2"
         :prefix="headingPrefix"
+        class="z-10"
       >
         {{ $t('Responses') }}
       </OAHeading>
@@ -249,8 +250,8 @@ function hasSlot(name) {
     >
       <OATryWithVariables
         :operation-id="tryIt.operationId"
-        :method="tryIt.method"
         :path="tryIt.path"
+        :method="tryIt.method"
         :base-url="tryIt.baseUrl"
         :is-dark="isDark"
       />
