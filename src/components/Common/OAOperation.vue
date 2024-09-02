@@ -279,6 +279,9 @@ function hasSlot(name) {
 
       <OACodeSamples
         :operation-id="codeSamples.operationId"
+        :path="codeSamples.path"
+        :method="codeSamples.method"
+        :base-url="codeSamples.baseUrl"
         :is-dark="isDark"
       />
     </template>
