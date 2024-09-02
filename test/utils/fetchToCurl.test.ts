@@ -6,7 +6,7 @@ describe('fetchToCurl', () => {
     const url = 'https://api.example.com/path/testOperation'
     const method = 'GET'
     const result = fetchToCurl(url, { method })
-    expect(result).toBe(`curl -X GET '${url}'`)
+    expect(result).toBe(`curl -X GET \\\n'${url}'`)
   })
 
   it('converts a POST request with body to curl', () => {
@@ -14,7 +14,7 @@ describe('fetchToCurl', () => {
     const method = 'POST'
     const body = { key: 'value' }
     const result = fetchToCurl(url, { method, body })
-    expect(result).toBe(`curl -X POST '${url}' \\
+    expect(result).toBe(`curl -X POST \\\n'${url}' \\
  --data '{"key":"value"}'`)
   })
 
@@ -23,7 +23,7 @@ describe('fetchToCurl', () => {
     const method = 'GET'
     const headers = { 'Content-Type': 'application/json' }
     const result = fetchToCurl(url, { method, headers })
-    expect(result).toBe(`curl -X GET '${url}' \\
+    expect(result).toBe(`curl -X GET \\\n'${url}' \\
  -H "Content-Type: application/json"`)
   })
 
@@ -31,7 +31,7 @@ describe('fetchToCurl', () => {
     const url = ''
     const method = 'GET'
     const result = fetchToCurl(url, { method })
-    expect(result).toBe(`curl -X GET ''`)
+    expect(result).toBe(`curl -X GET \\\n''`)
   })
 
   it('handles undefined method gracefully', () => {
@@ -44,20 +44,20 @@ describe('fetchToCurl', () => {
     const url = 'https://api.example.com/path/testOperation'
     const method = 'GET'
     const result = fetchToCurl(url, { method })
-    expect(result).toBe(`curl -X GET '${url}'`)
+    expect(result).toBe(`curl -X GET \\\n'${url}'`)
   })
 
   it('handles undefined body gracefully', () => {
     const url = 'https://api.example.com/path/testOperation'
     const method = 'POST'
     const result = fetchToCurl(url, { method })
-    expect(result).toBe(`curl -X POST '${url}'`)
+    expect(result).toBe(`curl -X POST \\\n'${url}'`)
   })
 
   it('handles URL object correctly', () => {
     const url = new URL('https://api.example.com/path/testOperation')
     const method = 'GET'
     const result = fetchToCurl(url, { method })
-    expect(result).toBe(`curl -X GET 'https://api.example.com/path/testOperation'`)
+    expect(result).toBe(`curl -X GET \\\n'https://api.example.com/path/testOperation'`)
   })
 })
