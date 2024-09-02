@@ -28,8 +28,6 @@ const openapi = useOpenapi()
 
 const baseUrl = openapi.getBaseUrl()
 
-const operation = openapi.getOperation(props.operationId)
-
 const path = openapi.getOperationPath(props.operationId)
 
 const operationParsed = openapi.getParsedOperation(props.operationId)

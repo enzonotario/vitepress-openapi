@@ -12,7 +12,7 @@ const props = defineProps({
 
 <template>
   <div
-    v-for="(key, idx) in Object.keys(props.property).filter(k => ![ 'type', 'description', 'properties', 'required', 'items' ].includes(k))"
+    v-for="(key, idx) in Object.keys(props.property).filter(k => ![ 'type', 'description', 'properties', 'required', 'items', 'xml' ].includes(k))"
     :key="idx"
     class="flex flex-row flex-wrap items-center gap-2"
   >
