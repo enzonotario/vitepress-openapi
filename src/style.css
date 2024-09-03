@@ -137,9 +137,14 @@
 .vjs-carets {
   @apply text-gray-500 dark:text-gray-400 !important;
 }
-
 .vjs-tree-node .vjs-indent-unit.has-line {
   @apply border-gray-400 dark:border-gray-700 !important;
+}
+.vjs-key {
+  color: #998418 !important;
+}
+.dark .vjs-key {
+  color: #b8a965 !important;
 }
 .vjs-value-null {
   color: #ab5959 !important;
