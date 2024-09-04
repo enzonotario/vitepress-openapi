@@ -11,7 +11,7 @@ The `OAOperation` component provides several slots for customizing the operation
 
 The `description` slot allows you to customize the operation description.
 
-```vue
+```markdown
 ---
 aside: false
 outline: false

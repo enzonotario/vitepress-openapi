@@ -7,7 +7,7 @@ outline: false
 
 You can use the `OASpec` component to render all operations in a single page layout.
 
-```vue
+```markdown
 ---
 aside: false
 outline: false
