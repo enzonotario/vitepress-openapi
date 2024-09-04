@@ -35,7 +35,9 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "npm run build && vitepress build docs"
+    "docs:build": "npm run build && vitepress build docs",
+    "test": "vitest",
+    "test:run": "vitest --run"
   },
   "peerDependencies": {
     "vue": "^3.4.29"

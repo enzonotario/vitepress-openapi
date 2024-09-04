@@ -1,4 +1,4 @@
-name: Publish Any Commit
+name: Run Test
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
     types: [submitted]
 
 jobs:
-  publish:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build
-        run: pnpm build
-
-      - run: pnpm dlx pkg-pr-new@0.0 publish --compact --pnpm ./
+      - name: Run test
+        run: pnpm test:run
