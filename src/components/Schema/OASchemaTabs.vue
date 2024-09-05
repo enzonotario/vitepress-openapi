@@ -53,13 +53,13 @@ const schemaContentType = computed(() => {
 const lang = computed(() => {
   if (props.contentType === 'application/json') return 'json'
   if (props.contentType === 'application/xml') return 'xml'
-  return 'json'
+  return null
 })
 </script>
 
 <template>
   <Tabs
-    :default-value="theme.schemaDefaultView"
+    :default-value="lang ? theme.schemaDefaultView : 'schema'"
     class="rounded border dark:border-gray-700"
   >
     <TabsList class="relative flex flex-row justify-start rounded-t rounded-b-none p-0">
@@ -71,6 +71,7 @@ const lang = computed(() => {
         {{ $t('Schema') }}
       </TabsTrigger>
       <TabsTrigger
+        v-if="lang"
         value="contentType"
         class="h-full"
       >
@@ -107,6 +108,7 @@ const lang = computed(() => {
         </div>
 
         <OACodeBlock
+          v-if="lang"
           :code="schemaContentType"
           :lang="lang"
           :label="contentTypeLabel"
