@@ -35,7 +35,7 @@ const schemaHasExample = hasExample(props.schema)
 const checkboxId = `useExample-${Math.random().toString(36).substring(7)}`
 
 const contentTypeLabel = computed(() => {
-  if (props.contentType === 'application/json') return 'JSON'
+  if (props.contentType.includes('json')) return 'JSON'
   if (props.contentType === 'application/xml') return 'XML'
   return 'Schema'
 })
@@ -53,7 +53,7 @@ const schemaContentType = computed(() => {
 const lang = computed(() => {
   if (props.contentType === 'application/json') return 'json'
   if (props.contentType === 'application/xml') return 'xml'
-  return null
+  return props.contentType
 })
 </script>
 

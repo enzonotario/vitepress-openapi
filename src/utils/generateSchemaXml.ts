@@ -2,9 +2,13 @@ import xmlFormat from 'xml-formatter';
 
 export function generateSchemaXml(schema: any, useExample = false): string {
   const xmlContent = propertiesTypesXmlRecursive(schema, useExample);
-  return xmlFormat(`<root>${xmlContent}</root>`, {
+  return formatXml(`<root>${xmlContent}</root>`);
+}
+
+export function formatXml(xml: string): string {
+  return xmlFormat(xml, {
     collapseContent: true,
-  }).replace(/(\r\n|\n|\r)[ \t]*(\r\n|\n|\r)/gm, '$1') // Remove empty lines.
+  }).replace(/(\r\n|\n|\r)[ \t]*(\r\n|\n|\r)/gm, '$1'); // Remove empty lines.
 }
 
 function propertiesTypesXmlRecursive(schema: any, useExample = false): string {
