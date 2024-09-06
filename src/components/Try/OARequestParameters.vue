@@ -120,7 +120,7 @@ function buildRequest() {
   }
 
   for (const [key, value] of Object.entries(auth.value)) {
-    if (!securitySchemes[key]) {
+    if (!securitySchemes[key] || !value) {
       continue
     }
 
