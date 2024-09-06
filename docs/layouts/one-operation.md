@@ -44,7 +44,7 @@ Example of `[operationId].paths.js`:
 
 ```ts
 import { useOpenapi, httpVerbs } from 'vitepress-theme-openapi'
-import spec from '../../public/openapi.json' assert { type: 'json' }
+import spec from '../public/openapi.json' assert { type: 'json' }
 
 export default {
     paths() {

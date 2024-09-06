@@ -48,7 +48,7 @@ import type { Theme } from 'vitepress'
 import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
 import 'vitepress-theme-openapi/dist/style.css'
 
-import spec from '../public/openapi.json' assert { type: 'json' }
+import spec from '../../public/openapi.json' assert { type: 'json' }
 
 export default {
     ...DefaultTheme,
