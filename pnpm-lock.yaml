@@ -108,6 +108,9 @@ importers:
       vue-tsc:
         specifier: ^2.1.4
         version: 2.1.4(typescript@5.5.4)
+      xml-formatter:
+        specifier: ^3.6.3
+        version: 3.6.3
 
 packages:
 
@@ -1976,9 +1979,17 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
+  xml-formatter@3.6.3:
+    resolution: {integrity: sha512-++x1TlRO1FRlQ82AZ4WnoCSufaI/PT/sycn4K8nRl4gnrNC1uYY2VV/67aALZ2m0Q4Q/BLj/L69K360Itw9NNg==}
+    engines: {node: '>= 16'}
+
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
     engines: {node: '>=12'}
+
+  xml-parser-xo@4.1.2:
+    resolution: {integrity: sha512-Z/DRB0ZAKj5vAQg++XsfQQKfT73Vfj5n5lKIVXobBDQEva6NHWUTxOA6OohJmEcpoy8AEqBmSGkXXAnFwt5qAA==}
+    engines: {node: '>= 16'}
 
   yaml@2.4.5:
     resolution: {integrity: sha512-aBx2bnqDzVOyNKfsysjA2ms5ZlnjSAW2eG3/L5G/CSujfjLJTJsEw1bGw8kCf04KodQWk1pxlGnZ56CRxiawmg==}
@@ -3897,7 +3908,13 @@ snapshots:
 
   wrappy@1.0.2: {}
 
+  xml-formatter@3.6.3:
+    dependencies:
+      xml-parser-xo: 4.1.2
+
   xml-name-validator@4.0.0: {}
+
+  xml-parser-xo@4.1.2: {}
 
   yaml@2.4.5: {}
 

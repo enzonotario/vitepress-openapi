@@ -4,7 +4,7 @@ import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
 
 const locale: Ref<'es' | 'en'> = ref('en')
 
-const schemaDefaultView: Ref<'schema' | 'json'> = ref('json')
+const schemaDefaultView: Ref<'schema' | 'contentType', 'xml'> = ref('contentType')
 
 const showBaseURL: Ref<boolean> = ref(false)
 
@@ -26,7 +26,7 @@ export function useTheme() {
     return schemaDefaultView.value
   }
 
-  function setSchemaDefaultView(value: 'schema' | 'json') {
+  function setSchemaDefaultView(value: 'schema' | 'contentType') {
     schemaDefaultView.value = value
   }
 

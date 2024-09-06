@@ -28,8 +28,6 @@ const openapi = useOpenapi()
 
 const baseUrl = openapi.getBaseUrl()
 
-const operation = openapi.getOperation(props.operationId)
-
 const path = openapi.getOperationPath(props.operationId)
 
 const operationParsed = openapi.getParsedOperation(props.operationId)
@@ -38,11 +36,11 @@ const parameters = operationParsed?.parameters ?? []
 
 const securitySchemes = openapi.getSecuritySchemes()
 
-const headerParameters = parameters.filter(parameter => parameter.in === 'header')
+const headerParameters = parameters.filter(parameter => parameter && parameter.in === 'header')
 
-const pathParameters = parameters.filter(parameter => parameter.in === 'path')
+const pathParameters = parameters.filter(parameter => parameter && parameter.in === 'path')
 
-const queryParameters = parameters.filter(parameter => parameter.in === 'query')
+const queryParameters = parameters.filter(parameter => parameter && parameter.in === 'query')
 
 const variables = ref({
   ...headerParameters.reduce((acc, parameter) => {

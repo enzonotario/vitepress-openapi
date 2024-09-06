@@ -5,11 +5,16 @@ import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
 import { generateSchemaJson } from 'vitepress-theme-openapi/utils/generateSchemaJson'
 import { hasExample } from 'vitepress-theme-openapi/utils/hasExample'
+import { generateSchemaXml } from 'vitepress-theme-openapi/utils/generateSchemaXml';
 
 const props = defineProps({
   schema: {
     type: Object,
     required: true,
+  },
+  contentType: {
+    type: String,
+    default: 'application/json',
   },
   isDark: {
     type: Boolean,
@@ -28,11 +33,33 @@ const schemaJson = computed(() => {
 const schemaHasExample = hasExample(props.schema)
 
 const checkboxId = `useExample-${Math.random().toString(36).substring(7)}`
+
+const contentTypeLabel = computed(() => {
+  if (props.contentType.includes('json')) return 'JSON'
+  if (props.contentType === 'application/xml') return 'XML'
+  return 'Schema'
+})
+
+const schemaXml = computed(() => {
+  return generateSchemaXml(props.schema, useExample.value)
+})
+
+const schemaContentType = computed(() => {
+  if (props.contentType === 'application/json') return schemaJson.value
+  if (props.contentType === 'application/xml') return schemaXml.value
+  return props.schema
+})
+
+const lang = computed(() => {
+  if (props.contentType === 'application/json') return 'json'
+  if (props.contentType === 'application/xml') return 'xml'
+  return props.contentType
+})
 </script>
 
 <template>
   <Tabs
-    :default-value="theme.schemaDefaultView"
+    :default-value="lang ? theme.schemaDefaultView : 'schema'"
     class="rounded border dark:border-gray-700"
   >
     <TabsList class="relative flex flex-row justify-start rounded-t rounded-b-none p-0">
@@ -44,10 +71,11 @@ const checkboxId = `useExample-${Math.random().toString(36).substring(7)}`
         {{ $t('Schema') }}
       </TabsTrigger>
       <TabsTrigger
-        value="json"
+        v-if="lang"
+        value="contentType"
         class="h-full"
       >
-        {{ $t('JSON') }}
+        {{ contentTypeLabel }}
       </TabsTrigger>
     </TabsList>
     <TabsContent
@@ -57,7 +85,7 @@ const checkboxId = `useExample-${Math.random().toString(36).substring(7)}`
       <OASchemaBody :schema="props.schema" />
     </TabsContent>
     <TabsContent
-      value="json"
+      value="contentType"
       class="mt-0 p-2"
     >
       <div class="relative flex flex-col">
@@ -80,9 +108,10 @@ const checkboxId = `useExample-${Math.random().toString(36).substring(7)}`
         </div>
 
         <OACodeBlock
-          :code="schemaJson"
-          lang="json"
-          label="JSON"
+          v-if="lang"
+          :code="schemaContentType"
+          :lang="lang"
+          :label="contentTypeLabel"
           :is-dark="props.isDark"
         />
       </div>

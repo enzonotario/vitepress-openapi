@@ -6,6 +6,8 @@ let json: any = {}
 
 let parsedSpec: any = {}
 
+const DEFAULT_SERVER_URL = 'http://localhost'
+
 export function useOpenapi({ spec } = { spec: null }) {
   if (spec !== null) {
     setSpec(spec)
@@ -89,10 +91,19 @@ export function useOpenapi({ spec } = { spec: null }) {
 
   function getBaseUrl() {
     if (!json?.servers || json.servers.length === 0) {
-      return ''
+      return DEFAULT_SERVER_URL
     }
 
-    return json.servers[0].url
+    try {
+      const firstUrl = json.servers[0].url
+
+      new URL(firstUrl)
+
+      return firstUrl
+    } catch {
+      console.warn('Invalid server URL:', firstUrl)
+      return DEFAULT_SERVER_URL
+    }
   }
 
   function setParsedSpec(value: any) {

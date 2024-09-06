@@ -1,9 +1,13 @@
 export function generateSchemaJson(schema: any, useExample = false) {
-  return JSON.stringify(
-      propertiesTypesJsonRecursive(schema, useExample),
-      null,
-      2,
-  )
+  try {
+    return JSON.stringify(
+        propertiesTypesJsonRecursive(schema, useExample),
+        null,
+        2,
+    )
+  } catch {
+    return '{}'
+  }
 }
 
 export function propertiesTypesJsonRecursive(schema: any, useExample = false) {

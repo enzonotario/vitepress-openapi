@@ -1,5 +1,13 @@
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'vitepress-theme-openapi/components/ui/select'
 
 const props = defineProps({
   operationId: {
@@ -20,7 +28,11 @@ const props = defineProps({
   },
 })
 
-const schema = props.response.content?.['application/json']?.schema
+const contentTypes = Object.keys(props.response.content ?? {})
+
+const contentType = ref(contentTypes[0] ?? '')
+
+const schema = props.response.content?.[contentType.value]?.schema
 </script>
 
 <template>
@@ -29,15 +41,33 @@ const schema = props.response.content?.['application/json']?.schema
 
     <div
       v-if="props.response?.content"
-      class="flex flex-row items-center text-xs space-x-2"
+      class="flex flex-row items-center gap-2 text-xs"
     >
-      <span class="text-gray-600 dark:text-gray-400">Content-Type:</span>
-      <span class="text-gray-800 dark:text-gray-200">{{ Object.keys(props.response.content)[0] }}</span>
+      <span class="flex-shrink-0 text-gray-600 dark:text-gray-400">Content-Type</span>
+      <div class="flex-shrink-0">
+        <Select v-model="contentType">
+          <SelectTrigger class="h-6 text-xs">
+            <SelectValue>{{ contentType }}</SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem
+                v-for="(type, idx) in contentTypes"
+                :key="idx"
+                :value="type"
+              >
+                {{ type }}
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
 
     <OASchemaTabs
       v-if="schema"
       :schema="schema"
+      :content-type="contentType"
       :is-dark="props.isDark"
     />
   </div>
