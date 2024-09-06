@@ -26,7 +26,7 @@ const securitySchemes = openapi.getSecuritySchemes()
 
 const operationParsed = openapi.getParsedOperation(props.id)
 
-const operationParameters = operationParsed.parameters
+const operationParameters = operationParsed?.parameters
 
 const operationRequestBody = operationParsed?.requestBody?.content?.['application/json']?.schema
 

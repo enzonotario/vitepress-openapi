@@ -12,11 +12,11 @@ const props = defineProps({
   },
 })
 
-const headerParameters = props.parameters.filter(parameter => parameter.in === 'header')
+const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
 
-const pathParameters = props.parameters.filter(parameter => parameter.in === 'path')
+const pathParameters = props.parameters.filter(parameter => parameter && parameter.in === 'path')
 
-const queryParameters = props.parameters.filter(parameter => parameter.in === 'query')
+const queryParameters = props.parameters.filter(parameter => parameter && parameter.in === 'query')
 </script>
 
 <template>

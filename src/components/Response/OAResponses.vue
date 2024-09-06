@@ -43,6 +43,7 @@ const responsesCodes = Object.keys(props.responses)
         :value="responseCode"
       >
         <OAResponse
+          v-if="props.responses[responseCode]"
           :operation-id="props.operationId"
           :response="props.responses[responseCode]"
           :response-code="responseCode"

@@ -18,16 +18,18 @@ const openapi = useOpenapi()
       :key="path.id"
       class="flex flex-col space-y-10"
     >
-      <OAOperation
-        v-for="method in Object.keys(path)"
-        :key="`${method}-${path.id}`"
-        :operation-id="path[method].operationId"
-        :is-dark="props.isDark"
-        prefix-headings
-        hide-default-footer
-      />
+      <template v-for="method in Object.keys(path)">
+        <OAOperation
+          v-if="path[method].operationId"
+          :key="`${method}-${path.id}`"
+          :operation-id="path[method].operationId"
+          :is-dark="props.isDark"
+          prefix-headings
+          hide-default-footer
+        />
+      </template>
 
-      <hr />
+      <hr>
     </div>
 
     <OAFooter />

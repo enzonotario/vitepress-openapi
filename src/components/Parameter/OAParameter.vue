@@ -23,21 +23,23 @@ const props = defineProps({
         v-html="props.parameter.description"
       />
     </div>
-    <div class="flex flex-col space-y-2">
+    <div
+      v-if="props.parameter.schema"
+      class="flex flex-col space-y-2"
+    >
       <div class="flex flex-row space-x-2">
-        <span
-          v-if="props?.parameter?.schema?.type"
-          class="text-sm font-bold"
+        <div
+          v-if="props.parameter.schema.type"
+          class="flex flex-row space-x-2 text-sm"
         >
-          {{ $t('Type') }}
-        </span>
+          <span class="font-bold">
+            {{ $t('Type') }}
+          </span>
 
-        <span
-          v-if="props?.parameter?.schema?.type"
-          class="text-sm text-gray-600 dark:text-gray-300"
-        >
-          {{ props.parameter.schema.type }}
-        </span>
+          <span class="text-gray-600 dark:text-gray-300">
+            {{ props.parameter.schema.type }}
+          </span>
+        </div>
 
         <span
           v-if="props.parameter.required"

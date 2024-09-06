@@ -36,11 +36,11 @@ const parameters = operationParsed?.parameters ?? []
 
 const securitySchemes = openapi.getSecuritySchemes()
 
-const headerParameters = parameters.filter(parameter => parameter.in === 'header')
+const headerParameters = parameters.filter(parameter => parameter && parameter.in === 'header')
 
-const pathParameters = parameters.filter(parameter => parameter.in === 'path')
+const pathParameters = parameters.filter(parameter => parameter && parameter.in === 'path')
 
-const queryParameters = parameters.filter(parameter => parameter.in === 'query')
+const queryParameters = parameters.filter(parameter => parameter && parameter.in === 'query')
 
 const variables = ref({
   ...headerParameters.reduce((acc, parameter) => {
