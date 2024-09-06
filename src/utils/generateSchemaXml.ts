@@ -52,11 +52,10 @@ function getPropertyValueXml(property: any, useExample: boolean): string {
       }
       return '';
     case 'object':
+    default:
       if (property.properties) {
         return propertiesTypesXmlRecursive(property, useExample);
       }
-      return '';
-    default:
       return '';
   }
 }

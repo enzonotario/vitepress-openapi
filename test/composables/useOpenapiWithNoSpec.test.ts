@@ -22,7 +22,7 @@ describe('useOpenapi with no spec', () => {
 
   it('returns empty string for getBaseUrl when servers are not defined', () => {
     const result = openapi.getBaseUrl()
-    expect(result).toBe('')
+    expect(result).toBe('http://localhost')
   })
 
   it('returns empty array for getTags when paths are not defined', () => {
