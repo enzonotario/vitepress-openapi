@@ -34,7 +34,7 @@ const operationParsed = openapi.getParsedOperation(props.operationId)
 
 const parameters = operationParsed?.parameters ?? []
 
-const securitySchemes = openapi.getSecuritySchemes()
+const securitySchemes = openapi.getSecuritySchemes(props.operationId)
 
 const headerParameters = parameters.filter(parameter => parameter && parameter.in === 'header')
 

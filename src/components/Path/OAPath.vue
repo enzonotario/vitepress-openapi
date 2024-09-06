@@ -22,7 +22,7 @@ const operationMethod = openapi.getOperationMethod(props.id)?.toUpperCase()
 
 const baseUrl = openapi.getBaseUrl()
 
-const securitySchemes = openapi.getSecuritySchemes()
+const securitySchemes = openapi.getSecuritySchemes(props.id)
 
 const operationParsed = openapi.getParsedOperation(props.id)
 
