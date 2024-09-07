@@ -1,11 +1,14 @@
 /**
  * Based on [fetch-to-curl](https://github.com/leoek/fetch-to-curl]
  * @author [leoek](https://github.com/leoek)
+ * @author [enzonotario](https://github.com/enzonotario)
  */
 
-export const generateMethod = (options: any): string => {
-  const method = options.method;
-  if (!method) return '';
+export const generateMethodArgument = (method: string): string => {
+  if (!method) {
+    return ''
+  }
+
   const type: { [key: string]: string } = {
     GET: '-X GET \\\n',
     POST: '-X POST \\\n',
@@ -14,8 +17,9 @@ export const generateMethod = (options: any): string => {
     DELETE: '-X DELETE \\\n',
     HEAD: '-X HEAD \\\n',
     OPTIONS: '-X OPTIONS\\\n '
-  };
-  return type[method.toUpperCase()] || '';
+  }
+
+  return type[method.toUpperCase()] || ''
 }
 
 export const isInstanceOfHeaders = (val: any): boolean => {
@@ -36,8 +40,7 @@ interface HeaderParams {
 
 const getHeaderString = (name: string, val: any): string => ` -H "${name}: ${`${val}`.replace(/(\\|")/g, '\\$1')}"`;
 
-export const generateHeader = (options: { headers?: any } = {}): HeaderParams => {
-  const { headers } = options;
+export const generateHeadersArgument = (headers?: any): HeaderParams => {
   let isEncode = false;
   let headerParam = '';
   if (isInstanceOfHeaders(headers)){
@@ -71,45 +74,41 @@ export function escapeBody(body: any): string {
 }
 
 export function generateBody(body: any): string {
-  if (!body) return '';
-  if (typeof body === "object"){
-    return ` --data '${escapeBody(JSON.stringify(body))}'`;
+  if (!body) {
+    return ''
   }
-  return ` --data '${escapeBody(body)}'`;
+
+  if (typeof body === "object"){
+    return ` --data '${escapeBody(JSON.stringify(body))}'`
+  }
+
+  return ` --data '${escapeBody(body)}'`
 }
 
 export function generateCompress(isEncode: boolean): string {
   return isEncode ? ' --compressed' : '';
 }
 
-export const fetchToCurl = (requestInfo: string | { url?: string }, requestInit: object = {}): string => {
-  let url: string | undefined, options: any;
-  /**
-   * initialization with an empty object is done here to
-   * keep everything backwards compatible to 0.4.0 and below
-   */
-  if (typeof requestInfo === "string" || requestInfo instanceof URL) {
-    url = requestInfo.toString();
-    options = requestInit || {};
-  } else {
-    url = (requestInfo || {}).url;
-    options = requestInfo || {};
-  }
-  const { body } = options;
-  const headers = generateHeader(options);
+export const fetchToCurl = ({
+  url,
+  method,
+  headers,
+  body,
+}: { url: string, method: string, headers: any, body: any }): string => {
+  const headersArgument = generateHeadersArgument(headers);
 
-  let output = `curl ${generateMethod(options)}'${url}'`
+  let output = `curl ${generateMethodArgument(method)}'${url}'`
 
-  if (headers.params) {
-    output += ` \\\n${headers.params}`
+  if (headersArgument.params) {
+    output += ` \\\n${headersArgument.params}`
   }
 
   if (body) {
     output += ` \\\n${generateBody(body)}`
   }
 
-  if (headers.isEncode) {
-    output += ` \\\n${generateCompress(headers.isEncode)}`
+  if (headersArgument.isEncode) {
+    output += ` \\\n${generateCompress(headersArgument.isEncode)}`
   }
 
   return output;

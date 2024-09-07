@@ -52,7 +52,7 @@ const curl = computed(() => {
     method: props.method.toUpperCase(),
     url: request.value.url,
     headers: request.value.headers,
-    body: schemaJson && Object.keys(schemaJson).length ? JSON.stringify(schemaJson, null, 2) : undefined,
+    body: schemaJson,
   })
 })
 </script>
