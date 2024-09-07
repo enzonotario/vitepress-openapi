@@ -1,27 +1,17 @@
-import { useOpenapi, httpVerbs } from 'vitepress-theme-openapi'
+import { OpenApi } from 'vitepress-theme-openapi'
 import spec from '../../docs/public/openapi.json' assert { type: 'json' }
 
 export default {
     paths() {
-        const openapi = useOpenapi({ spec })
+        const openapi = OpenApi({ spec })
 
-        if (!openapi?.json?.paths) {
-            return []
-        }
-
-        return Object.keys(openapi.json.paths)
-            .flatMap((path) => {
-                return httpVerbs
-                    .filter((verb) => openapi.json.paths[path][verb])
-                    .map((verb) => {
-                        const { operationId, summary } = openapi.json.paths[path][verb]
-                        return {
-                            params: {
-                                operationId,
-                                pageTitle: `${summary} - vitepress-theme-openapi`,
-                            },
-                        }
-                    })
-            })
+        return openapi.getPathsByVerbs().map(({ operationId, summary }) => {
+            return {
+                params: {
+                    operationId,
+                    pageTitle: `${summary} - vitepress-theme-openapi`,
+                },
+            }
+        })
     },
 }

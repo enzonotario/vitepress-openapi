@@ -2,6 +2,7 @@
 import { defineProps } from 'vue'
 import { useOpenapi } from 'vitepress-theme-openapi'
 import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
+import { OpenApi } from 'vitepress-theme-openapi/utils/OpenApi';
 
 const props = defineProps({
   id: {
@@ -16,8 +17,7 @@ const props = defineProps({
 
 const theme = useTheme()
 
-const openapi = useOpenapi()
-openapi.setSpec(props.spec)
+const openapi = OpenApi({ spec: props.spec || useOpenapi().json })
 
 const operation = openapi.getOperation(props.id)
 

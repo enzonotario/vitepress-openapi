@@ -1,10 +1,11 @@
 import { useOpenapi, httpVerbs } from 'vitepress-theme-openapi'
+import { OpenApi } from 'vitepress-theme-openapi'
 
 export function useSidebar({ spec } = { spec: null }) {
-  const openapi = useOpenapi({ spec })
+  const openapi = OpenApi({ spec: spec || useOpenapi().json })
 
   function generateSidebarItem(method: string, path: string) {
-    const operation = openapi?.json?.paths?.[path]?.[method]
+    const operation = openapi.getPaths()?.[path]?.[method]
     if (!operation) {
       return null
     }
@@ -22,17 +23,17 @@ export function useSidebar({ spec } = { spec: null }) {
   }
 
   function generateSidebarGroup(tag: string | string[], text?: string, addedOperations = new Set()) {
-    if (!openapi?.json?.paths) {
+    if (!openapi.getPaths()) {
       return []
     }
 
     const includeTags = Array.isArray(tag) ? tag : [tag]
 
-    const sidebarGroupElements = Object.keys(openapi.json.paths)
+    const sidebarGroupElements = Object.keys(openapi.getPaths())
         .flatMap((path) => {
           return httpVerbs
               .map((method) => {
-                const operation = openapi.json.paths[path][method]
+                const operation = openapi.getPaths()[path][method]
                 if (operation && !addedOperations.has(operation.operationId) && (includeTags.length === 0 || includeTags.every(tag => operation.tags?.includes(tag)))) {
                   addedOperations.add(operation.operationId)
                   return generateSidebarItem(method, path)
@@ -49,7 +50,7 @@ export function useSidebar({ spec } = { spec: null }) {
   }
 
   function generateSidebarGroups() {
-    if (!openapi?.json?.paths) {
+    if (!openapi.getPaths()) {
       return []
     }
 
@@ -67,11 +68,11 @@ export function useSidebar({ spec } = { spec: null }) {
   }
 
   function getTags(): string[] {
-    if (!openapi?.json?.paths) {
+    if (!openapi.getPaths()) {
       return []
     }
 
-    return Object.values(openapi?.json?.paths).reduce((tags, path: any) => {
+    return Object.values(openapi.getPaths()).reduce((tags, path: any) => {
       for (const verb of httpVerbs) {
         if (path[verb]?.tags) {
           path[verb].tags.forEach((tag: string) => {

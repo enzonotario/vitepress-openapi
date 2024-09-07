@@ -17,6 +17,7 @@ export { useSidebar } from './composables/useSidebar'
 export { useOpenapi } from './composables/useOpenapi'
 export { useTheme } from './composables/useTheme'
 export { useShiki } from './composables/useShiki'
+export { OpenApi } from './utils/OpenApi'
 
 interface VPTheme {
   Layout: Component
