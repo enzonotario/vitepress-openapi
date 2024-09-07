@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import { useOpenapi } from 'vitepress-theme-openapi'
 import { Button } from 'vitepress-theme-openapi/components/ui/button'
 
 const props = defineProps({
@@ -8,7 +7,15 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  path: {
+    type: String,
+    required: true,
+  },
   method: {
+    type: String,
+    required: true,
+  },
+  baseUrl: {
     type: String,
     required: true,
   },
@@ -30,13 +37,7 @@ const emits = defineEmits([
   'loading',
 ])
 
-const openapi = useOpenapi()
-
-const operationPath = openapi.getOperationPath(props.operationId)
-
-const baseUrl = openapi.getBaseUrl()
-
-const defaultRequestUrl = `${baseUrl}${operationPath}`
+const defaultRequestUrl = `${props.baseUrl}${props.path}`
 
 const response = ref(null)
 

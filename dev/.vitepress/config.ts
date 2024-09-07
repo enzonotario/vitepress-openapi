@@ -21,6 +21,15 @@ export default defineConfigWithTheme({
         text: 'Custom Slots',
         link: '/custom-slots',
       },
+      {
+        text: 'By Specs',
+        items: [
+          {
+            text: 'Buy Tickets',
+            link: '/operations-specs/buyMuseumTickets',
+          },
+        ],
+      },
     ],
   },
   vite: {

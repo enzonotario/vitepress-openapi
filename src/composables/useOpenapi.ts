@@ -14,13 +14,14 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function setSpec(value: any) {
-    if (value?.openapi) {
-      if (!value.openapi.startsWith('3.')) {
-        throw new Error('Only OpenAPI 3.x is supported')
-      }
-    } else {
-      console.warn('Invalid OpenAPI spec, missing `openapi` field, no version specified ')
+    if (!value) {
+      return
     }
+
+    if (!value.openapi || !value.openapi.startsWith('3.')) {
+        throw new Error('Only OpenAPI 3.x is supported')
+    }
+
     if (value?.paths) {
       value = generateMissingOperationIds(value)
     }
@@ -111,7 +112,7 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function getParsedOperation(operationId: string) {
-    if (!parsedSpec.paths) {
+    if (!parsedSpec?.paths) {
       return null
     }
 
@@ -119,7 +120,7 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function getSecuritySchemes(operationId: string) {
-    if (operationId && parsedSpec.paths) {
+    if (operationId && parsedSpec?.paths) {
       const operation = findOperation(parsedSpec.paths, operationId)
 
       if (operation && operation.security) {
@@ -127,7 +128,7 @@ export function useOpenapi({ spec } = { spec: null }) {
       }
     }
 
-    if (!parsedSpec.components || !parsedSpec.components.securitySchemes) {
+    if (!parsedSpec?.components || !parsedSpec?.components?.securitySchemes) {
       return {}
     }
 

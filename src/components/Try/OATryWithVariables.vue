@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue'
 import fetchToCurl from 'vitepress-theme-openapi/utils/fetchToCurl';
-import { useOpenapi } from 'vitepress-theme-openapi';
 import { generateSchemaJson } from 'vitepress-theme-openapi/utils/generateSchemaJson';
 
 const props = defineProps({
@@ -29,6 +28,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  schema: {
+    type: Object,
+    required: false,
+  },
+  securitySchemes: {
+    type: Object,
+    required: true,
+  },
 })
 
 const request = ref({
@@ -38,11 +45,7 @@ const request = ref({
 
 const loading = ref(false)
 
-const openapi = useOpenapi()
-
-const parsedOperation = openapi.getParsedOperation(props.operationId)
-
-const schemaJson = generateSchemaJson(parsedOperation?.requestBody?.content?.['application/json']?.schema, true)
+const schemaJson = props.schema ? generateSchemaJson(props.schema, true) : null
 
 const curl = computed(() => {
   return fetchToCurl({
@@ -59,7 +62,11 @@ const curl = computed(() => {
     <OARequestParameters
       v-model:request="request"
       :operation-id="props.operationId"
+      :path="props.path"
       :method="props.method"
+      :base-url="props.baseUrl"
+      :parameters="props.schema?.parameters ?? []"
+      :security-schemes="props.securitySchemes ?? {}"
     />
 
     <OACodeBlock
@@ -72,7 +79,9 @@ const curl = computed(() => {
     <OATryItButton
       :request="request"
       :operation-id="props.operationId"
+      :path="props.path"
       :method="props.method"
+      :base-url="props.baseUrl"
       :is-dark="props.isDark"
       @loading="loading = $event"
     >

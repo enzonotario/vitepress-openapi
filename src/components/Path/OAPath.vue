@@ -8,11 +8,16 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  spec: {
+    type: Object,
+    required: false,
+  },
 })
 
 const theme = useTheme()
 
 const openapi = useOpenapi()
+openapi.setSpec(props.spec)
 
 const operation = openapi.getOperation(props.id)
 
@@ -128,6 +133,8 @@ const operationResponses = operationParsed?.responses
               :path="operationPath"
               :method="operationMethod"
               :base-url="baseUrl"
+              :schema="operationRequestBody"
+              :security-schemes="securitySchemes"
             />
 
             <slot
