@@ -3,7 +3,7 @@ import { dereferenceSync } from '@trojs/openapi-dereference';
 
 const DEFAULT_SERVER_URL = 'http://localhost'
 
-export function OpenApi({ spec }: { spec: any }) {
+export function OpenApi({ spec }: { spec: any } = { spec: null }) {
   let parsedSpec: any = null
 
   function findOperation(paths: any, operationId: string) {

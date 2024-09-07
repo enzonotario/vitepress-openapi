@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { useOpenapi } from './src/composables/useOpenapi'
+import { OpenApi } from 'vitepress-theme-openapi'
 import { useSidebar } from './src/composables/useSidebar'
 
 describe('useOpenapi with no spec', () => {
-  const openapi = useOpenapi()
+  const openapi = OpenApi()
 
   it('returns null for getOperation when paths are not defined', () => {
     const result = openapi.getOperation('someOperationId')
