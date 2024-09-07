@@ -45,13 +45,13 @@ const schemaXml = computed(() => {
 })
 
 const schemaContentType = computed(() => {
-  if (props.contentType === 'application/json') return schemaJson.value
+  if (props.contentType.includes('json')) return schemaJson.value
   if (props.contentType === 'application/xml') return schemaXml.value
   return props.schema
 })
 
 const lang = computed(() => {
-  if (props.contentType === 'application/json') return 'json'
+  if (props.contentType.includes('json')) return 'json'
   if (props.contentType === 'application/xml') return 'xml'
   return props.contentType
 })
