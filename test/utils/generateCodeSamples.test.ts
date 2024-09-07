@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { generateCodeSamples } from '../../src/utils/generateCodeSamples'
+import { generateCodeSamples } from '../../src/lib/generateCodeSamples'
 
 describe('generateCodeSamples', () => {
   it('generates code samples for GET method', () => {

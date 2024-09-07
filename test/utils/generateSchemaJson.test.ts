@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateSchemaJson } from '../../src/utils/generateSchemaJson';
+import { generateSchemaJson } from '../../src/lib/generateSchemaJson';
 
 describe('generateSchemaJson', () => {
   it('generates JSON for schema with string property', () => {

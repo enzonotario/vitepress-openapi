@@ -2,7 +2,7 @@
 import { defineProps } from 'vue'
 import { useOpenapi } from 'vitepress-theme-openapi'
 import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
-import { OpenApi } from 'vitepress-theme-openapi/utils/OpenApi';
+import { OpenApi } from 'vitepress-theme-openapi';
 
 const props = defineProps({
   id: {

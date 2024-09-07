@@ -3,9 +3,9 @@ import { computed, ref } from 'vue';
 import { TabsIndicator } from 'radix-vue'
 import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
-import { generateSchemaJson } from 'vitepress-theme-openapi/utils/generateSchemaJson'
-import { hasExample } from 'vitepress-theme-openapi/utils/hasExample'
-import { generateSchemaXml } from 'vitepress-theme-openapi/utils/generateSchemaXml';
+import { generateSchemaJson } from 'vitepress-theme-openapi/lib/generateSchemaJson'
+import { hasExample } from 'vitepress-theme-openapi/lib/hasExample'
+import { generateSchemaXml } from 'vitepress-theme-openapi/lib/generateSchemaXml';
 
 const props = defineProps({
   schema: {

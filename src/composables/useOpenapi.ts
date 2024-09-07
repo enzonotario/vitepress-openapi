@@ -1,4 +1,4 @@
-import { generateMissingOperationIds } from '../utils/generateMissingOperationIds';
+import { generateMissingOperationIds } from '../lib/generateMissingOperationIds';
 
 let json: any = {}
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fetchToCurl, generateMethod, generateHeader, generateBody, generateCompress, escapeBody, isInstanceOfHeaders } from '../../src/utils/fetchToCurl'
+import { fetchToCurl, generateMethod, generateHeader, generateBody, generateCompress, escapeBody, isInstanceOfHeaders } from '../../src/lib/fetchToCurl'
 
 describe('fetchToCurl', () => {
   it('converts a simple GET request to curl', () => {
