@@ -118,7 +118,15 @@ export function useOpenapi({ spec } = { spec: null }) {
     return findOperation(parsedSpec.paths, operationId)
   }
 
-  function getSecuritySchemes() {
+  function getSecuritySchemes(operationId: string) {
+    if (operationId && parsedSpec.paths) {
+      const operation = findOperation(parsedSpec.paths, operationId)
+
+      if (operation && operation.security) {
+          return operation.security
+      }
+    }
+
     if (!parsedSpec.components || !parsedSpec.components.securitySchemes) {
       return {}
     }

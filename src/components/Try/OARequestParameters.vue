@@ -34,7 +34,7 @@ const operationParsed = openapi.getParsedOperation(props.operationId)
 
 const parameters = operationParsed?.parameters ?? []
 
-const securitySchemes = openapi.getSecuritySchemes()
+const securitySchemes = openapi.getSecuritySchemes(props.operationId)
 
 const headerParameters = parameters.filter(parameter => parameter && parameter.in === 'header')
 
@@ -120,7 +120,7 @@ function buildRequest() {
   }
 
   for (const [key, value] of Object.entries(auth.value)) {
-    if (!securitySchemes[key]) {
+    if (!securitySchemes[key] || !value) {
       continue
     }
 
