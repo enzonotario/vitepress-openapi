@@ -22,7 +22,7 @@ export default defineConfigWithTheme({
         link: '/custom-slots',
       },
       {
-        text: 'By Specs',
+        text: 'Multiple Specs',
         items: [
           {
             text: 'Buy Tickets',
