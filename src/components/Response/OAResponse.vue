@@ -40,7 +40,7 @@ const schema = props.response.content?.[contentType.value]?.schema
     <span class="text-gray-800 dark:text-gray-200 text-lg">{{ props.response.description }}</span>
 
     <div
-      v-if="props.response?.content"
+      v-if="props.response?.content && contentTypes.length"
       class="flex flex-row items-center gap-2 text-xs"
     >
       <span class="flex-shrink-0 text-gray-600 dark:text-gray-400">Content-Type</span>
