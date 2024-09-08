@@ -1,4 +1,5 @@
 import { generateMissingOperationIds } from '../lib/generateMissingOperationIds';
+import { generateMissingSummary } from '../lib/generateMissingSummary';
 
 let json: any = {}
 
@@ -20,6 +21,7 @@ export function useOpenapi({ spec } = { spec: null }) {
 
     if (value?.paths) {
       value = generateMissingOperationIds(value)
+      value = generateMissingSummary(value)
     }
 
     json = value
