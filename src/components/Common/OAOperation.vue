@@ -125,7 +125,7 @@ function hasSlot(name) {
         level="h2"
         :prefix="headingPrefix"
       >
-        {{ $t('Security') }}
+        {{ $t('Authorizations') }}
       </OAHeading>
 
       <OASecurity

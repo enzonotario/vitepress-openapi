@@ -19,6 +19,6 @@
   "Request Body": "Cuerpo de la petición",
   "Schema": "Schema",
   "JSON": "JSON",
-  "Security": "Seguridad",
+  "Authorizations": "Autorizaciones",
   "Use example": "Usar ejemplo"
 }

@@ -19,6 +19,6 @@
   "Request Body": "Request Body",
   "Schema": "Schema",
   "JSON": "JSON",
-  "Security": "Security",
+  "Authorizations": "Authorizations",
   "Use example": "Use example"
 }
