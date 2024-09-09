@@ -6,6 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openap
 import { generateSchemaJson } from 'vitepress-theme-openapi/lib/generateSchemaJson'
 import { hasExample } from 'vitepress-theme-openapi/lib/hasExample'
 import { generateSchemaXml } from 'vitepress-theme-openapi/lib/generateSchemaXml';
+import { Checkbox } from 'vitepress-theme-openapi/components/ui/checkbox'
+import { Label } from 'vitepress-theme-openapi/components/ui/label'
 
 const props = defineProps({
   schema: {
@@ -91,20 +93,20 @@ const lang = computed(() => {
       <div class="relative flex flex-col">
         <div
           v-if="schemaHasExample"
-          class="absolute right-14 top-4 z-10"
+          class="absolute right-14 top-5 z-10 flex flex-row items-center gap-1"
         >
-          <input
+          <Checkbox
             :id="checkboxId"
-            v-model="useExample"
-            type="checkbox"
+            :checked="useExample"
             name="useExample"
-          >
-          <label
+            @update:checked="useExample = $event"
+          />
+          <Label
             :for="checkboxId"
-            class="ml-1 text-gray-800 dark:text-gray-200 text-sm"
+            class="text-gray-800 dark:text-gray-200 text-sm"
           >
             {{ $t('Use example') }}
-          </label>
+          </Label>
         </div>
 
         <OACodeBlock
