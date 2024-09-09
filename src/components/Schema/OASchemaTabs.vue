@@ -100,7 +100,6 @@ const lang = computed(() => {
             :checked="useExample"
             name="useExample"
             aria-label="Use example"
-            class="size-5"
             @update:checked="useExample = $event"
           />
           <Label
