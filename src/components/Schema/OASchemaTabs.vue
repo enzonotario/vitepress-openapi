@@ -99,6 +99,7 @@ const lang = computed(() => {
             :id="checkboxId"
             :checked="useExample"
             name="useExample"
+            aria-label="Use example"
             @update:checked="useExample = $event"
           />
           <Label
