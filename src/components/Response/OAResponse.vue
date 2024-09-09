@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, useId } from 'vue'
+import { defineProps, ref } from 'vue'
 import {
   Select,
   SelectContent,
@@ -35,7 +35,7 @@ const contentType = ref(contentTypes[0] ?? '')
 
 const schema = props.response.content?.[contentType.value]?.schema
 
-const contentTypeId = useId()
+const contentTypeId = `content-type-${props.operationId}-${props.responseCode}`
 </script>
 
 <template>
