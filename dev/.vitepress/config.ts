@@ -26,10 +26,19 @@ export default defineConfigWithTheme({
         items: [
           {
             text: 'Buy Tickets',
-            link: '/operations-specs/buyMuseumTickets',
+            link: '/multiple-specs/buyMuseumTickets',
           },
         ],
       },
+      {
+        text: 'Other',
+        items: [
+          {
+            text: 'Plant Store',
+            link: '/plant-store',
+          },
+        ],
+      }
     ],
   },
   vite: {
