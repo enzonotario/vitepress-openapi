@@ -164,7 +164,7 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
       class="flex flex-col"
     >
       <summary class="my-0! text-lg font-bold cursor-pointer">
-        {{ $t('Security') }}
+        {{ $t('Authorization') }}
       </summary>
 
       <div class="flex flex-col">
