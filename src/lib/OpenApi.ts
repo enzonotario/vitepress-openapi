@@ -1,5 +1,6 @@
 import { httpVerbs } from 'vitepress-theme-openapi'
 import { dereferenceSync } from '@trojs/openapi-dereference';
+import { merge } from 'allof-merge'
 
 const DEFAULT_SERVER_URL = 'http://localhost'
 
@@ -19,7 +20,7 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
 
   function getParsedSpec() {
     if (!parsedSpec) {
-      parsedSpec = dereferenceSync(spec)
+      parsedSpec = dereferenceSync(merge(spec))
     }
 
     return parsedSpec

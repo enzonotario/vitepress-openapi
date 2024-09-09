@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { generateSchemaJson } from '../../src/lib/generateSchemaJson';
+import { merge } from 'allof-merge';
 
 describe('generateSchemaJson', () => {
   it('generates JSON for schema with string property', () => {
@@ -137,6 +138,39 @@ describe('generateSchemaJson', () => {
     const result = generateSchemaJson(schema, false)
     expect(result).toBe(JSON.stringify({
       dates: [ 'string' ]
+    }, null, 2))
+  })
+
+  it('generates JSON for schema with allOf', () => {
+    const schema = {
+      allOf: [
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "required": [
+            "id"
+          ],
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "Identification number of the plant",
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      ]
+    }
+    const result = generateSchemaJson(merge(schema))
+    expect(result).toBe(JSON.stringify({
+      name: 'string',
+      id: 0,
     }, null, 2))
   })
 });
