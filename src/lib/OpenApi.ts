@@ -1,11 +1,30 @@
 import { httpVerbs } from 'vitepress-theme-openapi'
 import { dereferenceSync } from '@trojs/openapi-dereference';
 import { merge } from 'allof-merge'
+import { generateMissingOperationIds } from './generateMissingOperationIds';
+import { generateMissingSummary } from './generateMissingSummary';
 
 const DEFAULT_SERVER_URL = 'http://localhost'
 
 export function OpenApi({ spec }: { spec: any } = { spec: null }) {
   let parsedSpec: any = null
+
+  transformSpec()
+
+  function transformSpec() {
+    if (!spec) {
+      return
+    }
+
+    if (!spec.openapi || !spec.openapi.startsWith('3.')) {
+      throw new Error('Only OpenAPI 3.x is supported')
+    }
+
+    if (spec?.paths) {
+      spec = generateMissingOperationIds(spec)
+      spec = generateMissingSummary(spec)
+    }
+  }
 
   function findOperation(paths: any, operationId: string) {
     for (const path of Object.values(paths)) {
@@ -142,6 +161,8 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
   }
 
   return {
+    spec,
+    parsedSpec,
     getBaseUrl,
     getOperation,
     getOperationPath,

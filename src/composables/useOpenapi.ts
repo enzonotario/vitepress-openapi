@@ -1,35 +1,21 @@
-import { generateMissingOperationIds } from '../lib/generateMissingOperationIds';
-import { generateMissingSummary } from '../lib/generateMissingSummary';
+import { OpenApi } from '../lib/OpenApi';
 
-let json: any = {}
-
-const parsedSpec: any = {}
+let openapi = null
 
 export function useOpenapi({ spec } = { spec: null }) {
   if (spec !== null) {
-    setSpec(spec)
+    openapi = OpenApi({ spec })
   }
 
   function setSpec(value: any) {
-    if (!value) {
-      return
+    if (openapi === null) {
+      openapi = OpenApi({ spec: value })
     }
-
-    if (!value.openapi || !value.openapi.startsWith('3.')) {
-        throw new Error('Only OpenAPI 3.x is supported')
-    }
-
-    if (value?.paths) {
-      value = generateMissingOperationIds(value)
-      value = generateMissingSummary(value)
-    }
-
-    json = value
   }
 
   return {
-    spec: parsedSpec,
-    json,
+    spec: openapi?.parsedSpec,
+    json: openapi?.spec,
     setSpec,
   }
 }
