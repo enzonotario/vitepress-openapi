@@ -8,6 +8,8 @@
     "type": "git",
     "url": "git+https://github.com/enzonotario/vitepress-theme-openapi.git"
   },
+  "author": "Enzo Notario <hi@enzonotario.me>",
+  "license": "MIT",
   "keywords": [
     "vitepress",
     "theme",
