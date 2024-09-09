@@ -133,6 +133,7 @@ const operationResponses = operationParsed?.responses
               :path="operationPath"
               :method="operationMethod"
               :base-url="baseUrl"
+              :parameters="operationParameters"
               :schema="operationRequestBody"
               :security-schemes="securitySchemes"
             />

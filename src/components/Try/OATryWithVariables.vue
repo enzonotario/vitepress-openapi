@@ -28,6 +28,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  parameters: {
+    type: Object,
+    required: false,
+  },
   schema: {
     type: Object,
     required: false,
@@ -65,7 +69,7 @@ const curl = computed(() => {
       :path="props.path"
       :method="props.method"
       :base-url="props.baseUrl"
-      :parameters="props.schema?.parameters ?? []"
+      :parameters="props.parameters ?? []"
       :security-schemes="props.securitySchemes ?? {}"
     />
 

@@ -258,6 +258,7 @@ function hasSlot(name) {
         :path="tryIt.path"
         :method="tryIt.method"
         :base-url="tryIt.baseUrl"
+        :parameters="tryIt.parameters"
         :schema="tryIt.schema"
         :security-schemes="tryIt.securitySchemes"
         :is-dark="isDark"
