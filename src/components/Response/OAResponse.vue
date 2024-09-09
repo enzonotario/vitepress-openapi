@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, useId } from 'vue'
 import {
   Select,
   SelectContent,
@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from 'vitepress-theme-openapi/components/ui/select'
+import { Label } from 'vitepress-theme-openapi/components/ui/label'
 
 const props = defineProps({
   operationId: {
@@ -33,6 +34,8 @@ const contentTypes = Object.keys(props.response.content ?? {})
 const contentType = ref(contentTypes[0] ?? '')
 
 const schema = props.response.content?.[contentType.value]?.schema
+
+const contentTypeId = useId()
 </script>
 
 <template>
@@ -43,9 +46,15 @@ const schema = props.response.content?.[contentType.value]?.schema
       v-if="props.response?.content && contentTypes.length"
       class="flex flex-row items-center gap-2 text-xs"
     >
-      <span class="flex-shrink-0 text-gray-600 dark:text-gray-400">Content-Type</span>
+      <Label
+        :for="contentTypeId"
+        class="flex-shrink-0 text-gray-600 dark:text-gray-400"
+      >Content-Type</Label>
       <div class="flex-shrink-0">
-        <Select v-model="contentType">
+        <Select
+          :id="contentTypeId"
+          v-model="contentType"
+        >
           <SelectTrigger class="h-6 text-xs">
             <SelectValue>{{ contentType }}</SelectValue>
           </SelectTrigger>
