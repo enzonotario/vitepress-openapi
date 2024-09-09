@@ -54,6 +54,7 @@ const contentTypeId = `content-type-${props.operationId}-${props.responseCode}`
         <Select
           :id="contentTypeId"
           v-model="contentType"
+          aria-label="Content-Type"
         >
           <SelectTrigger class="h-6 text-xs">
             <SelectValue>{{ contentType }}</SelectValue>
