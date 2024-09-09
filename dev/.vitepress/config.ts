@@ -37,6 +37,10 @@ export default defineConfigWithTheme({
             text: 'Plant Store',
             link: '/plant-store',
           },
+          {
+            text: 'ArgentinaDatos',
+            link: '/argentinadatos',
+          },
         ],
       }
     ],
