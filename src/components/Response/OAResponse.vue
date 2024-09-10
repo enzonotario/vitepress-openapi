@@ -35,7 +35,7 @@ const contentType = ref(contentTypes[0] ?? '')
 
 const schema = props.response.content?.[contentType.value]?.schema
 
-const contentTypeId = `content-type-${props.operationId}-${props.responseCode}`
+const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
 </script>
 
 <template>

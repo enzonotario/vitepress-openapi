@@ -5,6 +5,7 @@ const props = defineProps({
   spec: {
     type: Object,
     required: false,
+    default: null,
   },
   isDark: {
     type: Boolean,
