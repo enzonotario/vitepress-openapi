@@ -122,6 +122,7 @@ function hasSlot(name) {
       #security="security"
     >
       <OAHeading
+        v-if="Object.keys(security.securitySchemes).length"
         level="h2"
         :prefix="headingPrefix"
       >
@@ -129,6 +130,7 @@ function hasSlot(name) {
       </OAHeading>
 
       <OASecurity
+        v-if="Object.keys(security.securitySchemes).length"
         :operation-id="security.operationId"
         :method="security.method"
         :path="security.path"
