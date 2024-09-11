@@ -8,9 +8,7 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function setSpec(value: any) {
-    if (openapi === null) {
-      openapi = OpenApi({ spec: value })
-    }
+    openapi = OpenApi({ spec: value })
   }
 
   return {
