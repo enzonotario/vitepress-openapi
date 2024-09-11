@@ -182,3 +182,7 @@
 .dark .vjs-tree-node:hover {
   background-color: #24272C !important;
 }
+
+.oa-doc p {
+  @apply my-1 !important;
+}

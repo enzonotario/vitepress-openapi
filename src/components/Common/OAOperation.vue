@@ -102,9 +102,9 @@ function hasSlot(name) {
       v-else
       #description="description"
     >
-      <div
+      <OAMarkdown
+        :content="description.operation.description"
         class="description"
-        v-html="description.operation.description"
       />
     </template>
 

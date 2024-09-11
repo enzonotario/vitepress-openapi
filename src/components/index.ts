@@ -3,6 +3,7 @@ import OAOperation from './Common/OAOperation.vue'
 import OAHeading from './Common/OAHeading.vue'
 import OAFooter from './Common/OAFooter.vue'
 import OACodeBlock from './Common/OACodeBlock.vue'
+import OAMarkdown from './Common/OAMarkdown.vue'
 import OAPath from './Path/OAPath.vue'
 import OAPathEndpoint from './Path/OAPathEndpoint.vue'
 import OAResponses from './Response/OAResponses.vue'
@@ -29,6 +30,7 @@ export {
   OAHeading,
   OAFooter,
   OACodeBlock,
+  OAMarkdown,
   OAPath,
   OAPathEndpoint,
   OAResponses,

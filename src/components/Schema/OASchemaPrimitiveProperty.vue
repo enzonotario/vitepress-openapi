@@ -16,10 +16,10 @@ const props = defineProps({
       <span class="text-gray-600 dark:text-gray-400">{{ props.property.type }}</span>
     </div>
 
-    <div
+    <OAMarkdown
       v-if="props.property.description"
+      :content="props.property.description"
       class="text-sm text-gray-800 dark:text-gray-300"
-      v-html="props.property.description"
     />
 
     <OASchemaPropertyAttributes :property="props.property" />

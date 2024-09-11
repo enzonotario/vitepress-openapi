@@ -54,7 +54,7 @@ const operationResponses = operationParsed?.responses
 
       <div class="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="flex flex-col">
-          <div class="flex flex-col space-y-4">
+          <div class="flex flex-col">
             <slot
               name="path-mobile"
               :operation-id="props.id"

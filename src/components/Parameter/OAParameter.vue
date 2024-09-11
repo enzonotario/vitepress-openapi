@@ -17,10 +17,10 @@ const props = defineProps({
           class="text-sm text-red-500"
         >*</span>
       </div>
-      <div
+      <OAMarkdown
         v-if="props.parameter.description"
+        :content="props.parameter.description"
         class="text-sm text-gray-800 dark:text-gray-100"
-        v-html="props.parameter.description"
       />
     </div>
     <div

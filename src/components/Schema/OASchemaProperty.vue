@@ -73,10 +73,10 @@ const isOpen = ref(true)
           <span class="text-red-800 dark:text-red-200 text-xs">{{ props.schema.required && props.schema.required.includes(name) ? $t('Required') : '' }}</span>
         </div>
 
-        <div
+        <OAMarkdown
           v-if="props.property?.description"
+          :content="props.property.description"
           class="text-sm text-gray-800 dark:text-gray-300"
-          v-html="props.property.description"
         />
 
         <OASchemaPropertyAttributes :property="props.property" />
