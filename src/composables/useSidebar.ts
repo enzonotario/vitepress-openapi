@@ -44,7 +44,7 @@ export function useSidebar({ spec } = { spec: null }) {
         })
 
     return {
-      text: text || includeTags.join(', ') || '',
+      text: text !== undefined ? text : includeTags.join(', ') || '',
       items: sidebarGroupElements,
     }
   }
