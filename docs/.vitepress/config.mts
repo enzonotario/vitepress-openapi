@@ -37,6 +37,10 @@ export default defineConfigWithTheme({
                 text: 'Custom Slots',
                 link: '/layouts/custom-slots',
               },
+              {
+                text: 'Multiple Specs',
+                link: '/layouts/multiple-specs',
+              },
             ]
           }
         ],

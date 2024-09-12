@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { useOpenapi } from './src/composables/useOpenapi'
+import { OpenApi } from 'vitepress-theme-openapi'
 import { useSidebar } from './src/composables/useSidebar'
 
 const spec = {
@@ -57,7 +57,7 @@ const spec = {
 }
 
 describe('useOpenapi with spec', () => {
-  const openapi = useOpenapi({ spec })
+  const openapi = OpenApi({ spec })
 
   it('returns the correct operation for getOperation', () => {
     const result = openapi.getOperation('getUsers')

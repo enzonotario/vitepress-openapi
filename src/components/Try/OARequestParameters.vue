@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref, watch } from 'vue'
-import { useOpenapi } from 'vitepress-theme-openapi'
 
 const props = defineProps({
+  request: { // v-model
+    type: Object,
+    default: () => ({
+      url: '',
+      headers: {},
+    }),
+  },
   operationId: {
+    type: String,
+    required: true,
+  },
+  path: {
     type: String,
     required: true,
   },
@@ -11,12 +21,17 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  request: {
+  baseUrl: {
+    type: String,
+    required: true,
+  },
+  parameters: {
+    type: Array,
+    required: true,
+  },
+  securitySchemes: {
     type: Object,
-    default: () => ({
-      url: '',
-      headers: {},
-    }),
+    required: true,
   },
 })
 
@@ -24,23 +39,11 @@ const emits = defineEmits([
   'update:request',
 ])
 
-const openapi = useOpenapi()
+const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
 
-const baseUrl = openapi.getBaseUrl()
+const pathParameters = props.parameters.filter(parameter => parameter && parameter.in === 'path')
 
-const path = openapi.getOperationPath(props.operationId)
-
-const operationParsed = openapi.getParsedOperation(props.operationId)
-
-const parameters = operationParsed?.parameters ?? []
-
-const securitySchemes = openapi.getSecuritySchemes(props.operationId)
-
-const headerParameters = parameters.filter(parameter => parameter && parameter.in === 'header')
-
-const pathParameters = parameters.filter(parameter => parameter && parameter.in === 'path')
-
-const queryParameters = parameters.filter(parameter => parameter && parameter.in === 'query')
+const queryParameters = props.parameters.filter(parameter => parameter && parameter.in === 'query')
 
 const variables = ref({
   ...headerParameters.reduce((acc, parameter) => {
@@ -59,7 +62,7 @@ const variables = ref({
 
 const auth = ref({
   ...Object.fromEntries(
-    Object.entries(securitySchemes).map(([name, scheme]) => {
+    Object.entries(props.securitySchemes).map(([name, scheme]) => {
       switch (scheme.type) {
         case 'http':
           return [name, scheme.scheme === 'basic' ? 'Basic Auth' : 'Bearer Token']
@@ -77,7 +80,7 @@ const auth = ref({
 })
 
 function buildRequest() {
-  let requestPath = path
+  let requestPath = props.path
 
   for (const [key, value] of Object.entries(variables.value)) {
     if (!pathParameters.find(parameter => parameter.name === key)) {
@@ -91,7 +94,7 @@ function buildRequest() {
     requestPath = requestPath.replace(`{${key}}`, value)
   }
 
-  const url = new URL(`${baseUrl}${requestPath}`)
+  const url = new URL(`${props.baseUrl}${requestPath}`)
 
   for (const [key, value] of Object.entries(variables.value)) {
     if (!queryParameters.find(parameter => parameter.name === key)) {
@@ -120,16 +123,16 @@ function buildRequest() {
   }
 
   for (const [key, value] of Object.entries(auth.value)) {
-    if (!securitySchemes[key] || !value) {
+    if (!props.securitySchemes[key] || !value) {
       continue
     }
 
-    switch (securitySchemes[key].type) {
+    switch (props.securitySchemes[key].type) {
       case 'http':
-        headers.set('Authorization', `${securitySchemes[key].scheme === 'basic' ? 'Basic' : 'Bearer'} ${value}`)
+        headers.set('Authorization', `${props.securitySchemes[key].scheme === 'basic' ? 'Basic' : 'Bearer'} ${value}`)
         break
       case 'apiKey':
-        headers.set(securitySchemes[key].name, value)
+        headers.set(props.securitySchemes[key].name, value)
         break
       case 'openIdConnect':
         headers.set('Authorization', `Bearer ${value}`)
@@ -156,17 +159,17 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
 <template>
   <div class="flex flex-col">
     <details
-      v-if="Object.keys(securitySchemes).length"
+      v-if="Object.keys(props.securitySchemes).length"
       open
       class="flex flex-col"
     >
       <summary class="my-0! text-lg font-bold cursor-pointer">
-        {{ $t('Security') }}
+        {{ $t('Authorization') }}
       </summary>
 
       <div class="flex flex-col">
         <div
-          v-for="(scheme, name) in securitySchemes"
+          v-for="(scheme, name) in props.securitySchemes"
           :key="name"
           class="flex flex-col gap-2"
         >

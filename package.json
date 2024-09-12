@@ -8,6 +8,8 @@
     "type": "git",
     "url": "git+https://github.com/enzonotario/vitepress-theme-openapi.git"
   },
+  "author": "Enzo Notario <hi@enzonotario.me>",
+  "license": "MIT",
   "keywords": [
     "vitepress",
     "theme",
@@ -57,12 +59,14 @@
     "@trojs/openapi-dereference": "^0.2.3",
     "@types/node": "^22.5.1",
     "@vitejs/plugin-vue": "^5.1.3",
+    "allof-merge": "^0.6.6",
     "autoprefixer": "^10.4.20",
     "eslint": "8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-vue": "^9.27.0",
     "globals": "^15.9.0",
+    "markdown-it": "^14.1.0",
     "postcss": "^8.4.42",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",

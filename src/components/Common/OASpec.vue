@@ -1,20 +1,27 @@
 <script setup>
-import { useOpenapi } from 'vitepress-theme-openapi'
+import { OpenApi, useOpenapi } from 'vitepress-theme-openapi'
 
 const props = defineProps({
+  spec: {
+    type: Object,
+    required: false,
+    default: null,
+  },
   isDark: {
     type: Boolean,
     default: false,
   },
 })
 
-const openapi = useOpenapi()
+const openapi = OpenApi({ spec: props.spec || useOpenapi().json })
+
+const paths = openapi.getPaths()
 </script>
 
 <template>
   <div class="flex flex-col space-y-10">
     <div
-      v-for="path in openapi.json.paths"
+      v-for="path in paths"
       :key="path.id"
       class="flex flex-col space-y-10"
     >
@@ -23,6 +30,7 @@ const openapi = useOpenapi()
           v-if="path[method].operationId"
           :key="`${method}-${path.id}`"
           :operation-id="path[method].operationId"
+          :spec="props.spec"
           :is-dark="props.isDark"
           prefix-headings
           hide-default-footer

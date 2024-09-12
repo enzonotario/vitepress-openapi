@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { generateSchemaXml, formatXml } from '../../src/utils/generateSchemaXml';
+import { generateSchemaXml, formatXml } from '../../src/lib/generateSchemaXml';
 
 describe('generateSchemaXml', () => {
   it('generates XML for a simple schema', () => {

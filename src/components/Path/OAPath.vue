@@ -2,17 +2,22 @@
 import { defineProps } from 'vue'
 import { useOpenapi } from 'vitepress-theme-openapi'
 import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
+import { OpenApi } from 'vitepress-theme-openapi';
 
 const props = defineProps({
   id: {
     type: String,
     required: true,
   },
+  spec: {
+    type: Object,
+    required: false,
+  },
 })
 
 const theme = useTheme()
 
-const openapi = useOpenapi()
+const openapi = OpenApi({ spec: props.spec || useOpenapi().json })
 
 const operation = openapi.getOperation(props.id)
 
@@ -49,7 +54,7 @@ const operationResponses = operationParsed?.responses
 
       <div class="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="flex flex-col">
-          <div class="flex flex-col space-y-4">
+          <div class="flex flex-col">
             <slot
               name="path-mobile"
               :operation-id="props.id"
@@ -128,6 +133,9 @@ const operationResponses = operationParsed?.responses
               :path="operationPath"
               :method="operationMethod"
               :base-url="baseUrl"
+              :parameters="operationParameters"
+              :schema="operationRequestBody"
+              :security-schemes="securitySchemes"
             />
 
             <slot

@@ -6,6 +6,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  spec: {
+    type: Object,
+    required: false,
+  },
   isDark: {
     type: Boolean,
     default: false,
@@ -40,6 +44,7 @@ function hasSlot(name) {
   <OAPath
     v-if="props.operationId"
     :id="props.operationId"
+    :spec="props.spec"
   >
     <template
       v-if="hasSlot('header')"
@@ -97,9 +102,10 @@ function hasSlot(name) {
       v-else
       #description="description"
     >
-      <div
+      <OAMarkdown
+        v-if="description.operation.description"
+        :content="description.operation.description"
         class="description"
-        v-html="description.operation.description"
       />
     </template>
 
@@ -117,13 +123,15 @@ function hasSlot(name) {
       #security="security"
     >
       <OAHeading
+        v-if="Object.keys(security.securitySchemes).length"
         level="h2"
         :prefix="headingPrefix"
       >
-        {{ $t('Security') }}
+        {{ $t('Authorizations') }}
       </OAHeading>
 
       <OASecurity
+        v-if="Object.keys(security.securitySchemes).length"
         :operation-id="security.operationId"
         :method="security.method"
         :path="security.path"
@@ -253,6 +261,9 @@ function hasSlot(name) {
         :path="tryIt.path"
         :method="tryIt.method"
         :base-url="tryIt.baseUrl"
+        :parameters="tryIt.parameters"
+        :schema="tryIt.schema"
+        :security-schemes="tryIt.securitySchemes"
         :is-dark="isDark"
       />
     </template>

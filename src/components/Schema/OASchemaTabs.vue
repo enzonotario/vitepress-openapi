@@ -3,9 +3,11 @@ import { computed, ref } from 'vue';
 import { TabsIndicator } from 'radix-vue'
 import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
-import { generateSchemaJson } from 'vitepress-theme-openapi/utils/generateSchemaJson'
-import { hasExample } from 'vitepress-theme-openapi/utils/hasExample'
-import { generateSchemaXml } from 'vitepress-theme-openapi/utils/generateSchemaXml';
+import { generateSchemaJson } from 'vitepress-theme-openapi/lib/generateSchemaJson'
+import { hasExample } from 'vitepress-theme-openapi/lib/hasExample'
+import { generateSchemaXml } from 'vitepress-theme-openapi/lib/generateSchemaXml';
+import { Checkbox } from 'vitepress-theme-openapi/components/ui/checkbox'
+import { Label } from 'vitepress-theme-openapi/components/ui/label'
 
 const props = defineProps({
   schema: {
@@ -45,13 +47,13 @@ const schemaXml = computed(() => {
 })
 
 const schemaContentType = computed(() => {
-  if (props.contentType === 'application/json') return schemaJson.value
+  if (props.contentType.includes('json')) return schemaJson.value
   if (props.contentType === 'application/xml') return schemaXml.value
-  return props.schema
+  return null
 })
 
 const lang = computed(() => {
-  if (props.contentType === 'application/json') return 'json'
+  if (props.contentType.includes('json')) return 'json'
   if (props.contentType === 'application/xml') return 'xml'
   return props.contentType
 })
@@ -59,7 +61,7 @@ const lang = computed(() => {
 
 <template>
   <Tabs
-    :default-value="lang ? theme.schemaDefaultView : 'schema'"
+    :default-value="schemaContentType ? theme.getSchemaDefaultView() : 'schema'"
     class="rounded border dark:border-gray-700"
   >
     <TabsList class="relative flex flex-row justify-start rounded-t rounded-b-none p-0">
@@ -71,7 +73,7 @@ const lang = computed(() => {
         {{ $t('Schema') }}
       </TabsTrigger>
       <TabsTrigger
-        v-if="lang"
+        v-if="schemaContentType"
         value="contentType"
         class="h-full"
       >
@@ -91,24 +93,25 @@ const lang = computed(() => {
       <div class="relative flex flex-col">
         <div
           v-if="schemaHasExample"
-          class="absolute right-14 top-4 z-10"
+          class="absolute right-14 top-5 z-10 flex flex-row items-center gap-1"
         >
-          <input
+          <Checkbox
             :id="checkboxId"
-            v-model="useExample"
-            type="checkbox"
+            :checked="useExample"
             name="useExample"
-          >
-          <label
+            aria-label="Use example"
+            @update:checked="useExample = $event"
+          />
+          <Label
             :for="checkboxId"
-            class="ml-1 text-gray-800 dark:text-gray-200 text-sm"
+            class="text-gray-800 dark:text-gray-200 text-sm"
           >
             {{ $t('Use example') }}
-          </label>
+          </Label>
         </div>
 
         <OACodeBlock
-          v-if="lang"
+          v-if="schemaContentType"
           :code="schemaContentType"
           :lang="lang"
           :label="contentTypeLabel"

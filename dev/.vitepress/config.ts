@@ -21,6 +21,32 @@ export default defineConfigWithTheme({
         text: 'Custom Slots',
         link: '/custom-slots',
       },
+      {
+        text: 'Multiple Specs',
+        items: [
+          {
+            text: 'Buy Tickets',
+            link: '/multiple-specs/buyMuseumTickets',
+          },
+        ],
+      },
+      {
+        text: 'Other',
+        items: [
+          {
+            text: 'Plant Store',
+            link: '/plant-store',
+          },
+          {
+            text: 'ArgentinaDatos',
+            link: '/argentinadatos',
+          },
+            {
+            text: 'CriptoYA Argentina',
+            link: '/criptoya-argentina',
+          },
+        ],
+      }
     ],
   },
   vite: {

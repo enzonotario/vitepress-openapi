@@ -1,0 +1,1106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ArgentinaDatos API",
+    "version": "1.0.0",
+    "description": "API desarrollada en <a href=\"https://es.js.org?ref=argentinadatos.com\" target=\"_blank\">EsJS</a> que brinda datos de interés para los argentinos.\n\n¿Encontraste útil esta API? <strong>¡Dejá tu ⭐ en <a href=\"https://github.com/enzonotario/esjs-argentina-datos-api\" alt=\"GitHub\" target=\"_blank\">GitHub</a>!</strong>"
+  },
+  "servers": [
+    {
+      "url": "https://api.argentinadatos.com",
+      "description": "Producción"
+    },
+    {
+      "url": "http://localhost:5173",
+      "description": "Local"
+    }
+  ],
+  "paths": {
+    "/v1/feriados/{año}": {
+      "get": {
+        "summary": "Feriados",
+        "tags": [
+          "Eventos"
+        ],
+        "description": "Devuelve los feriados del año indicado (o del año actual si no se especifica).",
+        "parameters": [
+          {
+            "name": "año",
+            "in": "path",
+            "description": "Año de consulta",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 2016,
+              "maximum": 2025
+            },
+            "example": 2024
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve los feriados del año actual",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Feriado"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-feriados",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/feriados/{año}\""
+          }
+        ]
+      }
+    },
+    "/v1/cotizaciones/dolares": {
+      "get": {
+        "summary": "Dólares",
+        "tags": [
+          "Cotizaciones históricas"
+        ],
+        "description": "Devuelve las cotizaciones de todas las casas de cambio.",
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de cotizaciones del dólar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Cotizacion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-cotizaciones-dolares",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/cotizaciones/dolares/{casa}\""
+          }
+        ]
+      }
+    },
+    "/v1/cotizaciones/dolares/{casa}": {
+      "get": {
+        "summary": "Dólares por casa",
+        "tags": [
+          "Cotizaciones históricas"
+        ],
+        "description": "Devuelve las cotizaciones del dólar de la casa de cambio especificada.",
+        "parameters": [
+          {
+            "name": "casa",
+            "in": "path",
+            "description": "Casa de cambio",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "oficial",
+                "blue",
+                "bolsa",
+                "cripto",
+                "mayorista",
+                "solidario",
+                "turista"
+              ]
+            },
+            "example": "blue"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de cotizaciones del dólar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Cotizacion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-cotizaciones-dolares-casa",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/cotizaciones/dolares/{casa}\""
+          }
+        ]
+      }
+    },
+    "/v1/cotizaciones/dolares/{casa}/{fecha}": {
+      "get": {
+        "summary": "Dólar por casa y fecha",
+        "tags": [
+          "Cotizaciones históricas"
+        ],
+        "description": "Devuelve la cotización del dólar de la casa de cambio especificada en la fecha indicada (en formato `YYYY/MM/DD`).",
+        "parameters": [
+          {
+            "name": "casa",
+            "in": "path",
+            "description": "Casa de cambio",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "oficial",
+                "blue",
+                "bolsa",
+                "cripto",
+                "mayorista",
+                "solidario",
+                "turista"
+              ]
+            },
+            "example": "blue"
+          },
+          {
+            "name": "fecha",
+            "in": "path",
+            "description": "Fecha de consulta",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2024/01/01"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de cotizaciones del dólar",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cotizacion"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-cotizaciones-dolares-casa-fecha",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/cotizaciones/dolares/{casa}/{fecha}\""
+          }
+        ]
+      }
+    },
+    "/v1/eventos/presidenciales": {
+      "get": {
+        "summary": "Eventos presidenciales",
+        "tags": [
+          "Eventos"
+        ],
+        "description": "Devuelve los eventos presidenciales.",
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de eventos presidenciales",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventoPresidencial"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-eventos-presidenciales",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/eventos/presidenciales\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/indices/inflacion": {
+      "get": {
+        "summary": "Índices de inflación",
+        "tags": [
+          "Finanzas",
+          "Índices"
+        ],
+        "description": "Devuelve los índices de inflación mensuales.",
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de índices de inflación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IndiceInflacion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-indices-inflacion",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/indices/inflacion\""
+          }
+        ],
+        "x-sidebar-title": "Inflación mensual"
+      }
+    },
+    "/v1/finanzas/indices/inflacionInteranual": {
+      "get": {
+        "summary": "Índices de inflación interanuales",
+        "tags": [
+          "Finanzas",
+          "Índices"
+        ],
+        "description": "Devuelve los índices de inflación interanuales.",
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de índices de inflación",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IndiceInflacion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-indices-inflacion-interanual",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/indices/inflacionInteranual\""
+          }
+        ],
+        "x-sidebar-title": "Inflación interanual"
+      }
+    },
+    "/v1/finanzas/indices/uva": {
+      "get": {
+        "summary": "Índices UVA",
+        "tags": [
+          "Finanzas",
+          "Índices"
+        ],
+        "description": "Devuelve los índices UVA.",
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de índices UVA",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IndiceUVA"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-indices-uva",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/indices/uva\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/indices/riesgo-pais": {
+      "get": {
+        "summary": "Riesgo país",
+        "tags": [
+          "Finanzas",
+          "Índices"
+        ],
+        "description": "Devuelve una lista de riesgo país. Para obtener el último valor, consultar `/v1/finanzas/indices/riesgo-pais/ultimo`.",
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de riesgo país",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RiesgoPais"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-indices-riesgo-pais",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/indices/riesgo-pais\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/indices/riesgo-pais/ultimo": {
+      "get": {
+        "summary": "Riesgo país (último)",
+        "tags": [
+          "Finanzas",
+          "Índices"
+        ],
+        "description": "Devuelve el último valor de riesgo país.",
+        "responses": {
+          "200": {
+            "description": "Devuelve el último valor de riesgo país",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiesgoPais"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-indices-riesgo-pais-ultimo",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/indices/riesgo-pais/ultimo\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/tasas/plazoFijo": {
+      "get": {
+        "summary": "Plazo fijo",
+        "tags": [
+          "Finanzas",
+          "Tasas"
+        ],
+        "description": "Tasa Nominal Anual para colocaciones online de $100.000 a 30 días.(*).\n\nLas tasas son reportadas por los bancos al BCRA en cumplimiento del Régimen Informativo de Transparencia, capítulo I.\n\n(*): La tasa puede cambiar para otros montos o plazos.",
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de tasas de plazo fijo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TasaPlazoFijo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-tasas-plazo-fijo",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/tasas/plazoFijo\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/tasas/depositos30Dias": {
+      "get": {
+        "summary": "Depósitos a 30 días",
+        "tags": [
+          "Finanzas",
+          "Tasas"
+        ],
+        "description": "Tasas de interés por depósitos a 30 días de plazo.",
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de tasas de interés por depósitos a 30 días",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TasaInteres"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-tasas-depositos-30-dias",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/tasas/depositos30Dias\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/fci/mercadoDinero/{fecha}": {
+      "get": {
+        "summary": "Mercado de dinero",
+        "tags": [
+          "Finanzas",
+          "FCI"
+        ],
+        "description": "Devuelve los valores de Mercado de Dinero de los Fondos Comunes de Inversión en la fecha indicada (en formato `YYYY/MM/DD`).\n\nTambién se puede consultar el `ultimo` y `penultimo` día con valores utilizando los endpoints: \n\n- `/v1/finanzas/fci/mercadoDinero/ultimo`\n- `/v1/finanzas/fci/mercadoDinero/penultimo`",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "description": "Fecha de consulta",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "ultimo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de Fondos Comunes de Inversión",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FondoComunInversion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-fci-mercado-dinero-fecha",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/fci/mercadoDinero/{fecha}\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/fci/rentaVariable/{fecha}": {
+      "get": {
+        "summary": "Renta variable",
+        "tags": [
+          "Finanzas",
+          "FCI"
+        ],
+        "description": "Devuelve los valores de Renta Variable de los Fondos Comunes de Inversión en la fecha indicada (en formato `YYYY/MM/DD`).\n\nTambién se puede consultar el `ultimo` y `penultimo` día con valores utilizando los endpoints: \n\n- `/v1/finanzas/fci/rentaVariable/ultimo`\n- `/v1/finanzas/fci/rentaVariable/penultimo`",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "description": "Fecha de consulta",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "ultimo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de Fondos Comunes de Inversión",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FondoComunInversion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-fci-renta-variable-fecha",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/fci/rentaVariable/{fecha}\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/fci/rentaFija/{fecha}": {
+      "get": {
+        "summary": "Renta fija",
+        "tags": [
+          "Finanzas",
+          "FCI"
+        ],
+        "description": "Devuelve los valores de Renta Fija de los Fondos Comunes de Inversión en la fecha indicada (en formato `YYYY/MM/DD`).\n\nTambién se puede consultar el `ultimo` y `penultimo` día con valores utilizando los endpoints: \n\n- `/v1/finanzas/fci/rentaFija/ultimo`\n- `/v1/finanzas/fci/rentaFija/penultimo`",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "description": "Fecha de consulta",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "ultimo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de Fondos Comunes de Inversión",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FondoComunInversion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-fci-renta-fija-fecha",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/fci/rentaFija/{fecha}\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/fci/rentaMixta/{fecha}": {
+      "get": {
+        "summary": "Renta mixta",
+        "tags": [
+          "Finanzas",
+          "FCI"
+        ],
+        "description": "Devuelve los valores de Renta Mixta de los Fondos Comunes de Inversión en la fecha indicada (en formato `YYYY/MM/DD`).\n\nTambién se puede consultar el `ultimo` y `penultimo` día con valores utilizando los endpoints: \n\n- `/v1/finanzas/fci/rentaMixta/ultimo`\n- `/v1/finanzas/fci/rentaMixta/penultimo`",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "description": "Fecha de consulta",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "ultimo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de Fondos Comunes de Inversión",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FondoComunInversion"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-fci-renta-mixta-fecha",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/fci/rentaMixta/{fecha}\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/fci/otros/{fecha}": {
+      "get": {
+        "summary": "Otros",
+        "tags": [
+          "Finanzas",
+          "FCI"
+        ],
+        "description": "Devuelve los valores de Otros Fondos Comunes de Inversión en la fecha indicada (en formato `YYYY/MM/DD`).\n\nTambién se puede consultar el `ultimo` y `penultimo` día con valores utilizando los endpoints: \n\n- `/v1/finanzas/fci/otros/ultimo`\n- `/v1/finanzas/fci/otros/penultimo`",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "description": "Fecha de consulta",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "ultimo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de Fondos Comunes de Inversión",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FondoComunInversionOtro"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-fci-otros-fecha",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/fci/otros/{fecha}\""
+          }
+        ]
+      }
+    },
+    "/v1/estado": {
+      "get": {
+        "summary": "Estado de la API",
+        "description": "Devuelve el estado de la API.",
+        "tags": [
+          "API"
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve el estado de la API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Estado"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-estado",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/estado\""
+          }
+        ]
+      }
+    },
+    "/v1/finanzas/rendimientos": {
+      "get": {
+        "summary": "Rendimientos de todas las entidades",
+        "tags": [
+          "Finanzas",
+          "Rendimientos"
+        ],
+        "description": "Rendimientos de distintas monedas por entidad.\n\nLas entidades disponibles son:\n\n- [Buenbit](https://buenbit.com/?ref=argentinadatos.com)\n\n- [Fiwind](https://www.fiwind.io/?ref=argentinadatos.com)\n\n- [Letsbit](https://letsbit.io/?ref=argentinadatos.com)\n\n- [Belo](https://www.belo.app/?ref=argentinadatos.com)\n\n- [Lemon Cash](https://www.lemon.me/?ref=argentinadatos.com)\n\n- [Ripio](https://www.ripio.com/ar/?ref=argentinadatos.com)",
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de rendimientos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntidadRendimiento"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-rendimientos",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/rendimientos/{entidad}\""
+          }
+        ],
+        "x-sidebar-title": "De entidades"
+      }
+    },
+    "/v1/finanzas/rendimientos/{entidad}": {
+      "get": {
+        "summary": "Por entidad",
+        "tags": [
+          "Finanzas",
+          "Rendimientos"
+        ],
+        "description": "Rendimientos de distintas monedas por entidad.\n\nLas entidades disponibles son:\n\n- [Buenbit](https://buenbit.com/?ref=argentinadatos.com)\n\n- [Fiwind](https://www.fiwind.io/?ref=argentinadatos.com)\n\n- [Letsbit](https://letsbit.io/?ref=argentinadatos.com)\n\n- [Belo](https://www.belo.app/?ref=argentinadatos.com)\n\n- [Lemon Cash](https://www.lemon.me/?ref=argentinadatos.com)\n\n- [Ripio](https://www.ripio.com/ar/?ref=argentinadatos.com)",
+        "parameters": [
+          {
+            "name": "entidad",
+            "in": "path",
+            "description": "Entidad",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "buenbit",
+                "fiwind",
+                "letsbit",
+                "belo",
+                "lemoncash",
+                "ripio"
+              ]
+            },
+            "example": "buenbit"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve una lista de rendimientos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rendimiento"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-finanzas-rendimientos-entidad",
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "curl -X GET \\\n \"https://api.argentinadatos.com/v1/finanzas/rendimientos/{entidad}\""
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Feriado": {
+        "title": "Feriado",
+        "type": "object",
+        "properties": {
+          "fecha": {
+            "type": "string"
+          },
+          "tipo": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "fecha": "2020-01-01",
+            "tipo": "Inamovible",
+            "motivo": "Año Nuevo"
+          }
+        }
+      },
+      "Estado": {
+        "title": "Estado",
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string"
+          },
+          "aleatorio": {
+            "type": "integer"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "estado": "Disponible",
+            "aleatorio": 1234
+          }
+        }
+      },
+      "Cotizacion": {
+        "title": "Cotizacion",
+        "type": "object",
+        "properties": {
+          "moneda": {
+            "type": "string"
+          },
+          "casa": {
+            "type": "string"
+          },
+          "fecha": {
+            "type": "string"
+          },
+          "compra": {
+            "type": "number"
+          },
+          "venta": {
+            "type": "number"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "compra": 123.45,
+            "venta": 123.45
+          }
+        }
+      },
+      "EventoPresidencial": {
+        "title": "EventoPresidencial",
+        "type": "object",
+        "properties": {
+          "fecha": {
+            "type": "string"
+          },
+          "tipo": {
+            "type": "string"
+          },
+          "evento": {
+            "type": "string"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "fecha": "2020-01-01",
+            "evento": "Año Nuevo"
+          }
+        }
+      },
+      "IndiceInflacion": {
+        "title": "IndiceInflacion",
+        "type": "object",
+        "properties": {
+          "fecha": {
+            "type": "string"
+          },
+          "valor": {
+            "type": "number"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "mes": "Enero",
+            "indice": 2.3
+          }
+        }
+      },
+      "IndiceUVA": {
+        "title": "IndiceUVA",
+        "type": "object",
+        "properties": {
+          "fecha": {
+            "type": "string"
+          },
+          "valor": {
+            "type": "number"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "mes": "Enero",
+            "indice": 2.3
+          }
+        }
+      },
+      "RiesgoPais": {
+        "title": "RiesgoPais",
+        "type": "object",
+        "properties": {
+          "fecha": {
+            "type": "string"
+          },
+          "valor": {
+            "type": "number"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "fecha": "2020-01-01",
+            "valor": 123.45
+          }
+        }
+      },
+      "TasaPlazoFijo": {
+        "title": "TasaPlazoFijo",
+        "type": "object",
+        "properties": {
+          "entidad": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true,
+            "description": "URL del logo de la entidad"
+          },
+          "tnaClientes": {
+            "type": "number",
+            "description": "Tasa Nominal Anual para clientes, en porcentaje",
+            "example": 123.45,
+            "format": "float",
+            "nullable": true
+          },
+          "tnaNoClientes": {
+            "type": "number",
+            "description": "Tasa Nominal Anual para no clientes, en porcentaje",
+            "example": 123.45,
+            "format": "float",
+            "nullable": true
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "entidad": "Banco de la Nación Argentina",
+            "tnaClientes": 123.45,
+            "tnaNoClientes": 123.45,
+            "logo": null,
+            "link": null
+          }
+        }
+      },
+      "TasaInteres": {
+        "title": "TasaInteres",
+        "type": "object",
+        "properties": {
+          "fecha": {
+            "type": "string"
+          },
+          "valor": {
+            "type": "number"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "entidad": "Banco de la Nación Argentina",
+            "tna": 123.45
+          }
+        }
+      },
+      "FondoComunInversion": {
+        "title": "FondoComunInversion",
+        "type": "object",
+        "properties": {
+          "fondo": {
+            "type": "string"
+          },
+          "fecha": {
+            "type": "string"
+          },
+          "vcp": {
+            "type": "number"
+          },
+          "ccp": {
+            "type": "number"
+          },
+          "patrimonio": {
+            "type": "number"
+          },
+          "horizonte": {
+            "type": "string",
+            "enum": [
+              "corto",
+              "medio",
+              "largo"
+            ]
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "fondo": "Fondo Común de Inversión",
+            "vcp": 123.45,
+            "ccp": 123.45,
+            "patrimonio": 123.45,
+            "horizonte": "corto"
+          }
+        }
+      },
+      "FondoComunInversionOtro": {
+        "title": "FondoComunInversionOtro",
+        "type": "object",
+        "properties": {
+          "fondo": {
+            "type": "string"
+          },
+          "fecha": {
+            "type": "string"
+          },
+          "tea": {
+            "type": "number"
+          },
+          "tna": {
+            "type": "number"
+          },
+          "tope": {
+            "type": "number"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "fondo": "Otro Fondo Común de Inversión",
+            "tea": 123.45,
+            "tna": 123.45,
+            "tope": 123.45
+          }
+        }
+      },
+      "Rendimiento": {
+        "title": "Rendimiento",
+        "type": "object",
+        "properties": {
+          "moneda": {
+            "type": "string"
+          },
+          "apy": {
+            "type": "number"
+          },
+          "fecha": {
+            "type": "string"
+          }
+        },
+        "x-examples": {
+          "Example 1": {
+            "moneda": "USDT",
+            "apy": 123.45,
+            "fecha": "2024-01-01"
+          }
+        }
+      },
+      "EntidadRendimiento": {
+        "title": "EntidadRendimiento",
+        "type": "object",
+        "properties": {
+          "entidad": {
+            "type": "string"
+          },
+          "rendimientos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rendimiento"
+            }
+          }
+        }
+      }
+    }
+  }
+}

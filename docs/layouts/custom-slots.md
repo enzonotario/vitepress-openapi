@@ -51,7 +51,7 @@ console.log('Custom description slot')
 
 This will render the following:
 
-<div class="flex flex-col p-3 rounded border dark:border-gray-700">
+::: info Custom description slot 
 
 <script setup lang="ts">
 import { useRoute, useData } from 'vitepress'
@@ -81,6 +81,7 @@ console.log('Custom description slot')
 
 </OAOperation>
 
-</div>
+:::
 
 ## WIP
+

@@ -1,5 +1,5 @@
 <script setup>
-import { generateCodeSamples } from '../../utils/generateCodeSamples'
+import { generateCodeSamples } from '../../lib/generateCodeSamples'
 
 const props = defineProps({
   operationId: {

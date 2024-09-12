@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest';
-import {hasExample} from "../../src/utils/hasExample";
+import { describe, it, expect } from 'vitest';
+import { hasExample } from "../../src/lib/hasExample";
 
 describe('hasExample', () => {
   it('returns true if schema has an example at the root level', () => {

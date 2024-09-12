@@ -2,50 +2,69 @@ import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
 
-const locale: Ref<'es' | 'en'> = ref('en')
+const themeConfig = {
+  locale: ref<'es' | 'en'>('en'),
+  highlighterTheme: {
+    light: vitesseLight,
+    dark: vitesseDark,
+  },
+}
 
-const schemaDefaultView: Ref<'schema' | 'contentType', 'xml'> = ref('contentType')
+const schemaConfig = {
+  defaultView: ref<'schema' | 'contentType'>('contentType'),
+  showBaseURL: ref<boolean>(false),
+}
 
-const showBaseURL: Ref<boolean> = ref(false)
-
-const highlighterTheme = {
-  light: vitesseLight,
-  dark: vitesseDark,
+const jsonViewerConfig = {
+  deep: ref<number>(Number.Infinity),
 }
 
 export function useTheme() {
   function getLocale() {
-    return locale.value
+    return themeConfig.locale.value
   }
 
   function setLocale(value: 'es' | 'en') {
-    locale.value = value
+    themeConfig.locale.value = value
+  }
+
+  function getHighlighterTheme() {
+    return themeConfig.highlighterTheme
   }
 
   function getSchemaDefaultView() {
-    return schemaDefaultView.value
+    return schemaConfig.defaultView.value
   }
 
   function setSchemaDefaultView(value: 'schema' | 'contentType') {
-    schemaDefaultView.value = value
+    schemaConfig.defaultView.value = value
   }
 
   function getShowBaseURL() {
-    return showBaseURL.value
+    return schemaConfig.showBaseURL.value
   }
 
   function setShowBaseURL(value: boolean) {
-    showBaseURL.value = value
+    schemaConfig.showBaseURL.value = value
+  }
+
+  function getJsonViewerDeep() {
+    return jsonViewerConfig.deep.value
+  }
+
+  function setJsonViewerDeep(value: number) {
+    jsonViewerConfig.deep.value = value
   }
 
   return {
-    highlighterTheme,
-    schemaDefaultView,
     getLocale,
     setLocale,
+    getHighlighterTheme,
     getSchemaDefaultView,
     setSchemaDefaultView,
     getShowBaseURL,
     setShowBaseURL,
+    getJsonViewerDeep,
+    setJsonViewerDeep,
   }
 }
