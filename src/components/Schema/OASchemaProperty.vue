@@ -20,9 +20,13 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  deep: {
+    type: Number,
+    default: Infinity,
+  },
 })
 
-const isOpen = ref(true)
+const isOpen = ref(props.deep > 0)
 </script>
 
 <template>
@@ -87,6 +91,7 @@ const isOpen = ref(true)
         v-if="[ 'object', 'array' ].includes(props.property.type)"
         :schema="props.property"
         :response-type="props.property.type"
+        :deep="props.deep - 1"
         class="pl-2 mt-1"
       />
     </CollapsibleContent>

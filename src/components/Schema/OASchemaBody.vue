@@ -4,6 +4,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  deep: {
+    type: Number,
+    default: Infinity,
+  },
 })
 
 const primitiveSchemasTypes = ['string', 'number', 'integer', 'boolean']
@@ -25,6 +29,7 @@ const primitiveSchemasTypes = ['string', 'number', 'integer', 'boolean']
         :property="property"
         :name="name"
         :schema="props.schema"
+        :deep="props.deep - 1"
       />
     </div>
 
@@ -38,6 +43,7 @@ const primitiveSchemasTypes = ['string', 'number', 'integer', 'boolean']
 
       <OASchemaBody
         :schema="props.schema.items"
+        :deep="props.deep - 1"
       />
     </div>
   </div>
