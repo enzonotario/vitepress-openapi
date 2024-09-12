@@ -249,7 +249,7 @@
             "description": "Time the museum closes on a specific date. Uses 24 hour time format (`HH:mm`).",
             "type": "string",
             "pattern": "^([01]\\d|2[0-3]):?([0-5]\\d)$",
-            "example": 1080
+            "example": "12:34"
           }
         },
         "required": [
