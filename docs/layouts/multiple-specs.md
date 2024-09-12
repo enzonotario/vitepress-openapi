@@ -6,7 +6,7 @@ title: vitepress-theme-openapi
 
 # Multiple specs
 
-You can use multiple OpenAPI specs in the same page by importing them and passing them as `spec` prop to the `OAOperation` component.
+You can use multiple OpenAPI specs on the same page by importing them and passing them as `spec` prop to the `OAOperation` component.
 
 ## Example
 
