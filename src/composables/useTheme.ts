@@ -16,7 +16,7 @@ const schemaConfig = {
 }
 
 const jsonViewerConfig = {
-  deep: ref<number>(Infinity),
+  deep: ref<number>(Number.Infinity),
 }
 
 export function useTheme() {
