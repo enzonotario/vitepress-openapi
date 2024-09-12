@@ -103,6 +103,7 @@ function hasSlot(name) {
       #description="description"
     >
       <OAMarkdown
+        v-if="description.operation.description"
         :content="description.operation.description"
         class="description"
       />

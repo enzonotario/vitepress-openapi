@@ -5,7 +5,8 @@ import { cn } from '../../lib/utils'
 const props = defineProps({
   content: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
   },
   class: {
     type: String,
