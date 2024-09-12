@@ -61,7 +61,7 @@ const lang = computed(() => {
 
 <template>
   <Tabs
-    :default-value="schemaContentType ? theme.schemaDefaultView : 'schema'"
+    :default-value="schemaContentType ? theme.getSchemaDefaultView() : 'schema'"
     class="rounded border dark:border-gray-700"
   >
     <TabsList class="relative flex flex-row justify-start rounded-t rounded-b-none p-0">

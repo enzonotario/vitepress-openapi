@@ -41,6 +41,10 @@ export default defineConfigWithTheme({
             text: 'ArgentinaDatos',
             link: '/argentinadatos',
           },
+            {
+            text: 'CriptoYA Argentina',
+            link: '/criptoya-argentina',
+          },
         ],
       }
     ],
