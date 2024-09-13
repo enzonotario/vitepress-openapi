@@ -24,7 +24,7 @@ const props = defineProps({
   },
 })
 
-const theme = useTheme()
+const themeConfig = useTheme()
 
 const useExample = ref(true)
 
@@ -61,7 +61,7 @@ const lang = computed(() => {
 
 <template>
   <Tabs
-    :default-value="schemaContentType ? theme.getSchemaDefaultView() : 'schema'"
+    :default-value="schemaContentType ? themeConfig.schemaConfig.defaultView : 'schema'"
     class="rounded border dark:border-gray-700"
   >
     <TabsList class="relative flex flex-row justify-start rounded-t rounded-b-none p-0">
@@ -84,7 +84,10 @@ const lang = computed(() => {
       value="schema"
       class="mt-0 p-2"
     >
-      <OASchemaBody :schema="props.schema" />
+      <OASchemaBody
+        :schema="props.schema"
+        :deep="themeConfig.getSchemaViewerDeep()"
+      />
     </TabsContent>
     <TabsContent
       value="contentType"

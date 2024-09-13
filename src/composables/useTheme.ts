@@ -16,11 +16,15 @@ const schemaConfig = {
 }
 
 const jsonViewerConfig = {
-  deep: ref<number>(Number.Infinity),
+  deep: ref<number>(Infinity),
+}
+
+const schemaViewerConfig = {
+  deep: ref<number>(Infinity),
 }
 
 export function useTheme() {
-  function getLocale() {
+  function getLocale(): 'es' | 'en' {
     return themeConfig.locale.value
   }
 
@@ -32,7 +36,7 @@ export function useTheme() {
     return themeConfig.highlighterTheme
   }
 
-  function getSchemaDefaultView() {
+  function getSchemaDefaultView(): 'schema' | 'contentType' {
     return schemaConfig.defaultView.value
   }
 
@@ -40,7 +44,7 @@ export function useTheme() {
     schemaConfig.defaultView.value = value
   }
 
-  function getShowBaseURL() {
+  function getShowBaseURL(): boolean {
     return schemaConfig.showBaseURL.value
   }
 
@@ -48,7 +52,7 @@ export function useTheme() {
     schemaConfig.showBaseURL.value = value
   }
 
-  function getJsonViewerDeep() {
+  function getJsonViewerDeep(): number {
     return jsonViewerConfig.deep.value
   }
 
@@ -56,7 +60,16 @@ export function useTheme() {
     jsonViewerConfig.deep.value = value
   }
 
+  function getSchemaViewerDeep(): number {
+    return schemaViewerConfig.deep.value
+  }
+
+  function setSchemaViewerDeep(value: number) {
+    schemaViewerConfig.deep.value = value
+  }
+
   return {
+    schemaConfig,
     getLocale,
     setLocale,
     getHighlighterTheme,
@@ -66,5 +79,7 @@ export function useTheme() {
     setShowBaseURL,
     getJsonViewerDeep,
     setJsonViewerDeep,
+    getSchemaViewerDeep,
+    setSchemaViewerDeep,
   }
 }
