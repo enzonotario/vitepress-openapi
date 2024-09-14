@@ -24,8 +24,51 @@ const spec = {
             source: 'fetch("/users")',
           },
         ],
+        security: [
+          {
+            apiKey: [],
+          },
+          {
+            bearerAuth: [],
+          }
+        ],
       },
     },
+    '/users/{id}': {
+      get: {
+        operationId: 'getUser',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: {
+              type: 'integer',
+            },
+          },
+        ],
+        security: [
+          {
+            bearerAuth: [],
+          }
+        ],
+      },
+    },
+    '/users/{id}/pets': {
+      get: {
+        operationId: 'getUserPets',
+        parameters: [
+          {
+              name: 'id',
+              in: 'path',
+              required: true,
+              schema: {
+              type: 'integer',
+              },
+          },
+        ],
+      },
+    }
   },
   servers: [
     {
@@ -52,11 +95,15 @@ const spec = {
         name: 'api_key',
         in: 'header',
       },
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+      },
     },
   },
 }
 
-describe('useOpenapi with spec', () => {
+describe('OpenApi with spec', () => {
   const openapi = OpenApi({ spec })
 
   it('returns the correct operation for getOperation', () => {
@@ -82,5 +129,31 @@ describe('useOpenapi with spec', () => {
   it('returns the correct tags for getTags', () => {
     const result = useSidebar().getTags()
     expect(result).toEqual([])
+  })
+
+  it('returns the correct security schemes for getSecuritySchemes', () => {
+    const getUsersSecuritySchemes = openapi.getSecuritySchemes('getUsers')
+    expect(getUsersSecuritySchemes).toEqual({
+      apiKey: {
+        type: 'apiKey',
+        name: 'api_key',
+        in: 'header',
+      },
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+      },
+    })
+
+    const getUserSecuritySchemes = openapi.getSecuritySchemes('getUser')
+    expect(getUserSecuritySchemes).toEqual({
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+      },
+    })
+
+    const getUserPetsSecuritySchemes = openapi.getSecuritySchemes('getUserPets')
+    expect(getUserPetsSecuritySchemes).toEqual({})
   })
 })

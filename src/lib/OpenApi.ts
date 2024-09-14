@@ -111,19 +111,27 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
   }
 
   function getSecuritySchemes(operationId: string) {
-    if (operationId && getParsedSpec()?.paths) {
-      const operation = findOperation(getParsedSpec().paths, operationId)
+    const operation = findOperation(getParsedSpec().paths, operationId)
 
-      if (operation && operation.security) {
-        return operation.security
-      }
+    const securitySchemes = getParsedSpec().components.securitySchemes
+
+    if (operation?.security) {
+      const output = {};
+
+      Object.entries(securitySchemes)
+          .filter(([key]) => operation.security.some((security) => security[key]))
+          .map(([key, value]) => {
+            output[key] = value
+          })
+
+      return output
     }
 
-    if (!getParsedSpec()?.components || !getParsedSpec()?.components?.securitySchemes) {
-      return {}
+    if (getParsedSpec()?.security) {
+      return securitySchemes
     }
 
-    return getParsedSpec().components.securitySchemes
+    return {}
   }
 
   function getParsedOperation(operationId: string) {
