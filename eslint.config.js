@@ -1,17 +1,13 @@
-import pluginJs from '@eslint/js'
-import eslintPluginVue from 'eslint-plugin-vue'
-import ts from 'typescript-eslint'
+// @ts-check
+import antfu from '@antfu/eslint-config'
 
-export default ts.config(
-    pluginJs.configs.recommended,
-    ...ts.configs.recommended,
-    ...eslintPluginVue.configs['flat/recommended'],
-    {
-      files: ['*.vue', '**/*.vue'],
-      languageOptions: {
-        parserOptions: {
-          parser: '@typescript-eslint/parser'
-        }
-      }
-    }
+export default antfu(
+  {
+    unocss: false,
+    formatters: true,
+    lessOpinionated: true,
+    rules: {
+      'brace-style': ['error', '1tbs', { allowSingleLine: false }],
+    },
+  },
 )

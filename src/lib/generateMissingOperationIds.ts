@@ -1,4 +1,4 @@
-import { httpVerbs } from 'vitepress-theme-openapi';
+import { httpVerbs } from 'vitepress-theme-openapi'
 
 export function generateMissingOperationIds(value: any) {
   if (!value.paths) {
@@ -15,7 +15,7 @@ export function generateMissingOperationIds(value: any) {
           }
         })
         return [path, pathValue]
-      })
+      }),
     ),
   }
 }

@@ -90,7 +90,6 @@
   @apply truncate max-w-[170px] text-gray-800 dark:text-gray-100;
 }
 
-
 .OAMethodBadge--get {
   @apply bg-green-200 text-green-800 hover:bg-green-300 dark:bg-green-800 dark:text-green-200 dark:hover:bg-green-700;
 }
@@ -126,8 +125,7 @@
 .shiki.vitesse-light,
 .shiki.vitesse-dark,
 .shiki.github-light,
-.shiki.github-dark
-{
+.shiki.github-dark {
   @apply bg-transparent !important;
 }
 
@@ -162,7 +160,7 @@
   color: #2f798a !important;
 }
 .dark .vjs-value-number {
-  color: #4C9A91 !important;
+  color: #4c9a91 !important;
 }
 .vjs-value-boolean {
   color: #1e754f !important;
@@ -177,10 +175,10 @@
   color: #c98a7d !important;
 }
 .vjs-tree-node:hover {
-  background-color: #EAEBEE !important;
+  background-color: #eaebee !important;
 }
 .dark .vjs-tree-node:hover {
-  background-color: #24272C !important;
+  background-color: #24272c !important;
 }
 
 .oa-doc p {

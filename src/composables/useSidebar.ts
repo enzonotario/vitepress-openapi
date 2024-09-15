@@ -1,5 +1,4 @@
-import { useOpenapi, httpVerbs } from 'vitepress-theme-openapi'
-import { OpenApi } from 'vitepress-theme-openapi'
+import { OpenApi, httpVerbs, useOpenapi } from 'vitepress-theme-openapi'
 
 export function useSidebar({ spec } = { spec: null }) {
   const openapi = OpenApi({ spec: spec || useOpenapi().json })
@@ -19,7 +18,7 @@ export function useSidebar({ spec } = { spec: null }) {
         <span class="OASidebarItem-text">${sidebarTitle}</span>
       </span>`,
       link: `/operations/${operationId}`,
-    };
+    }
   }
 
   function generateSidebarGroup(tag: string | string[], text?: string, addedOperations = new Set()) {
@@ -30,18 +29,18 @@ export function useSidebar({ spec } = { spec: null }) {
     const includeTags = Array.isArray(tag) ? tag : [tag]
 
     const sidebarGroupElements = Object.keys(openapi.getPaths())
-        .flatMap((path) => {
-          return httpVerbs
-              .map((method) => {
-                const operation = openapi.getPaths()[path][method]
-                if (operation && !addedOperations.has(operation.operationId) && (includeTags.length === 0 || includeTags.every(tag => operation.tags?.includes(tag)))) {
-                  addedOperations.add(operation.operationId)
-                  return generateSidebarItem(method, path)
-                }
-                return null
-              })
-              .filter(Boolean)
-        })
+      .flatMap((path) => {
+        return httpVerbs
+          .map((method) => {
+            const operation = openapi.getPaths()[path][method]
+            if (operation && !addedOperations.has(operation.operationId) && (includeTags.length === 0 || includeTags.every(tag => operation.tags?.includes(tag)))) {
+              addedOperations.add(operation.operationId)
+              return generateSidebarItem(method, path)
+            }
+            return null
+          })
+          .filter(Boolean)
+      })
 
     return {
       text: text !== undefined ? text : includeTags.join(', ') || '',
@@ -56,7 +55,7 @@ export function useSidebar({ spec } = { spec: null }) {
 
     const tags = getTags()
     const addedOperations = new Set()
-    const groups = tags.map((tag) => generateSidebarGroup(tag, tag, addedOperations))
+    const groups = tags.map(tag => generateSidebarGroup(tag, tag, addedOperations))
 
     // Add a group for operations without tags
     const noTagGroup = generateSidebarGroup([], '', addedOperations)

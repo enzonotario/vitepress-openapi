@@ -1,8 +1,8 @@
 import { httpVerbs } from 'vitepress-theme-openapi'
-import { dereferenceSync } from '@trojs/openapi-dereference';
+import { dereferenceSync } from '@trojs/openapi-dereference'
 import { merge } from 'allof-merge'
-import { generateMissingOperationIds } from './generateMissingOperationIds';
-import { generateMissingSummary } from './generateMissingSummary';
+import { generateMissingOperationIds } from './generateMissingOperationIds'
+import { generateMissingSummary } from './generateMissingSummary'
 
 const DEFAULT_SERVER_URL = 'http://localhost'
 
@@ -116,13 +116,13 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
     const securitySchemes = getParsedSpec().components.securitySchemes
 
     if (operation?.security) {
-      const output = {};
+      const output = {}
 
       Object.entries(securitySchemes)
-          .filter(([key]) => operation.security.some((security) => security[key]))
-          .map(([key, value]) => {
-            output[key] = value
-          })
+        .filter(([key]) => operation.security.some(security => security[key]))
+        .map(([key, value]) => {
+          output[key] = value
+        })
 
       return output
     }
@@ -154,7 +154,7 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
     return Object.keys(getPaths())
       .flatMap((path) => {
         return httpVerbs
-          .filter((verb) => getPaths()[path][verb])
+          .filter(verb => getPaths()[path][verb])
           .map((verb) => {
             const { operationId, summary } = getPaths()[path][verb]
 

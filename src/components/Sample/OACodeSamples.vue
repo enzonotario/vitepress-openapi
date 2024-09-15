@@ -24,9 +24,9 @@ const props = defineProps({
   },
 })
 
-const url = props.baseUrl + props.path;
+const url = props.baseUrl + props.path
 
-const samples = generateCodeSamples(url, props.method);
+const samples = generateCodeSamples(url, props.method)
 </script>
 
 <template>

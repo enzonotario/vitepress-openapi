@@ -9,7 +9,7 @@ const props = defineProps({
   },
 })
 
-const keysToIgnore = [ 'type', 'description', 'properties', 'required', 'items', 'xml', 'allOf', 'anyOf', 'oneOf', 'not' ]
+const keysToIgnore = ['type', 'description', 'properties', 'required', 'items', 'xml', 'allOf', 'anyOf', 'oneOf', 'not']
 </script>
 
 <template>

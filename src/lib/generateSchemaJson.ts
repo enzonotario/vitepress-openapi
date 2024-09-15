@@ -1,9 +1,9 @@
 export function generateSchemaJson(schema: any, useExample = false) {
   try {
     return JSON.stringify(
-        propertiesTypesJsonRecursive(schema, useExample),
-        null,
-        2,
+      propertiesTypesJsonRecursive(schema, useExample),
+      null,
+      2,
     )
   } catch {
     return '{}'

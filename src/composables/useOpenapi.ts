@@ -1,4 +1,4 @@
-import { OpenApi } from '../lib/OpenApi';
+import { OpenApi } from '../lib/OpenApi'
 
 let openapi = null
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, computed } from 'vue'
+import { computed, defineEmits, defineProps } from 'vue'
 import { Input } from 'vitepress-theme-openapi/components/ui/input'
 
 const props = defineProps({
