@@ -16,61 +16,63 @@ export const generateMethodArgument = (method: string): string => {
     PATCH: '-X PATCH \\\n',
     DELETE: '-X DELETE \\\n',
     HEAD: '-X HEAD \\\n',
-    OPTIONS: '-X OPTIONS\\\n '
+    OPTIONS: '-X OPTIONS\\\n ',
   }
 
   return type[method.toUpperCase()] || ''
 }
 
 export const isInstanceOfHeaders = (val: any): boolean => {
-  if (typeof Headers !== "function"){
+  if (typeof Headers !== 'function') {
     /**
      * Environment does not support the Headers constructor
      * old internet explorer?
      */
-    return false;
+    return false
   }
-  return val instanceof Headers;
+  return val instanceof Headers
 }
 
 interface HeaderParams {
-  isEncode: boolean;
-  params: string;
+  isEncode: boolean
+  params: string
 }
 
-const getHeaderString = (name: string, val: any): string => ` -H "${name}: ${`${val}`.replace(/(\\|")/g, '\\$1')}"`;
+const getHeaderString = (name: string, val: any): string => ` -H "${name}: ${`${val}`.replace(/(\\|")/g, '\\$1')}"`
 
 export const generateHeadersArgument = (headers?: any): HeaderParams => {
-  let isEncode = false;
-  let headerParam = '';
-  if (isInstanceOfHeaders(headers)){
+  let isEncode = false
+  let headerParam = ''
+  if (isInstanceOfHeaders(headers)) {
     headers.forEach((val: any, name: string) => {
       if (name.toLocaleLowerCase() !== 'content-length') {
-        headerParam += getHeaderString(name, val);
-      }
-      if (name.toLocaleLowerCase() === 'accept-encoding'){
-        isEncode = true;
-      }
-    })
-  } else if (headers){
-    Object.keys(headers).map(name => {
-      if (name.toLocaleLowerCase() !== 'content-length') {
-        headerParam += getHeaderString(name, headers[name]);
+        headerParam += getHeaderString(name, val)
       }
       if (name.toLocaleLowerCase() === 'accept-encoding') {
-        isEncode = true;
+        isEncode = true
       }
-    });
+    })
+  } else if (headers) {
+    Object.keys(headers).map((name) => {
+      if (name.toLocaleLowerCase() !== 'content-length') {
+        headerParam += getHeaderString(name, headers[name])
+      }
+      if (name.toLocaleLowerCase() === 'accept-encoding') {
+        isEncode = true
+      }
+    })
   }
   return {
     params: headerParam,
     isEncode,
-  };
+  }
 }
 
 export function escapeBody(body: any): string {
-  if (typeof body !== 'string') return body;
-  return body.replace(/'/g, `'\\''`);
+  if (typeof body !== 'string') {
+    return body
+  }
+  return body.replace(/'/g, `'\\''`)
 }
 
 export function generateBody(body: any): string {
@@ -78,7 +80,7 @@ export function generateBody(body: any): string {
     return ''
   }
 
-  if (typeof body === "object"){
+  if (typeof body === 'object') {
     return ` --data '${escapeBody(JSON.stringify(body))}'`
   }
 
@@ -86,7 +88,7 @@ export function generateBody(body: any): string {
 }
 
 export function generateCompress(isEncode: boolean): string {
-  return isEncode ? ' --compressed' : '';
+  return isEncode ? ' --compressed' : ''
 }
 
 export const fetchToCurl = ({
@@ -95,7 +97,7 @@ export const fetchToCurl = ({
   headers,
   body,
 }: { url: string, method: string, headers: any, body: any }): string => {
-  const headersArgument = generateHeadersArgument(headers);
+  const headersArgument = generateHeadersArgument(headers)
 
   let output = `curl ${generateMethodArgument(method)}'${url}'`
 
@@ -111,7 +113,7 @@ export const fetchToCurl = ({
     output += ` \\\n${generateCompress(headersArgument.isEncode)}`
   }
 
-  return output;
+  return output
 }
 
-export default fetchToCurl;
+export default fetchToCurl

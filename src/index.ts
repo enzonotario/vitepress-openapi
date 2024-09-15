@@ -1,14 +1,13 @@
+import * as VueI18n from 'vue-i18n'
+import type { EnhanceAppContext, Theme } from 'vitepress/client'
+import type { Component } from 'vue'
+import type { Awaitable } from 'vitepress'
 import { useTheme } from './composables/useTheme'
 import { useShiki } from './composables/useShiki'
 import * as components from './components'
 
-import * as VueI18n from 'vue-i18n'
 import es from './locales/es.json'
 import en from './locales/en.json'
-
-import type { EnhanceAppContext, Theme } from 'vitepress/client'
-import type { Component } from 'vue'
-import type { Awaitable } from 'vitepress'
 
 import 'tailwindcss/tailwind.css'
 import './style.css'
@@ -44,7 +43,7 @@ export const theme = {
       app.component(key, components[key])
     }
 
-    useShiki().initShiki();
+    useShiki().initShiki()
   },
 } as VPTheme
 

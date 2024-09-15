@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue'
-import fetchToCurl from 'vitepress-theme-openapi/lib/fetchToCurl';
-import { generateSchemaJson } from 'vitepress-theme-openapi/lib/generateSchemaJson';
+import fetchToCurl from 'vitepress-theme-openapi/lib/fetchToCurl'
+import { generateSchemaJson } from 'vitepress-theme-openapi/lib/generateSchemaJson'
 
 const props = defineProps({
   operationId: {

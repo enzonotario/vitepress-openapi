@@ -21,4 +21,3 @@ const props = defineProps({
     :is-dark="props.isDark"
   />
 </template>
-

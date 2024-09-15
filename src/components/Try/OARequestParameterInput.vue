@@ -26,10 +26,12 @@ const emits = defineEmits([
 ])
 
 function inputType(parameter: any) {
-  if (parameter.schema?.type === 'integer')
+  if (parameter.schema?.type === 'integer') {
     return 'number'
-  if (parameter.schema?.type === 'number')
+  }
+  if (parameter.schema?.type === 'number') {
     return 'number'
+  }
   return 'text'
 }
 

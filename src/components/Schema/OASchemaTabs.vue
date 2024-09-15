@@ -1,11 +1,11 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref } from 'vue'
 import { TabsIndicator } from 'radix-vue'
 import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
 import { generateSchemaJson } from 'vitepress-theme-openapi/lib/generateSchemaJson'
 import { hasExample } from 'vitepress-theme-openapi/lib/hasExample'
-import { generateSchemaXml } from 'vitepress-theme-openapi/lib/generateSchemaXml';
+import { generateSchemaXml } from 'vitepress-theme-openapi/lib/generateSchemaXml'
 import { Checkbox } from 'vitepress-theme-openapi/components/ui/checkbox'
 import { Label } from 'vitepress-theme-openapi/components/ui/label'
 
@@ -37,8 +37,12 @@ const schemaHasExample = hasExample(props.schema)
 const checkboxId = `useExample-${Math.random().toString(36).substring(7)}`
 
 const contentTypeLabel = computed(() => {
-  if (props.contentType.includes('json')) return 'JSON'
-  if (props.contentType === 'application/xml') return 'XML'
+  if (props.contentType.includes('json')) {
+    return 'JSON'
+  }
+  if (props.contentType === 'application/xml') {
+    return 'XML'
+  }
   return 'Schema'
 })
 
@@ -47,14 +51,22 @@ const schemaXml = computed(() => {
 })
 
 const schemaContentType = computed(() => {
-  if (props.contentType.includes('json')) return schemaJson.value
-  if (props.contentType === 'application/xml') return schemaXml.value
+  if (props.contentType.includes('json')) {
+    return schemaJson.value
+  }
+  if (props.contentType === 'application/xml') {
+    return schemaXml.value
+  }
   return null
 })
 
 const lang = computed(() => {
-  if (props.contentType.includes('json')) return 'json'
-  if (props.contentType === 'application/xml') return 'xml'
+  if (props.contentType.includes('json')) {
+    return 'json'
+  }
+  if (props.contentType === 'application/xml') {
+    return 'xml'
+  }
   return props.contentType
 })
 </script>

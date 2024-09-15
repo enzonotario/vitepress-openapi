@@ -88,7 +88,7 @@ const isOpen = ref(props.deep > 0)
     </CollapsibleTrigger>
     <CollapsibleContent>
       <OASchemaBody
-        v-if="[ 'object', 'array' ].includes(props.property.type)"
+        v-if="['object', 'array'].includes(props.property.type)"
         :schema="props.property"
         :response-type="props.property.type"
         :deep="props.deep - 1"

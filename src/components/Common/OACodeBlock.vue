@@ -2,8 +2,8 @@
 import { ref, watch } from 'vue'
 import { useShiki } from 'vitepress-theme-openapi/composables/useShiki'
 import { useTheme } from 'vitepress-theme-openapi'
-import VueJsonPretty from 'vue-json-pretty';
-import 'vue-json-pretty/lib/styles.css';
+import VueJsonPretty from 'vue-json-pretty'
+import 'vue-json-pretty/lib/styles.css'
 
 const props = defineProps({
   code: {
@@ -68,7 +68,7 @@ watch(
     />
     <span class="lang">{{ props.label }}</span>
 
-    <vue-json-pretty
+    <VueJsonPretty
       v-if="props.lang === 'json' && !props.disableHtmlTransform"
       :data="JSON.parse(props.code)"
       :theme="props.isDark ? 'dark' : 'light'"

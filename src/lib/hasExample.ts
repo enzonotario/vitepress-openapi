@@ -1,15 +1,15 @@
 export function hasExample(schema: any): boolean {
   if (schema?.example) {
-    return true;
+    return true
   }
 
   if (schema?.properties) {
-    return Object.values(schema.properties).some((property) => hasExample(property));
+    return Object.values(schema.properties).some(property => hasExample(property))
   }
 
   if (schema?.items) {
-    return hasExample(schema.items);
+    return hasExample(schema.items)
   }
 
-  return false;
+  return false
 }

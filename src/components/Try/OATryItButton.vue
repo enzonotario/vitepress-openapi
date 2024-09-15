@@ -61,10 +61,10 @@ async function tryIt() {
 
     response.value = await data.json()
   }
-  catch (error) {
+ catch (error) {
     response.value = error
   }
-  finally {
+ finally {
     setLoading(false)
     const end = performance.now()
     responseTime.value = (end - start).toFixed(2)
@@ -80,7 +80,7 @@ function trackTryIt() {
       event_label: props.operationId,
     })
   }
-  catch (error) { }
+ catch (error) { }
 }
 
 function setLoading(value) {
