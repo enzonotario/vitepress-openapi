@@ -3,7 +3,9 @@ import { OpenApi, httpVerbs, useOpenapi } from 'vitepress-theme-openapi'
 export function useSidebar({ spec } = { spec: null }) {
   const openapi = OpenApi({ spec: spec || useOpenapi().json })
 
-  function generateSidebarItem(method: string, path: string) {
+  const DEFAULT_LINK_PREFIX = '/operations/'
+
+  function generateSidebarItem(method: string, path: string, linkPrefix: string = DEFAULT_LINK_PREFIX) {
     const operation = openapi.getPaths()?.[path]?.[method]
     if (!operation) {
       return null
@@ -17,11 +19,11 @@ export function useSidebar({ spec } = { spec: null }) {
         <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
         <span class="OASidebarItem-text">${sidebarTitle}</span>
       </span>`,
-      link: `/operations/${operationId}`,
+      link: `${linkPrefix}${operationId}`,
     }
   }
 
-  function generateSidebarGroup(tag: string | string[], text?: string, addedOperations = new Set()) {
+  function generateSidebarGroup(tag: string | string[], text?: string, addedOperations = new Set(), linkPrefix: string = DEFAULT_LINK_PREFIX) {
     if (!openapi.getPaths()) {
       return []
     }
@@ -35,7 +37,7 @@ export function useSidebar({ spec } = { spec: null }) {
             const operation = openapi.getPaths()[path][method]
             if (operation && !addedOperations.has(operation.operationId) && (includeTags.length === 0 || includeTags.every(tag => operation.tags?.includes(tag)))) {
               addedOperations.add(operation.operationId)
-              return generateSidebarItem(method, path)
+              return generateSidebarItem(method, path, linkPrefix)
             }
             return null
           })
@@ -48,17 +50,17 @@ export function useSidebar({ spec } = { spec: null }) {
     }
   }
 
-  function generateSidebarGroups() {
+  function generateSidebarGroups( linkPrefix: string = DEFAULT_LINK_PREFIX) {
     if (!openapi.getPaths()) {
       return []
     }
 
     const tags = getTags()
     const addedOperations = new Set()
-    const groups = tags.map(tag => generateSidebarGroup(tag, tag, addedOperations))
+    const groups = tags.map(tag => generateSidebarGroup(tag, tag, addedOperations, linkPrefix))
 
     // Add a group for operations without tags
-    const noTagGroup = generateSidebarGroup([], '', addedOperations)
+    const noTagGroup = generateSidebarGroup([], '', addedOperations, linkPrefix)
     if (noTagGroup.items.length > 0) {
       groups.push(noTagGroup)
     }
