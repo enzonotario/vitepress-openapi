@@ -1,7 +1,34 @@
 import { OpenApi, httpVerbs, useOpenapi } from 'vitepress-theme-openapi'
 
-export function useSidebar({ spec } = { spec: null }) {
-  const openapi = OpenApi({ spec: spec || useOpenapi().json })
+interface GenerateSidebarGroupsOptions {
+  tags?: string[] | null
+  linkPrefix?: string | null
+}
+
+interface GenerateSidebarGroupOptions {
+  tag: string | string[]
+  text?: string
+  linkPrefix?: string
+  addedOperations?: Set<string>
+}
+
+const defaultOptions = {
+  spec: null,
+  linkPrefix: '/operations/',
+}
+
+export function useSidebar({
+  spec,
+  linkPrefix,
+} = {
+  ...defaultOptions,
+}) {
+  const options = {
+    spec: spec || useOpenapi().json,
+    linkPrefix: linkPrefix || defaultOptions.linkPrefix,
+  }
+
+  const openapi = OpenApi({ spec: options.spec })
 
   function sidebarItemTemplate(method: string, title: string) {
     return `<span class="OASidebarItem">
@@ -10,7 +37,7 @@ export function useSidebar({ spec } = { spec: null }) {
       </span>`
   }
 
-  function generateSidebarItem(method: string, path: string) {
+  function generateSidebarItem(method: string, path: string, linkPrefix = options.linkPrefix) {
     const operation = openapi.getPaths()?.[path]?.[method]
     if (!operation) {
       return null
@@ -21,11 +48,21 @@ export function useSidebar({ spec } = { spec: null }) {
 
     return {
       text: sidebarItemTemplate(method, sidebarTitle),
-      link: `/operations/${operationId}`,
+      link: `${linkPrefix}${operationId}`,
     }
   }
 
-  function generateSidebarGroup(tag: string | string[], text?: string, addedOperations = new Set()) {
+  function generateSidebarGroup({
+    tag,
+    text,
+    linkPrefix,
+    addedOperations,
+  }: GenerateSidebarGroupOptions = {}) {
+    tag = tag || []
+    text = text || ''
+    linkPrefix = linkPrefix || options.linkPrefix
+    addedOperations = addedOperations || new Set()
+
     if (!openapi.getPaths()) {
       return []
     }
@@ -39,7 +76,7 @@ export function useSidebar({ spec } = { spec: null }) {
             const operation = openapi.getPaths()[path][method]
             if (operation && !addedOperations.has(operation.operationId) && (includeTags.length === 0 || includeTags.every(tag => operation.tags?.includes(tag)))) {
               addedOperations.add(operation.operationId)
-              return generateSidebarItem(method, path)
+              return generateSidebarItem(method, path, linkPrefix)
             }
             return null
           })
@@ -52,17 +89,32 @@ export function useSidebar({ spec } = { spec: null }) {
     }
   }
 
-  function generateSidebarGroups() {
+  function generateSidebarGroups({
+    tags,
+    linkPrefix,
+  }: GenerateSidebarGroupsOptions = {}) {
+    tags = tags || getTags()
+    linkPrefix = linkPrefix || options.linkPrefix
+
     if (!openapi.getPaths()) {
       return []
     }
 
-    const tags = getTags()
     const addedOperations = new Set()
-    const groups = tags.map(tag => generateSidebarGroup(tag, tag, addedOperations))
+    const groups = tags.map(tag => generateSidebarGroup({
+      tag,
+      text: tag,
+      linkPrefix,
+      addedOperations,
+    }))
 
     // Add a group for operations without tags
-    const noTagGroup = generateSidebarGroup([], '', addedOperations)
+    const noTagGroup = generateSidebarGroup({
+      tag: [],
+      text: '',
+      linkPrefix,
+      addedOperations,
+    })
     if (noTagGroup.items.length > 0) {
       groups.push(noTagGroup)
     }
