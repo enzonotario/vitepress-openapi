@@ -41,7 +41,7 @@ const operationResponses = operationParsed?.responses
   <div>
     <div
       v-if="operation"
-      class="flex flex-col space-y-8"
+      class="OAPath flex flex-col space-y-8"
     >
       <slot
         name="header"
@@ -52,7 +52,7 @@ const operationResponses = operationParsed?.responses
       />
 
       <div class="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="flex flex-col">
+        <div class="OAPathContentStart flex flex-col">
           <div class="flex flex-col">
             <slot
               name="path-mobile"
@@ -115,7 +115,7 @@ const operationResponses = operationParsed?.responses
             :path="operationPath"
           />
 
-          <div class="sticky top-[100px] inset-x-0 flex flex-col sm:px-6 space-y-4">
+          <div class="OAPathContentEnd sticky top-[100px] inset-x-0 flex flex-col space-y-4">
             <slot
               name="path"
               :operation-id="props.id"
