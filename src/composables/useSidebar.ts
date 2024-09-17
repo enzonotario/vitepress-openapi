@@ -3,6 +3,13 @@ import { OpenApi, httpVerbs, useOpenapi } from 'vitepress-theme-openapi'
 export function useSidebar({ spec } = { spec: null }) {
   const openapi = OpenApi({ spec: spec || useOpenapi().json })
 
+  function sidebarItemTemplate(method: string, title: string) {
+    return `<span class="OASidebarItem">
+        <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
+        <span class="OASidebarItem-text">${title}</span>
+      </span>`
+  }
+
   function generateSidebarItem(method: string, path: string) {
     const operation = openapi.getPaths()?.[path]?.[method]
     if (!operation) {
@@ -13,10 +20,7 @@ export function useSidebar({ spec } = { spec: null }) {
     const sidebarTitle = operation['x-sidebar-title'] || summary || `${method.toUpperCase()} ${path}`
 
     return {
-      text: `<span class="OASidebarItem">
-        <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
-        <span class="OASidebarItem-text">${sidebarTitle}</span>
-      </span>`,
+      text: sidebarItemTemplate(method, sidebarTitle),
       link: `/operations/${operationId}`,
     }
   }
@@ -86,6 +90,7 @@ export function useSidebar({ spec } = { spec: null }) {
   }
 
   return {
+    sidebarItemTemplate,
     generateSidebarItem,
     generateSidebarGroup,
     generateSidebarGroups,
