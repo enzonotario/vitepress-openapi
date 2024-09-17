@@ -186,8 +186,8 @@
 }
 
 .VPDoc.has-aside .OAPathContentEnd {
-  @apply px-2
+  @apply px-2;
 }
 .VPDoc:not(.has-aside) .OAPathContentEnd {
-  @apply sm:px-6
+  @apply sm:px-6;
 }
