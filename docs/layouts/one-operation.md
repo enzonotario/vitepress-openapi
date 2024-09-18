@@ -76,4 +76,4 @@ export default {
 
 If you want to make use of search on your site, the default `local` search will not work due to https://github.com/vuejs/vitepress/issues/2939
 
-You can make use of [vitepress-plugin-pagefind](https://www.npmjs.com/package/vitepress-plugin-pagefind) which works with dynamic routes.
+Consider using [vitepress-plugin-pagefind](https://www.npmjs.com/package/vitepress-plugin-pagefind), which works with dynamic routes.
