@@ -184,3 +184,10 @@
 .oa-doc p {
   @apply my-1 !important;
 }
+
+.VPDoc.has-aside .OAPathContentEnd {
+  @apply px-2;
+}
+.VPDoc:not(.has-aside) .OAPathContentEnd {
+  @apply sm:px-6;
+}
