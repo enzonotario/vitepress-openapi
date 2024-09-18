@@ -3,7 +3,10 @@ import { useSidebar } from 'vitepress-theme-openapi'
 import { defineConfigWithTheme } from 'vitepress'
 import spec from '../../docs/public/openapi.json' assert { type: 'json' }
 
-const sidebar = useSidebar({ spec })
+const sidebar = useSidebar({
+  spec,
+  prefix: '/operations/',
+})
 
 export default defineConfigWithTheme({
   title: 'vitepress-theme-openapi',
@@ -41,12 +44,12 @@ export default defineConfigWithTheme({
             text: 'ArgentinaDatos',
             link: '/argentinadatos',
           },
-            {
+          {
             text: 'CriptoYA Argentina',
             link: '/criptoya-argentina',
           },
         ],
-      }
+      },
     ],
   },
   vite: {
