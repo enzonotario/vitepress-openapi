@@ -1,5 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
+import { Badge } from 'vitepress-theme-openapi/components/ui/badge'
 
 const props = defineProps({
   operationId: {
@@ -59,12 +60,26 @@ function hasSlot(name) {
       v-else
       #header="header"
     >
-      <OAHeading
-        level="h1"
-        :prefix="headingPrefix"
-      >
-        {{ header.operation.summary }}
-      </OAHeading>
+      <div class="flex flex-col">
+        <Badge
+          v-if="header.deprecated"
+          type="deprecated"
+          variant="outline"
+          class="self-start bg-muted"
+        >
+          {{ $t('Deprecated') }}
+        </Badge>
+
+        <OAHeading
+          level="h1"
+          :prefix="headingPrefix"
+          :class="{
+            'line-through': header.deprecated,
+          }"
+        >
+          {{ header.operation.summary }}
+        </OAHeading>
+      </div>
     </template>
 
     <template
@@ -85,6 +100,7 @@ function hasSlot(name) {
         :method="pathMobile.method"
         :base-url="pathMobile.baseUrl"
         :hide-base-url="pathMobile.hideBaseUrl"
+        :deprecated="pathMobile.deprecated"
         class="sm:hidden"
       />
     </template>
@@ -239,6 +255,7 @@ function hasSlot(name) {
         :method="path.method"
         :base-url="path.baseUrl"
         :hide-base-url="path.hideBaseUrl"
+        :deprecated="path.deprecated"
         class="hidden sm:flex"
       />
     </template>

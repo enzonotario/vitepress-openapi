@@ -49,6 +49,7 @@ const operationResponses = operationParsed?.responses
         :method="operationMethod"
         :base-url="baseUrl"
         :path="operationPath"
+        :deprecated="operation.deprecated"
       />
 
       <div class="relative grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -62,6 +63,7 @@ const operationResponses = operationParsed?.responses
               :base-url="baseUrl"
               :path="operationPath"
               :hide-base-url="!theme.getShowBaseURL()"
+              :deprecated="operation.deprecated"
             />
 
             <slot
@@ -124,6 +126,7 @@ const operationResponses = operationParsed?.responses
               :base-url="baseUrl"
               :path="operationPath"
               :hide-base-url="!theme.getShowBaseURL()"
+              :deprecated="operation.deprecated"
             />
 
             <slot
