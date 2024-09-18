@@ -345,6 +345,7 @@
     },
     "/tickets/{ticketId}/qr": {
       "get": {
+        "deprecated": true,
         "summary": "Get ticket QR code",
         "description": "Return an image of your ticket with scannable QR code. Used for event entry.",
         "operationId": "getTicketCode",

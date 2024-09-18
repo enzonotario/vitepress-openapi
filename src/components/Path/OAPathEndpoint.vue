@@ -18,6 +18,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  deprecated: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
@@ -37,7 +41,12 @@ const props = defineProps({
       >
         {{ props.baseUrl }}
       </span>
-      <span class="text-gray-800 dark:text-gray-200 font-bold select-all">{{ props.path }}</span>
+      <span
+        :class="{
+          'line-through': props.deprecated,
+        }"
+        class="text-gray-800 dark:text-gray-200 font-bold select-all"
+      >{{ props.path }}</span>
     </span>
   </div>
 </template>
