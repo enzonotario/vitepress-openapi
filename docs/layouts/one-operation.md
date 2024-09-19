@@ -18,28 +18,6 @@ To create operation pages, create a directory named `operations` in the `docs` d
 │   └── [operationId].paths.js
 ```
 
-Example of `[operationId].md`:
-
-```markdown
----
-aside: false
-outline: false
-title: vitepress-theme-openapi
----
-
-<script setup lang="ts">
-import { useRoute, useData } from 'vitepress'
-
-const route = useRoute()
-
-const { isDark } = useData()
-
-const operationId = route.data.params.operationId
-</script>
-
-<OAOperation :operationId="operationId" :isDark="isDark" />
-```
-
 Example of `[operationId].paths.js`:
 
 ```ts
@@ -70,6 +48,28 @@ export default {
             })
     },
 }
+```
+
+Example of `[operationId].md`:
+
+```markdown
+---
+aside: false
+outline: false
+title: vitepress-theme-openapi
+---
+
+<script setup lang="ts">
+import { useRoute, useData } from 'vitepress'
+
+const route = useRoute()
+
+const { isDark } = useData()
+
+const operationId = route.data.params.operationId
+</script>
+
+<OAOperation :operationId="operationId" :isDark="isDark" />
 ```
 
 ## Searching Operation Pages
