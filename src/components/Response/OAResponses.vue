@@ -1,6 +1,16 @@
 <script setup>
+import { defineProps, ref } from 'vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'vitepress-theme-openapi/components/ui/select'
 import { TabsIndicator } from 'radix-vue'
+import { useTheme } from 'vitepress-theme-openapi'
 
 const props = defineProps({
   operationId: {
@@ -15,28 +25,82 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  headingPrefix: {
+    type: String,
+    default: null,
+  },
 })
 
+const themeConfig = useTheme()
+
 const responsesCodes = Object.keys(props.responses)
+
+const vModel = ref(responsesCodes && responsesCodes.length > 0 ? responsesCodes[0] : null)
 </script>
 
 <template>
-  <div class="flex flex-col -mt-[52px]">
+  <div class="flex flex-col">
     <Tabs
-      :default-value="responsesCodes && responsesCodes[0]"
+      :default-value="vModel"
     >
-      <TabsList class="relative w-full bg-transparent">
-        <TabsIndicator class="absolute left-0 h-full bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded transition-[width,transform] duration-300 bg-muted" />
-        <span class="flex-1" />
-        <TabsTrigger
-          v-for="responseCode in responsesCodes"
-          :key="responseCode"
-          :value="responseCode"
-          class="h-full z-10"
-        >
-          {{ responseCode }}
-        </TabsTrigger>
-      </TabsList>
+      <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)]">
+        <TabsList class="w-full bg-transparent text-muted-foreground p-0">
+          <OAHeading
+            level="h2"
+            :prefix="headingPrefix"
+            class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0"
+            header-anchor-class="!top-0"
+          >
+            {{ $t('Responses') }}
+          </OAHeading>
+
+          <span class="flex-grow min-w-2" />
+
+          <div class="relative flex flex-row">
+            <template v-if="themeConfig.getResponseCodeSelector() === 'tabs'">
+              <TabsIndicator class="absolute left-0 h-full bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded transition-[width,transform] duration-300 bg-muted" />
+
+              <TabsTrigger
+                v-for="responseCode in responsesCodes"
+                :key="responseCode"
+                :value="responseCode"
+                class="h-full z-10"
+              >
+                {{ responseCode }}
+              </TabsTrigger>
+            </template>
+
+            <Select
+              v-if="themeConfig.getResponseCodeSelector() === 'select'"
+              v-model="vModel"
+            >
+              <SelectTrigger
+                aria-label="Response Code"
+                class="px-3 py-1.5 text-foreground"
+              >
+                <SelectValue>{{ vModel }}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <TabsTrigger
+                    v-for="(code, idx) in responsesCodes"
+                    :key="idx"
+                    :value="code"
+                    variant="select"
+                  >
+                    <SelectItem
+                      :value="code"
+                    >
+                      {{ code }}
+                    </SelectItem>
+                  </TabsTrigger>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </TabsList>
+      </div>
+
       <TabsContent
         v-for="responseCode in responsesCodes"
         :key="responseCode"

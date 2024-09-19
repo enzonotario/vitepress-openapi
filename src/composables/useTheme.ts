@@ -23,6 +23,10 @@ const schemaViewerConfig = {
   deep: ref<number>(Infinity),
 }
 
+const responseConfig = {
+  responseCodeSelector: ref<'tabs', 'select'>('tabs'),
+}
+
 export function useTheme() {
   function getLocale(): 'es' | 'en' {
     return themeConfig.locale.value
@@ -68,6 +72,14 @@ export function useTheme() {
     schemaViewerConfig.deep.value = value
   }
 
+  function getResponseCodeSelector(): 'tabs' | 'select' {
+    return responseConfig.responseCodeSelector.value
+  }
+
+  function setResponseCodeSelector(value: 'tabs' | 'select') {
+    responseConfig.responseCodeSelector.value = value
+  }
+
   return {
     schemaConfig,
     getLocale,
@@ -81,5 +93,7 @@ export function useTheme() {
     setJsonViewerDeep,
     getSchemaViewerDeep,
     setSchemaViewerDeep,
+    getResponseCodeSelector,
+    setResponseCodeSelector,
   }
 }

@@ -1,6 +1,7 @@
 <script setup>
 import slugify from '@sindresorhus/slugify'
 import { computed, useSlots } from 'vue'
+import { cn } from '../../lib/utils'
 
 const props = defineProps({
   level: {
@@ -10,6 +11,14 @@ const props = defineProps({
   prefix: {
     type: String,
     default: null,
+  },
+  class: {
+    type: String,
+    required: false,
+  },
+  headerAnchorClass: {
+    type: String,
+    default: 'header-anchor',
   },
 })
 
@@ -45,11 +54,12 @@ const id = computed(() => {
     :is="level"
     :id="id"
     tabindex="-1"
+    :class="cn(props.class)"
   >
     <slot />
 
     <a
-      class="header-anchor"
+      :class="cn('header-anchor', props.headerAnchorClass)"
       :href="`#${id}`"
       :aria-label="`Permalink to ${slotText}`"
     >&#8203;</a>

@@ -60,6 +60,32 @@
               }
             }
           },
+          "201": {
+            "description": "Created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMuseumHoursResponse"
+                },
+                "examples": {
+                  "default_example": {
+                    "$ref": "#/components/examples/GetMuseumHoursResponseExample"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMuseumHoursResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content."
+          },
+          "206": {
+            "description": "Partial content."
+          },
           "400": {
             "$ref": "#/components/responses/BadRequest"
           },
