@@ -1,6 +1,7 @@
 <script setup>
 import slugify from '@sindresorhus/slugify'
 import { computed, useSlots } from 'vue'
+import { useTheme } from 'vitepress-theme-openapi'
 import { cn } from '../../lib/utils'
 
 const props = defineProps({
@@ -47,11 +48,17 @@ const id = computed(() => {
 
   return slugify(value, { decamelize: false })
 })
+
+const themeConfig = useTheme()
+
+const hLevel = computed(() => {
+  return themeConfig.getHeadingLevel(props.level) ?? props.level
+})
 </script>
 
 <template>
   <component
-    :is="level"
+    :is="hLevel"
     :id="id"
     tabindex="-1"
     :class="cn(props.class)"

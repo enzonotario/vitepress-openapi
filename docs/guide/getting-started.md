@@ -61,6 +61,16 @@ export default {
         const themeConfig = useTheme()
         themeConfig.setLocale('en') // en or es
 
+        // Optionally, you can set the heading levels to be used in content.
+        themeConfig.setHeadingLevels({
+            h1: 1,
+            h2: 3,
+            h3: 4,
+            h4: 4,
+            h5: 4,
+            h6: 4,
+        })
+
         // Use the theme.
         theme.enhanceApp({app})
     }
