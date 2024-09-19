@@ -2,6 +2,15 @@ import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
 
+interface HeadingLevels {
+  h1: number
+  h2: number
+  h3: number
+  h4: number
+  h5: number
+  h6: number
+}
+
 const themeConfig = {
   locale: ref<'es' | 'en'>('en'),
   highlighterTheme: {
@@ -21,6 +30,15 @@ const jsonViewerConfig = {
 
 const schemaViewerConfig = {
   deep: ref<number>(Infinity),
+}
+
+const headingLevels: HeadingLevels = {
+  h1: 1,
+  h2: 2,
+  h3: 3,
+  h4: 4,
+  h5: 5,
+  h6: 6,
 }
 
 export function useTheme() {
@@ -68,6 +86,28 @@ export function useTheme() {
     schemaViewerConfig.deep.value = value
   }
 
+  function getHeadingLevels() {
+    return headingLevels
+  }
+
+  function getHeadingLevel(level: keyof HeadingLevels): `h${1 | 2 | 3 | 4 | 5 | 6}` {
+    const headingLevel = headingLevels[level]
+    if (headingLevel < 1 || headingLevel > 6) {
+      throw new Error(`Heading level for ${level} must be between 1 and 6.`)
+    }
+    return `h${headingLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+  }
+
+  function setHeadingLevels(levels: Partial<HeadingLevels>) {
+    for (const key in levels) {
+      const value = levels[key as keyof HeadingLevels]
+      if (value < 1 || value > 6) {
+        throw new Error(`Heading level for ${key} must be between 1 and 6.`)
+      }
+    }
+    Object.assign(headingLevels, levels)
+  }
+
   return {
     schemaConfig,
     getLocale,
@@ -81,5 +121,8 @@ export function useTheme() {
     setJsonViewerDeep,
     getSchemaViewerDeep,
     setSchemaViewerDeep,
+    getHeadingLevels,
+    getHeadingLevel,
+    setHeadingLevels,
   }
 }
