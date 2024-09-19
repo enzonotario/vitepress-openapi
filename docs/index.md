@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "VitePress Theme"
   text: "OpenAPI"
-  tagline: "Generate documentation from OpenAPI specifications."
+  tagline: "Generate documentation from OpenAPI definitions"
   actions:
     - theme: brand
       text: Get Started

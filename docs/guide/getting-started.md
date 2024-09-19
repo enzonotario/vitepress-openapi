@@ -14,7 +14,7 @@ Before you begin, make sure you have the following installed:
 
 - Node.js
 - VitePress
-- OpenAPI Specification (Version 3)
+- OpenAPI Definition (Version 3)
 
 ## Installation
 
@@ -33,9 +33,9 @@ bun install vitepress-theme-openapi
 
 ## Usage
 
-### OpenAPI Specification
+### OpenAPI Definition
 
-Place your OpenAPI specification in the public directory. For example, `public/openapi.json`.
+Place your OpenAPI definition in the public directory. For example, `public/openapi.json`.
 
 ### Theme Configuration
 
@@ -53,7 +53,7 @@ import spec from '../../public/openapi.json' assert { type: 'json' }
 export default {
     ...DefaultTheme,
     async enhanceApp({app, router, siteData}) {
-        // Set the OpenAPI specification.
+        // Set the OpenAPI definition.
         const openapi = useOpenapi()
         openapi.setSpec(spec)
 
@@ -69,7 +69,7 @@ export default {
 
 ### Layouts
 
-You can render the OpenAPI specification in different layouts:
+You can render the OpenAPI description in different layouts:
 
 - [One operation per page](/layouts/one-operation.html)
 - [All operations in a single page](/layouts/all-operations.html)

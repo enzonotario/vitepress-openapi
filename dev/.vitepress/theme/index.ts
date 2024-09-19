@@ -5,7 +5,7 @@ import spec from '../../../docs/public/openapi.json' assert {type: 'json'}
 export default {
   ...DefaultTheme,
   enhanceApp({ app }) {
-    // Set the OpenAPI specification.
+    // Set the OpenAPI definition.
     const openapi = useOpenapi()
     openapi.setSpec(spec)
 

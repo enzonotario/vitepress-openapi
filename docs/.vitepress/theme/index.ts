@@ -6,7 +6,7 @@ import 'vitepress-theme-openapi/dist/style.css'
 export default {
   ...DefaultTheme,
   enhanceApp({ app }) {
-    // Set the OpenAPI specification.
+    // Set the OpenAPI definition.
     const openapi = useOpenapi()
     openapi.setSpec(spec)
 
