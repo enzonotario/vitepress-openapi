@@ -96,4 +96,26 @@ describe('useTheme', () => {
       h6: 6,
     })
   })
+
+  it('returns the default response code selector', () => {
+    const result = theme.getResponseCodeSelector()
+    expect(result).toBe('tabs')
+  })
+
+  it('sets and gets the response code selector', () => {
+    theme.setResponseCodeSelector('select')
+    const result = theme.getResponseCodeSelector()
+    expect(result).toBe('select')
+  })
+
+  it('returns the default response code max tabs', () => {
+    const result = theme.getResponseCodeMaxTabs()
+    expect(result).toBe(5)
+  })
+
+  it('sets and gets the response code max tabs', () => {
+    theme.setResponseCodeMaxTabs(10)
+    const result = theme.getResponseCodeMaxTabs()
+    expect(result).toBe(10)
+  })
 })

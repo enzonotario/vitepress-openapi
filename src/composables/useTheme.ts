@@ -43,6 +43,7 @@ const headingLevels: HeadingLevels = {
 
 const responseConfig = {
   responseCodeSelector: ref<'tabs', 'select'>('tabs'),
+  maxTabs: ref<number>(5),
 }
 
 export function useTheme() {
@@ -120,6 +121,14 @@ export function useTheme() {
     responseConfig.responseCodeSelector.value = value
   }
 
+  function getResponseCodeMaxTabs(): number {
+    return responseConfig.maxTabs.value
+  }
+
+  function setResponseCodeMaxTabs(value: number) {
+    responseConfig.maxTabs.value = value
+  }
+
   return {
     schemaConfig,
     getLocale,
@@ -138,5 +147,7 @@ export function useTheme() {
     setHeadingLevels,
     getResponseCodeSelector,
     setResponseCodeSelector,
+    getResponseCodeMaxTabs,
+    setResponseCodeMaxTabs,
   }
 }

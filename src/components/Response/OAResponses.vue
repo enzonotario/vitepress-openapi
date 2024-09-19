@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref } from 'vue'
+import { computed, defineProps, ref } from 'vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
 import {
   Select,
@@ -36,6 +36,18 @@ const themeConfig = useTheme()
 const responsesCodes = Object.keys(props.responses)
 
 const vModel = ref(responsesCodes && responsesCodes.length > 0 ? responsesCodes[0] : null)
+
+const tabsSelector = computed(() => {
+  const selector = themeConfig.getResponseCodeSelector()
+
+  if (selector === 'tabs') {
+    const maxTabs = themeConfig.getResponseCodeMaxTabs()
+
+    return maxTabs && responsesCodes.length > maxTabs ? 'select' : 'tabs'
+  }
+
+  return selector
+})
 </script>
 
 <template>
@@ -57,7 +69,7 @@ const vModel = ref(responsesCodes && responsesCodes.length > 0 ? responsesCodes[
           <span class="flex-grow min-w-2" />
 
           <div class="relative flex flex-row">
-            <template v-if="themeConfig.getResponseCodeSelector() === 'tabs'">
+            <template v-if="tabsSelector === 'tabs'">
               <TabsIndicator class="absolute left-0 h-full bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded transition-[width,transform] duration-300 bg-muted" />
 
               <TabsTrigger
@@ -71,7 +83,7 @@ const vModel = ref(responsesCodes && responsesCodes.length > 0 ? responsesCodes[
             </template>
 
             <Select
-              v-if="themeConfig.getResponseCodeSelector() === 'select'"
+              v-if="tabsSelector === 'select'"
               v-model="vModel"
             >
               <SelectTrigger
