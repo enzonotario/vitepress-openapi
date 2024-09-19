@@ -12,7 +12,7 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   return {
-    ...openapi,
+    ...(openapi || {}),
     spec: openapi?.parsedSpec,
     json: openapi?.spec,
     setSpec,
