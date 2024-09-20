@@ -75,8 +75,9 @@ export default {
 
 ## Response Configuration
 
-| Function                  | Description                                    | Default Value |
-|---------------------------|------------------------------------------------|---------------|
-| `setResponseCodeSelector` | Sets the response code selector.               | `'tabs'`      |
-| `setResponseCodeMaxTabs`  | Sets the maximum number of response code tabs. | `5`           |
+| Function                  | Description                                                          | Default Value |
+|---------------------------|----------------------------------------------------------------------|---------------|
+| `setResponseCodeSelector` | Sets the response code selector.                                     | `'tabs'`      |
+| `setResponseCodeMaxTabs`  | Sets the maximum number of tabs, after which a Select will be shown. | `5`           |
+```
 
