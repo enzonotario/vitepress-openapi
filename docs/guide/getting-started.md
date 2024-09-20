@@ -45,7 +45,7 @@ In your `.vitepress/theme/index.js`, import the theme and configure it as follow
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 
-import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
+import { theme, useOpenapi } from 'vitepress-theme-openapi'
 import 'vitepress-theme-openapi/dist/style.css'
 
 import spec from '../../public/openapi.json' assert { type: 'json' }
