@@ -41,6 +41,11 @@ const headingLevels: HeadingLevels = {
   h6: 6,
 }
 
+const responseConfig = {
+  responseCodeSelector: ref<'tabs', 'select'>('tabs'),
+  maxTabs: ref<number>(5),
+}
+
 export function useTheme() {
   function getLocale(): 'es' | 'en' {
     return themeConfig.locale.value
@@ -99,13 +104,29 @@ export function useTheme() {
   }
 
   function setHeadingLevels(levels: Partial<HeadingLevels>) {
-    for (const key in levels) {
+    for (const key of Object.keys(levels)) {
       const value = levels[key as keyof HeadingLevels]
       if (value < 1 || value > 6) {
         throw new Error(`Heading level for ${key} must be between 1 and 6.`)
       }
     }
     Object.assign(headingLevels, levels)
+  }
+
+  function getResponseCodeSelector(): 'tabs' | 'select' {
+    return responseConfig.responseCodeSelector.value
+  }
+
+  function setResponseCodeSelector(value: 'tabs' | 'select') {
+    responseConfig.responseCodeSelector.value = value
+  }
+
+  function getResponseCodeMaxTabs(): number {
+    return responseConfig.maxTabs.value
+  }
+
+  function setResponseCodeMaxTabs(value: number) {
+    responseConfig.maxTabs.value = value
   }
 
   return {
@@ -124,5 +145,9 @@ export function useTheme() {
     getHeadingLevels,
     getHeadingLevel,
     setHeadingLevels,
+    getResponseCodeSelector,
+    setResponseCodeSelector,
+    getResponseCodeMaxTabs,
+    setResponseCodeMaxTabs,
   }
 }

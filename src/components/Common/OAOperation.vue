@@ -221,19 +221,12 @@ function hasSlot(name) {
       v-else
       #responses="responses"
     >
-      <OAHeading
-        level="h2"
-        :prefix="headingPrefix"
-        class="z-10"
-      >
-        {{ $t('Responses') }}
-      </OAHeading>
-
       <OAResponses
         :operation-id="responses.operationId"
         :responses="responses.responses"
         :response-type="responses.responseType"
         :is-dark="isDark"
+        :heading-prefix="headingPrefix"
       />
     </template>
 

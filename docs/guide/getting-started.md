@@ -45,7 +45,7 @@ In your `.vitepress/theme/index.js`, import the theme and configure it as follow
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 
-import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
+import { theme, useOpenapi } from 'vitepress-theme-openapi'
 import 'vitepress-theme-openapi/dist/style.css'
 
 import spec from '../../public/openapi.json' assert { type: 'json' }
@@ -54,25 +54,10 @@ export default {
     ...DefaultTheme,
     async enhanceApp({app, router, siteData}) {
         // Set the OpenAPI specification.
-        const openapi = useOpenapi()
-        openapi.setSpec(spec)
-
-        // Optionally, configure the theme.
-        const themeConfig = useTheme()
-        themeConfig.setLocale('en') // en or es
-
-        // Optionally, you can set the heading levels to be used in content.
-        themeConfig.setHeadingLevels({
-            h1: 1,
-            h2: 3,
-            h3: 4,
-            h4: 4,
-            h5: 4,
-            h6: 4,
-        })
+        const openapi = useOpenapi({ spec })
 
         // Use the theme.
-        theme.enhanceApp({app})
+        theme.enhanceApp({ app })
     }
 } satisfies Theme
 ```
@@ -84,3 +69,7 @@ You can render the OpenAPI specification in different layouts:
 - [One operation per page](/layouts/one-operation.html)
 - [All operations in a single page](/layouts/all-operations.html)
 - [Sidebar items](/layouts/sidebar.html)
+
+### Customization
+
+You can use the [`useTheme`](/composables/useTheme) composable to configure the theme in your `.vitepress/theme/index.js` file, or in any `.md` page/file.
