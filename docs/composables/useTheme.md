@@ -79,5 +79,4 @@ export default {
 |---------------------------|----------------------------------------------------------------------|---------------|
 | `setResponseCodeSelector` | Sets the response code selector.                                     | `'tabs'`      |
 | `setResponseCodeMaxTabs`  | Sets the maximum number of tabs, after which a Select will be shown. | `5`           |
-```
 
