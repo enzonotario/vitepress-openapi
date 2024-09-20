@@ -104,7 +104,7 @@ export function useTheme() {
   }
 
   function setHeadingLevels(levels: Partial<HeadingLevels>) {
-    for (const key in levels) {
+    for (const key of Object.keys(levels)) {
       const value = levels[key as keyof HeadingLevels]
       if (value < 1 || value > 6) {
         throw new Error(`Heading level for ${key} must be between 1 and 6.`)
