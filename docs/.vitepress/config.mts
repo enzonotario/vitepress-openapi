@@ -1,7 +1,7 @@
+import { resolve } from 'node:path'
+import spec from '../public/openapi.json' assert { type: 'json' }
 import { defineConfigWithTheme } from 'vitepress'
 import { useSidebar } from 'vitepress-theme-openapi'
-import spec from '../public/openapi.json' assert { type: 'json' }
-import { resolve } from "node:path";
 
 const sidebar = useSidebar({ spec })
 
@@ -41,16 +41,34 @@ export default defineConfigWithTheme({
                 text: 'Multiple Specs',
                 link: '/layouts/multiple-specs',
               },
-            ]
-          }
+            ],
+          },
+        ],
+      },
+      {
+        text: 'Composables',
+        items: [
+          {
+            items: [
+              // {
+              //   text: 'useOpenapi',
+              //   link: '/composables/useOpenapi',
+              // },
+              {
+                text: 'useTheme',
+                link: '/composables/useTheme',
+              },
+            ],
+          },
         ],
       },
       {
         text: 'Example',
+        collapsed: true,
         items: [
-          ...sidebar.generateSidebarGroups().map((group) => ({
+          ...sidebar.generateSidebarGroups().map(group => ({
             ...group,
-            items: group.items.map((item) => ({
+            items: group.items.map(item => ({
               ...item,
               link: `/example${item.link}`,
             })),
