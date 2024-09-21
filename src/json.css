@@ -77,88 +77,87 @@
 /**
   JSON Editor
  */
-:root {
-  .oa-jse-theme-light {
-    --jse-theme: light;
+.oa-jse-theme-light {
+  --jse-theme: light;
 
-    /* Over all fonts, sizes, and colors */
-    --jse-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-    --jse-font-family-mono: consolas, menlo, monaco, 'Ubuntu Mono', 'source-code-pro', monospace;
-    --jse-font-size-mono: 14px;
-    --jse-theme-color: var(--vp-c-bg-alt);
-    --jse-theme-color-highlight: var(--vp-c-bg);
-    --jse-background-color: var(--vp-code-block-bg);
-    --jse-text-color: var(--vp-c-text-1);
-    --jse-text-color-inverse: var(--vp-c-neutral-inverse);
-    --jse-text-readonly: var(--vp-c-text-3);
-    --jse-error-color: var(--vp-c-danger-1);
-    --jse-warning-color: var(--vp-c-warning-1);
-    --jse-info-color: var(--vp-c-brand-1);
+  /* Over all fonts, sizes, and colors */
+  --jse-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --jse-font-family-mono: consolas, menlo, monaco, 'Ubuntu Mono', 'source-code-pro', monospace;
+  --jse-font-size-mono: 14px;
+  --jse-theme-color: var(--vp-c-bg-alt);
+  --jse-theme-color-highlight: var(--vp-c-bg);
+  --jse-background-color: var(--vp-code-block-bg);
+  --jse-text-color: var(--vp-c-text-1);
+  --jse-text-color-inverse: var(--vp-c-neutral-inverse);
+  --jse-text-readonly: var(--vp-c-text-3);
+  --jse-error-color: var(--vp-c-danger-1);
+  --jse-warning-color: var(--vp-c-warning-1);
+  --jse-info-color: var(--vp-c-brand-1);
 
-    /* Main, menu, modal */
-    --jse-main-border: 0 solid var(--vp-c-border);
-    --jse-menu-color: var(--vp-c-text-3);
-    --jse-modal-background: var(--vp-c-bg-alt);
-    --jse-modal-overlay-background: rgba(0, 0, 0, 0.3);
-    --jse-modal-code-background: var(--vp-c-bg-soft);
+  /* Main, menu, modal */
+  --jse-main-border: 0 solid var(--vp-c-border);
+  --jse-menu-color: var(--vp-c-text-3);
+  --jse-modal-background: var(--vp-c-bg-alt);
+  --jse-modal-overlay-background: rgba(0, 0, 0, 0.3);
+  --jse-modal-code-background: var(--vp-c-bg-soft);
 
-    /* Tooltip in text mode */
-    --jse-tooltip-color: var(--vp-c-text-1);
-    --jse-tooltip-background: var(--vp-c-bg-alt);
-    --jse-tooltip-border: 1px solid var(--vp-c-border);
-    --jse-tooltip-action-button-color: var(--vp-c-neutral-inverse);
-    --jse-tooltip-action-button-background: var(--vp-c-text-1);
+  /* Tooltip in text mode */
+  --jse-tooltip-color: var(--vp-c-text-1);
+  --jse-tooltip-background: var(--vp-c-bg-alt);
+  --jse-tooltip-border: 1px solid var(--vp-c-border);
+  --jse-tooltip-action-button-color: var(--vp-c-neutral-inverse);
+  --jse-tooltip-action-button-background: var(--vp-c-text-1);
 
-    /* Panels: navigation bar, gutter, search box */
-    --jse-panel-background: var(--vp-c-bg-alt);
-    --jse-panel-color: var(--vp-c-text-1);
-    --jse-panel-color-readonly: var(--vp-c-text-3);
-    --jse-panel-border: 1px solid var(--vp-c-border);
-    --jse-panel-button-color-highlight: var(--vp-c-text-1);
-    --jse-panel-button-background-highlight: var(--vp-c-bg-soft);
+  /* Panels: navigation bar, gutter, search box */
+  --jse-panel-background: var(--vp-c-bg-alt);
+  --jse-panel-color: var(--vp-c-text-1);
+  --jse-panel-color-readonly: var(--vp-c-text-3);
+  --jse-panel-border: 1px solid var(--vp-c-border);
+  --jse-panel-button-color-highlight: var(--vp-c-text-1);
+  --jse-panel-button-background-highlight: var(--vp-c-bg-soft);
 
-    /* Navigation bar */
-    --jse-navigation-bar-background: var(--vp-c-bg);
-    --jse-navigation-bar-background-highlight: var(--vp-c-bg-alt);
-    --jse-navigation-bar-dropdown-color: var(--vp-c-text-1);
+  /* Navigation bar */
+  --jse-navigation-bar-background: var(--vp-c-bg);
+  --jse-navigation-bar-background-highlight: var(--vp-c-bg-alt);
+  --jse-navigation-bar-dropdown-color: var(--vp-c-text-1);
 
-    /* Context menu */
-    --jse-context-menu-background: var(--vp-c-bg-alt);
-    --jse-context-menu-background-highlight: var(--vp-c-bg-soft);
-    --jse-context-menu-color: var(--vp-c-text-1);
-    --jse-context-menu-separator-color: var(--vp-c-border);
-    --jse-context-menu-pointer-background: var(--vp-c-bg-alt);
-    --jse-context-menu-pointer-background-highlight: var(--vp-c-bg-soft);
-    --jse-context-menu-pointer-color: var(--vp-c-text-1);
+  /* Context menu */
+  --jse-context-menu-background: var(--vp-c-bg-alt);
+  --jse-context-menu-background-highlight: var(--vp-c-bg-soft);
+  --jse-context-menu-color: var(--vp-c-text-1);
+  --jse-context-menu-separator-color: var(--vp-c-border);
+  --jse-context-menu-pointer-background: var(--vp-c-bg-alt);
+  --jse-context-menu-pointer-background-highlight: var(--vp-c-bg-soft);
+  --jse-context-menu-pointer-color: var(--vp-c-text-1);
 
-    /* Contents: JSON key and values */
-    --jse-key-color: var(--vjs-key-color);
-    --jse-value-color: var(--vjs-value-string-color);
-    --jse-value-color-number: var(--vjs-value-number-color);
-    --jse-value-color-boolean: var(--vjs-value-boolean-color);
-    --jse-value-color-null: var(--vjs-value-null-color);
-    --jse-value-color-string: var(--vjs-value-string-color);
-    --jse-value-color-url: var(--vjs-value-string-color);
-    --jse-delimiter-color: var(--vjs-caret-color);
-    --jse-edit-outline: 2px solid var(--vjs-border-color);
+  /* Contents: JSON key and values */
+  --jse-key-color: var(--vjs-key-color);
+  --jse-value-color: var(--vjs-value-string-color);
+  --jse-value-color-number: var(--vjs-value-number-color);
+  --jse-value-color-boolean: var(--vjs-value-boolean-color);
+  --jse-value-color-null: var(--vjs-value-null-color);
+  --jse-value-color-string: var(--vjs-value-string-color);
+  --jse-value-color-url: var(--vjs-value-string-color);
+  --jse-delimiter-color: var(--vjs-caret-color);
+  --jse-edit-outline: 2px solid var(--vjs-border-color);
 
-    /* Selected or hovered */
-    --jse-selection-background-color: var(--vp-c-bg-soft);
-    --jse-hover-background-color: rgba(0, 0, 0, 0.06);
+  /* Selected or hovered */
+  --jse-selection-background-color: var(--vp-c-bg-soft);
+  --jse-hover-background-color: rgba(0, 0, 0, 0.06);
 
-    /* Controls in modals: inputs, buttons, and `a` */
-    --jse-input-background: var(--vp-c-bg);
-    --jse-input-color: var(--vp-c-text-1);
-    --jse-input-border: 1px solid var(--vp-c-border);
-    --jse-button-background: var(--vp-c-default-3);
-    --jse-button-primary-background: var(--vp-c-brand-3);
-    --jse-button-primary-color: var(--vp-c-white);
-    --jse-button-secondary-background: var(--vp-c-default-3);
-    --jse-a-color: var(--vp-c-brand-1);
-    --jse-a-color-highlight: var(--vp-c-brand-2);
-  }
+  /* Controls in modals: inputs, buttons, and `a` */
+  --jse-input-background: var(--vp-c-bg);
+  --jse-input-color: var(--vp-c-text-1);
+  --jse-input-border: 1px solid var(--vp-c-border);
+  --jse-button-background: var(--vp-c-default-3);
+  --jse-button-primary-background: var(--vp-c-brand-3);
+  --jse-button-primary-color: var(--vp-c-white);
+  --jse-button-secondary-background: var(--vp-c-default-3);
+  --jse-a-color: var(--vp-c-brand-1);
+  --jse-a-color-highlight: var(--vp-c-brand-2);
+}
 
-  .oa-jse-theme-dark {
+.oa-jse-theme-dark {
     --jse-theme: dark;
 
     /* Over all fonts, sizes, and colors */
@@ -237,7 +236,6 @@
     --jse-a-color: var(--vp-c-brand-1);
     --jse-a-color-highlight: var(--vp-c-brand-2);
   }
-}
 
 .oa-jse .jse-main   {
   @apply rounded p-2;
