@@ -46,6 +46,14 @@ const responseConfig = {
   maxTabs: ref<number>(5),
 }
 
+const playgroundConfig = {
+  jsonEditor: {
+    mode: ref<'text' | 'tree' | 'table'>('tree'),
+    mainMenuBar: ref<boolean>(false),
+    navigationBar: ref<boolean>(false),
+  },
+}
+
 export function useTheme() {
   function getLocale(): 'es' | 'en' {
     return themeConfig.locale.value
@@ -129,6 +137,30 @@ export function useTheme() {
     responseConfig.maxTabs.value = value
   }
 
+  function getPlaygroundJsonEditorMode(): 'text' | 'tree' {
+    return playgroundConfig.jsonEditor.mode.value
+  }
+
+  function setPlaygroundJsonEditorMode(value: 'text' | 'tree') {
+    playgroundConfig.jsonEditor.mode.value = value
+  }
+
+  function getPlaygroundJsonEditorMainMenuBar(): boolean {
+    return playgroundConfig.jsonEditor.mainMenuBar.value
+  }
+
+  function setPlaygroundJsonEditorMainMenuBar(value: boolean) {
+    playgroundConfig.jsonEditor.mainMenuBar.value = value
+  }
+
+  function getPlaygroundJsonEditorNavigationBar(): boolean {
+    return playgroundConfig.jsonEditor.navigationBar.value
+  }
+
+  function setPlaygroundJsonEditorNavigationBar(value: boolean) {
+    playgroundConfig.jsonEditor.navigationBar.value = value
+  }
+
   return {
     schemaConfig,
     getLocale,
@@ -149,5 +181,11 @@ export function useTheme() {
     setResponseCodeSelector,
     getResponseCodeMaxTabs,
     setResponseCodeMaxTabs,
+    getPlaygroundJsonEditorMode,
+    setPlaygroundJsonEditorMode,
+    getPlaygroundJsonEditorMainMenuBar,
+    setPlaygroundJsonEditorMainMenuBar,
+    getPlaygroundJsonEditorNavigationBar,
+    setPlaygroundJsonEditorNavigationBar,
   }
 }

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref, watch } from 'vue'
+import OAJSONEditor from 'vitepress-theme-openapi/components/Common/OAJSONEditor.vue'
+import { propertiesTypesJsonRecursive } from 'vitepress-theme-openapi/lib/generateSchemaJson'
 
 const props = defineProps({
   request: { // v-model
@@ -32,6 +34,10 @@ const props = defineProps({
   securitySchemes: {
     type: Object,
     required: true,
+  },
+  schema: {
+    type: Object,
+    required: false,
   },
 })
 
@@ -78,6 +84,8 @@ const auth = ref({
     }),
   ),
 })
+
+const body = ref(props.schema ? propertiesTypesJsonRecursive(props.schema, true) : null)
 
 function buildRequest() {
   let requestPath = props.path
@@ -146,6 +154,7 @@ function buildRequest() {
   const newRequest = {
     url: url.toString(),
     headers: Object.fromEntries(headers),
+    body: body.value,
   }
 
   emits('update:request', newRequest)
@@ -153,7 +162,7 @@ function buildRequest() {
   return newRequest
 }
 
-watch([variables, auth], buildRequest, { deep: true, immediate: true })
+watch([variables, auth, body], buildRequest, { deep: true, immediate: true })
 </script>
 
 <template>
@@ -259,6 +268,24 @@ watch([variables, auth], buildRequest, { deep: true, immediate: true })
             />
           </div>
         </div>
+      </div>
+    </details>
+
+    <details
+      v-if="body"
+      open
+      class="flex flex-col"
+    >
+      <summary class="my-0! text-lg font-bold cursor-pointer">
+        {{ $t('Body') }}
+      </summary>
+
+      <div class="flex flex-col">
+        <OAJSONEditor
+          v-model="body"
+          :is-dark="props.isDark"
+          class="w-full"
+        />
       </div>
     </details>
   </div>

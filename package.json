@@ -66,6 +66,7 @@
     "eslint-plugin-cypress": "^3.5.0",
     "eslint-plugin-format": "^0.1.2",
     "globals": "^15.9.0",
+    "json-editor-vue": "^0.16.0",
     "markdown-it": "^14.1.0",
     "postcss": "^8.4.42",
     "prettier": "^3.3.3",

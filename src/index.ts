@@ -11,6 +11,7 @@ import en from './locales/en.json'
 
 import 'tailwindcss/tailwind.css'
 import './style.css'
+import './json.css'
 
 export { useSidebar } from './composables/useSidebar'
 export { useOpenapi } from './composables/useOpenapi'

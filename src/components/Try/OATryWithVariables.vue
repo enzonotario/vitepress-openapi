@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue'
 import fetchToCurl from 'vitepress-theme-openapi/lib/fetchToCurl'
-import { generateSchemaJson } from 'vitepress-theme-openapi/lib/generateSchemaJson'
+import { formatJson } from 'vitepress-theme-openapi/lib/formatJson'
 
 const props = defineProps({
   operationId: {
@@ -49,14 +49,12 @@ const request = ref({
 
 const loading = ref(false)
 
-const schemaJson = props.schema ? generateSchemaJson(props.schema, true) : null
-
 const curl = computed(() => {
   return fetchToCurl({
     method: props.method.toUpperCase(),
     url: request.value.url,
     headers: request.value.headers,
-    body: schemaJson,
+    body: formatJson(request.value.body),
   })
 })
 </script>
@@ -71,6 +69,8 @@ const curl = computed(() => {
       :base-url="props.baseUrl"
       :parameters="props.parameters ?? []"
       :security-schemes="props.securitySchemes ?? {}"
+      :schema="props.schema"
+      :is-dark="props.isDark"
     />
 
     <OACodeBlock
@@ -91,7 +91,7 @@ const curl = computed(() => {
     >
       <template #response="response">
         <OACodeBlock
-          :code="JSON.stringify(response.response, null, 2)"
+          :code="response.response"
           lang="json"
           label="JSON"
           :is-dark="props.isDark"

@@ -118,4 +118,37 @@ describe('useTheme', () => {
     const result = theme.getResponseCodeMaxTabs()
     expect(result).toBe(10)
   })
+
+  it('returns the default playground json editor mode', () => {
+    const result = theme.getPlaygroundJsonEditorMode()
+    expect(result).toBe('tree')
+  })
+
+  it('sets and gets the playground json editor mode', () => {
+    theme.setPlaygroundJsonEditorMode('text')
+    const result = theme.getPlaygroundJsonEditorMode()
+    expect(result).toBe('text')
+  })
+
+  it('returns the default playground json editor main menu bar value', () => {
+    const result = theme.getPlaygroundJsonEditorMainMenuBar()
+    expect(result).toBe(false)
+  })
+
+  it('sets and gets the playground json editor main menu bar value', () => {
+    theme.setPlaygroundJsonEditorMainMenuBar(true)
+    const result = theme.getPlaygroundJsonEditorMainMenuBar()
+    expect(result).toBe(true)
+  })
+
+  it('returns the default playground json editor navigation bar value', () => {
+    const result = theme.getPlaygroundJsonEditorNavigationBar()
+    expect(result).toBe(false)
+  })
+
+  it('sets and gets the playground json editor navigation bar value', () => {
+    theme.setPlaygroundJsonEditorNavigationBar(true)
+    const result = theme.getPlaygroundJsonEditorNavigationBar()
+    expect(result).toBe(true)
+  })
 })

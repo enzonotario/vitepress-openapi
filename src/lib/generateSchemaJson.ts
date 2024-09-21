@@ -1,13 +1,7 @@
+import { formatJson } from './formatJson'
+
 export function generateSchemaJson(schema: any, useExample = false) {
-  try {
-    return JSON.stringify(
-      propertiesTypesJsonRecursive(schema, useExample),
-      null,
-      2,
-    )
-  } catch {
-    return '{}'
-  }
+  return formatJson(propertiesTypesJsonRecursive(schema, useExample))
 }
 
 export function propertiesTypesJsonRecursive(schema: any, useExample = false) {
