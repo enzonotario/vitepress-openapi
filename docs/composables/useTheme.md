@@ -38,6 +38,15 @@ export default {
         
         // Set the maximum number of tabs, after which a Select will be shown.
         themeConfig.setResponseCodeMaxTabs(5)
+        
+        // Set the mode of the JSON editor.
+        themeConfig.setPlaygroundJsonEditorMode('tree') // text, tree, or table
+        
+        // Set the visibility of the main menu bar.
+        themeConfig.setPlaygroundJsonEditorMainMenuBar(false)
+        
+        // Set the visibility of the navigation bar.
+        themeConfig.setPlaygroundJsonEditorNavigationBar(false)
     }
 }
 ```
@@ -80,3 +89,10 @@ export default {
 | `setResponseCodeSelector` | Sets the response code selector.                                     | `'tabs'`      |
 | `setResponseCodeMaxTabs`  | Sets the maximum number of tabs, after which a Select will be shown. | `5`           |
 
+## Playground JSON Editor Configuration
+
+| Function                               | Description                                | Default Value |
+|----------------------------------------|--------------------------------------------|---------------|
+| `setPlaygroundJsonEditorMode`          | Sets the mode of the JSON editor.          | `'tree'`      |
+| `setPlaygroundJsonEditorMainMenuBar`   | Sets the visibility of the main menu bar.  | `false`       |
+| `setPlaygroundJsonEditorNavigationBar` | Sets the visibility of the navigation bar. | `false`       |

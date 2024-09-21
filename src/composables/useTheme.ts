@@ -47,6 +47,11 @@ const responseConfig = {
 }
 
 const playgroundConfig = {
+  /**
+   * See:
+   * - https://github.com/cloydlau/json-editor-vue?tab=readme-ov-file#props
+   * - https://github.com/josdejong/svelte-jsoneditor/#properties
+   */
   jsonEditor: {
     mode: ref<'text' | 'tree' | 'table'>('tree'),
     mainMenuBar: ref<boolean>(false),
