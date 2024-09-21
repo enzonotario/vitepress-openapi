@@ -53,46 +53,46 @@ export default {
 
 ## Global Configuration
 
-| Function    | Description                           | Default Value |
-|-------------|---------------------------------------|---------------|
-| `setLocale` | Sets the language (`'es'` or `'en'`). | `'en'`        |
+| Function    | Description                           | Default Value | Allowed Values |
+|-------------|---------------------------------------|---------------|----------------|
+| `setLocale` | Sets the language (`'es'` or `'en'`). | `'en'`        | `'es'`, `'en'` |
 
 ## Schema Configuration
 
-| Function               | Description                         | Default Value |
-|------------------------|-------------------------------------|---------------|
-| `setSchemaDefaultView` | Sets the default schema view.       | `'schema'`    |
-| `setShowBaseURL`       | Sets whether the base URL is shown. | `true`        |
+| Function               | Description                         | Default Value | Allowed Values              |
+|------------------------|-------------------------------------|---------------|-----------------------------|
+| `setSchemaDefaultView` | Sets the default schema view.       | `'schema'`    | `'schema'`, `'contentType'` |
+| `setShowBaseURL`       | Sets whether the base URL is shown. | `true`        | `true`, `false`             |
 
 ## JSON Viewer Configuration
 
-| Function            | Description                 | Default Value |
-|---------------------|-----------------------------|---------------|
-| `setJsonViewerDeep` | Sets the JSON viewer depth. | `Infinity`    |
+| Function            | Description                 | Default Value | Allowed Values |
+|---------------------|-----------------------------|---------------|----------------|
+| `setJsonViewerDeep` | Sets the JSON viewer depth. | `Infinity`    | `number`       |
 
 ## Schema Viewer Configuration
 
-| Function              | Description                   | Default Value |
-|-----------------------|-------------------------------|---------------|
-| `setSchemaViewerDeep` | Sets the schema viewer depth. | `Infinity`    |
+| Function              | Description                   | Default Value | Allowed Values |
+|-----------------------|-------------------------------|---------------|----------------|
+| `setSchemaViewerDeep` | Sets the schema viewer depth. | `Infinity`    | `number`       |
 
 ## Heading Levels Configuration
 
-| Function           | Description              | Default Value                                  |
-|--------------------|--------------------------|------------------------------------------------|
-| `setHeadingLevels` | Sets the heading levels. | `{ h1: 1, h2: 2, h3: 3, h4: 4, h5: 5, h6: 6 }` |
+| Function           | Description              | Default Value                                  | Allowed Values                                                               |
+|--------------------|--------------------------|------------------------------------------------|------------------------------------------------------------------------------|
+| `setHeadingLevels` | Sets the heading levels. | `{ h1: 1, h2: 2, h3: 3, h4: 4, h5: 5, h6: 6 }` | `{ h1: number, h2: number, h3: number, h4: number, h5: number, h6: number }` |
 
 ## Response Configuration
 
-| Function                  | Description                                                          | Default Value |
-|---------------------------|----------------------------------------------------------------------|---------------|
-| `setResponseCodeSelector` | Sets the response code selector.                                     | `'tabs'`      |
-| `setResponseCodeMaxTabs`  | Sets the maximum number of tabs, after which a Select will be shown. | `5`           |
+| Function                  | Description                                                          | Default Value | Allowed Values       |
+|---------------------------|----------------------------------------------------------------------|---------------|----------------------|
+| `setResponseCodeSelector` | Sets the response code selector.                                     | `'tabs'`      | `'tabs'`, `'select'` |
+| `setResponseCodeMaxTabs`  | Sets the maximum number of tabs, after which a Select will be shown. | `5`           | `number`             |
 
 ## Playground JSON Editor Configuration
 
-| Function                               | Description                                | Default Value |
-|----------------------------------------|--------------------------------------------|---------------|
-| `setPlaygroundJsonEditorMode`          | Sets the mode of the JSON editor.          | `'tree'`      |
-| `setPlaygroundJsonEditorMainMenuBar`   | Sets the visibility of the main menu bar.  | `false`       |
-| `setPlaygroundJsonEditorNavigationBar` | Sets the visibility of the navigation bar. | `false`       |
+| Function                               | Description                                | Default Value | Allowed Values                |
+|----------------------------------------|--------------------------------------------|---------------|-------------------------------|
+| `setPlaygroundJsonEditorMode`          | Sets the mode of the JSON editor.          | `'tree'`      | `'text'`, `'tree'`, `'table'` |
+| `setPlaygroundJsonEditorMainMenuBar`   | Sets the visibility of the main menu bar.  | `false`       | `true`, `false`               |
+| `setPlaygroundJsonEditorNavigationBar` | Sets the visibility of the navigation bar. | `false`       | `true`, `false`               |
