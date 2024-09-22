@@ -142,11 +142,11 @@ export function useTheme() {
     responseConfig.maxTabs.value = value
   }
 
-  function getPlaygroundJsonEditorMode(): 'text' | 'tree' {
+  function getPlaygroundJsonEditorMode(): 'text' | 'tree' | 'table' {
     return playgroundConfig.jsonEditor.mode.value
   }
 
-  function setPlaygroundJsonEditorMode(value: 'text' | 'tree') {
+  function setPlaygroundJsonEditorMode(value: 'text' | 'tree' | 'table') {
     playgroundConfig.jsonEditor.mode.value = value
   }
 
