@@ -57,7 +57,7 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
 
       return firstUrl
     } catch {
-      console.warn('Invalid server URL:', firstUrl)
+      console.warn('Invalid server URL:', spec.servers)
       return DEFAULT_SERVER_URL
     }
   }

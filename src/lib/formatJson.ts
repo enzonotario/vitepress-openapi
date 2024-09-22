@@ -1,6 +1,6 @@
 export function formatJson(json: any): string {
   if (typeof json !== 'object' && typeof json !== 'undefined' && json !== null) {
-    return null
+    return '{}'
   }
 
   try {
