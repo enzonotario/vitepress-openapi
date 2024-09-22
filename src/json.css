@@ -142,8 +142,8 @@
   --jse-edit-outline: 2px solid var(--vjs-border-color);
 
   /* Selected or hovered */
-  --jse-selection-background-color: var(--vp-c-bg-soft);
-  --jse-hover-background-color: rgba(0, 0, 0, 0.06);
+  --jse-selection-background-color: var(--vjs-hover-background-color);
+  --jse-hover-background-color: var(--vjs-hover-background-color);
 
   /* Controls in modals: inputs, buttons, and `a` */
   --jse-input-background: var(--vp-c-bg);
@@ -222,8 +222,8 @@
     --jse-edit-outline: 2px solid var(--vjs-border-color);
 
     /* Selected or hovered */
-    --jse-selection-background-color: var(--vp-c-bg-soft);
-    --jse-hover-background-color: rgba(0, 0, 0, 0.06);
+    --jse-selection-background-color: var(--vjs-hover-background-color);
+    --jse-hover-background-color: var(--vjs-hover-background-color);
 
     /* Controls in modals: inputs, buttons, and `a` */
     --jse-input-background: var(--vp-c-bg);
