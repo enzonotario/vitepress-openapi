@@ -54,7 +54,7 @@ const curl = computed(() => {
     method: props.method.toUpperCase(),
     url: request.value.url,
     headers: request.value.headers,
-    body: formatJson(request.value.body),
+    body: request.value.body ? formatJson(request.value.body) : null,
   })
 })
 </script>
