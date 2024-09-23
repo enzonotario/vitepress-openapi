@@ -130,61 +130,15 @@
 }
 
 /**
-  JSON Viewer
+  OAMarkdown
  */
-.vjs-carets {
-  @apply text-gray-500 dark:text-gray-400 !important;
-}
-.vjs-tree-node .vjs-indent-unit.has-line {
-  @apply border-gray-400 dark:border-gray-700 !important;
-}
-.vjs-key {
-  color: #998418 !important;
-}
-.dark .vjs-key {
-  color: #b8a965 !important;
-}
-.vjs-value-null {
-  color: #ab5959 !important;
-}
-.dark .vjs-value-null {
-  color: #cb7676 !important;
-}
-.vjs-value-undefined {
-  color: #ab5959 !important;
-}
-.dark .vjs-value-undefined {
-  color: #cb7676 !important;
-}
-.vjs-value-number {
-  color: #2f798a !important;
-}
-.dark .vjs-value-number {
-  color: #4c9a91 !important;
-}
-.vjs-value-boolean {
-  color: #1e754f !important;
-}
-.dark .vjs-value-boolean {
-  color: #4d9375 !important;
-}
-.vjs-value-string {
-  color: #b56959 !important;
-}
-.dark .vjs-value-string {
-  color: #c98a7d !important;
-}
-.vjs-tree-node:hover {
-  background-color: #eaebee !important;
-}
-.dark .vjs-tree-node:hover {
-  background-color: #24272c !important;
-}
-
 .oa-doc p {
   @apply my-1 !important;
 }
 
+/**
+  OAPath
+ */
 .VPDoc.has-aside .OAPathContentEnd {
   @apply px-2;
 }

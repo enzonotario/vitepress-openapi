@@ -4,6 +4,7 @@ import { useShiki } from 'vitepress-theme-openapi/composables/useShiki'
 import { useTheme } from 'vitepress-theme-openapi'
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
+import { destr } from 'destr'
 
 const props = defineProps({
   code: {
@@ -70,7 +71,7 @@ watch(
 
     <VueJsonPretty
       v-if="props.lang === 'json' && !props.disableHtmlTransform"
-      :data="JSON.parse(props.code)"
+      :data="destr(props.code)"
       :theme="props.isDark ? 'dark' : 'light'"
       :deep="themeConfig.getJsonViewerDeep()"
       show-icon

@@ -11,6 +11,8 @@ interface HeadingLevels {
   h6: number
 }
 
+type PlaygroundJsonEditorMode = 'text' | 'tree' | 'table'
+
 const themeConfig = {
   locale: ref<'es' | 'en'>('en'),
   highlighterTheme: {
@@ -44,6 +46,19 @@ const headingLevels: HeadingLevels = {
 const responseConfig = {
   responseCodeSelector: ref<'tabs', 'select'>('tabs'),
   maxTabs: ref<number>(5),
+}
+
+const playgroundConfig = {
+  /**
+   * See:
+   * - https://github.com/cloydlau/json-editor-vue?tab=readme-ov-file#props
+   * - https://github.com/josdejong/svelte-jsoneditor/#properties
+   */
+  jsonEditor: {
+    mode: ref<PlaygroundJsonEditorMode>('tree'),
+    mainMenuBar: ref<boolean>(false),
+    navigationBar: ref<boolean>(false),
+  },
 }
 
 export function useTheme() {
@@ -129,6 +144,30 @@ export function useTheme() {
     responseConfig.maxTabs.value = value
   }
 
+  function getPlaygroundJsonEditorMode(): PlaygroundJsonEditorMode {
+    return playgroundConfig.jsonEditor.mode.value
+  }
+
+  function setPlaygroundJsonEditorMode(value: PlaygroundJsonEditorMode) {
+    playgroundConfig.jsonEditor.mode.value = value
+  }
+
+  function getPlaygroundJsonEditorMainMenuBar(): boolean {
+    return playgroundConfig.jsonEditor.mainMenuBar.value
+  }
+
+  function setPlaygroundJsonEditorMainMenuBar(value: boolean) {
+    playgroundConfig.jsonEditor.mainMenuBar.value = value
+  }
+
+  function getPlaygroundJsonEditorNavigationBar(): boolean {
+    return playgroundConfig.jsonEditor.navigationBar.value
+  }
+
+  function setPlaygroundJsonEditorNavigationBar(value: boolean) {
+    playgroundConfig.jsonEditor.navigationBar.value = value
+  }
+
   return {
     schemaConfig,
     getLocale,
@@ -149,5 +188,11 @@ export function useTheme() {
     setResponseCodeSelector,
     getResponseCodeMaxTabs,
     setResponseCodeMaxTabs,
+    getPlaygroundJsonEditorMode,
+    setPlaygroundJsonEditorMode,
+    getPlaygroundJsonEditorMainMenuBar,
+    setPlaygroundJsonEditorMainMenuBar,
+    getPlaygroundJsonEditorNavigationBar,
+    setPlaygroundJsonEditorNavigationBar,
   }
 }

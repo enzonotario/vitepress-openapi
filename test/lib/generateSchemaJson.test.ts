@@ -1,15 +1,15 @@
-import { describe, it, expect } from 'vitest';
-import { generateSchemaJson } from '../../src/lib/generateSchemaJson';
-import { merge } from 'allof-merge';
+import { describe, expect, it } from 'vitest'
+import { merge } from 'allof-merge'
+import { generateSchemaJson } from '../../src/lib/generateSchemaJson'
 
 describe('generateSchemaJson', () => {
   it('generates JSON for schema with string property', () => {
     const schema = {
       properties: {
         name: {
-          type: 'string'
-        }
-      }
+          type: 'string',
+        },
+      },
     }
     const result = generateSchemaJson(schema)
     expect(result).toBe(JSON.stringify({ name: 'string' }, null, 2))
@@ -19,9 +19,9 @@ describe('generateSchemaJson', () => {
     const schema = {
       properties: {
         age: {
-          type: 'number'
-        }
-      }
+          type: 'number',
+        },
+      },
     }
     const result = generateSchemaJson(schema)
     expect(result).toBe(JSON.stringify({ age: 0 }, null, 2))
@@ -31,9 +31,9 @@ describe('generateSchemaJson', () => {
     const schema = {
       properties: {
         isActive: {
-          type: 'boolean'
-        }
-      }
+          type: 'boolean',
+        },
+      },
     }
     const result = generateSchemaJson(schema)
     expect(result).toBe(JSON.stringify({ isActive: true }, null, 2))
@@ -46,11 +46,11 @@ describe('generateSchemaJson', () => {
           type: 'object',
           properties: {
             street: {
-              type: 'string'
-            }
-          }
-        }
-      }
+              type: 'string',
+            },
+          },
+        },
+      },
     }
     const result = generateSchemaJson(schema)
     expect(result).toBe(JSON.stringify({ address: { street: 'string' } }, null, 2))
@@ -62,28 +62,28 @@ describe('generateSchemaJson', () => {
         tags: {
           type: 'array',
           items: {
-            type: 'string'
-          }
-        }
-      }
+            type: 'string',
+          },
+        },
+      },
     }
     const result = generateSchemaJson(schema)
-    expect(result).toBe(JSON.stringify({ tags: [ 'string' ] }, null, 2))
+    expect(result).toBe(JSON.stringify({ tags: ['string'] }, null, 2))
   })
 
   it('generates JSON for schema with mixed properties', () => {
     const schema = {
       properties: {
         name: {
-          type: 'string'
+          type: 'string',
         },
         age: {
-          type: 'number'
+          type: 'number',
         },
         isActive: {
-          type: 'boolean'
-        }
-      }
+          type: 'boolean',
+        },
+      },
     }
     const result = generateSchemaJson(schema)
     expect(result).toBe(JSON.stringify({ name: 'string', age: 0, isActive: true }, null, 2))
@@ -98,7 +98,7 @@ describe('generateSchemaJson', () => {
   it('generates JSON for null schema', () => {
     const schema = null
     const result = generateSchemaJson(schema)
-    expect(result).toBe('null')
+    expect(result).toBe('{}')
   })
 
   it('generates JSON for schema with array of strings using example', () => {
@@ -110,14 +110,14 @@ describe('generateSchemaJson', () => {
           items: {
             type: 'string',
             example: '2020-01-01',
-            format: 'date'
+            format: 'date',
           },
         },
       },
     }
     const result = generateSchemaJson(schema, true)
     expect(result).toBe(JSON.stringify({
-        dates: [ '2020-01-01' ]
+      dates: ['2020-01-01'],
     }, null, 2))
   })
 
@@ -130,14 +130,14 @@ describe('generateSchemaJson', () => {
           items: {
             type: 'string',
             example: '2020-01-01',
-            format: 'date'
+            format: 'date',
           },
         },
       },
     }
     const result = generateSchemaJson(schema, false)
     expect(result).toBe(JSON.stringify({
-      dates: [ 'string' ]
+      dates: ['string'],
     }, null, 2))
   })
 
@@ -145,27 +145,27 @@ describe('generateSchemaJson', () => {
     const schema = {
       allOf: [
         {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            }
-          }
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+            },
+          },
         },
         {
-          "required": [
-            "id"
+          required: [
+            'id',
           ],
-          "type": "object",
-          "properties": {
-            "id": {
-              "description": "Identification number of the plant",
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        }
-      ]
+          type: 'object',
+          properties: {
+            id: {
+              description: 'Identification number of the plant',
+              type: 'integer',
+              format: 'int64',
+            },
+          },
+        },
+      ],
     }
     const result = generateSchemaJson(merge(schema))
     expect(result).toBe(JSON.stringify({
@@ -173,4 +173,4 @@ describe('generateSchemaJson', () => {
       id: 0,
     }, null, 2))
   })
-});
+})

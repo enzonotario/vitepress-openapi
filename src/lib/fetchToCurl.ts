@@ -4,6 +4,10 @@
  * @author [enzonotario](https://github.com/enzonotario)
  */
 
+function removeLastBackslash(str: string): string {
+  return str.replace(/ \\$/, '')
+}
+
 export const generateMethodArgument = (method: string): string => {
   if (!method) {
     return ''
@@ -41,12 +45,19 @@ interface HeaderParams {
 const getHeaderString = (name: string, val: any): string => ` -H "${name}: ${`${val}`.replace(/(\\|")/g, '\\$1')}"`
 
 export const generateHeadersArgument = (headers?: any): HeaderParams => {
+  if (!headers || Object.keys(headers).length === 0) {
+    return {
+      params: '',
+      isEncode: false,
+    }
+  }
+
   let isEncode = false
   let headerParam = ''
   if (isInstanceOfHeaders(headers)) {
     headers.forEach((val: any, name: string) => {
       if (name.toLocaleLowerCase() !== 'content-length') {
-        headerParam += getHeaderString(name, val)
+        headerParam += `${getHeaderString(name, val)} \\\n`
       }
       if (name.toLocaleLowerCase() === 'accept-encoding') {
         isEncode = true
@@ -55,13 +66,20 @@ export const generateHeadersArgument = (headers?: any): HeaderParams => {
   } else if (headers) {
     Object.keys(headers).map((name) => {
       if (name.toLocaleLowerCase() !== 'content-length') {
-        headerParam += getHeaderString(name, headers[name])
+        headerParam += `${getHeaderString(name, headers[name])} \\\n`
       }
       if (name.toLocaleLowerCase() === 'accept-encoding') {
         isEncode = true
       }
     })
   }
+
+  headerParam = headerParam.trim()
+
+  headerParam = removeLastBackslash(headerParam)
+
+  headerParam = ` ${headerParam}`
+
   return {
     params: headerParam,
     isEncode,
@@ -113,7 +131,7 @@ export const fetchToCurl = ({
     output += ` \\\n${generateCompress(headersArgument.isEncode)}`
   }
 
-  return output
+  return output.trim()
 }
 
 export default fetchToCurl

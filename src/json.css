@@ -1,0 +1,248 @@
+:root {
+  --vjs-caret-color: #6b7280;
+  --vjs-border-color: #9ca3af;
+  --vjs-key-color: #998418;
+  --vjs-value-null-color: #ab5959;
+  --vjs-value-undefined-color: #ab5959;
+  --vjs-value-number-color: #2f798a;
+  --vjs-value-boolean-color: #1e754f;
+  --vjs-value-string-color: #b56959;
+  --vjs-hover-background-color: #eaebee;
+}
+
+.dark {
+  --vjs-caret-color: #9ca3af;
+  --vjs-border-color: #374151;
+  --vjs-key-color: #b8a965;
+  --vjs-value-null-color: #cb7676;
+  --vjs-value-undefined-color: #cb7676;
+  --vjs-value-number-color: #4c9a91;
+  --vjs-value-boolean-color: #4d9375;
+  --vjs-value-string-color: #c98a7d;
+  --vjs-hover-background-color: #24272c;
+}
+
+/**
+  JSON Viewer
+ */
+.vjs-carets {
+  @apply text-gray-500 dark:text-gray-400 !important;
+}
+.vjs-tree-node .vjs-indent-unit.has-line {
+  @apply border-gray-400 dark:border-gray-700 !important;
+}
+.vjs-key {
+  color: var(--vjs-key-color) !important;
+}
+.dark .vjs-key {
+  color: var(--vjs-key-color) !important;
+}
+.vjs-value-null {
+  color: var(--vjs-value-null-color) !important;
+}
+.dark .vjs-value-null {
+  color: var(--vjs-value-null-color) !important;
+}
+.vjs-value-undefined {
+  color: var(--vjs-value-undefined-color) !important;
+}
+.dark .vjs-value-undefined {
+  color: var(--vjs-value-undefined-color) !important;
+}
+.vjs-value-number {
+  color: var(--vjs-value-number-color) !important;
+}
+.dark .vjs-value-number {
+  color: var(--vjs-value-number-color) !important;
+}
+.vjs-value-boolean {
+  color: var(--vjs-value-boolean-color) !important;
+}
+.dark .vjs-value-boolean {
+  color: var(--vjs-value-boolean-color) !important;
+}
+.vjs-value-string {
+  color: var(--vjs-value-string-color) !important;
+}
+.dark .vjs-value-string {
+  color: var(--vjs-value-string-color) !important;
+}
+.vjs-tree-node:hover {
+  background-color: var(--vjs-hover-background-color) !important;
+}
+.dark .vjs-tree-node:hover {
+  background-color: var(--vjs-hover-background-color) !important;
+}
+
+/**
+  JSON Editor
+ */
+.oa-jse-theme-light {
+  --jse-theme: light;
+
+  /* Over all fonts, sizes, and colors */
+  --jse-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --jse-font-family-mono: consolas, menlo, monaco, 'Ubuntu Mono', 'source-code-pro', monospace;
+  --jse-font-size-mono: 14px;
+  --jse-theme-color: var(--vp-c-bg-alt);
+  --jse-theme-color-highlight: var(--vp-c-bg);
+  --jse-background-color: var(--vp-code-block-bg);
+  --jse-text-color: var(--vp-c-text-1);
+  --jse-text-color-inverse: var(--vp-c-neutral-inverse);
+  --jse-text-readonly: var(--vp-c-text-3);
+  --jse-error-color: var(--vp-c-danger-1);
+  --jse-warning-color: var(--vp-c-warning-1);
+  --jse-info-color: var(--vp-c-brand-1);
+
+  /* Main, menu, modal */
+  --jse-main-border: 0 solid var(--vp-c-border);
+  --jse-menu-color: var(--vp-c-text-3);
+  --jse-modal-background: var(--vp-c-bg-alt);
+  --jse-modal-overlay-background: rgba(0, 0, 0, 0.3);
+  --jse-modal-code-background: var(--vp-c-bg-soft);
+
+  /* Tooltip in text mode */
+  --jse-tooltip-color: var(--vp-c-text-1);
+  --jse-tooltip-background: var(--vp-c-bg-alt);
+  --jse-tooltip-border: 1px solid var(--vp-c-border);
+  --jse-tooltip-action-button-color: var(--vp-c-neutral-inverse);
+  --jse-tooltip-action-button-background: var(--vp-c-text-1);
+
+  /* Panels: navigation bar, gutter, search box */
+  --jse-panel-background: var(--vp-c-bg-alt);
+  --jse-panel-color: var(--vp-c-text-1);
+  --jse-panel-color-readonly: var(--vp-c-text-3);
+  --jse-panel-border: 1px solid var(--vp-c-border);
+  --jse-panel-button-color-highlight: var(--vp-c-text-1);
+  --jse-panel-button-background-highlight: var(--vp-c-bg-soft);
+
+  /* Navigation bar */
+  --jse-navigation-bar-background: var(--vp-c-bg);
+  --jse-navigation-bar-background-highlight: var(--vp-c-bg-alt);
+  --jse-navigation-bar-dropdown-color: var(--vp-c-text-1);
+
+  /* Context menu */
+  --jse-context-menu-background: var(--vp-c-bg-alt);
+  --jse-context-menu-background-highlight: var(--vp-c-bg-soft);
+  --jse-context-menu-color: var(--vp-c-text-1);
+  --jse-context-menu-separator-color: var(--vp-c-border);
+  --jse-context-menu-pointer-background: var(--vp-c-bg-alt);
+  --jse-context-menu-pointer-background-highlight: var(--vp-c-bg-soft);
+  --jse-context-menu-pointer-color: var(--vp-c-text-1);
+
+  /* Contents: JSON key and values */
+  --jse-key-color: var(--vjs-key-color);
+  --jse-value-color: var(--vjs-value-string-color);
+  --jse-value-color-number: var(--vjs-value-number-color);
+  --jse-value-color-boolean: var(--vjs-value-boolean-color);
+  --jse-value-color-null: var(--vjs-value-null-color);
+  --jse-value-color-string: var(--vjs-value-string-color);
+  --jse-value-color-url: var(--vjs-value-string-color);
+  --jse-delimiter-color: var(--vjs-caret-color);
+  --jse-edit-outline: 2px solid var(--vjs-border-color);
+
+  /* Selected or hovered */
+  --jse-selection-background-color: var(--vjs-hover-background-color);
+  --jse-hover-background-color: var(--vjs-hover-background-color);
+
+  /* Controls in modals: inputs, buttons, and `a` */
+  --jse-input-background: var(--vp-c-bg);
+  --jse-input-color: var(--vp-c-text-1);
+  --jse-input-border: 1px solid var(--vp-c-border);
+  --jse-button-background: var(--vp-c-default-3);
+  --jse-button-primary-background: var(--vp-c-brand-3);
+  --jse-button-primary-color: var(--vp-c-white);
+  --jse-button-secondary-background: var(--vp-c-default-3);
+  --jse-a-color: var(--vp-c-brand-1);
+  --jse-a-color-highlight: var(--vp-c-brand-2);
+}
+
+.oa-jse-theme-dark {
+    --jse-theme: dark;
+
+    /* Over all fonts, sizes, and colors */
+    --jse-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    --jse-font-family-mono: consolas, menlo, monaco, 'Ubuntu Mono', 'source-code-pro', monospace;
+    --jse-font-size-mono: 14px;
+    --jse-theme-color: var(--vp-c-bg-alt);
+    --jse-theme-color-highlight: var(--vp-c-bg);
+    --jse-background-color: var(--vp-code-block-bg);
+    --jse-text-color: var(--vp-c-text-1);
+    --jse-text-color-inverse: var(--vp-c-neutral-inverse);
+    --jse-text-readonly: var(--vp-c-text-3);
+    --jse-error-color: var(--vp-c-danger-1);
+    --jse-warning-color: var(--vp-c-warning-1);
+    --jse-info-color: var(--vp-c-brand-1);
+
+    /* Main, menu, modal */
+    --jse-main-border: 0 solid var(--vp-c-border);
+    --jse-menu-color: var(--vp-c-text-3);
+    --jse-modal-background: var(--vp-c-bg-alt);
+    --jse-modal-overlay-background: rgba(0, 0, 0, 0.3);
+    --jse-modal-code-background: var(--vp-c-bg-soft);
+
+    /* Tooltip in text mode */
+    --jse-tooltip-color: var(--vp-c-text-1);
+    --jse-tooltip-background: var(--vp-c-bg-alt);
+    --jse-tooltip-border: 1px solid var(--vp-c-border);
+    --jse-tooltip-action-button-color: var(--vp-c-neutral-inverse);
+    --jse-tooltip-action-button-background: var(--vp-c-text-1);
+
+    /* Panels: navigation bar, gutter, search box */
+    --jse-panel-background: var(--vp-c-bg-alt);
+    --jse-panel-color: var(--vp-c-text-1);
+    --jse-panel-color-readonly: var(--vp-c-text-3);
+    --jse-panel-border: 1px solid var(--vp-c-border);
+    --jse-panel-button-color-highlight: var(--vp-c-text-1);
+    --jse-panel-button-background-highlight: var(--vp-c-bg-soft);
+
+    /* Navigation bar */
+    --jse-navigation-bar-background: var(--vp-c-bg);
+    --jse-navigation-bar-background-highlight: var(--vp-c-bg-alt);
+    --jse-navigation-bar-dropdown-color: var(--vp-c-text-1);
+
+    /* Context menu */
+    --jse-context-menu-background: var(--vp-c-bg-alt);
+    --jse-context-menu-background-highlight: var(--vp-c-bg-soft);
+    --jse-context-menu-color: var(--vp-c-text-1);
+    --jse-context-menu-separator-color: var(--vp-c-border);
+    --jse-context-menu-pointer-background: var(--vp-c-bg-alt);
+    --jse-context-menu-pointer-background-highlight: var(--vp-c-bg-soft);
+    --jse-context-menu-pointer-color: var(--vp-c-text-1);
+
+    /* Contents: JSON key and values */
+    --jse-key-color: var(--vjs-key-color);
+    --jse-value-color: var(--vjs-value-string-color);
+    --jse-value-color-number: var(--vjs-value-number-color);
+    --jse-value-color-boolean: var(--vjs-value-boolean-color);
+    --jse-value-color-null: var(--vjs-value-null-color);
+    --jse-value-color-string: var(--vjs-value-string-color);
+    --jse-value-color-url: var(--vjs-value-string-color);
+    --jse-delimiter-color: var(--vjs-caret-color);
+    --jse-edit-outline: 2px solid var(--vjs-border-color);
+
+    /* Selected or hovered */
+    --jse-selection-background-color: var(--vjs-hover-background-color);
+    --jse-hover-background-color: var(--vjs-hover-background-color);
+
+    /* Controls in modals: inputs, buttons, and `a` */
+    --jse-input-background: var(--vp-c-bg);
+    --jse-input-color: var(--vp-c-text-1);
+    --jse-input-border: 1px solid var(--vp-c-border);
+    --jse-button-background: var(--vp-c-default-3);
+    --jse-button-primary-background: var(--vp-c-brand-3);
+    --jse-button-primary-color: var(--vp-c-white);
+    --jse-button-secondary-background: var(--vp-c-default-3);
+    --jse-a-color: var(--vp-c-brand-1);
+    --jse-a-color-highlight: var(--vp-c-brand-2);
+  }
+
+.oa-jse .jse-main   {
+  @apply rounded p-2;
+  background-color: var(--vp-code-block-bg);
+}
+.oa-jse .jse-modal-bg {
+  left: calc(var(--vp-sidebar-width) + max(32px, calc((100% - (var(--vp-layout-max-width) - 64px)) / 2))) !important;
+  max-width: var(--vp-layout-max-width);
+  top: var(--vp-nav-height) !important;
+}
