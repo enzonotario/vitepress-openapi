@@ -31,4 +31,20 @@ describe('formatJson', () => {
     const output = formatJson(input)
     expect(output).toBe('{\n  "key": "value\\nwith\\nnewlines"\n}')
   })
+
+  it('formats a JSON object with various special characters', () => {
+    const input = {
+      key1: 'value with "quotes"',
+      key2: 'value with \\backslashes\\',
+      key3: 'value with unicode \u00A9',
+    }
+    const output = formatJson(input)
+    expect(output).toBe(
+      '{\n'
+      + '  "key1": "value with \\"quotes\\"",\n'
+      + '  "key2": "value with \\\\backslashes\\\\",\n'
+      + '  "key3": "value with unicode ©"\n'
+      + '}',
+    )
+  })
 })
