@@ -24,6 +24,7 @@ const props = defineProps({
     default: () => ({
       url: '',
       headers: {},
+      body: {},
     }),
   },
   isDark: {
@@ -57,6 +58,7 @@ async function tryIt() {
     const data = await fetch(props.request.url ?? defaultRequestUrl, {
       method: props.method.toUpperCase(),
       headers: props.request.headers,
+      body: props.request.body ? JSON.stringify(props.request.body) : null,
     })
 
     response.value = await data.json()

@@ -116,7 +116,7 @@ function buildRequest() {
     url.searchParams.set(key, value)
   }
 
-  const headers = new Headers()
+  const headers = new Headers(props.request.headers)
 
   for (const [key, value] of Object.entries(variables.value)) {
     if (!headerParameters.find(parameter => parameter.name === key)) {

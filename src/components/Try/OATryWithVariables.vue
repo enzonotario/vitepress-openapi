@@ -44,7 +44,9 @@ const props = defineProps({
 
 const request = ref({
   url: `${props.baseUrl}${props.path}`,
-  headers: {},
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
 const loading = ref(false)
