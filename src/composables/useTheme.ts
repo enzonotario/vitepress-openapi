@@ -144,7 +144,7 @@ export function useTheme() {
     responseConfig.maxTabs.value = value
   }
 
-  function getPlaygroundJsonEditorMode(): PlaygroundJsonEditorMode
+  function getPlaygroundJsonEditorMode(): PlaygroundJsonEditorMode {
     return playgroundConfig.jsonEditor.mode.value
   }
 
