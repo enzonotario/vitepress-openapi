@@ -11,6 +11,8 @@ interface HeadingLevels {
   h6: number
 }
 
+type PlaygroundJsonEditorMode = 'text' | 'tree' | 'table'
+
 const themeConfig = {
   locale: ref<'es' | 'en'>('en'),
   highlighterTheme: {
@@ -53,7 +55,7 @@ const playgroundConfig = {
    * - https://github.com/josdejong/svelte-jsoneditor/#properties
    */
   jsonEditor: {
-    mode: ref<'text' | 'tree' | 'table'>('tree'),
+    mode: ref<PlaygroundJsonEditorMode>('tree'),
     mainMenuBar: ref<boolean>(false),
     navigationBar: ref<boolean>(false),
   },
@@ -142,11 +144,11 @@ export function useTheme() {
     responseConfig.maxTabs.value = value
   }
 
-  function getPlaygroundJsonEditorMode(): 'text' | 'tree' | 'table' {
+  function getPlaygroundJsonEditorMode(): PlaygroundJsonEditorMode
     return playgroundConfig.jsonEditor.mode.value
   }
 
-  function setPlaygroundJsonEditorMode(value: 'text' | 'tree' | 'table') {
+  function setPlaygroundJsonEditorMode(value: PlaygroundJsonEditorMode) {
     playgroundConfig.jsonEditor.mode.value = value
   }
 
