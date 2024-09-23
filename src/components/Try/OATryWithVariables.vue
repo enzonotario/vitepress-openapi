@@ -44,9 +44,7 @@ const props = defineProps({
 
 const request = ref({
   url: `${props.baseUrl}${props.path}`,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: {},
 })
 
 const loading = ref(false)
@@ -55,7 +53,14 @@ const curl = computed(() => {
   return fetchToCurl({
     method: props.method.toUpperCase(),
     url: request.value.url,
-    headers: request.value.headers,
+    headers: {
+      ...request.value.headers,
+      ...(request.value.body
+        ? {
+            'Content-Type': 'application/json',
+          }
+        : {}),
+    },
     body: request.value.body ? formatJson(request.value.body) : null,
   })
 })

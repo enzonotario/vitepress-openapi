@@ -5,7 +5,7 @@ describe('fetchToCurl', () => {
   it('converts a simple GET request to curl', () => {
     const url = 'https://api.example.com/path/testOperation'
     const method = 'GET'
-    const result = fetchToCurl({ url, method })
+    const result = fetchToCurl({ url, method, headers: {} })
     expect(result).toBe(`curl -X GET \\\n'${url}'`)
   })
 

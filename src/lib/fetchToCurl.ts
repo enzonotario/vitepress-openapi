@@ -4,6 +4,10 @@
  * @author [enzonotario](https://github.com/enzonotario)
  */
 
+function removeLastBackslash(str: string): string {
+  return str.replace(/ \\$/, '')
+}
+
 export const generateMethodArgument = (method: string): string => {
   if (!method) {
     return ''
@@ -41,7 +45,7 @@ interface HeaderParams {
 const getHeaderString = (name: string, val: any): string => ` -H "${name}: ${`${val}`.replace(/(\\|")/g, '\\$1')}"`
 
 export const generateHeadersArgument = (headers?: any): HeaderParams => {
-  if (!headers) {
+  if (!headers || Object.keys(headers).length === 0) {
     return {
       params: '',
       isEncode: false,
@@ -72,10 +76,7 @@ export const generateHeadersArgument = (headers?: any): HeaderParams => {
 
   headerParam = headerParam.trim()
 
-  // Remove the last backslash.
-  if (headerParam.endsWith(' \\')) {
-    headerParam = headerParam.slice(0, -2)
-  }
+  headerParam = removeLastBackslash(headerParam)
 
   headerParam = ` ${headerParam}`
 
