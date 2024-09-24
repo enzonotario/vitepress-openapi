@@ -1,5 +1,13 @@
 export const spec = {
   openapi: '3.1.0',
+  info: {
+    title: 'Test API',
+    version: '1.0.0',
+  },
+  externalDocs: {
+    description: 'Find out more about OpenAPI',
+    url: 'https://swagger.io/specification/',
+  },
   paths: {
     '/users': {
       get: {
