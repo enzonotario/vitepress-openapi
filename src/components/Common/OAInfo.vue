@@ -90,7 +90,7 @@ const { info, externalDocs } = defineProps({
         {{ $t('External Documentation') }}
       </OAHeading>
 
-      <a :href="externalDocs.url" :aria-label="externalDocs.description">
+      <a :href="externalDocs.url" :aria-label="externalDocs.description ?? $t('External Documentation')">
         {{ externalDocs.description ?? $t('External Documentation') }}
       </a>
     </template>
