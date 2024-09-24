@@ -23,5 +23,11 @@
   "Authorization": "Autorización",
   "Use example": "Usar ejemplo",
   "Deprecated": "Obsoleto",
-  "Body": "Cuerpo"
+  "Body": "Cuerpo",
+  "Terms of Service": "Términos de servicio",
+  "License": "Licencia",
+  "Contact": "Contacto",
+  "API Documentation": "Documentación de la API",
+  "External Documentation": "Documentación externa",
+  "Servers": "Servidores"
 }

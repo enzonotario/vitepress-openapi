@@ -98,7 +98,7 @@ const curl = computed(() => {
     >
       <template #response="response">
         <OACodeBlock
-          :code="response.response"
+          :code="JSON.stringify(response.response)"
           lang="json"
           label="JSON"
           :is-dark="props.isDark"

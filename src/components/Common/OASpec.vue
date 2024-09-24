@@ -1,5 +1,7 @@
 <script setup>
 import { OpenApi, useOpenapi } from 'vitepress-theme-openapi'
+import OAInfo from 'vitepress-theme-openapi/components/Common/OAInfo.vue'
+import OAServers from 'vitepress-theme-openapi/components/Common/OAServers.vue'
 
 const props = defineProps({
   spec: {
@@ -11,15 +13,49 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hideInfo: {
+    type: Boolean,
+    default: false,
+  },
+  hideServers: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const openapi = OpenApi({ spec: props.spec || useOpenapi().json })
 
 const paths = openapi.getPaths()
+
+const info = openapi.getInfo()
+
+const externalDocs = openapi.getExternalDocs()
+
+const servers = openapi.getServers()
+
+const showInfo = !props.hideInfo && Object.keys(info).length
+
+const showServers = !props.hideServers && servers.length
 </script>
 
 <template>
   <div class="flex flex-col space-y-10">
+    <div v-if="showInfo || showServers">
+      <OAInfo
+        v-if="showInfo"
+        :info="info"
+        :external-docs="externalDocs"
+      />
+
+      <OAServers
+        v-if="showServers"
+        :spec="props.spec"
+        :servers="servers"
+      />
+    </div>
+
+    <hr v-if="showInfo || showServers">
+
     <div
       v-for="path in paths"
       :key="path.id"

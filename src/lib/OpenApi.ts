@@ -113,7 +113,7 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
   function getSecuritySchemes(operationId: string) {
     const operation = findOperation(getParsedSpec().paths, operationId)
 
-    const securitySchemes = getParsedSpec().components.securitySchemes
+    const securitySchemes = getParsedSpec().components?.securitySchemes
 
     if (operation?.security) {
       const output = {}
@@ -168,6 +168,18 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
       })
   }
 
+  function getInfo() {
+    return spec?.info ?? {}
+  }
+
+  function getExternalDocs() {
+    return spec?.externalDocs ?? {}
+  }
+
+  function getServers() {
+    return spec?.servers ?? []
+  }
+
   return {
     spec,
     parsedSpec,
@@ -181,5 +193,8 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
     getParsedSpec,
     getPaths,
     getPathsByVerbs,
+    getInfo,
+    getExternalDocs,
+    getServers,
   }
 }

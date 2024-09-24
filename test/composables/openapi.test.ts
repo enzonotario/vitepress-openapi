@@ -56,4 +56,19 @@ describe('openapi with spec', () => {
     const getUserPetsSecuritySchemes = openapi.getSecuritySchemes('getUserPets')
     expect(getUserPetsSecuritySchemes).toEqual({})
   })
+
+  it('returns the correct info for getInfo', () => {
+    const result = openapi.getInfo()
+    expect(result).toEqual(spec.info)
+  })
+
+  it('returns the correct external docs for getExternalDocs', () => {
+    const result = openapi.getExternalDocs()
+    expect(result).toEqual(spec.externalDocs)
+  })
+
+  it('returns the correct servers for getServers', () => {
+    const result = openapi.getServers()
+    expect(result).toEqual(spec.servers)
+  })
 })
