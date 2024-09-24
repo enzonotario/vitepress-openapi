@@ -1,6 +1,6 @@
 <script setup>
 import { OpenApi, useOpenapi } from 'vitepress-theme-openapi'
-import OAIntroduction from 'vitepress-theme-openapi/components/Common/OAIntroduction.vue'
+import OAInfo from 'vitepress-theme-openapi/components/Common/OAInfo.vue'
 import OAServers from 'vitepress-theme-openapi/components/Common/OAServers.vue'
 
 const props = defineProps({
@@ -41,7 +41,7 @@ const showServers = !props.hideServers && servers.length
 <template>
   <div class="flex flex-col space-y-10">
     <div v-if="showInfo || showServers">
-      <OAIntroduction
+      <OAInfo
         v-if="showInfo"
         :info="info"
         :external-docs="externalDocs"
