@@ -16,7 +16,7 @@ const props = defineProps({
     required: true,
   },
   modelValue: {
-    type: [String, Number],
+    type: [String, Number, Boolean],
     required: true,
   },
 })
@@ -58,14 +58,14 @@ onMounted(() => {
       @update:model-value="emits('update:modelValue', $event)"
     >
       <SelectTrigger>
-        <SelectValue :placeholder="parameter.example ?? parameter.schema?.example ?? 'Seleccionar...'" />
+        <SelectValue :placeholder="String(parameter.example ?? parameter.schema?.example ?? 'Seleccionar...')" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectItem
             v-for="enumValue in parameter.schema.enum"
             :key="enumValue"
-            :value="enumValue"
+            :value="String(enumValue)"
           >
             {{ enumValue }}
           </SelectItem>
