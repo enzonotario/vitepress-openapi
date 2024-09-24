@@ -50,7 +50,7 @@ const { info, externalDocs } = defineProps({
 
       <div class="flex flex-row items-center gap-2">
         <template v-if="info.contact.url">
-          <a :href="info.contact.url" :aria-label="info.contact.name">
+          <a :href="info.contact.url" :aria-label="info.contact.name ?? $t('Contact')">
             {{ info.contact.name ?? $t('Contact') }}
           </a>
 
