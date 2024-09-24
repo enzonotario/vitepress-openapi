@@ -5,10 +5,6 @@ const props = defineProps({
     required: false,
     default: null,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
 })
 </script>
 

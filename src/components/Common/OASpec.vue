@@ -51,7 +51,6 @@ const showServers = !props.hideServers && servers.length
         v-if="showServers"
         :spec="props.spec"
         :servers="servers"
-        :is-dark="props.isDark"
       />
     </div>
 
