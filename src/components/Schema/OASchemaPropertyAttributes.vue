@@ -1,5 +1,4 @@
 <script setup>
-import { Badge } from 'vitepress-theme-openapi/components/ui/badge'
 import { titleCase } from 'scule'
 
 const props = defineProps({
@@ -23,24 +22,18 @@ const keysToIgnore = ['type', 'description', 'properties', 'required', 'items', 
     </span>
 
     <template v-if="Array.isArray(props.property[key])">
-      <Badge
+      <code
         v-for="(value, idx) in props.property[key]"
         :key="idx"
-        variant="plain"
-        size="xs"
-        class="bg-muted"
+        class="!text-xs"
       >
         {{ value }}
-      </Badge>
+      </code>
     </template>
-    <template v-else>
-      <Badge
-        variant="plain"
-        size="xs"
-        class="bg-muted"
-      >
-        {{ props.property[key] }}
-      </Badge>
-    </template>
+    <code
+      v-else class="!text-xs"
+    >
+      {{ props.property[key] }}
+    </code>
   </div>
 </template>
