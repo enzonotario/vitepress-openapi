@@ -22,7 +22,6 @@ const { info, externalDocs } = defineProps({
         <Badge
           v-if="info.version"
           variant="outline"
-          class="bg-muted"
         >
           v{{ info.version }}
         </Badge>

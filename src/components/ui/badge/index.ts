@@ -13,12 +13,17 @@ export const badgeVariants = cva(
           'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
         destructive:
           'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
-        outline: 'text-foreground',
+        outline: 'text-foreground bg-muted',
         plain: 'border-transparent',
+      },
+      size: {
+        default: '',
+        xs: 'rounded px-1',
       },
     },
     defaultVariants: {
       variant: 'default',
+      size: 'default',
     },
   },
 )

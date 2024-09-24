@@ -26,16 +26,18 @@ const keysToIgnore = ['type', 'description', 'properties', 'required', 'items', 
       <Badge
         v-for="(value, idx) in props.property[key]"
         :key="idx"
-        variant="outline"
-        class="bg-muted rounded text-xs px-1"
+        variant="plain"
+        size="xs"
+        class="bg-muted"
       >
         {{ value }}
       </Badge>
     </template>
     <template v-else>
       <Badge
-        variant="outline"
-        class="bg-muted rounded text-xs px-1"
+        variant="plain"
+        size="xs"
+        class="bg-muted"
       >
         {{ props.property[key] }}
       </Badge>
