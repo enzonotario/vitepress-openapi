@@ -49,13 +49,13 @@ const { info, externalDocs } = defineProps({
       </OAHeading>
 
       <div class="flex flex-row items-center gap-2">
-        <a v-if="info.contact.url" :href="info.contact.url">
+        <a v-if="info.contact.url" :href="info.contact.url" :aria-label="info.contact.name">
           {{ info.contact.name ?? $t('Contact') }}
         </a>
 
         <span v-if="info.contact.url && info.contact.email" class="text-gray-400 dark:text-gray-500">/</span>
 
-        <a v-if="info.contact.email" :href="`mailto:${info.contact.email}`">
+        <a v-if="info.contact.email" :href="`mailto:${info.contact.email}`" :aria-label="info.contact.email">
           {{ info.contact.email }}
         </a>
       </div>
@@ -67,7 +67,7 @@ const { info, externalDocs } = defineProps({
           {{ $t('Terms of Service') }}
         </OAHeading>
 
-        <a :href="info.termsOfService">
+        <a :href="info.termsOfService" :aria-label="info.termsOfService">
           {{ info.termsOfService }}
         </a>
       </div>
@@ -77,7 +77,7 @@ const { info, externalDocs } = defineProps({
           {{ $t('License') }}
         </OAHeading>
 
-        <a :href="info.license.url">
+        <a :href="info.license.url" :aria-label="info.license.name">
           {{ info.license.name ?? $t('License') }}
         </a>
       </div>
@@ -88,7 +88,7 @@ const { info, externalDocs } = defineProps({
         {{ $t('External Documentation') }}
       </OAHeading>
 
-      <a :href="externalDocs.url">
+      <a :href="externalDocs.url" :aria-label="externalDocs.description">
         {{ externalDocs.description ?? $t('External Documentation') }}
       </a>
     </template>
