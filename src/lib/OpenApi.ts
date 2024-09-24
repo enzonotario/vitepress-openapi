@@ -169,15 +169,15 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
   }
 
   function getInfo() {
-    return spec?.info || {}
+    return spec?.info ?? {}
   }
 
   function getExternalDocs() {
-    return spec?.externalDocs || {}
+    return spec?.externalDocs ?? {}
   }
 
   function getServers() {
-    return spec?.servers || []
+    return spec?.servers ?? []
   }
 
   return {

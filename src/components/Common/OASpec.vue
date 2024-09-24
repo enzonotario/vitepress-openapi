@@ -27,29 +27,35 @@ const openapi = OpenApi({ spec: props.spec || useOpenapi().json })
 
 const paths = openapi.getPaths()
 
+const info = openapi.getInfo()
+
 const externalDocs = openapi.getExternalDocs()
 
 const servers = openapi.getServers()
+
+const showInfo = !props.hideInfo && Object.keys(info).length
+
+const showServers = !props.hideServers && servers.length
 </script>
 
 <template>
   <div class="flex flex-col space-y-10">
-    <div>
+    <div v-if="showInfo || showServers">
       <OAIntroduction
-        v-if="!props.hideInfo"
-        :info="openapi.getInfo()"
+        v-if="showInfo"
+        :info="info"
         :external-docs="externalDocs"
       />
 
       <OAServers
-        v-if="!props.hideServers"
+        v-if="showServers"
         :spec="props.spec"
         :servers="servers"
         :is-dark="props.isDark"
       />
     </div>
 
-    <hr>
+    <hr v-if="showInfo || showServers">
 
     <div
       v-for="path in paths"
