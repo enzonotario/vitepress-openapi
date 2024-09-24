@@ -49,11 +49,13 @@ const { info, externalDocs } = defineProps({
       </OAHeading>
 
       <div class="flex flex-row items-center gap-2">
-        <a v-if="info.contact.url" :href="info.contact.url" :aria-label="info.contact.name">
-          {{ info.contact.name ?? $t('Contact') }}
-        </a>
+        <template v-if="info.contact.url">
+          <a :href="info.contact.url" :aria-label="info.contact.name">
+            {{ info.contact.name ?? $t('Contact') }}
+          </a>
 
-        <span v-if="info.contact.url && info.contact.email" class="text-gray-400 dark:text-gray-500">/</span>
+          <span v-if="info.contact.email" class="text-gray-400 dark:text-gray-500">/</span>
+        </template>
 
         <a v-if="info.contact.email" :href="`mailto:${info.contact.email}`" :aria-label="info.contact.email">
           {{ info.contact.email }}
