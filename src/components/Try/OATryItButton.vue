@@ -7,6 +7,7 @@ interface PlaygroundResponse {
   body: any
   type: string
   time: string | null
+  status: number | null
 }
 
 const props = defineProps({
