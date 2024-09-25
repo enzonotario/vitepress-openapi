@@ -48,6 +48,10 @@ export default defineConfigWithTheme({
             text: 'CriptoYA Argentina',
             link: '/criptoya-argentina',
           },
+          {
+            text: 'Response Types',
+            link: '/response-types',
+          },
         ],
       },
     ],

@@ -80,6 +80,10 @@ export default defineConfigWithTheme({
                 text: 'One Page',
                 link: '/example/one-page',
               },
+              {
+                text: 'Multiple Response Types',
+                link: '/example/response-types',
+              }
             ],
           },
         ],
