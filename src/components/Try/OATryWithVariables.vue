@@ -2,6 +2,7 @@
 import { computed, defineProps, ref } from 'vue'
 import fetchToCurl from 'vitepress-theme-openapi/lib/fetchToCurl'
 import { formatJson } from 'vitepress-theme-openapi/lib/formatJson'
+import OAPlaygroundResponse from 'vitepress-theme-openapi/components/Playground/OAPlaygroundResponse.vue'
 
 const props = defineProps({
   operationId: {
@@ -97,12 +98,9 @@ const curl = computed(() => {
       @loading="loading = $event"
     >
       <template #response="response">
-        <OACodeBlock
-          :code="JSON.stringify(response.response)"
-          lang="json"
-          label="JSON"
-          :is-dark="props.isDark"
-          :disable-html-transform="response.response.length > 1000"
+        <OAPlaygroundResponse
+          :response="response.response"
+          :is-dark="response.isDark"
         />
       </template>
     </OATryItButton>
