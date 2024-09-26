@@ -65,7 +65,7 @@ function hasSlot(name) {
           v-if="header.deprecated"
           type="deprecated"
           variant="outline"
-          class="self-start bg-muted"
+          class="self-start"
         >
           {{ $t('Deprecated') }}
         </Badge>

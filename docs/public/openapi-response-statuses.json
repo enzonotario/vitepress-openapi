@@ -1,0 +1,193 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Response statuses",
+    "description": "Example of an OpenAPI document with response statuses.",
+    "version": "1.0.0",
+    "license": {
+      "name": "MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://httpstat.us/"
+    }
+  ],
+  "paths": {
+    "200": {
+      "get": {
+        "operationId": "get200",
+        "summary": "Get 200",
+        "description": "Example of a response with a 200 status code.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "200 OK"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "201": {
+      "get": {
+        "operationId": "get201",
+        "summary": "Get 201",
+        "description": "Example of a response with a 201 status code.",
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "201 Created"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "400": {
+      "get": {
+        "operationId": "get400",
+        "summary": "Get 400",
+        "description": "Example of a response with a 400 status code.",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "400 Bad Request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "401": {
+      "get": {
+        "operationId": "get401",
+        "summary": "Get 401",
+        "description": "Example of a response with a 401 status code.",
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "401 Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "403": {
+      "get": {
+        "operationId": "get403",
+        "summary": "Get 403",
+        "description": "Example of a response with a 403 status code.",
+        "responses": {
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "403 Forbidden"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "404": {
+      "get": {
+        "operationId": "get404",
+        "summary": "Get 404",
+        "description": "Example of a response with a 404 status code.",
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "404 Not Found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "500": {
+      "get": {
+        "operationId": "get500",
+        "summary": "Get 500",
+        "description": "Example of a response with a 500 status code.",
+        "responses": {
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "500 Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -29,5 +29,8 @@
   "Contact": "Contact",
   "API Documentation": "API Documentation",
   "External Documentation": "External Documentation",
-  "Servers": "Servers"
+  "Servers": "Servers",
+  "Your browser does not support the audio element.": "Your browser does not support the audio element.",
+  "Unrecognized response type. Raw content:": "Unrecognized response type. Raw content:",
+  "Download file": "Download file"
 }
