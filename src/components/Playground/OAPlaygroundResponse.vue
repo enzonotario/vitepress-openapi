@@ -20,12 +20,16 @@ const isCsv = /text\/csv/i.test(response.type)
 const isImage = /^image\//i.test(response.type)
 const isAudio = /^audio\//i.test(response.type)
 const isDownloadable = /^application\/octet-stream/i.test(response.type)
-  || (response && response.headers && (
-    /attachment/i.test(response.headers['Content-Disposition'])
-    || /attachment/i.test(response.headers['content-disposition'])
-    || /download/i.test(response.headers['Content-Disposition'])
-    || /download/i.test(response.headers['content-disposition'])
-  ))
+  || (
+    response
+    && response.headers
+    && (
+      /attachment/i.test(response.headers['Content-Disposition'])
+      || /attachment/i.test(response.headers['content-disposition'])
+      || /download/i.test(response.headers['Content-Disposition'])
+      || /download/i.test(response.headers['content-disposition'])
+    )
+  )
 
 const lang = computed(() => {
   if (isJson) {
@@ -74,6 +78,15 @@ const url = computed(() => {
 
   return ''
 })
+
+function downloadBlob(blob: Blob, fileName: string) {
+  const url = window.URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = fileName
+  link.click()
+  window.URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
