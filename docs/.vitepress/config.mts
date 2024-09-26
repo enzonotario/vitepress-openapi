@@ -83,7 +83,11 @@ export default defineConfigWithTheme({
               {
                 text: 'Multiple Response Types',
                 link: '/example/response-types',
-              }
+              },
+              {
+                text: 'Response Statuses',
+                link: '/example/response-statuses',
+              },
             ],
           },
         ],

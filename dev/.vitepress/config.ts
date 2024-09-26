@@ -52,6 +52,10 @@ export default defineConfigWithTheme({
             text: 'Response Types',
             link: '/response-types',
           },
+          {
+            text: 'Response Statuses',
+            link: '/response-statuses',
+          },
         ],
       },
     ],
