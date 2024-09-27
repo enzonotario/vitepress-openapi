@@ -1,11 +1,11 @@
 const animate = require('tailwindcss-animate')
+const colors = require('tailwindcss/colors')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
   safelist: ['dark'],
   prefix: '',
-
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
@@ -20,11 +20,12 @@ module.exports = {
     },
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
+        gray: colors.zinc,
+        border: 'var(--vp-c-border)',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        background: '--vp-c-bg',
+        foreground: 'var(--vp-c-text-1)',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
@@ -38,16 +39,16 @@ module.exports = {
           foreground: 'hsl(var(--destructive-foreground))',
         },
         muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
+          DEFAULT: 'var(--vp-c-bg-alt)',
+          foreground: 'var(--vp-c-text-2)',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+          DEFAULT: 'var(--vp-c-bg-alt)',
+          foreground: 'var(--vp-c-text-1)',
         },
         popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
+          DEFAULT: 'var(--vp-c-bg-elv)',
+          foreground: 'var(--vp-c-text-2)',
         },
         card: {
           DEFAULT: 'hsl(var(--card))',
