@@ -56,6 +56,10 @@ export default defineConfigWithTheme({
             text: 'Response Statuses',
             link: '/response-statuses',
           },
+          {
+            text: 'Schemas',
+            link: '/schemas',
+          },
         ],
       },
     ],
