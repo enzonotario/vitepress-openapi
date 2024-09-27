@@ -1,0 +1,36 @@
+name: "🐛 Bug Report"
+description: Report a bug found while using the theme.
+labels: ["Type: Bug", "Status: Triage"]
+body:
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current behavior
+      description: A description of what is currently happening, including error messages, logs, and other useful information (**DO NOT INCLUDE PRIVATE INFORMATION**).
+      placeholder: Currently...
+    validations:
+      required: true
+  - type: textarea
+    id: desired-behavior
+    attributes:
+      label: Desired behavior
+      description: A clear description of what you think should happen.
+      placeholder: In this situation, I expected ...
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Clearly describe the steps or actions taken to arrive at the problem. Include any relevant code snippets or configuration details.
+      placeholder: I did X, then Y, before arriving at Z, when ERROR ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and Error Messages
+      description: Provide any relevant logs or error messages that can help diagnose the problem.
+  - type: textarea
+    id: other
+    attributes:
+      label: Other Information
+      description: Any other details? Things like additional configurations, specific modules or packages, etc.
