@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { merge } from 'allof-merge'
+import { dereferenceSync } from '@trojs/openapi-dereference'
 import { generateSchemaJson } from '../../src/lib/generateSchemaJson'
+import { specWithCircularRef, specWithMultipleLevels } from '../testsConstants'
+import { formatJson } from '../../src/lib/formatJson'
 
 describe('generateSchemaJson', () => {
   it('generates JSON for schema with string property', () => {
@@ -172,5 +175,103 @@ describe('generateSchemaJson', () => {
       name: 'string',
       id: 0,
     }, null, 2))
+  })
+})
+
+describe('schema with circular references', () => {
+  it('generates JSON for schema with circular references', () => {
+    const schema = dereferenceSync(merge(specWithCircularRef)).components.schemas.Parent
+    const result = generateSchemaJson(schema)
+    expect(result).toBe(
+      formatJson({
+        id: 'string',
+        child: {
+          id: 'string',
+          parent: {
+            id: 'string',
+            child: {
+              id: 'string',
+              parent: {
+                id: 'string',
+                child: {
+                  id: 'string',
+                  parent: '[Circular Reference]',
+                },
+              },
+            },
+          },
+        },
+      }),
+    )
+  })
+})
+
+describe('schema with multiple levels', () => {
+  it('generates JSON for schema with circular references', () => {
+    const schema = dereferenceSync(merge(specWithMultipleLevels)).components.schemas.Level1
+    const result = generateSchemaJson(schema)
+    expect(result).toBe(
+      formatJson({
+        id: 'string',
+        level2: {
+          id: 'string',
+          level3: {
+            id: 'string',
+            level4: {
+              id: 'string',
+              level5: {
+                id: 'string',
+                level6: {
+                  id: 'string',
+                  level7: {
+                    id: 'string',
+                    level8: {
+                      id: 'string',
+                      level9: {
+                        id: 'string',
+                        level10: {
+                          id: 'string',
+                          level11: {
+                            id: 'string',
+                            level12: {
+                              id: 'string',
+                              level13: {
+                                id: 'string',
+                                level14: {
+                                  id: 'string',
+                                  level15: {
+                                    id: 'string',
+                                    level16: {
+                                      id: 'string',
+                                      level17: {
+                                        id: 'string',
+                                        level18: {
+                                          id: 'string',
+                                          level19: {
+                                            id: 'string',
+                                            level20: {
+                                              id: 'string',
+                                              finalValue: 'string',
+                                            },
+                                          },
+                                        },
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      }),
+    )
   })
 })
