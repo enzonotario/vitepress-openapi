@@ -74,7 +74,7 @@ const lang = computed(() => {
 <template>
   <Tabs
     :default-value="schemaContentType ? themeConfig.schemaConfig.defaultView : 'schema'"
-    class="rounded border dark:border-gray-700"
+    class="rounded border"
   >
     <TabsList class="relative flex flex-row justify-start rounded-t rounded-b-none p-0">
       <TabsIndicator class="absolute left-0 h-[2px] bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded-full transition-[width,transform] duration-300 bg-black dark:bg-white" />
