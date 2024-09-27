@@ -24,21 +24,30 @@ const props = defineProps({
     type: Number,
     default: Infinity,
   },
+  visited: {
+    type: Set,
+    default: () => new Set(),
+  },
+  level: {
+    type: Number,
+    default: 0,
+  },
 })
 
-const isOpen = ref(props.deep > 0)
+const isOpen = ref(props.deep > 0 && props.level <= 10)
+const isCircularRef = props.visited.has(props.property) && props.level > 10
 </script>
 
 <template>
   <Collapsible
     v-model:open="isOpen"
-    :disabled="!['object', 'array'].includes(props.property.type)"
+    :disabled="!['object', 'array'].includes(props.property.type) || isCircularRef"
   >
     <CollapsibleTrigger class="w-full">
       <div class="flex flex-col text-start space-y-1 group select-text cursor-auto">
         <div class="flex flex-row items-center text-sm">
           <div
-            v-if="['object', 'array'].includes(props.property.type)"
+            v-if="['object', 'array'].includes(props.property.type) && !isCircularRef"
             class="flex-shrink-0 w-4 h-4 cursor-pointer"
           >
             <svg
@@ -65,7 +74,9 @@ const isOpen = ref(props.deep > 0)
 
           <span class="font-bold">{{ props.name }}</span>
 
-          <span class="ml-2 text-gray-600 dark:text-gray-400">{{ props.property?.type }}</span>
+          <span class="ml-2 text-gray-600 dark:text-gray-400">
+            {{ isCircularRef ? '[Circular Reference]' : props.property?.type }}
+          </span>
 
           <div class="flex-grow mx-2">
             <div
@@ -74,7 +85,9 @@ const isOpen = ref(props.deep > 0)
             />
           </div>
 
-          <span class="text-red-800 dark:text-red-200 text-xs">{{ props.schema.required && props.schema.required.includes(name) ? $t('Required') : '' }}</span>
+          <span class="text-red-800 dark:text-red-200 text-xs">{{
+            props.schema.required && props.schema.required.includes(name) ? $t('Required') : ''
+          }}</span>
         </div>
 
         <OAMarkdown
@@ -88,10 +101,12 @@ const isOpen = ref(props.deep > 0)
     </CollapsibleTrigger>
     <CollapsibleContent>
       <OASchemaBody
-        v-if="['object', 'array'].includes(props.property.type)"
+        v-if="['object', 'array'].includes(props.property.type) && !isCircularRef"
         :schema="props.property"
         :response-type="props.property.type"
         :deep="props.deep - 1"
+        :visited="new Set(visited)"
+        :level="level + 1"
         class="pl-2 mt-1"
       />
     </CollapsibleContent>
