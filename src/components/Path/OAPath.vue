@@ -24,7 +24,7 @@ const operationPath = openapi.getOperationPath(props.id)
 
 const operationMethod = openapi.getOperationMethod(props.id)?.toUpperCase()
 
-const baseUrl = openapi.getBaseUrl()
+const baseUrl = openapi.getBaseUrl(props.id)
 
 const securitySchemes = openapi.getSecuritySchemes(props.id)
 
