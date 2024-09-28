@@ -2,6 +2,8 @@
 import { defineEmits, defineProps, ref, watch } from 'vue'
 import OAJSONEditor from 'vitepress-theme-openapi/components/Common/OAJSONEditor.vue'
 import { propertiesTypesJsonRecursive } from 'vitepress-theme-openapi/lib/generateSchemaJson'
+import { usePlayground } from 'vitepress-theme-openapi'
+import { useStorage } from '@vueuse/core'
 
 const props = defineProps({
   request: { // v-model
@@ -45,6 +47,8 @@ const emits = defineEmits([
   'update:request',
 ])
 
+const playground = usePlayground()
+
 const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
 
 const pathParameters = props.parameters.filter(parameter => parameter && parameter.in === 'path')
@@ -69,18 +73,9 @@ const variables = ref({
 const auth = ref({
   ...Object.fromEntries(
     Object.entries(props.securitySchemes).map(([name, scheme]) => {
-      switch (scheme.type) {
-        case 'http':
-          return [name, scheme.scheme === 'basic' ? 'Basic Auth' : 'Bearer Token']
-        case 'apiKey':
-          return [name, scheme.name]
-        case 'openIdConnect':
-          return [name, 'OpenID Connect']
-        case 'oauth2':
-          return [name, 'OAuth2 Token']
-        default:
-          return [name, '']
-      }
+      const defaultValue = playground.getSecuritySchemeDefaultValue(scheme)
+
+      return [name, useStorage(`--oa-authorization-${name}`, defaultValue, localStorage)]
     }),
   ),
 })
