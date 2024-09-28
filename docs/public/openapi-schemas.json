@@ -42,6 +42,66 @@
           }
         }
       }
+    },
+    "/primitive-string": {
+      "get": {
+        "summary": "Get a string",
+        "operationId": "getPrimitiveString",
+        "description": "Example of a JSON object with a string.",
+        "responses": {
+          "200": {
+            "description": "A string",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Hello, World!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/primitive-number": {
+      "get": {
+        "summary": "Get a number",
+        "operationId": "getPrimitiveNumber",
+        "description": "Example of a JSON object with a number.",
+        "responses": {
+          "200": {
+            "description": "A number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number",
+                  "example": 42
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/primitive-boolean": {
+      "get": {
+        "summary": "Get a boolean",
+        "operationId": "getPrimitiveBoolean",
+        "description": "Example of a JSON object with a boolean.",
+        "responses": {
+          "200": {
+            "description": "A boolean",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

@@ -176,6 +176,30 @@ describe('generateSchemaJson', () => {
       id: 0,
     }, null, 2))
   })
+
+  it('generates JSON for primitive string schema', () => {
+    const schema = {
+      type: 'string',
+    }
+    const result = generateSchemaJson(schema)
+    expect(result).toBe('string')
+  })
+
+  it('generates JSON for primitive number schema', () => {
+    const schema = {
+      type: 'number',
+    }
+    const result = generateSchemaJson(schema)
+    expect(result).toBe(0)
+  })
+
+  it('generates JSON for primitive boolean schema', () => {
+    const schema = {
+      type: 'boolean',
+    }
+    const result = generateSchemaJson(schema)
+    expect(result).toBe(true)
+  })
 })
 
 describe('schema with circular references', () => {

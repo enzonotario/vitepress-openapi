@@ -73,7 +73,7 @@ const lang = computed(() => {
 
 <template>
   <Tabs
-    :default-value="schemaContentType ? themeConfig.schemaConfig.defaultView : 'schema'"
+    :default-value="schemaContentType !== null ? themeConfig.schemaConfig.defaultView : 'schema'"
     class="rounded border"
   >
     <TabsList class="relative flex flex-row justify-start rounded-t rounded-b-none p-0">
@@ -85,7 +85,7 @@ const lang = computed(() => {
         {{ $t('Schema') }}
       </TabsTrigger>
       <TabsTrigger
-        v-if="schemaContentType"
+        v-if="schemaContentType !== null"
         value="contentType"
         class="h-full"
       >
@@ -126,7 +126,7 @@ const lang = computed(() => {
         </div>
 
         <OACodeBlock
-          v-if="schemaContentType"
+          v-if="schemaContentType !== null"
           :code="schemaContentType"
           :lang="lang"
           :label="contentTypeLabel"

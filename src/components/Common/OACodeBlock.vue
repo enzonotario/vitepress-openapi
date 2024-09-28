@@ -8,7 +8,7 @@ import { destr } from 'destr'
 
 const props = defineProps({
   code: {
-    type: [String, Object, Array],
+    type: [String, Object, Array, Number, Boolean],
     required: true,
   },
   lang: {

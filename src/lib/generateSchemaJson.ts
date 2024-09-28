@@ -1,7 +1,17 @@
 import { formatJson } from './formatJson'
 
 export function generateSchemaJson(schema: any, useExample = false) {
-  return formatJson(propertiesTypesJsonRecursive(schema, useExample, new Set()))
+  if (schema === null || schema === undefined) {
+    return '{}'
+  }
+
+  const properties = propertiesTypesJsonRecursive(schema, useExample, new Set())
+
+  if (typeof properties === 'string' || typeof properties === 'number' || typeof properties === 'boolean') {
+    return properties
+  }
+
+  return formatJson(properties)
 }
 
 export function propertiesTypesJsonRecursive(schema: any, useExample = false, visited = new Set(), level = 0) {
@@ -19,7 +29,7 @@ export function propertiesTypesJsonRecursive(schema: any, useExample = false, vi
   }
 
   if (!schema?.properties) {
-    return schema
+    return getPropertyValue(schema, useExample, new Set(visited), level)
   }
 
   const propertiesKeys = Object.keys(schema.properties)
@@ -56,7 +66,7 @@ function getPropertyValue(property: any, useExample: boolean, visited: Set<any>,
       return []
     case 'object':
       if (property.properties) {
-        return propertiesTypesJsonRecursive(property, useExample, visited, level + 1)
+        return propertiesTypesJsonRecursive(property, useExample, new Set(visited), level + 1)
       }
       return {}
     default:
