@@ -45,7 +45,23 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
     return parsedSpec
   }
 
-  function getBaseUrl() {
+  function getBaseUrl(operationId?: string) {
+    if (operationId) {
+      const operationPath = getOperationPath(operationId)
+      if (operationPath) {
+        const pathServers = spec.paths[operationPath]?.servers
+        if (pathServers && pathServers.length > 0) {
+          try {
+            const firstUrl = pathServers[0].url
+            new URL(firstUrl)
+            return firstUrl
+          } catch {
+            console.warn('Invalid server URL in path servers:', pathServers)
+          }
+        }
+      }
+    }
+
     if (!spec?.servers || spec.servers.length === 0) {
       return DEFAULT_SERVER_URL
     }

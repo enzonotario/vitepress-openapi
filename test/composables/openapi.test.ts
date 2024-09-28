@@ -72,3 +72,48 @@ describe('openapi with spec', () => {
     expect(result).toEqual(spec.servers)
   })
 })
+
+describe('spec with different servers for specific path', () => {
+  const spec = {
+    openapi: '3.0.0',
+    servers: [
+      {
+        url: 'https://api.example.com',
+      },
+    ],
+    paths: {
+      '/use-global-server': {
+        get: {
+          operationId: 'useGlobalServer',
+        },
+      },
+      '/use-local-server': {
+        get: {
+          operationId: 'useLocalServer',
+        },
+        servers: [
+          {
+            url: 'https://api.local.com',
+          },
+        ],
+      },
+    },
+  }
+
+  const openapi = OpenApi({ spec })
+
+  it('returns global server for getBaseUrl', () => {
+    const result = openapi.getBaseUrl()
+    expect(result).toBe('https://api.example.com')
+  })
+
+  it('returns global server for useGlobalServer', () => {
+    const result = openapi.getBaseUrl('useGlobalServer')
+    expect(result).toBe('https://api.example.com')
+  })
+
+  it('returns local server for useLocalServer', () => {
+    const result = openapi.getBaseUrl('useLocalServer')
+    expect(result).toBe('https://api.local.com')
+  })
+})
