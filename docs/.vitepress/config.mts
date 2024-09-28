@@ -58,6 +58,10 @@ export default defineConfigWithTheme({
                 text: 'useTheme',
                 link: '/composables/useTheme',
               },
+              {
+                text: 'usePlayground',
+                link: '/composables/usePlayground',
+              },
             ],
           },
         ],
