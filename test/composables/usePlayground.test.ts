@@ -84,4 +84,11 @@ describe('securityScheme default values with custom values', () => {
     playground.setSecuritySchemeDefaultValues({ unknownType: 'Custom Scheme' })
     expect(playground.getSecuritySchemeDefaultValue(scheme)).toBe('Custom Scheme')
   })
+
+  it('does not overwrite existing custom values when called with an empty object', () => {
+    const scheme = { type: 'http', scheme: 'basic' }
+    playground.setSecuritySchemeDefaultValues({ 'http-basic': 'Custom Basic Auth' })
+    playground.setSecuritySchemeDefaultValues({})
+    expect(playground.getSecuritySchemeDefaultValue(scheme)).toBe('Custom Basic Auth')
+  })
 })
