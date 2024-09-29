@@ -114,8 +114,7 @@ function trackTryIt() {
       event_category: 'api',
       event_label: props.operationId,
     })
-  }
- catch (error) { }
+  } catch { }
 }
 
 function setLoading(value) {

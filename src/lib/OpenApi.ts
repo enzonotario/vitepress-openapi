@@ -53,7 +53,12 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
         if (pathServers && pathServers.length > 0) {
           try {
             const firstUrl = pathServers[0].url
-            new URL(firstUrl)
+
+            const isValid = new URL(firstUrl)
+            if (!isValid) {
+              throw new Error('Invalid URL')
+            }
+
             return firstUrl
           } catch {
             console.warn('Invalid server URL in path servers:', pathServers)
@@ -69,7 +74,10 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
     try {
       const firstUrl = spec.servers[0].url
 
-      new URL(firstUrl)
+      const isValid = new URL(firstUrl)
+      if (!isValid) {
+        throw new Error('Invalid URL')
+      }
 
       return firstUrl
     } catch {
@@ -136,7 +144,7 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
 
       Object.entries(securitySchemes)
         .filter(([key]) => operation.security.some(security => security[key]))
-        .map(([key, value]) => {
+        .forEach(([key, value]) => {
           output[key] = value
         })
 

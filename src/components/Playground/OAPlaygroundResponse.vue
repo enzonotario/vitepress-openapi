@@ -73,7 +73,7 @@ const url = computed(() => {
   if (isAudio) {
     try {
       return window.URL ? URL.createObjectURL(response.body) : ''
-    } catch (error) {}
+    } catch { }
   }
 
   return ''

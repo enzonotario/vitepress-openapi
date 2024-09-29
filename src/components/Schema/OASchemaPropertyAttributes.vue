@@ -13,8 +13,8 @@ const keysToIgnore = ['type', 'description', 'properties', 'required', 'items', 
 
 <template>
   <div
-    v-for="(key, idx) in Object.keys(props.property).filter(k => !keysToIgnore.includes(k))"
-    :key="idx"
+    v-for="(key, propertyIdx) in Object.keys(props.property).filter(k => !keysToIgnore.includes(k))"
+    :key="propertyIdx"
     class="flex flex-row flex-wrap items-center gap-2"
   >
     <span class="text-xs text-gray-600 dark:text-gray-300">
@@ -23,8 +23,8 @@ const keysToIgnore = ['type', 'description', 'properties', 'required', 'items', 
 
     <template v-if="Array.isArray(props.property[key])">
       <code
-        v-for="(value, idx) in props.property[key]"
-        :key="idx"
+        v-for="(value, attributeIdx) in props.property[key]"
+        :key="attributeIdx"
         class="!text-xs"
       >
         {{ value }}

@@ -320,7 +320,7 @@ function hasSlot(name) {
       v-else-if="!hideDefaultFooter"
       #footer="footer"
     >
-      <OAFooter />
+      <OAFooter v-bind="footer" />
     </template>
   </OAPath>
 </template>

@@ -32,6 +32,8 @@ function getSlotChildrenText(children) {
     } else if (node.children.default) {
       return getSlotChildrenText(node.children.default())
     }
+
+    return ''
   }).join('')
 }
 
