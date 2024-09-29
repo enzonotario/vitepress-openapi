@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, defineEmits, defineProps } from 'vue'
+import { usePlayground } from 'vitepress-theme-openapi'
 import { Input } from 'vitepress-theme-openapi/components/ui/input'
 
 const props = defineProps({
@@ -18,18 +19,11 @@ const emits = defineEmits([
 ])
 
 const placeholder = computed(() => {
-  switch (props.scheme.type) {
-    case 'http':
-      return props.scheme.scheme === 'basic' ? 'Basic Auth' : 'Bearer Token'
-    case 'apiKey':
-      return props.scheme.name
-    case 'openIdConnect':
-      return 'OpenID Connect'
-    case 'oauth2':
-      return 'OAuth2 Token'
-    default:
-      return ''
+  if (props.modelValue) {
+    return props.modelValue
   }
+
+  return usePlayground().getSecuritySchemeDefaultValue(props.scheme)
 })
 </script>
 
