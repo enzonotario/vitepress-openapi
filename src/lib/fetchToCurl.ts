@@ -64,7 +64,7 @@ export const generateHeadersArgument = (headers?: any): HeaderParams => {
       }
     })
   } else if (headers) {
-    Object.keys(headers).map((name) => {
+    Object.keys(headers).forEach((name) => {
       if (name.toLocaleLowerCase() !== 'content-length') {
         headerParam += `${getHeaderString(name, headers[name])} \\\n`
       }

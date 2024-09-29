@@ -32,7 +32,7 @@ const samples = generateCodeSamples(url, props.method)
 <template>
   <div class="vp-code-group vp-adaptive-theme">
     <div class="tabs">
-      <template v-for="(sample, key) in samples">
+      <template v-for="(sample, key) in samples" :key="key">
         <input
           :id="`tab-${props.operationId}-${key}`"
           type="radio"

@@ -7,7 +7,10 @@ export default antfu(
     formatters: true,
     lessOpinionated: true,
     rules: {
-      'brace-style': ['error', '1tbs', { allowSingleLine: false }],
+      'style/brace-style': 'off',
+    },
+    stylistic: {
+      'style/brace-style': ['error', '1tbs', { allowSingleLine: true }],
     },
   },
 )
