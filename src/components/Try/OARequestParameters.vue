@@ -5,6 +5,13 @@ import { propertiesTypesJsonRecursive } from 'vitepress-theme-openapi/lib/genera
 import { usePlayground, useTheme } from 'vitepress-theme-openapi'
 import { useStorage } from '@vueuse/core'
 
+interface SecurityScheme {
+  type: string
+  scheme?: string
+  name?: string
+  in?: string
+}
+
 const props = defineProps({
   request: { // v-model
     type: Object,
@@ -155,7 +162,7 @@ function buildRequest() {
   return newRequest
 }
 
-function setAuthScheme(scheme: object) {
+function setAuthScheme(scheme: SecurityScheme) {
   const name = selectedSchemeName.value
 
   authScheme.value = {
