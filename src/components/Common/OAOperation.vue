@@ -266,16 +266,18 @@ function hasSlot(name) {
       v-else
       #try-it="tryIt"
     >
-      <OATryWithVariables
-        :operation-id="tryIt.operationId"
-        :path="tryIt.path"
-        :method="tryIt.method"
-        :base-url="tryIt.baseUrl"
-        :parameters="tryIt.parameters"
-        :schema="tryIt.schema"
-        :security-schemes="tryIt.securitySchemes"
-        :is-dark="isDark"
-      />
+      <ClientOnly>
+        <OATryWithVariables
+          :operation-id="tryIt.operationId"
+          :path="tryIt.path"
+          :method="tryIt.method"
+          :base-url="tryIt.baseUrl"
+          :parameters="tryIt.parameters"
+          :schema="tryIt.schema"
+          :security-schemes="tryIt.securitySchemes"
+          :is-dark="isDark"
+        />
+      </ClientOnly>
     </template>
 
     <template
