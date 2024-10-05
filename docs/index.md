@@ -11,7 +11,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: Example
-      link: /example/operations/getMuseumHours
+      link: /example/operations/getAllData
 
 features:
   - title: Internationalization (i18n) Support
