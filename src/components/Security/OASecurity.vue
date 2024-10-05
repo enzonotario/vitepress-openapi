@@ -27,8 +27,9 @@ const themeConfig = useTheme()
 
 const firstSecurityScheme = Object.keys(securitySchemes).find(Boolean)
 
-const selectedSchemeName = computed(() => {
-  return themeConfig.securityConfig.selectedScheme.value
+const selectedSchemeName = computed({
+  get: () => themeConfig.securityConfig.selectedScheme.value,
+  set: value => themeConfig.securityConfig.selectedScheme.value = value,
 })
 
 const selectedScheme = computed(() => {
@@ -36,8 +37,8 @@ const selectedScheme = computed(() => {
 })
 
 onMounted(() => {
-  if (!themeConfig.securityConfig.selectedScheme.value) {
-    themeConfig.securityConfig.selectedScheme.value = firstSecurityScheme
+  if (!selectedSchemeName.value) {
+    selectedSchemeName.value = firstSecurityScheme
   }
 })
 </script>
@@ -58,10 +59,7 @@ onMounted(() => {
         <span class="flex-grow min-w-2" />
 
         <div v-if="Object.keys(securitySchemes).length > 1" class="relative flex flex-row">
-          <Select
-            :model-value="themeConfig.securityConfig.selectedScheme.value"
-            @update:model-value="themeConfig.securityConfig.selectedScheme.value = $event"
-          >
+          <Select v-model="selectedSchemeName">
             <SelectTrigger
               aria-label="Security Scheme"
               class="px-3 py-1.5 text-foreground"
