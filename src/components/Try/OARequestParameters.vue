@@ -54,8 +54,6 @@ const emits = defineEmits([
   'update:request',
 ])
 
-const playground = usePlayground()
-
 const themeConfig = useTheme()
 
 const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
