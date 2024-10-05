@@ -1,341 +1,402 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Redocly Museum API",
-    "description": "Imaginary, but delightful Museum API for interacting with museum services and information. Built with love by Redocly.",
-    "version": "1.1.1",
-    "termsOfService": "https://redocly.com/subscription-agreement/",
+    "title": "Scalar Galaxy",
+    "description": "The Scalar Galaxy is an example OpenAPI specification to test OpenAPI tools and libraries. It’s a fictional universe with fictional planets and fictional data. Get all the data for [all planets](#tag/planets/GET/planets).\n\n## Resources\n\n* https://github.com/scalar/scalar\n* https://github.com/OAI/OpenAPI-Specification\n* https://scalar.com\n\n## Markdown Support\n\nAll descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub supports the syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax), chances are we’re supporting it, too. You can even create [internal links to reference endpoints](#tag/authentication/POST/user/signup).\n\n<details>\n  <summary>Examples</summary>\n\n  **Blockquotes**\n\n  > I love OpenAPI. <3\n\n  **Tables**\n\n  | Feature          | Availability |\n  | ---------------- | ------------ |\n  | Markdown Support | ✓            |\n\n  **Accordion**\n\n  ```html\n  <details>\n    <summary>Using Details Tags</summary>\n    <p>HTML Example</p>\n  </details>\n  ```\n\n  **Images**\n\n  Yes, there’s support for images, too!\n\n  ![Empty placeholder image showing the width/height](https://images.placeholders.dev/?width=1280&height=720)\n\n</details>\n",
+    "version": "1.0.0",
     "contact": {
-      "email": "team@redocly.com",
-      "url": "https://redocly.com/docs/cli/"
-    },
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/license/mit/"
+      "name": "Marc from Scalar",
+      "url": "https://scalar.com",
+      "email": "marc@scalar.com"
     }
   },
   "servers": [
     {
-      "url": "https://redocly.com/_mock/docs/openapi/museum-api"
+      "url": "https://galaxy.scalar.com"
+    },
+    {
+      "url": "{protocol}://void.scalar.com/{path}",
+      "description": "Responds with your request data",
+      "variables": {
+        "protocol": {
+          "enum": [
+            "https"
+          ],
+          "default": "https"
+        },
+        "path": {
+          "default": ""
+        }
+      }
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    },
+    {
+      "basicAuth": []
+    },
+    {
+      "apiKeyQuery": []
+    },
+    {
+      "apiKeyHeader": []
+    },
+    {
+      "apiKeyCookie": []
+    },
+    {
+      "oauth2": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Some endpoints are public, but some require authentication. We provide all the required endpoints to create an account and authorize yourself."
+    },
+    {
+      "name": "Planets",
+      "description": "Everything about planets"
     }
   ],
   "paths": {
-    "/museum-hours": {
+    "/planets": {
       "get": {
-        "summary": "Get museum hours",
-        "description": "Get upcoming museum operating hours.",
-        "operationId": "getMuseumHours",
         "tags": [
-          "Operations"
+          "Planets"
+        ],
+        "summary": "Get all planets",
+        "description": "It’s easy to say you know them all, but do you really? Retrieve all the planets and check whether you missed one.",
+        "operationId": "getAllData",
+        "security": [
+          {}
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/StartDate"
+            "$ref": "#/components/parameters/limit"
           },
           {
-            "$ref": "#/components/parameters/PaginationPage"
-          },
-          {
-            "$ref": "#/components/parameters/PaginationLimit"
+            "$ref": "#/components/parameters/offset"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetMuseumHoursResponse"
-                },
-                "examples": {
-                  "default_example": {
-                    "$ref": "#/components/examples/GetMuseumHoursResponseExample"
-                  }
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetMuseumHoursResponse"
-                }
-              }
-            }
-          },
-          "201": {
-            "description": "Created.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetMuseumHoursResponse"
-                },
-                "examples": {
-                  "default_example": {
-                    "$ref": "#/components/examples/GetMuseumHoursResponseExample"
-                  }
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetMuseumHoursResponse"
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Planet"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$ref": "#/components/schemas/PaginatedResource"
+                    }
+                  ]
                 }
               }
             }
-          },
-          "204": {
-            "description": "No content."
-          },
-          "206": {
-            "description": "Partial content."
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
           }
-        },
-        "security": []
-      }
-    },
-    "/special-events": {
+        }
+      },
       "post": {
-        "summary": "Create special events",
-        "description": "Creates a new special event for the museum.",
-        "operationId": "createSpecialEvent",
         "tags": [
-          "Events"
+          "Planets"
         ],
+        "summary": "Create a planet",
+        "description": "Time to play god and create a new planet. What do you think? Ah, don’t think too much. What could go wrong anyway?",
+        "operationId": "createPlanet",
         "requestBody": {
-          "required": true,
+          "description": "Planet",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateSpecialEventRequest"
-              },
-              "examples": {
-                "default_example": {
-                  "$ref": "#/components/examples/CreateSpecialEventRequestExample"
-                }
-              }
-            },
-            "application/xml": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateSpecialEventRequest"
+                "$ref": "#/components/schemas/Planet"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Created.",
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpecialEventResponse"
-                },
-                "examples": {
-                  "default_example": {
-                    "$ref": "#/components/examples/CreateSpecialEventResponseExample"
-                  }
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpecialEventResponse"
+                  "$ref": "#/components/schemas/Planet"
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          }
-        }
-      },
-      "get": {
-        "summary": "List special events",
-        "description": "Return a list of upcoming special events at the museum.",
-        "operationId": "listSpecialEvents",
-        "tags": [
-          "Events"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/StartDate"
-          },
-          {
-            "$ref": "#/components/parameters/EndDate"
-          },
-          {
-            "$ref": "#/components/parameters/PaginationPage"
-          },
-          {
-            "$ref": "#/components/parameters/PaginationLimit"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success.",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListSpecialEventsResponse"
-                },
-                "examples": {
-                  "default_example": {
-                    "$ref": "#/components/examples/ListSpecialEventsResponseExample"
-                  }
+                  "$ref": "#/components/responses/BadRequest"
                 }
               }
             }
           },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/Forbidden"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/special-events/{eventId}": {
+    "/planets/{planetId}": {
       "get": {
-        "summary": "Get special event",
-        "description": "Get details about a special event.",
-        "operationId": "getSpecialEvent",
         "tags": [
-          "Events"
+          "Planets"
+        ],
+        "summary": "Get a planet",
+        "description": "You’ll better learn a little bit more about the planets. It might come in handy once space travel is available for everyone.",
+        "operationId": "getPlanet",
+        "security": [
+          {}
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/EventId"
+            "$ref": "#/components/parameters/planetId"
           }
         ],
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "Planet Found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpecialEventResponse"
-                },
-                "examples": {
-                  "default_example": {
-                    "$ref": "#/components/examples/GetSpecialEventResponseExample"
-                  }
+                  "$ref": "#/components/schemas/Planet"
                 }
               }
             }
           },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Planet Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/NotFound"
+                }
+              }
+            }
           }
         }
       },
-      "patch": {
-        "summary": "Update special event",
-        "description": "Update the details of a special event.",
-        "operationId": "updateSpecialEvent",
+      "put": {
         "tags": [
-          "Events"
+          "Planets"
         ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/EventId"
-          }
-        ],
+        "summary": "Update a planet",
+        "description": "Sometimes you make mistakes, that’s fine. No worries, you can update all planets.",
+        "operationId": "updatePlanet",
         "requestBody": {
-          "required": true,
+          "description": "New information about the planet",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateSpecialEventRequest"
-              },
-              "examples": {
-                "default_example": {
-                  "$ref": "#/components/examples/UpdateSpecialEventRequestExample"
-                }
+                "$ref": "#/components/schemas/Planet"
               }
             }
           }
         },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/planetId"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success.",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpecialEventResponse"
-                },
-                "examples": {
-                  "default_example": {
-                    "$ref": "#/components/examples/UpdateSpecialEventResponseExample"
-                  }
+                  "$ref": "#/components/schemas/Planet"
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/BadRequest"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/Forbidden"
+                }
+              }
+            }
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/NotFound"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "summary": "Delete special event",
-        "description": "Delete a special event from the collection. Allows museum to cancel planned events.",
-        "operationId": "deleteSpecialEvent",
         "tags": [
-          "Events"
+          "Planets"
         ],
+        "summary": "Delete a planet",
+        "operationId": "deletePlanet",
+        "description": "This endpoint was used to delete planets. Unfortunately, that caused a lot of trouble for planets with life. So, this endpoint is now deprecated and should not be used anymore.",
+        "deprecated": true,
         "parameters": [
           {
-            "$ref": "#/components/parameters/EventId"
+            "$ref": "#/components/parameters/planetId"
           }
         ],
         "responses": {
           "204": {
-            "description": "Success - no content."
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
+            "description": "No Content"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Not Found"
           }
         }
       }
     },
-    "/tickets": {
+    "/planets/{planetId}/image": {
       "post": {
-        "summary": "Buy museum tickets",
-        "description": "Purchase museum tickets for general entry or special events.",
-        "operationId": "buyMuseumTickets",
         "tags": [
-          "Tickets"
+          "Planets"
+        ],
+        "summary": "Upload an image to a planet",
+        "description": "Got a crazy good photo of a planet? Share it with the world!",
+        "operationId": "uploadImage",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/planetId"
+          }
         ],
         "requestBody": {
-          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Image uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Image uploaded successfully"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Upload Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/BadRequest"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Upload Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/Forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed to Upload Image, Planet Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/NotFound"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/signup": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Create a user",
+        "description": "Time to create a user account, eh?",
+        "operationId": "createUser",
+        "security": [
+          {}
+        ],
+        "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BuyMuseumTicketsRequest"
+                "$ref": "#/components/schemas/NewUser"
               },
               "examples": {
-                "general_entry": {
-                  "$ref": "#/components/examples/BuyGeneralTicketsRequestExample"
+                "Marc": {
+                  "value": {
+                    "name": "Marc",
+                    "email": "marc@scalar.com",
+                    "password": "i-love-scalar"
+                  }
                 },
-                "event_entry": {
-                  "$ref": "#/components/examples/BuyEventTicketsRequestExample"
+                "Cam": {
+                  "value": {
+                    "name": "Cam",
+                    "email": "cam@scalar.com",
+                    "password": "scalar-is-cool"
+                  }
                 }
               }
             }
@@ -343,706 +404,216 @@
         },
         "responses": {
           "201": {
-            "description": "Created.",
+            "description": "Created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BuyMuseumTicketsResponse"
-                },
-                "examples": {
-                  "general_entry": {
-                    "$ref": "#/components/examples/BuyGeneralTicketsResponseExample"
-                  },
-                  "event_entry": {
-                    "$ref": "#/components/examples/BuyEventTicketsResponseExample"
-                  }
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/BadRequest"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/tickets/{ticketId}/qr": {
-      "get": {
-        "deprecated": true,
-        "summary": "Get ticket QR code",
-        "description": "Return an image of your ticket with scannable QR code. Used for event entry.",
-        "operationId": "getTicketCode",
+    "/auth/token": {
+      "post": {
         "tags": [
-          "Tickets"
+          "Authentication"
         ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/TicketId"
+        "summary": "Get a token",
+        "description": "Yeah, this is the boring security stuff. Just get your super secret token and move on.",
+        "operationId": "getToken",
+        "security": [
+          {}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Credentials"
+              }
+            }
           }
+        },
+        "responses": {
+          "201": {
+            "description": "Token Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "tags": [
+          "Authentication"
         ],
+        "summary": "Get authenticated user",
+        "description": "Find yourself they say. That’s what you can do here.",
+        "operationId": "getMe",
         "responses": {
           "200": {
-            "description": "Scannable event ticket in image format.",
+            "description": "OK",
             "content": {
-              "image/png": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetTicketCodeResponse"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
           },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/Forbidden"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "newPlanet": {
+      "post": {
+        "tags": [
+          "Planets"
+        ],
+        "requestBody": {
+          "description": "Information about a new planet",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Planet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
           }
         }
       }
     }
   },
   "components": {
-    "schemas": {
-      "TicketType": {
-        "description": "Type of ticket being purchased. Use `general` for regular museum entry and `event` for tickets to special events.",
-        "type": "string",
-        "enum": [
-          "event",
-          "general"
-        ],
-        "example": "event"
-      },
-      "Date": {
-        "type": "string",
-        "format": "date",
-        "example": "2023-10-29"
-      },
-      "Email": {
-        "description": "Email address for ticket purchaser.",
-        "type": "string",
-        "format": "email",
-        "example": "museum-lover@example.com"
-      },
-      "Phone": {
-        "description": "Phone number for the ticket purchaser (optional).",
-        "type": "string",
-        "example": "+1(234)-567-8910"
-      },
-      "BuyMuseumTicketsRequest": {
-        "description": "Request payload used for purchasing museum tickets.",
-        "type": "object",
-        "properties": {
-          "ticketType": {
-            "$ref": "#/components/schemas/TicketType"
-          },
-          "eventId": {
-            "description": "Unique identifier for a special event. Required if purchasing tickets for the museum's special events.",
-            "$ref": "#/components/schemas/EventId"
-          },
-          "ticketDate": {
-            "description": "Date that the ticket is valid for.",
-            "$ref": "#/components/schemas/Date"
-          },
-          "email": {
-            "$ref": "#/components/schemas/Email"
-          },
-          "phone": {
-            "$ref": "#/components/schemas/Phone"
-          }
-        },
-        "required": [
-          "ticketType",
-          "ticketDate",
-          "email"
-        ],
-        "xml": {
-          "name": "BuyMuseumTicketsRequest"
-        }
-      },
-      "TicketMessage": {
-        "description": "Confirmation message after a ticket purchase.",
-        "type": "string",
-        "example": "Museum general entry ticket purchased"
-      },
-      "TicketId": {
-        "description": "Unique identifier for museum ticket. Generated when purchased.",
-        "type": "string",
-        "format": "uuid",
-        "example": "a54a57ca-36f8-421b-a6b4-2e8f26858a4c"
-      },
-      "TicketConfirmation": {
-        "description": "Unique confirmation code used to verify ticket purchase.",
-        "type": "string",
-        "example": "ticket-event-a98c8f-7eb12"
-      },
-      "BuyMuseumTicketsResponse": {
-        "description": "Details for a museum ticket after a successful purchase.",
-        "type": "object",
-        "properties": {
-          "message": {
-            "$ref": "#/components/schemas/TicketMessage"
-          },
-          "eventName": {
-            "$ref": "#/components/schemas/EventName"
-          },
-          "ticketId": {
-            "$ref": "#/components/schemas/TicketId"
-          },
-          "ticketType": {
-            "$ref": "#/components/schemas/TicketType"
-          },
-          "ticketDate": {
-            "description": "Date the ticket is valid for.",
-            "$ref": "#/components/schemas/Date"
-          },
-          "confirmationCode": {
-            "$ref": "#/components/schemas/TicketConfirmation"
-          }
-        },
-        "required": [
-          "message",
-          "ticketId",
-          "ticketType",
-          "ticketDate",
-          "confirmationCode"
-        ],
-        "xml": {
-          "name": "BuyMuseumTicketsResponse"
-        }
-      },
-      "GetTicketCodeResponse": {
-        "description": "Image of a ticket with a QR code used for museum or event entry.",
-        "type": "string",
-        "format": "binary"
-      },
-      "GetMuseumHoursResponse": {
-        "description": "List of museum operating hours for consecutive days.",
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/MuseumDailyHours"
-        }
-      },
-      "MuseumDailyHours": {
-        "description": "Daily operating hours for the museum.",
-        "type": "object",
-        "properties": {
-          "date": {
-            "description": "Date the operating hours apply to.",
-            "$ref": "#/components/schemas/Date",
-            "example": "2024-12-31"
-          },
-          "timeOpen": {
-            "type": "string",
-            "pattern": "^([01]\\d|2[0-3]):?([0-5]\\d)$",
-            "description": "Time the museum opens on a specific date. Uses 24 hour time format (`HH:mm`).",
-            "example": "09:00"
-          },
-          "timeClose": {
-            "description": "Time the museum closes on a specific date. Uses 24 hour time format (`HH:mm`).",
-            "type": "string",
-            "pattern": "^([01]\\d|2[0-3]):?([0-5]\\d)$",
-            "example": 1080
-          }
-        },
-        "required": [
-          "date",
-          "timeOpen",
-          "timeClose"
-        ]
-      },
-      "EventId": {
-        "description": "Identifier for a special event.",
-        "type": "string",
-        "format": "uuid",
-        "example": "3be6453c-03eb-4357-ae5a-984a0e574a54"
-      },
-      "EventName": {
-        "type": "string",
-        "description": "Name of the special event.",
-        "example": "Pirate Coding Workshop"
-      },
-      "EventLocation": {
-        "type": "string",
-        "description": "Location where the special event is held.",
-        "example": "Computer Room"
-      },
-      "EventDescription": {
-        "type": "string",
-        "description": "Description of the special event.",
-        "example": "Captain Blackbeard shares his love of the C...language. And possibly Arrrrr (R lang)."
-      },
-      "EventDates": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Date"
-        },
-        "description": "List of planned dates for the special event."
-      },
-      "EventPrice": {
-        "description": "Price of a ticket for the special event.",
-        "type": "number",
-        "format": "float",
-        "example": 25
-      },
-      "CreateSpecialEventRequest": {
-        "description": "Request payload for creating new special events at the museum.",
-        "type": "object",
-        "properties": {
-          "name": {
-            "$ref": "#/components/schemas/EventName"
-          },
-          "location": {
-            "$ref": "#/components/schemas/EventLocation"
-          },
-          "eventDescription": {
-            "$ref": "#/components/schemas/EventDescription"
-          },
-          "dates": {
-            "$ref": "#/components/schemas/EventDates"
-          },
-          "price": {
-            "$ref": "#/components/schemas/EventPrice"
-          }
-        },
-        "required": [
-          "name",
-          "location",
-          "eventDescription",
-          "dates",
-          "price"
-        ]
-      },
-      "UpdateSpecialEventRequest": {
-        "description": "Request payload for updating an existing special event. Only included fields are updated in the event.",
-        "type": "object",
-        "properties": {
-          "name": {
-            "$ref": "#/components/schemas/EventName"
-          },
-          "location": {
-            "$ref": "#/components/schemas/EventLocation"
-          },
-          "eventDescription": {
-            "$ref": "#/components/schemas/EventDescription"
-          },
-          "dates": {
-            "$ref": "#/components/schemas/EventDates"
-          },
-          "price": {
-            "$ref": "#/components/schemas/EventPrice"
-          }
-        }
-      },
-      "ListSpecialEventsResponse": {
-        "description": "List of upcoming special events.",
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/SpecialEventResponse"
-        }
-      },
-      "SpecialEventResponse": {
-        "description": "Information about a special event.",
-        "type": "object",
-        "properties": {
-          "eventId": {
-            "$ref": "#/components/schemas/EventId"
-          },
-          "name": {
-            "$ref": "#/components/schemas/EventName"
-          },
-          "location": {
-            "$ref": "#/components/schemas/EventLocation"
-          },
-          "eventDescription": {
-            "$ref": "#/components/schemas/EventDescription"
-          },
-          "dates": {
-            "$ref": "#/components/schemas/EventDates"
-          },
-          "price": {
-            "$ref": "#/components/schemas/EventPrice"
-          }
-        },
-        "required": [
-          "eventId",
-          "name",
-          "location",
-          "eventDescription",
-          "dates",
-          "price"
-        ]
-      },
-      "Error": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "example": "object"
-          },
-          "title": {
-            "type": "string",
-            "example": "Validation failed"
-          }
-        }
-      }
-    },
     "securitySchemes": {
-      "MuseumPlaceholderAuth": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "basicAuth": {
         "type": "http",
         "scheme": "basic"
-      }
-    },
-    "examples": {
-      "BuyGeneralTicketsRequestExample": {
-        "summary": "General entry ticket",
-        "value": {
-          "ticketType": "general",
-          "ticketDate": "2023-09-07",
-          "email": "todd@example.com"
-        }
       },
-      "BuyEventTicketsRequestExample": {
-        "summary": "Special event ticket",
-        "value": {
-          "ticketType": "general",
-          "eventId": "dad4bce8-f5cb-4078-a211-995864315e39",
-          "ticketDate": "2023-09-05",
-          "email": "todd@example.com"
-        }
+      "apiKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
       },
-      "BuyGeneralTicketsResponseExample": {
-        "summary": "General entry ticket",
-        "value": {
-          "message": "Museum general entry ticket purchased",
-          "ticketId": "382c0820-0530-4f4b-99af-13811ad0f17a",
-          "ticketType": "general",
-          "ticketDate": "2023-09-07",
-          "confirmationCode": "ticket-general-e5e5c6-dce78"
-        }
+      "apiKeyQuery": {
+        "type": "apiKey",
+        "in": "query",
+        "name": "api_key"
       },
-      "BuyEventTicketsResponseExample": {
-        "summary": "Special event ticket",
-        "value": {
-          "message": "Museum special event ticket purchased",
-          "ticketId": "b811f723-17b2-44f7-8952-24b03e43d8a9",
-          "eventName": "Mermaid Treasure Identification and Analysis",
-          "ticketType": "event",
-          "ticketDate": "2023-09-05",
-          "confirmationCode": "ticket-event-9c55eg-8v82a"
-        }
+      "apiKeyCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "api_key"
       },
-      "CreateSpecialEventRequestExample": {
-        "summary": "Create special event",
-        "value": {
-          "name": "Mermaid Treasure Identification and Analysis",
-          "location": "Under the seaaa 🦀 🎶 🌊.",
-          "eventDescription": "Join us as we review and classify a rare collection of 20 thingamabobs, gadgets, gizmos, whoosits, and whatsits, kindly donated by Ariel.",
-          "dates": [
-            "2023-09-05",
-            "2023-09-08"
-          ],
-          "price": 0
-        }
-      },
-      "CreateSpecialEventResponseExample": {
-        "summary": "Special event created",
-        "value": {
-          "eventId": "dad4bce8-f5cb-4078-a211-995864315e39",
-          "name": "Mermaid Treasure Identification and Analysis",
-          "location": "Under the seaaa 🦀 🎶 🌊.",
-          "eventDescription": "Join us as we review and classify a rare collection of 20 thingamabobs, gadgets, gizmos, whoosits, and whatsits, kindly donated by Ariel.",
-          "dates": [
-            "2023-09-05",
-            "2023-09-08"
-          ],
-          "price": 30
-        }
-      },
-      "GetSpecialEventResponseExample": {
-        "summary": "Get special event",
-        "value": {
-          "eventId": "6744a0da-4121-49cd-8479-f8cc20526495",
-          "name": "Time Traveler Tea Party",
-          "location": "Temporal Tearoom",
-          "eventDescription": "Sip tea with important historical figures.",
-          "dates": [
-            "2023-11-18",
-            "2023-11-25",
-            "2023-12-02"
-          ],
-          "price": 60
-        }
-      },
-      "ListSpecialEventsResponseExample": {
-        "summary": "List of special events",
-        "value": [
-          {
-            "eventId": "f3e0e76e-e4a8-466e-ab9c-ae36c15b8e97",
-            "name": "Sasquatch Ballet",
-            "location": "Seattle... probably",
-            "eventDescription": "They're big, they're hairy, but they're also graceful. Come learn how the biggest feet can have the lightest touch.",
-            "dates": [
-              "2023-12-15",
-              "2023-12-22"
-            ],
-            "price": 40
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://galaxy.scalar.com/oauth/authorize",
+            "scopes": {
+              "write:planets": "modify planets in your account",
+              "read:planets": "read your planets"
+            }
           },
-          {
-            "eventId": "2f14374a-9c65-4ee5-94b7-fba66d893483",
-            "name": "Solar Telescope Demonstration",
-            "location": "Far from the sun.",
-            "eventDescription": "Look at the sun without going blind!",
-            "dates": [
-              "2023-09-07",
-              "2023-09-14"
-            ],
-            "price": 50
-          },
-          {
-            "eventId": "6aaa61ba-b2aa-4868-b803-603dbbf7bfdb",
-            "name": "Cook like a Caveman",
-            "location": "Fire Pit on East side",
-            "eventDescription": "Learn to cook on an open flame.",
-            "dates": [
-              "2023-11-10",
-              "2023-11-17",
-              "2023-11-24"
-            ],
-            "price": 5
-          },
-          {
-            "eventId": "602b75e1-5696-4ab8-8c7a-f9e13580f910",
-            "name": "Underwater Basket Weaving",
-            "location": "Rec Center Pool next door.",
-            "eventDescription": "Learn to weave baskets underwater.",
-            "dates": [
-              "2023-09-12",
-              "2023-09-15"
-            ],
-            "price": 15
-          },
-          {
-            "eventId": "dad4bce8-f5cb-4078-a211-995864315e39",
-            "name": "Mermaid Treasure Identification and Analysis",
-            "location": "Room Sea-12",
-            "eventDescription": "Join us as we review and classify a rare collection of 20 thingamabobs, gadgets, gizmos, whoosits, and whatsits — kindly donated by Ariel.",
-            "dates": [
-              "2023-09-05",
-              "2023-09-08"
-            ],
-            "price": 30
-          },
-          {
-            "eventId": "6744a0da-4121-49cd-8479-f8cc20526495",
-            "name": "Time Traveler Tea Party",
-            "location": "Temporal Tearoom",
-            "eventDescription": "Sip tea with important historical figures.",
-            "dates": [
-              "2023-11-18",
-              "2023-11-25",
-              "2023-12-02"
-            ],
-            "price": 60
-          },
-          {
-            "eventId": "3be6453c-03eb-4357-ae5a-984a0e574a54",
-            "name": "Pirate Coding Workshop",
-            "location": "Computer Room",
-            "eventDescription": "Captain Blackbeard shares his love of the C...language. And possibly Arrrrr (R lang).",
-            "dates": [
-              "2023-10-29",
-              "2023-10-30",
-              "2023-10-31"
-            ],
-            "price": 45
-          },
-          {
-            "eventId": "9d90d29a-2af5-4206-97d9-9ea9ceadcb78",
-            "name": "Llama Street Art Through the Ages",
-            "location": "Auditorium",
-            "eventDescription": "Llama street art?! Alpaca my bags -- let's go!",
-            "dates": [
-              "2023-10-29",
-              "2023-10-30",
-              "2023-10-31"
-            ],
-            "price": 45
-          },
-          {
-            "eventId": "a3c7b2c4-b5fb-4ef7-9322-00a919864957",
-            "name": "The Great Parrot Debate",
-            "location": "Outdoor Amphitheatre",
-            "eventDescription": "See leading parrot minds discuss important geopolitical issues.",
-            "dates": [
-              "2023-11-03",
-              "2023-11-10"
-            ],
-            "price": 35
-          },
-          {
-            "eventId": "b92d46b7-4c5d-422b-87a5-287767e26f29",
-            "name": "Eat a Bunch of Corn",
-            "location": "Cafeteria",
-            "eventDescription": "We accidentally bought too much corn. Please come eat it.",
-            "dates": [
-              "2023-11-10",
-              "2023-11-17",
-              "2023-11-24"
-            ],
-            "price": 5
+          "authorizationCode": {
+            "authorizationUrl": "https://galaxy.scalar.com/oauth/authorize",
+            "tokenUrl": "https://galaxy.scalar.com/oauth/token",
+            "scopes": {
+              "write:planets": "modify planets in your account",
+              "read:planets": "read your planets"
+            }
           }
-        ]
-      },
-      "UpdateSpecialEventRequestExample": {
-        "summary": "Update special event request",
-        "value": {
-          "location": "On the beach.",
-          "price": 15
         }
-      },
-      "UpdateSpecialEventResponseExample": {
-        "summary": "Update special event",
-        "value": {
-          "eventId": "dad4bce8-f5cb-4078-a211-995864315e39",
-          "name": "Mermaid Treasure Identification and Analysis",
-          "location": "On the beach.",
-          "eventDescription": "Join us as we review and classify a rare collection of 20 thingamabobs, gadgets, gizmos, whoosits, and whatsits, kindly donated by Ariel.",
-          "dates": [
-            "2023-09-05",
-            "2023-09-08"
-          ],
-          "price": 15
-        }
-      },
-      "GetMuseumHoursResponseExample": {
-        "summary": "Get hours response",
-        "value": [
-          {
-            "date": "2023-09-11",
-            "timeOpen": "09:00",
-            "timeClose": "18:00"
-          },
-          {
-            "date": "2023-09-12",
-            "timeOpen": "09:00",
-            "timeClose": "18:00"
-          },
-          {
-            "date": "2023-09-13",
-            "timeOpen": "09:00",
-            "timeClose": "18:00"
-          },
-          {
-            "date": "2023-09-14",
-            "timeOpen": "09:00",
-            "timeClose": "18:00"
-          },
-          {
-            "date": "2023-09-15",
-            "timeOpen": "10:00",
-            "timeClose": "16:00"
-          },
-          {
-            "date": "2023-09-18",
-            "timeOpen": "09:00",
-            "timeClose": "18:00"
-          },
-          {
-            "date": "2023-09-19",
-            "timeOpen": "09:00",
-            "timeClose": "18:00"
-          },
-          {
-            "date": "2023-09-20",
-            "timeOpen": "09:00",
-            "timeClose": "18:00"
-          },
-          {
-            "date": "2023-09-21",
-            "timeOpen": "09:00",
-            "timeClose": "18:00"
-          },
-          {
-            "date": "2023-09-22",
-            "timeOpen": "10:00",
-            "timeClose": "16:00"
-          }
-        ]
       }
     },
     "parameters": {
-      "PaginationPage": {
-        "name": "page",
-        "in": "query",
-        "description": "Page number to retrieve.",
+      "planetId": {
+        "name": "planetId",
+        "in": "path",
+        "required": true,
         "schema": {
           "type": "integer",
-          "default": 1,
-          "example": 2
+          "format": "int64",
+          "examples": [
+            1
+          ]
         }
       },
-      "PaginationLimit": {
+      "limit": {
         "name": "limit",
         "in": "query",
-        "description": "Number of days per page.",
+        "description": "The number of items to return",
+        "required": false,
         "schema": {
           "type": "integer",
-          "default": 10,
-          "maximum": 30,
-          "example": 15
+          "format": "int64",
+          "default": 10
         }
       },
-      "EventId": {
-        "name": "eventId",
-        "in": "path",
-        "description": "Identifier for a special event.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid",
-          "example": "dad4bce8-f5cb-4078-a211-995864315e39"
-        }
-      },
-      "StartDate": {
-        "name": "startDate",
+      "offset": {
+        "name": "offset",
         "in": "query",
-        "description": "Starting date to retrieve future operating hours from. Defaults to today's date.",
+        "description": "The number of items to skip before starting to collect the result set",
+        "required": false,
         "schema": {
-          "type": "string",
-          "format": "date",
-          "example": "2023-02-23"
-        }
-      },
-      "EndDate": {
-        "name": "endDate",
-        "in": "query",
-        "description": "End of a date range to retrieve special events for. Defaults to 7 days after `startDate`.",
-        "schema": {
-          "type": "string",
-          "format": "date",
-          "example": "2023-04-18"
-        }
-      },
-      "TicketId": {
-        "name": "ticketId",
-        "in": "path",
-        "description": "Identifier for a ticket to a museum event. Used to generate ticket image.",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid",
-          "example": "a54a57ca-36f8-421b-a6b4-2e8f26858a4c"
+          "type": "integer",
+          "format": "int64",
+          "default": 0
         }
       }
     },
     "responses": {
       "BadRequest": {
-        "description": "Bad request.",
+        "description": "Bad Request",
         "content": {
-          "application/problem+json": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
             "schema": {
               "$ref": "#/components/schemas/Error"
             }
@@ -1050,44 +621,226 @@
         }
       },
       "NotFound": {
-        "description": "Not found.",
+        "description": "NotFound",
         "content": {
-          "application/problem+json": {
-            "schema": {
-              "$ref": "#/components/schemas/Error"
-            }
-          }
-        }
-      },
-      "Unauthorized": {
-        "description": "Unauthorized.",
-        "content": {
-          "application/problem+json": {
+          "application/json": {
             "schema": {
               "$ref": "#/components/schemas/Error"
             }
           }
         }
       }
-    }
-  },
-  "tags": [
-    {
-      "name": "Operations",
-      "description": "Operational information about the museum."
     },
-    {
-      "name": "Events",
-      "description": "Special events hosted by the museum."
-    },
-    {
-      "name": "Tickets",
-      "description": "Museum tickets for general entrance or special events."
+    "schemas": {
+      "NewUser": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "examples": [
+              "Hans",
+              "Brynn"
+            ]
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "examples": [
+              "hans@scalar.com",
+              "brynn@scalar.com"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8,
+            "examples": [
+              "i-love-scalar",
+              "scalar-is-cool"
+            ]
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "email"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "examples": [
+              1
+            ]
+          },
+          "name": {
+            "type": "string",
+            "examples": [
+              "Marc"
+            ]
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "examples": [
+              "marc@scalar.com"
+            ]
+          }
+        }
+      },
+      "Credentials": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "examples": [
+              "marc@scalar.com"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "examples": [
+              "i-love-scalar"
+            ]
+          }
+        }
+      },
+      "Token": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "examples": [
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            ]
+          }
+        }
+      },
+      "Planet": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "examples": [
+              1
+            ],
+            "x-variable": "planetId"
+          },
+          "name": {
+            "type": "string",
+            "examples": [
+              "Mars"
+            ]
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "examples": [
+              "The red planet"
+            ]
+          },
+          "image": {
+            "type": "string",
+            "nullable": true,
+            "examples": [
+              "https://cdn.scalar.com/photos/mars.jpg"
+            ]
+          },
+          "creator": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "PaginatedResource": {
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "properties": {
+              "limit": {
+                "type": "integer",
+                "format": "int64",
+                "examples": [
+                  10
+                ]
+              },
+              "offset": {
+                "type": "integer",
+                "format": "int64",
+                "examples": [
+                  0
+                ]
+              },
+              "total": {
+                "type": "integer",
+                "format": "int64",
+                "examples": [
+                  100
+                ]
+              },
+              "next": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "examples": [
+                  "/planets?limit=10&offset=10"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+        "properties": {
+          "type": {
+            "type": "string",
+            "examples": [
+              "https://example.com/errors/generic-error"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "examples": [
+              "Something went wrong here."
+            ]
+          },
+          "status": {
+            "type": "integer",
+            "format": "int64",
+            "examples": [
+              403
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "examples": [
+              "Unfortunately, we can’t provide further information."
+            ]
+          }
+        }
+      }
     }
-  ],
-  "security": [
-    {
-      "MuseumPlaceholderAuth": []
-    }
-  ]
+  }
 }
