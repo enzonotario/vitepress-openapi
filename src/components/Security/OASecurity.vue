@@ -1,56 +1,93 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { computed, defineProps, onMounted } from 'vue'
+import OASecurityContent from 'vitepress-theme-openapi/components/Security/OASecurityContent.vue'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'vitepress-theme-openapi/components/ui/select'
+import { useTheme } from 'vitepress-theme-openapi'
 
-const props = defineProps({
+const { securitySchemes, headingPrefix } = defineProps({
   securitySchemes: {
     type: Object,
     required: true,
   },
+  headingPrefix: {
+    type: String,
+    required: false,
+    default: '',
+  },
+})
+
+const themeConfig = useTheme()
+
+const firstSecurityScheme = Object.keys(securitySchemes).find(Boolean)
+
+const selectedSchemeName = computed(() => {
+  return themeConfig.securityConfig.selectedScheme.value
+})
+
+const selectedScheme = computed(() => {
+  return securitySchemes[selectedSchemeName.value]
+})
+
+onMounted(() => {
+  if (!themeConfig.securityConfig.selectedScheme.value) {
+    themeConfig.securityConfig.selectedScheme.value = firstSecurityScheme
+  }
 })
 </script>
 
 <template>
-  <div class="space-y-4">
-    <div
-      v-for="(scheme, name) in props.securitySchemes"
-      :key="name"
-      class="flex flex-col p-3 gap-2 rounded bg-muted"
-    >
-      <div class="flex flex-row items-center space-x-2">
-        <span class="text-sm font-bold">{{ name }}</span>
-      </div>
-      <div class="flex flex-col space-y-1 text-sm">
-        <span v-if="scheme.type === 'http'">Type: HTTP ({{ scheme.scheme }})</span>
-        <span v-if="scheme.type === 'apiKey'">Type: API Key ({{ scheme.in }}: {{ scheme.name }})</span>
-        <span v-if="scheme.type === 'openIdConnect'">Type: OpenID Connect ({{ scheme.openIdConnectUrl }})</span>
-        <span v-if="scheme.type === 'oauth2'">Type: OAuth2</span>
-        <div
-          v-if="scheme.type === 'oauth2'"
-          class="pl-4"
+  <div class="flex flex-col">
+    <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)]">
+      <div class="flex flex-row items-center">
+        <OAHeading
+          level="h2"
+          :prefix="headingPrefix"
+          class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0"
+          header-anchor-class="!top-0"
         >
-          <div
-            v-for="(url, flow) in scheme.flows"
-            :key="flow"
+          {{ $t('Authorizations') }}
+        </OAHeading>
+
+        <span class="flex-grow min-w-2" />
+
+        <div v-if="Object.keys(securitySchemes).length > 1" class="relative flex flex-row">
+          <Select
+            :model-value="themeConfig.securityConfig.selectedScheme.value"
+            @update:model-value="themeConfig.securityConfig.selectedScheme.value = $event"
           >
-            <span>{{ flow }} Flow:</span>
-            <div class="pl-4">
-              <span>Authorization URL: {{ url.authorizationUrl }}</span>
-              <span>Token URL: {{ url.tokenUrl }}</span>
-              <div v-if="url.scopes">
-                <span>Scopes:</span>
-                <ul class="pl-4">
-                  <li
-                    v-for="(description, scope) in url.scopes"
-                    :key="scope"
-                  >
-                    {{ scope }}: {{ description }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+            <SelectTrigger
+              aria-label="Security Scheme"
+              class="px-3 py-1.5 text-foreground"
+            >
+              <SelectValue :placeholder="selectedScheme?.name ?? $t('Select...')" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem
+                  v-for="(scheme, name) in securitySchemes"
+                  :key="name"
+                  :value="name"
+                >
+                  {{ name }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>
+
+    <OASecurityContent
+      v-if="selectedSchemeName && selectedScheme"
+      :name="selectedSchemeName"
+      :scheme="selectedScheme"
+    />
   </div>
 </template>

@@ -61,6 +61,11 @@ const playgroundConfig = {
   },
 }
 
+const securityConfig = {
+  defaultScheme: ref<string | null>(null),
+  selectedScheme: ref<string | null>(null),
+}
+
 export function useTheme() {
   function getLocale(): 'es' | 'en' {
     return themeConfig.locale.value
@@ -170,6 +175,7 @@ export function useTheme() {
 
   return {
     schemaConfig,
+    securityConfig,
     getLocale,
     setLocale,
     getHighlighterTheme,

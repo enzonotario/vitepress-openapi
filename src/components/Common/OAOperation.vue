@@ -138,20 +138,10 @@ function hasSlot(name) {
       v-else
       #security="security"
     >
-      <OAHeading
-        v-if="Object.keys(security.securitySchemes).length"
-        level="h2"
-        :prefix="headingPrefix"
-      >
-        {{ $t('Authorizations') }}
-      </OAHeading>
-
       <OASecurity
         v-if="Object.keys(security.securitySchemes).length"
-        :operation-id="security.operationId"
-        :method="security.method"
-        :path="security.path"
         :security-schemes="security.securitySchemes"
+        :heading-prefix="headingPrefix"
       />
     </template>
 
