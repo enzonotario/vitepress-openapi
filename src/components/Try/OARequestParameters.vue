@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, ref, watch } from 'vue'
+import { computed, defineEmits, defineProps, ref, watch } from 'vue'
 import OAJSONEditor from 'vitepress-theme-openapi/components/Common/OAJSONEditor.vue'
 import { propertiesTypesJsonRecursive } from 'vitepress-theme-openapi/lib/generateSchemaJson'
-import { usePlayground } from 'vitepress-theme-openapi'
+import { usePlayground, useTheme } from 'vitepress-theme-openapi'
 import { useStorage } from '@vueuse/core'
+
+interface SecurityScheme {
+  type: string
+  scheme?: string
+  name?: string
+  in?: string
+}
 
 const props = defineProps({
   request: { // v-model
@@ -47,7 +54,7 @@ const emits = defineEmits([
   'update:request',
 ])
 
-const playground = usePlayground()
+const themeConfig = useTheme()
 
 const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
 
@@ -70,15 +77,15 @@ const variables = ref({
   }, {}),
 })
 
-const auth = ref({
-  ...Object.fromEntries(
-    Object.entries(props.securitySchemes).map(([name, scheme]) => {
-      const defaultValue = playground.getSecuritySchemeDefaultValue(scheme)
-
-      return [name, useStorage(`--oa-authorization-${name}`, defaultValue, localStorage)]
-    }),
-  ),
+const selectedSchemeName = computed(() => {
+  return themeConfig.securityConfig.selectedScheme.value
 })
+
+const selectedScheme = computed(() => {
+  return props.securitySchemes[selectedSchemeName.value]
+})
+
+const authScheme = ref(null)
 
 const body = ref(props.schema ? propertiesTypesJsonRecursive(props.schema, true) : null)
 
@@ -111,7 +118,7 @@ function buildRequest() {
     url.searchParams.set(key, value)
   }
 
-  const headers = new Headers(props.request.headers)
+  const headers = new Headers({})
 
   for (const [key, value] of Object.entries(variables.value)) {
     if (!headerParameters.find(parameter => parameter.name === key)) {
@@ -125,23 +132,19 @@ function buildRequest() {
     headers.set(key, value)
   }
 
-  for (const [key, value] of Object.entries(auth.value)) {
-    if (!props.securitySchemes[key] || !value) {
-      continue
-    }
-
-    switch (props.securitySchemes[key].type) {
+  if (authScheme.value) {
+    switch (authScheme.value.type) {
       case 'http':
-        headers.set('Authorization', `${props.securitySchemes[key].scheme === 'basic' ? 'Basic' : 'Bearer'} ${value}`)
+        headers.set('Authorization', `${authScheme.value.scheme === 'basic' ? 'Basic' : 'Bearer'} ${authScheme.value.value}`)
         break
       case 'apiKey':
-        headers.set(props.securitySchemes[key].name, value)
+        headers.set(authScheme.value.name, authScheme.value.value)
         break
       case 'openIdConnect':
-        headers.set('Authorization', `Bearer ${value}`)
+        headers.set('Authorization', `Bearer ${authScheme.value.value}`)
         break
       case 'oauth2':
-        headers.set('Authorization', `Bearer ${value}`)
+        headers.set('Authorization', `Bearer ${authScheme.value.value}`)
         break
     }
   }
@@ -157,13 +160,32 @@ function buildRequest() {
   return newRequest
 }
 
-watch([variables, auth, body], buildRequest, { deep: true, immediate: true })
+function setAuthScheme(scheme: SecurityScheme) {
+  const name = selectedSchemeName.value
+
+  authScheme.value = {
+    type: scheme.type,
+    scheme: scheme.scheme,
+    name,
+    value: useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage),
+  }
+}
+
+watch([variables, authScheme, body], buildRequest, { deep: true, immediate: true })
+
+watch(selectedScheme, () => {
+  if (!selectedScheme.value) {
+    return
+  }
+
+  setAuthScheme(selectedScheme.value)
+}, { immediate: true })
 </script>
 
 <template>
   <div class="flex flex-col">
     <details
-      v-if="Object.keys(props.securitySchemes).length"
+      v-if="authScheme"
       open
       class="flex flex-col"
     >
@@ -172,21 +194,15 @@ watch([variables, auth, body], buildRequest, { deep: true, immediate: true })
       </summary>
 
       <div class="flex flex-col">
-        <div
-          v-for="(scheme, name) in props.securitySchemes"
-          :key="name"
-          class="flex flex-col gap-2"
-        >
-          <div class="flex flex-row items-center space-x-2">
-            <span class="text-sm font-bold">{{ name }}</span>
-          </div>
-          <div class="flex flex-row items-center space-x-2">
-            <OARequestSecurityInput
-              v-model="auth[name]"
-              :scheme="scheme"
-              class="w-full"
-            />
-          </div>
+        <div class="flex flex-row items-center space-x-2">
+          <span class="text-sm font-bold">{{ authScheme.name }}</span>
+        </div>
+        <div class="flex flex-row items-center space-x-2">
+          <OARequestSecurityInput
+            v-model="authScheme.value"
+            :scheme="authScheme"
+            class="w-full"
+          />
         </div>
       </div>
     </details>

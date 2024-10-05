@@ -23,6 +23,10 @@ const placeholder = computed(() => {
     return props.modelValue
   }
 
+  if (!props.scheme || !props.scheme.type) {
+    return ''
+  }
+
   return usePlayground().getSecuritySchemeDefaultValue(props.scheme)
 })
 </script>
