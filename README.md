@@ -1,6 +1,6 @@
-# vitepress-theme-openapi
+# vitepress-openapi
 
-A VitePress theme for OpenAPI documentation.
+Generate VitePress API Documentation from OpenAPI Specification.
 
 ## Demo
 
