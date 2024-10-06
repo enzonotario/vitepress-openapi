@@ -1,15 +1,15 @@
 import { resolve } from 'node:path'
 import spec from '../public/openapi.json' assert { type: 'json' }
 import { defineConfigWithTheme } from 'vitepress'
-import { useSidebar } from 'vitepress-theme-openapi'
+import { useSidebar } from 'vitepress-openapi'
 
 const sidebar = useSidebar({ spec })
 
 const gaId = 'G-ELG8ZW19X4'
 
 export default defineConfigWithTheme({
-  title: 'VitePress Theme OpenAPI',
-  description: 'A VitePress theme for OpenAPI',
+  title: 'VitePress OpenAPI',
+  description: 'Generate VitePress API Documentation from OpenAPI specs.',
   themeConfig: {
     nav: [],
 
@@ -105,7 +105,7 @@ export default defineConfigWithTheme({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/enzonotario/vitepress-theme-openapi' },
+      { icon: 'github', link: 'https://github.com/enzonotario/vitepress-openapi' },
     ],
 
     outline: {
@@ -113,7 +113,7 @@ export default defineConfigWithTheme({
     },
 
     footer: {
-      message: 'Released under the <a href="https://github.com/enzonotario/vitepress-theme-openapi/blob/main/LICENSE">MIT License</a>.',
+      message: 'Released under the <a href="https://github.com/enzonotario/vitepress-openapi/blob/main/LICENSE">MIT License</a>.',
       copyright: 'Copyright © 2023-present <a href="https://enzonotario.me">Enzo Notario</a>',
     },
   },
@@ -134,7 +134,7 @@ export default defineConfigWithTheme({
   vite: {
     resolve: {
       alias: {
-        'vitepress-theme-openapi': resolve(__dirname, '../../'),
+        'vitepress-openapi': resolve(__dirname, '../../'),
       },
     },
   },

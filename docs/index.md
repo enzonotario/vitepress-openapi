@@ -2,9 +2,8 @@
 layout: home
 
 hero:
-  name: "VitePress Theme"
-  text: "OpenAPI"
-  tagline: "Generate documentation from OpenAPI specifications."
+  name: "VitePress OpenAPI"
+  tagline: "Integrate OpenAPI specifications into your VitePress documentation."
   actions:
     - theme: brand
       text: Get Started
@@ -14,15 +13,15 @@ hero:
       link: /example/operations/getAllData
 
 features:
+  - title: Powered by VitePress
+    details: "Leverage the power of VitePress to create fast and efficient documentation sites."
   - title: Internationalization (i18n) Support
-    details: "This theme provides built-in support for internationalization using VueI18n. Easily configure multiple languages for your documentation."
-  - title: TailwindCSS Integration
-    details: "Style your content effortlessly with the power of TailwindCSS, which is seamlessly integrated into the theme."
-  - title: Custom Components
-    details: "A collection of custom Vue components is included, making it easy to extend and customize your documentation."
+    details: "English and Spanish translations are included out of the box."
+  - title: Custom Slots
+    details: "Customize the layout of your documentation with custom slots."
 
 ---
 
 ## Notice
 
-This theme is still under development. Please report any issues or suggestions in the [GitHub repository](https://github.com/enzonotario/vitepress-theme-openapi/issues).
+This project is still under development. Please report any issues or suggestions in the [GitHub repository](https://github.com/enzonotario/vitepress-openapi/issues).

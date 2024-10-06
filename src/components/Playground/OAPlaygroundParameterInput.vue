@@ -7,8 +7,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from 'vitepress-theme-openapi/components/ui/select'
-import { Input } from 'vitepress-theme-openapi/components/ui/input'
+} from 'vitepress-openapi/components/ui/select'
+import { Input } from 'vitepress-openapi/components/ui/input'
 
 const props = defineProps({
   parameter: {

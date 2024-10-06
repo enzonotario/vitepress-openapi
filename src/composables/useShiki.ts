@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { createHighlighterCoreSync, createJavaScriptRegexEngine } from 'shiki/core'
-import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
+import { useTheme } from 'vitepress-openapi/composables/useTheme'
 import type { Highlighter } from 'shiki/bundle/web'
 
 import js from 'shiki/langs/javascript.mjs'

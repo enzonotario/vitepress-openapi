@@ -8,14 +8,14 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      'vitepress-theme-openapi': resolve(__dirname, 'src'),
+      'vitepress-openapi': resolve(__dirname, 'src'),
     },
   },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'vitepress-theme-openapi',
-      fileName: format => `vitepress-theme-openapi.${format}.js`,
+      name: 'vitepress-openapi',
+      fileName: format => `vitepress-openapi.${format}.js`,
     },
     rollupOptions: {
       external: ['vue'],

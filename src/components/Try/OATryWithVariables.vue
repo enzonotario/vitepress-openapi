@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from 'vue'
-import fetchToCurl from 'vitepress-theme-openapi/lib/fetchToCurl'
-import { formatJson } from 'vitepress-theme-openapi/lib/formatJson'
-import OAPlaygroundResponse from 'vitepress-theme-openapi/components/Playground/OAPlaygroundResponse.vue'
-import OAPlaygroundParameters from 'vitepress-theme-openapi/components/Playground/OAPlaygroundParameters.vue'
+import fetchToCurl from 'vitepress-openapi/lib/fetchToCurl'
+import { formatJson } from 'vitepress-openapi/lib/formatJson'
+import OAPlaygroundResponse from 'vitepress-openapi/components/Playground/OAPlaygroundResponse.vue'
+import OAPlaygroundParameters from 'vitepress-openapi/components/Playground/OAPlaygroundParameters.vue'
 
 const props = defineProps({
   operationId: {

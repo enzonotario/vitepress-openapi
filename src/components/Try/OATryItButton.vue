@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button } from 'vitepress-theme-openapi/components/ui/button'
-import { Badge } from 'vitepress-theme-openapi/components/ui/badge'
+import { Button } from 'vitepress-openapi/components/ui/button'
+import { Badge } from 'vitepress-openapi/components/ui/badge'
 
 interface PlaygroundResponse {
   body: any

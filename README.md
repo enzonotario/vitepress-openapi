@@ -10,7 +10,7 @@ Generate VitePress API Documentation from OpenAPI Specification.
 
 ## Documentation
 
-To get started, check out the [documentation](https://vitepress-theme-openapi.vercel.app/).
+To get started, check out the [documentation](https://vitepress-openapi.vercel.app/).
 
 ## License
 

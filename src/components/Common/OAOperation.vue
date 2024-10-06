@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { Badge } from 'vitepress-theme-openapi/components/ui/badge'
+import { Badge } from 'vitepress-openapi/components/ui/badge'
 
 const props = defineProps({
   operationId: {

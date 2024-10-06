@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from 'vue'
 import { SelectGroup, type SelectGroupProps } from 'radix-vue'
-import { cn } from 'vitepress-theme-openapi/lib/utils'
+import { cn } from 'vitepress-openapi/lib/utils'
 
 const props = defineProps<SelectGroupProps & { class?: HTMLAttributes['class'] }>()
 

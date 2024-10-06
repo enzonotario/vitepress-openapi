@@ -7,8 +7,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from 'vitepress-theme-openapi/components/ui/select'
-import { Label } from 'vitepress-theme-openapi/components/ui/label'
+} from 'vitepress-openapi/components/ui/select'
+import { Label } from 'vitepress-openapi/components/ui/label'
 
 const props = defineProps({
   operationId: {

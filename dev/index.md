@@ -1,3 +1,3 @@
-# vitepress-theme-openapi
+# vitepress-openapi
 
-OpenAPI theme for VitePress.
+VitePress OpenAPI.

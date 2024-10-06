@@ -1,13 +1,13 @@
 ---
 aside: false
 outline: false
-title: vitepress-theme-openapi
+title: vitepress-openapi
 ---
 
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { useRoute, useData } from 'vitepress'
-import { useTheme } from 'vitepress-theme-openapi'
+import { useTheme } from 'vitepress-openapi'
 import spec from '../../docs/public/openapi-criptoya-argentina.json'
 
 const route = useRoute()

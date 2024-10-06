@@ -1,4 +1,4 @@
-import { httpVerbs } from 'vitepress-theme-openapi'
+import { httpVerbs } from 'vitepress-openapi'
 
 export function generateMissingSummary(value: any) {
   if (!value.paths) {

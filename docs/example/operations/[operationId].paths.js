@@ -1,4 +1,4 @@
-import { useOpenapi, httpVerbs } from 'vitepress-theme-openapi'
+import { useOpenapi, httpVerbs } from 'vitepress-openapi'
 import spec from '../../public/openapi.json' assert { type: 'json' }
 
 export default {
@@ -18,7 +18,7 @@ export default {
                         return {
                             params: {
                                 operationId,
-                                pageTitle: `${summary} - vitepress-theme-openapi`,
+                                pageTitle: `${summary} - vitepress-openapi`,
                             },
                         }
                     })

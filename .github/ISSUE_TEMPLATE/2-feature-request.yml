@@ -1,5 +1,5 @@
 name: "✨ Feature Request"
-description: Suggest a feature or enhancement to the theme.
+description: Suggest a feature or enhancement to vitepress-openapi.
 labels: ["Type: Idea"]
 body:
   - type: textarea

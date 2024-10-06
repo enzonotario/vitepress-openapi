@@ -21,7 +21,7 @@ To create operation pages, create a directory named `operations` in the `docs` d
 Example of `[operationId].paths.js`:
 
 ```ts
-import { useOpenapi, httpVerbs } from 'vitepress-theme-openapi'
+import { useOpenapi, httpVerbs } from 'vitepress-openapi'
 import spec from '../public/openapi.json' assert { type: 'json' }
 
 export default {
@@ -41,7 +41,7 @@ export default {
                         return {
                             params: {
                                 operationId,
-                                pageTitle: `${summary} - vitepress-theme-openapi`,
+                                pageTitle: `${summary} - vitepress-openapi`,
                             },
                         }
                     })
@@ -56,7 +56,7 @@ Example of `[operationId].md`:
 ---
 aside: false
 outline: false
-title: vitepress-theme-openapi
+title: vitepress-openapi
 ---
 
 <script setup lang="ts">
@@ -78,12 +78,12 @@ You can also configure multiple options in this `[operationId].md` file, for exa
 ---
 aside: false
 outline: false
-title: vitepress-theme-openapi
+title: vitepress-openapi
 ---
 
 <script setup lang="ts">
 import { useRoute, useData } from 'vitepress'
-import { useOpenapi, useTheme } from 'vitepress-theme-openapi'
+import { useOpenapi, useTheme } from 'vitepress-openapi'
 
 const route = useRoute()
 
