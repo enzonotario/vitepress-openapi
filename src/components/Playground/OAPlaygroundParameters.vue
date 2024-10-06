@@ -4,6 +4,8 @@ import OAJSONEditor from 'vitepress-theme-openapi/components/Common/OAJSONEditor
 import { propertiesTypesJsonRecursive } from 'vitepress-theme-openapi/lib/generateSchemaJson'
 import { usePlayground, useTheme } from 'vitepress-theme-openapi'
 import { useStorage } from '@vueuse/core'
+import OAPlaygroundParameterInput from 'vitepress-theme-openapi/components/Playground/OAPlaygroundParameterInput.vue'
+import OAPlaygroundSecurityInput from 'vitepress-theme-openapi/components/Playground/OAPlaygroundSecurityInput.vue'
 
 interface SecurityScheme {
   type: string
@@ -198,7 +200,7 @@ watch(selectedScheme, () => {
           <span class="text-sm font-bold">{{ authScheme.name }}</span>
         </div>
         <div class="flex flex-row items-center space-x-2">
-          <OARequestSecurityInput
+          <OAPlaygroundSecurityInput
             v-model="authScheme.value"
             :scheme="authScheme"
             class="w-full"
@@ -230,7 +232,7 @@ watch(selectedScheme, () => {
             >*</span>
           </div>
           <div class="flex flex-row items-center space-x-2">
-            <OARequestParameterInput
+            <OAPlaygroundParameterInput
               v-model="variables[parameter.name]"
               :parameter="parameter"
               class="w-full"
@@ -272,7 +274,7 @@ watch(selectedScheme, () => {
             >*</span>
           </div>
           <div class="w-1/2 flex flex-row items-center space-x-2">
-            <OARequestParameterInput
+            <OAPlaygroundParameterInput
               v-model="variables[parameter.name]"
               :parameter="parameter"
               class="w-full"

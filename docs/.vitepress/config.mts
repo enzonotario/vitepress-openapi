@@ -5,6 +5,8 @@ import { useSidebar } from 'vitepress-theme-openapi'
 
 const sidebar = useSidebar({ spec })
 
+const gaId = 'G-ELG8ZW19X4'
+
 export default defineConfigWithTheme({
   title: 'VitePress Theme OpenAPI',
   description: 'A VitePress theme for OpenAPI',
@@ -115,6 +117,20 @@ export default defineConfigWithTheme({
       copyright: 'Copyright © 2023-present <a href="https://enzonotario.me">Enzo Notario</a>',
     },
   },
+  head: [
+    [
+      'script',
+      { async: '', src: `https://www.googletagmanager.com/gtag/js?id=${gaId}` },
+    ],
+    [
+      'script',
+      {},
+      `window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${gaId}');`,
+    ],
+  ],
   vite: {
     resolve: {
       alias: {
