@@ -1,4 +1,4 @@
-import { OpenApi } from 'vitepress-theme-openapi'
+import { OpenApi } from 'vitepress-openapi'
 import spec from '../../docs/public/openapi.json' assert { type: 'json' }
 
 export default {
@@ -9,7 +9,7 @@ export default {
             return {
                 params: {
                     operationId,
-                    pageTitle: `${summary} - vitepress-theme-openapi`,
+                    pageTitle: `${summary} - vitepress-openapi`,
                 },
             }
         })

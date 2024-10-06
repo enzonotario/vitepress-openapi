@@ -1,12 +1,12 @@
 ---
 aside: false
 outline: false
-title: vitepress-theme-openapi
+title: vitepress-openapi
 ---
 
 <script setup lang="ts">
 import { useRoute, useData } from 'vitepress'
-import { useOpenapi } from 'vitepress-theme-openapi'
+import { useOpenapi } from 'vitepress-openapi'
 import spec from '../../docs/public/openapi.json'
 import specV2 from '../../docs/public/openapi-v2.json'
 

@@ -1,4 +1,4 @@
-import { theme, useOpenapi, useTheme } from 'vitepress-theme-openapi'
+import { theme, useOpenapi, useTheme } from 'vitepress-openapi'
 import DefaultTheme from 'vitepress/theme'
 import spec from '../../../docs/public/openapi.json' assert {type: 'json'}
 

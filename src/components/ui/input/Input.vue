@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { cn } from 'vitepress-theme-openapi/lib/utils'
+import { cn } from 'vitepress-openapi/lib/utils'
 
 const props = defineProps<{
   defaultValue?: string | number

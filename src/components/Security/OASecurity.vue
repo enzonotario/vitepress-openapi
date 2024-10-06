@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineProps, onMounted } from 'vue'
-import OASecurityContent from 'vitepress-theme-openapi/components/Security/OASecurityContent.vue'
+import OASecurityContent from 'vitepress-openapi/components/Security/OASecurityContent.vue'
 import {
   Select,
   SelectContent,
@@ -8,8 +8,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from 'vitepress-theme-openapi/components/ui/select'
-import { useTheme } from 'vitepress-theme-openapi'
+} from 'vitepress-openapi/components/ui/select'
+import { useTheme } from 'vitepress-openapi'
 
 const { securitySchemes, headingPrefix } = defineProps({
   securitySchemes: {

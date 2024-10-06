@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { useShiki } from 'vitepress-theme-openapi/composables/useShiki'
-import { useTheme } from 'vitepress-theme-openapi'
+import { useShiki } from 'vitepress-openapi/composables/useShiki'
+import { useTheme } from 'vitepress-openapi'
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
 import { destr } from 'destr'

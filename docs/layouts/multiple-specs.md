@@ -1,7 +1,7 @@
 ---
 aside: false
 outline: false
-title: vitepress-theme-openapi
+title: vitepress-openapi
 ---
 
 # Multiple specs
@@ -16,7 +16,7 @@ In this example, we are using two different specs to render the same operation.
 ---
 aside: false
 outline: false
-title: vitepress-theme-openapi
+title: vitepress-openapi
 ---
 
 <script setup lang="ts">

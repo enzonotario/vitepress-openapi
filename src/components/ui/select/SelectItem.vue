@@ -8,7 +8,7 @@ import {
   useForwardProps,
 } from 'radix-vue'
 import { Check } from 'lucide-vue-next'
-import { cn } from 'vitepress-theme-openapi/lib/utils'
+import { cn } from 'vitepress-openapi/lib/utils'
 
 const props = defineProps<SelectItemProps & { class?: HTMLAttributes['class'] }>()
 

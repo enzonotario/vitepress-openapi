@@ -11,7 +11,7 @@ You can use the `OASpec` component to render all operations in a single page lay
 ---
 aside: false
 outline: false
-title: vitepress-theme-openapi
+title: vitepress-openapi
 ---
 
 <script setup lang="ts">

@@ -1,7 +1,7 @@
 <script setup>
 import slugify from '@sindresorhus/slugify'
 import { computed, useSlots } from 'vue'
-import { useTheme } from 'vitepress-theme-openapi'
+import { useTheme } from 'vitepress-openapi'
 import { cn } from '../../lib/utils'
 
 const props = defineProps({

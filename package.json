@@ -1,29 +1,29 @@
 {
-  "name": "vitepress-theme-openapi",
+  "name": "vitepress-openapi",
   "type": "module",
-  "version": "0.0.3-alpha.34",
+  "version": "0.0.3-alpha.35",
   "packageManager": "pnpm@9.1.1",
-  "homepage": "https://vitepress-theme-openapi.vercel.app/",
+  "homepage": "https://vitepress-openapi.vercel.app/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enzonotario/vitepress-theme-openapi.git"
+    "url": "git+https://github.com/enzonotario/vitepress-openapi.git"
   },
   "author": "Enzo Notario <hi@enzonotario.me>",
   "license": "MIT",
   "keywords": [
     "vitepress",
-    "theme",
+    "vitepress-theme",
     "openapi"
   ],
   "exports": {
     ".": {
-      "import": "./dist/vitepress-theme-openapi.es.js",
-      "require": "./dist/vitepress-theme-openapi.umd.js"
+      "import": "./dist/vitepress-openapi.es.js",
+      "require": "./dist/vitepress-openapi.umd.js"
     },
     "./dist/style.css": "./dist/style.css"
   },
-  "main": "./dist/vitepress-theme-openapi.es.js",
-  "module": "./dist/vitepress-theme-openapi.es.js",
+  "main": "./dist/vitepress-openapi.es.js",
+  "module": "./dist/vitepress-openapi.es.js",
   "types": "./dist/types/index.d.ts",
   "files": [
     "dist",

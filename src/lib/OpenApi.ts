@@ -1,4 +1,4 @@
-import { httpVerbs } from 'vitepress-theme-openapi'
+import { httpVerbs } from 'vitepress-openapi'
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { merge } from 'allof-merge'
 import { generateMissingOperationIds } from './generateMissingOperationIds'

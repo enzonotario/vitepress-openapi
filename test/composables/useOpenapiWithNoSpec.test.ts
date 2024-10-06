@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { OpenApi } from 'vitepress-theme-openapi'
+import { OpenApi } from 'vitepress-openapi'
 import { useSidebar } from './src/composables/useSidebar'
 
 describe('useOpenapi with no spec', () => {

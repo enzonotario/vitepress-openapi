@@ -4,7 +4,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from 'vitepress-theme-openapi/components/ui/collapsible'
+} from 'vitepress-openapi/components/ui/collapsible'
 import OASchemaBody from './OASchemaBody.vue'
 
 const props = defineProps({

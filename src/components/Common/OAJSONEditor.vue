@@ -1,7 +1,7 @@
 <script setup>
 import JsonEditorVue from 'json-editor-vue'
 import { computed } from 'vue'
-import { useTheme } from 'vitepress-theme-openapi'
+import { useTheme } from 'vitepress-openapi'
 
 const props = defineProps({
   modelValue: {

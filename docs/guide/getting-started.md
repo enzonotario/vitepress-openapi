@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide will walk you through the steps to set up and use the `vitepress-theme-openapi` in your VitePress project.
+This guide will walk you through the steps to set up and use the `vitepress-openapi` in your VitePress project.
 
 ## Demo
 
@@ -22,13 +22,13 @@ To install the theme in your VitePress project, run one of the following command
 manager:
 
 ```bash
-npm install vitepress-theme-openapi
+npm install vitepress-openapi
 
-pnpm add vitepress-theme-openapi
+pnpm add vitepress-openapi
 
-yarn add vitepress-theme-openapi
+yarn add vitepress-openapi
 
-bun install vitepress-theme-openapi
+bun install vitepress-openapi
 ```
 
 ## Usage
@@ -45,8 +45,8 @@ In your `.vitepress/theme/index.js`, import the theme and configure it as follow
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 
-import { theme, useOpenapi } from 'vitepress-theme-openapi'
-import 'vitepress-theme-openapi/dist/style.css'
+import { theme, useOpenapi } from 'vitepress-openapi'
+import 'vitepress-openapi/dist/style.css'
 
 import spec from '../../public/openapi.json' assert { type: 'json' }
 

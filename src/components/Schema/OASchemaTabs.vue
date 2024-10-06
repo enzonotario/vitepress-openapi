@@ -1,13 +1,13 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { TabsIndicator } from 'radix-vue'
-import { useTheme } from 'vitepress-theme-openapi/composables/useTheme'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-theme-openapi/components/ui/tabs'
-import { generateSchemaJson } from 'vitepress-theme-openapi/lib/generateSchemaJson'
-import { hasExample } from 'vitepress-theme-openapi/lib/hasExample'
-import { generateSchemaXml } from 'vitepress-theme-openapi/lib/generateSchemaXml'
-import { Checkbox } from 'vitepress-theme-openapi/components/ui/checkbox'
-import { Label } from 'vitepress-theme-openapi/components/ui/label'
+import { useTheme } from 'vitepress-openapi/composables/useTheme'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-openapi/components/ui/tabs'
+import { generateSchemaJson } from 'vitepress-openapi/lib/generateSchemaJson'
+import { hasExample } from 'vitepress-openapi/lib/hasExample'
+import { generateSchemaXml } from 'vitepress-openapi/lib/generateSchemaXml'
+import { Checkbox } from 'vitepress-openapi/components/ui/checkbox'
+import { Label } from 'vitepress-openapi/components/ui/label'
 
 const props = defineProps({
   schema: {

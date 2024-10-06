@@ -1,4 +1,4 @@
-import { OpenApi, httpVerbs, useOpenapi } from 'vitepress-theme-openapi'
+import { OpenApi, httpVerbs, useOpenapi } from 'vitepress-openapi'
 
 interface GenerateSidebarGroupsOptions {
   tags?: string[] | null

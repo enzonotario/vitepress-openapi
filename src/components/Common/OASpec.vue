@@ -1,7 +1,7 @@
 <script setup>
-import { OpenApi, useOpenapi } from 'vitepress-theme-openapi'
-import OAInfo from 'vitepress-theme-openapi/components/Common/OAInfo.vue'
-import OAServers from 'vitepress-theme-openapi/components/Common/OAServers.vue'
+import { OpenApi, useOpenapi } from 'vitepress-openapi'
+import OAInfo from 'vitepress-openapi/components/Common/OAInfo.vue'
+import OAServers from 'vitepress-openapi/components/Common/OAServers.vue'
 
 const props = defineProps({
   spec: {
