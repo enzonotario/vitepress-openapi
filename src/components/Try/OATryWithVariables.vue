@@ -3,6 +3,7 @@ import { computed, defineProps, ref } from 'vue'
 import fetchToCurl from 'vitepress-theme-openapi/lib/fetchToCurl'
 import { formatJson } from 'vitepress-theme-openapi/lib/formatJson'
 import OAPlaygroundResponse from 'vitepress-theme-openapi/components/Playground/OAPlaygroundResponse.vue'
+import OAPlaygroundParameters from 'vitepress-theme-openapi/components/Playground/OAPlaygroundParameters.vue'
 
 const props = defineProps({
   operationId: {
@@ -69,7 +70,7 @@ const curl = computed(() => {
 
 <template>
   <div class="flex flex-col space-y-2">
-    <OARequestParameters
+    <OAPlaygroundParameters
       v-model:request="request"
       :operation-id="props.operationId"
       :path="props.path"
