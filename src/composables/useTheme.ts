@@ -66,6 +66,12 @@ const securityConfig = {
   selectedScheme: ref<string | null>(null),
 }
 
+type OperationBadges = 'deprecated' | 'operationId'
+
+const operationConfig = {
+  badges: ref<OperationBadges[]>(['deprecated']),
+}
+
 export function useTheme() {
   function getLocale(): 'es' | 'en' {
     return themeConfig.locale.value
@@ -173,6 +179,14 @@ export function useTheme() {
     playgroundConfig.jsonEditor.navigationBar.value = value
   }
 
+  function getOperationBadges() {
+    return operationConfig.badges
+  }
+
+  function setOperationBadges(value: OperationBadges[]) {
+    operationConfig.badges.value = value
+  }
+
   return {
     schemaConfig,
     securityConfig,
@@ -200,5 +214,7 @@ export function useTheme() {
     setPlaygroundJsonEditorMainMenuBar,
     getPlaygroundJsonEditorNavigationBar,
     setPlaygroundJsonEditorNavigationBar,
+    getOperationBadges,
+    setOperationBadges,
   }
 }
