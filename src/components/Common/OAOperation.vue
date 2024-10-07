@@ -24,9 +24,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  operationIdAsHeaderId: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const slots = useSlots()
+
+const headerId = computed(() => {
+  return props.operationIdAsHeaderId ? props.operationId : null
+})
 
 const headingPrefix = computed(() => {
   if (!props.prefixHeadings) {
@@ -73,6 +81,7 @@ function hasSlot(name) {
         <OAHeading
           level="h1"
           :prefix="headingPrefix"
+          :headerId="headerId"
           :class="{
             'line-through': header.deprecated,
           }"

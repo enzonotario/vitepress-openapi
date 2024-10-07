@@ -21,6 +21,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  operationIdAsHeaderId: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const openapi = OpenApi({ spec: props.spec || useOpenapi().json })
@@ -68,6 +72,7 @@ const showServers = !props.hideServers && servers.length
           :operation-id="path[method].operationId"
           :spec="props.spec"
           :is-dark="props.isDark"
+          :operation-id-as-header-id="props.operationIdAsHeaderId"
           prefix-headings
           hide-default-footer
         />

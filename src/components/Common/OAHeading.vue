@@ -13,6 +13,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  headerId: {
+    type: String,
+    default: null,
+  },
   class: {
     type: String,
     required: false,
@@ -46,6 +50,9 @@ const slotText = computed(() => {
 })
 
 const id = computed(() => {
+  if (props.headerId) {
+    return props.headerId
+  }
   const value = props.prefix ? `${props.prefix}-${slotText.value}` : slotText.value
 
   return slugify(value, { decamelize: false })
