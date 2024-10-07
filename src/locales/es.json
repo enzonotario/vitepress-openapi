@@ -33,5 +33,6 @@
   "Your browser does not support the audio element.": "Tu navegador no soporta el elemento de audio.",
   "Unrecognized response type. Raw content:": "Tipo de respuesta no reconocido. Contenido en crudo:",
   "Download file": "Descargar archivo",
-  "Select...": "Seleccionar..."
+  "Select...": "Seleccionar...",
+  "operation.badgePrefix.operationId": "ID: "
 }

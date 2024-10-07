@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { Badge } from 'vitepress-openapi/components/ui/badge'
+import OAHeaderBadges from 'vitepress-openapi/components/Common/OAHeaderBadges.vue'
 
 const props = defineProps({
   operationId: {
@@ -61,14 +61,10 @@ function hasSlot(name) {
       #header="header"
     >
       <div class="flex flex-col">
-        <Badge
-          v-if="header.deprecated"
-          type="deprecated"
-          variant="outline"
-          class="self-start"
-        >
-          {{ $t('Deprecated') }}
-        </Badge>
+        <OAHeaderBadges
+          :operation="header.operation"
+          :deprecated="header.deprecated"
+        />
 
         <OAHeading
           level="h1"
