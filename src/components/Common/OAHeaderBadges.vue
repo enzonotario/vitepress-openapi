@@ -31,15 +31,13 @@ const operationBadges = computed(() => themeConfig.getOperationBadges().filter((
       v-for="badge in operationBadges"
       :key="badge"
       variant="outline"
-      class="gap-1"
     >
       <template v-if="badge === 'deprecated'">
         {{ $t('Deprecated') }}
       </template>
 
       <template v-else-if="badge === 'operationId'">
-        <span>{{ $t('operation.badgePrefix.operationId') }}</span>
-        <span>{{ operation.operationId }}</span>
+        {{ $t('operation.badgePrefix.operationId') }}{{ operation.operationId }}
       </template>
     </Badge>
   </div>

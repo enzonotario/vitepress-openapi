@@ -117,12 +117,10 @@ export default {
 
 | Function             | Description                                        | Default Value    | Allowed Values                  |
 |----------------------|----------------------------------------------------|------------------|---------------------------------|
-| `getOperationBadges` | Gets the current operation badges.                 | `['deprecated']` | `['deprecated', 'operationId']` |
 | `setOperationBadges` | Sets the operation badges. The order is respected. | `['deprecated']` | `['deprecated', 'operationId']` |
 
 ## I18n Configuration
 
-| Function        | Description                          | Default Value                                               | Allowed Values  |
-|-----------------|--------------------------------------|-------------------------------------------------------------|-----------------|
-| `getI18nConfig` | Gets the current i18n configuration. | `{ locale: 'en', fallbackLocale: 'en', messages: locales }` | `{ locale: 'es' | 'en', fallbackLocale: 'es' | 'en', messages: Record<'es' | 'en', Record<string, string>> }` |
-| `setI18nConfig` | Sets the i18n configuration.         | `{ locale: 'en', fallbackLocale: 'en', messages: locales }` | `{ locale: 'es' | 'en', fallbackLocale: 'es' | 'en', messages: Record<'es' | 'en', Record<string, string>> }` |
+| Function        | Description                  | Default Value                                               | Allowed Values                                                                                                                   |
+|-----------------|------------------------------|-------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `setI18nConfig` | Sets the i18n configuration. | `{ locale: 'en', fallbackLocale: 'en', messages: locales }` | `{ locale: 'es' \| 'en', fallbackLocale: 'es' \| 'en', messages: Record<'es' \| 'en', Record<string, Record<string, string>>> }` |

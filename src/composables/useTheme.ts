@@ -73,9 +73,9 @@ const operationConfig = {
 }
 
 interface I18nConfig {
-  locale: ref<'es' | 'en'>
-  fallbackLocale: ref<'es' | 'en'>
-  messages: Record<'es' | 'en', Record<string, string>>
+  locale: Ref<'es' | 'en' | string>
+  fallbackLocale: Ref<'es' | 'en' | string>
+  messages: Record<'es' | 'en', Record<string, Record<string, string>>>
 }
 
 const i18nConfig: I18nConfig = {
@@ -85,11 +85,11 @@ const i18nConfig: I18nConfig = {
 }
 
 export function useTheme() {
-  function getLocale(): 'es' | 'en' {
+  function getLocale(): 'es' | 'en' | string {
     return getI18nConfig().locale.value
   }
 
-  function setLocale(value: 'es' | 'en') {
+  function setLocale(value: 'es' | 'en' | string) {
     setI18nConfig({ locale: value })
   }
 
@@ -191,7 +191,7 @@ export function useTheme() {
     playgroundConfig.jsonEditor.navigationBar.value = value
   }
 
-  function getOperationBadges() {
+  function getOperationBadges(): OperationBadges[] {
     return [...operationConfig.badges.value]
   }
 
