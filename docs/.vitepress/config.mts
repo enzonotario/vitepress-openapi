@@ -69,6 +69,19 @@ export default defineConfigWithTheme({
         ],
       },
       {
+        text: 'Customizations',
+        items: [
+          {
+            items: [
+              {
+                text: 'Operation Badges',
+                link: '/customizations/operation-badges',
+              },
+            ],
+          },
+        ],
+      },
+      {
         text: 'Example',
         collapsed: true,
         items: [

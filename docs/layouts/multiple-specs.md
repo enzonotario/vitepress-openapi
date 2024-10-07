@@ -31,7 +31,7 @@ const { isDark } = useData()
 Using [default spec](../public/openapi.json)
 :::
 
-<OAOperation operationId="buyMuseumTickets" :spec="spec" :isDark="isDark" />
+<OAOperation operationId="getAllData" :spec="spec" :isDark="isDark" />
 
 ---
 
@@ -54,7 +54,7 @@ const { isDark } = useData()
 Using [default spec](../public/openapi.json)
 :::
 
-<OAOperation operationId="buyMuseumTickets" :spec="spec" :isDark="isDark" />
+<OAOperation operationId="getAllData" :spec="spec" :isDark="isDark" />
 
 ---
 
