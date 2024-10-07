@@ -16,7 +16,7 @@ const { deprecated } = defineProps({
 
 const themeConfig = useTheme()
 
-const operationBadges = computed(() => [...themeConfig.getOperationBadges().value].filter((badge) => {
+const operationBadges = computed(() => themeConfig.getOperationBadges().filter((badge) => {
   if (badge === 'deprecated' && !deprecated) {
     return false
   }

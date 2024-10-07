@@ -151,4 +151,30 @@ describe('useTheme', () => {
     const result = theme.getPlaygroundJsonEditorNavigationBar()
     expect(result).toBe(true)
   })
+
+  it('returns the operation badges', () => {
+    const result = theme.getOperationBadges()
+    expect(result).toEqual(['deprecated'])
+  })
+
+  it('sets and gets the operation badges', () => {
+    theme.setOperationBadges(['operationId'])
+    const result = theme.getOperationBadges()
+    expect(result).toEqual(['operationId'])
+  })
+
+  it('returns the i18n config', () => {
+    const result = theme.getI18nConfig()
+    expect(result).toEqual({
+      locale: expect.any(Object),
+      fallbackLocale: expect.any(Object),
+      messages: expect.any(Object),
+    })
+  })
+
+  it('sets and gets the i18n config', () => {
+    theme.setI18nConfig({ locale: 'es' })
+    const result = theme.getI18nConfig()
+    expect(result.locale.value).toBe('es')
+  })
 })

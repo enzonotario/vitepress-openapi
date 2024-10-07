@@ -6,9 +6,6 @@ import { useTheme } from './composables/useTheme'
 import { useShiki } from './composables/useShiki'
 import * as components from './components'
 
-import es from './locales/es.json'
-import en from './locales/en.json'
-
 import 'tailwindcss/tailwind.css'
 import './style.css'
 import './json.css'
@@ -19,6 +16,7 @@ export { useTheme } from './composables/useTheme'
 export { useShiki } from './composables/useShiki'
 export { usePlayground } from './composables/usePlayground'
 export { OpenApi } from './lib/OpenApi'
+export { locales } from './locales'
 
 interface VPTheme {
   Layout: Component
@@ -31,12 +29,9 @@ export const theme = {
     const themeConfig = useTheme()
 
     const i18n = VueI18n.createI18n({
-      locale: themeConfig.getLocale(),
-      fallbackLocale: 'en',
-      messages: {
-        en,
-        es,
-      },
+      locale: themeConfig.getI18nConfig().locale,
+      fallbackLocale: themeConfig.getI18nConfig().fallbackLocale,
+      messages: themeConfig.getI18nConfig().messages,
     })
     app.use(i18n)
 

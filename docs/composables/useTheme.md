@@ -5,14 +5,11 @@ The `useTheme` composable provides functions to configure the theme.
 You can use the `useTheme` composable to configure the theme in your `.vitepress/theme/index.js` file, or in any `.md` page/file.
 
 ```ts
-import { useTheme } from 'vitepress-openapi'
+import { useTheme, locales } from 'vitepress-openapi'
 
 export default {
     async enhanceApp({app, router, siteData}) {
         const themeConfig = useTheme()
-        
-        // Set the language.
-        themeConfig.setLocale('en') // en or es
         
         // Set the default schema view.
         themeConfig.setSchemaDefaultView('schema') // schema or contentType
@@ -47,15 +44,34 @@ export default {
         
         // Set the visibility of the navigation bar.
         themeConfig.setPlaygroundJsonEditorNavigationBar(false)
+        
+        // Get the current operation badges.
+        themeConfig.getOperationBadges() // ['deprecated']
+        
+        // Set the operation badges.
+        themeConfig.setOperationBadges(['deprecated'])
+        
+        // Get the current i18n configuration.
+        themeConfig.getI18nConfig() // { locale: 'en', fallbackLocale: 'en', messages: locales }
+        
+        // Set the i18n configuration.
+        themeConfig.setI18nConfig({
+            locale: 'en', // en or es
+            fallbackLocale: 'en', // en or es
+            messages: {
+                en: {
+                    ...locales.en,
+                    'operation.badgePrefix.operationId': 'Operation ID',
+                },
+                es: {
+                    ...locales.es,
+                    'operation.badgePrefix.operationId': 'ID de operación',
+                },
+            },
+        })
     }
 }
 ```
-
-## Global Configuration
-
-| Function    | Description                           | Default Value | Allowed Values |
-|-------------|---------------------------------------|---------------|----------------|
-| `setLocale` | Sets the language (`'es'` or `'en'`). | `'en'`        | `'es'`, `'en'` |
 
 ## Schema Configuration
 
@@ -96,3 +112,17 @@ export default {
 | `setPlaygroundJsonEditorMode`          | Sets the mode of the JSON editor.          | `'tree'`      | `'text'`, `'tree'`, `'table'` |
 | `setPlaygroundJsonEditorMainMenuBar`   | Sets the visibility of the main menu bar.  | `false`       | `true`, `false`               |
 | `setPlaygroundJsonEditorNavigationBar` | Sets the visibility of the navigation bar. | `false`       | `true`, `false`               |
+
+## Operation Configuration
+
+| Function             | Description                                        | Default Value    | Allowed Values                  |
+|----------------------|----------------------------------------------------|------------------|---------------------------------|
+| `getOperationBadges` | Gets the current operation badges.                 | `['deprecated']` | `['deprecated', 'operationId']` |
+| `setOperationBadges` | Sets the operation badges. The order is respected. | `['deprecated']` | `['deprecated', 'operationId']` |
+
+## I18n Configuration
+
+| Function        | Description                          | Default Value                                               | Allowed Values  |
+|-----------------|--------------------------------------|-------------------------------------------------------------|-----------------|
+| `getI18nConfig` | Gets the current i18n configuration. | `{ locale: 'en', fallbackLocale: 'en', messages: locales }` | `{ locale: 'es' | 'en', fallbackLocale: 'es' | 'en', messages: Record<'es' | 'en', Record<string, string>> }` |
+| `setI18nConfig` | Sets the i18n configuration.         | `{ locale: 'en', fallbackLocale: 'en', messages: locales }` | `{ locale: 'es' | 'en', fallbackLocale: 'es' | 'en', messages: Record<'es' | 'en', Record<string, string>> }` |

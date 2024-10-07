@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
+import { locales } from '../locales'
 
 interface HeadingLevels {
   h1: number
@@ -14,7 +15,6 @@ interface HeadingLevels {
 type PlaygroundJsonEditorMode = 'text' | 'tree' | 'table'
 
 const themeConfig = {
-  locale: ref<'es' | 'en'>('en'),
   highlighterTheme: {
     light: vitesseLight,
     dark: vitesseDark,
@@ -72,13 +72,25 @@ const operationConfig = {
   badges: ref<OperationBadges[]>(['deprecated']),
 }
 
+interface I18nConfig {
+  locale: ref<'es' | 'en'>
+  fallbackLocale: ref<'es' | 'en'>
+  messages: Record<'es' | 'en', Record<string, string>>
+}
+
+const i18nConfig: I18nConfig = {
+  locale: ref<'es' | 'en'>('en'),
+  fallbackLocale: ref<'es' | 'en'>('en'),
+  messages: locales,
+}
+
 export function useTheme() {
   function getLocale(): 'es' | 'en' {
-    return themeConfig.locale.value
+    return getI18nConfig().locale.value
   }
 
   function setLocale(value: 'es' | 'en') {
-    themeConfig.locale.value = value
+    setI18nConfig({ locale: value })
   }
 
   function getHighlighterTheme() {
@@ -180,11 +192,29 @@ export function useTheme() {
   }
 
   function getOperationBadges() {
-    return operationConfig.badges
+    return [...operationConfig.badges.value]
   }
 
   function setOperationBadges(value: OperationBadges[]) {
     operationConfig.badges.value = value
+  }
+
+  function getI18nConfig(): I18nConfig {
+    return i18nConfig
+  }
+
+  function setI18nConfig(config: Partial<I18nConfig>) {
+    if (config.locale) {
+      i18nConfig.locale.value = config.locale
+    }
+
+    if (config.fallbackLocale) {
+      i18nConfig.fallbackLocale.value = config.fallbackLocale
+    }
+
+    if (config.messages) {
+      i18nConfig.messages = config.messages
+    }
   }
 
   return {
@@ -216,5 +246,7 @@ export function useTheme() {
     setPlaygroundJsonEditorNavigationBar,
     getOperationBadges,
     setOperationBadges,
+    getI18nConfig,
+    setI18nConfig,
   }
 }
