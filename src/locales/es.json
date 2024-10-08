@@ -34,5 +34,6 @@
   "Unrecognized response type. Raw content:": "Tipo de respuesta no reconocido. Contenido en crudo:",
   "Download file": "Descargar archivo",
   "Select...": "Seleccionar...",
-  "operation.badgePrefix.operationId": "ID: "
+  "operation.badgePrefix.operationId": "ID: ",
+  "Content-Type": "Content-Type"
 }

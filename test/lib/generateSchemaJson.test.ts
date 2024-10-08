@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { merge } from 'allof-merge'
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { generateSchemaJson } from '../../src/lib/generateSchemaJson'
-import { specWithCircularRef, specWithMultipleLevels } from '../testsConstants'
+import { specWithCircularRef, specWithMultipleLevels, specWithSchemaAndContentTypes } from '../testsConstants'
 import { formatJson } from '../../src/lib/formatJson'
 
 describe('generateSchemaJson', () => {
@@ -295,6 +295,21 @@ describe('schema with multiple levels', () => {
             },
           },
         },
+      }),
+    )
+  })
+})
+
+describe('schema with content types', () => {
+  it('generates JSON from schema with content types', () => {
+    const schema = dereferenceSync(merge(specWithSchemaAndContentTypes)).paths['/pets'].get.responses['400']
+    const result = generateSchemaJson(schema)
+    expect(result).toBe(
+      formatJson({
+        type: 'string',
+        title: 'string',
+        status: 0,
+        detail: 'string',
       }),
     )
   })

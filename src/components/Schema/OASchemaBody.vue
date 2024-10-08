@@ -36,6 +36,15 @@ if (!isCircularRef) {
       <OASchemaPrimitiveProperty :property="props.schema" />
     </div>
 
+    <div v-else-if="props.schema?.content && Object.keys(props.schema.content).length === 1">
+      <OASchemaBody
+        :schema="Object.values(props.schema.content)[0].schema"
+        :deep="props.deep - 1"
+        :visited="new Set(visited)"
+        :level="level + 1"
+      />
+    </div>
+
     <div
       v-else-if="props.schema?.properties"
       class="flex flex-col pl-2 space-y-2 border-l border-l-solid"

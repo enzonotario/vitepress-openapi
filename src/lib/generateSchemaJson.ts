@@ -24,6 +24,12 @@ export function propertiesTypesJsonRecursive(schema: any, useExample = false, vi
 
   visited.add(schema)
 
+  if (schema?.content) {
+    const contentTypesKeys = Object.keys(schema.content)
+    const contentType = contentTypesKeys.find(key => key !== 'application/json') || contentTypesKeys.find(Boolean)
+    return propertiesTypesJsonRecursive(schema.content[contentType].schema, useExample, new Set(visited), level)
+  }
+
   if (schema?.items) {
     return [getPropertyValue(schema.items, useExample, new Set(visited), level + 1)]
   }

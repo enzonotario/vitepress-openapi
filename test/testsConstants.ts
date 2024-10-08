@@ -479,3 +479,59 @@ export const specWithMultipleLevels = {
     },
   },
 }
+
+export const specWithSchemaAndContentTypes = {
+  openapi: '3.0.0',
+  info: {
+    title: 'API with Schema and Content Types',
+    version: '1.0.0',
+  },
+  paths: {
+    '/pets': {
+      get: {
+        summary: 'Get a list of pets',
+        operationId: 'getPets',
+        responses: {
+          400: {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  description: 'RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)',
+                  properties: {
+                    type: {
+                      type: 'string',
+                      examples: [
+                        'https://example.com/errors/generic-error',
+                      ],
+                    },
+                    title: {
+                      type: 'string',
+                      examples: [
+                        'Something went wrong here.',
+                      ],
+                    },
+                    status: {
+                      type: 'integer',
+                      format: 'int64',
+                      examples: [
+                        403,
+                      ],
+                    },
+                    detail: {
+                      type: 'string',
+                      examples: [
+                        'Unfortunately, we can’t provide further information.',
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}
