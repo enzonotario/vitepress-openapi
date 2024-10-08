@@ -31,9 +31,9 @@ export function useSidebar({
   const openapi = OpenApi({ spec: options.spec })
 
   function sidebarItemTemplate(method: string, title: string) {
-    return `<span class="OASidebarItem">
+    return `<span class="OASidebarItem group/oaSidebarItem">
         <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
-        <span class="OASidebarItem-text">${title}</span>
+        <p class="OASidebarItem-text text">${title}</p>
       </span>`
   }
 
