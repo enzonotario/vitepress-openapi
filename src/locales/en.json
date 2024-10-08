@@ -34,5 +34,6 @@
   "Unrecognized response type. Raw content:": "Unrecognized response type. Raw content:",
   "Download file": "Download file",
   "Select...": "Select...",
-  "operation.badgePrefix.operationId": "ID: "
+  "operation.badgePrefix.operationId": "ID: ",
+  "Content-Type": "Content-Type"
 }

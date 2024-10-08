@@ -49,7 +49,9 @@ const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
       <Label
         :for="contentTypeId"
         class="flex-shrink-0 text-gray-600 dark:text-gray-400"
-      >Content-Type</Label>
+      >
+        {{ $t('Content-Type') }}
+      </Label>
       <div class="flex-shrink-0">
         <Select
           :id="contentTypeId"
