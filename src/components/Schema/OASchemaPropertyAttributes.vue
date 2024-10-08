@@ -25,7 +25,7 @@ const keysToIgnore = ['type', 'description', 'properties', 'required', 'items', 
       <code
         v-for="(value, attributeIdx) in props.property[key]"
         :key="attributeIdx"
-        class="!text-xs"
+        class="!text-xs text-wrap break-all"
       >
         {{ value }}
       </code>
