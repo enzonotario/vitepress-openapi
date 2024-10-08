@@ -67,8 +67,8 @@ function hasSlot(name) {
         />
 
         <OAHeading
+          :id="headingPrefix"
           level="h1"
-          :prefix="headingPrefix"
           :class="{
             'line-through': header.deprecated,
           }"

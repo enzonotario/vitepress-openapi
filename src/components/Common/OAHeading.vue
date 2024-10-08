@@ -5,6 +5,10 @@ import { useTheme } from 'vitepress-openapi'
 import { cn } from '../../lib/utils'
 
 const props = defineProps({
+  id: {
+    type: String,
+    required: false,
+  },
   level: {
     type: String,
     required: true,
@@ -46,6 +50,10 @@ const slotText = computed(() => {
 })
 
 const id = computed(() => {
+  if (props.id) {
+    return props.id
+  }
+
   const value = props.prefix ? `${props.prefix}-${slotText.value}` : slotText.value
 
   return slugify(value, { decamelize: false })
