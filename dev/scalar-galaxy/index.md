@@ -6,7 +6,7 @@ title: vitepress-openapi
 
 <script setup lang="ts">
 import { useRoute, useData } from 'vitepress'
-import spec from '../../docs/public/openapi-scalar-galaxy.json'
+import spec from '../../docs/public/openapi.json'
 
 const route = useRoute()
 
