@@ -39,7 +39,13 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
 
   function getParsedSpec() {
     if (!parsedSpec) {
-      parsedSpec = dereferenceSync(merge(spec))
+      try {
+        const mergedSpec = merge(spec)
+        parsedSpec = dereferenceSync(mergedSpec)
+      } catch (error) {
+        console.warn('Failed to parse OpenAPI spec:', error)
+        parsedSpec = { ...spec }
+      }
     }
 
     return parsedSpec
