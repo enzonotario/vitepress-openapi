@@ -7,6 +7,10 @@ export function generateSchemaJson(schema: any, useExample = false) {
 
   const properties = propertiesTypesJsonRecursive(schema, useExample, new Set())
 
+  if (properties === null) {
+    return null
+  }
+
   if (typeof properties === 'string' || typeof properties === 'number' || typeof properties === 'boolean') {
     return properties
   }

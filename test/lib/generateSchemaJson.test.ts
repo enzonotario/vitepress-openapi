@@ -92,10 +92,10 @@ describe('generateSchemaJson', () => {
     expect(result).toBe(JSON.stringify({ name: 'string', age: 0, isActive: true }, null, 2))
   })
 
-  it('generates JSON for empty schema', () => {
+  it('returns null for empty schema', () => {
     const schema = {}
     const result = generateSchemaJson(schema)
-    expect(result).toBe(JSON.stringify({}, null, 2))
+    expect(result).toBe(null)
   })
 
   it('generates JSON for null schema', () => {

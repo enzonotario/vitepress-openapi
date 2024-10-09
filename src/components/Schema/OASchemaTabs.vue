@@ -29,7 +29,7 @@ const themeConfig = useTheme()
 const useExample = ref(true)
 
 const schemaJson = computed(() => {
-  return generateSchemaJson(props.schema, useExample.value)
+  return generateSchemaJson(props.schema, useExample.value) ?? props.schema
 })
 
 const schemaHasExample = hasExample(props.schema)
