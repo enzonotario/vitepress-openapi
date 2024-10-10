@@ -1,7 +1,7 @@
 import { resolve } from 'node:path'
+import { useSidebar } from 'vitepress-openapi'
 import spec from '../public/openapi.json' assert { type: 'json' }
 import { defineConfigWithTheme } from 'vitepress'
-import { useSidebar } from 'vitepress-openapi'
 
 const sidebar = useSidebar({ spec })
 
@@ -42,6 +42,10 @@ export default defineConfigWithTheme({
               {
                 text: 'Multiple Specs',
                 link: '/layouts/multiple-specs',
+              },
+              {
+                text: 'Info and Servers',
+                link: '/layouts/info-servers',
               },
             ],
           },
@@ -85,6 +89,10 @@ export default defineConfigWithTheme({
         text: 'Example',
         collapsed: true,
         items: [
+          {
+            text: 'Introduction',
+            link: '/example/introduction',
+          },
           ...sidebar.generateSidebarGroups().map(group => ({
             ...group,
             items: group.items.map(item => ({
