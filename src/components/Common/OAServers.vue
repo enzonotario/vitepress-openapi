@@ -1,11 +1,16 @@
 <script setup>
-const props = defineProps({
-  servers: {
-    type: Array,
+import { OpenApi, useOpenapi } from 'vitepress-openapi'
+
+const { spec } = defineProps({
+  spec: {
+    type: Object,
     required: false,
-    default: null,
   },
 })
+
+const openapi = OpenApi({ spec: spec || useOpenapi().json })
+
+const servers = openapi.getServers()
 </script>
 
 <template>
@@ -15,7 +20,7 @@ const props = defineProps({
     </OAHeading>
 
     <div class="flex flex-col space-y-4">
-      <div v-for="server in props.servers" :key="server.url" class="flex flex-col p-3 gap-2 rounded bg-muted">
+      <div v-for="server in servers" :key="server.url" class="flex flex-col p-3 gap-2 rounded bg-muted">
         <span class="font-semibold select-all">
           {{ server.url }}
         </span>
