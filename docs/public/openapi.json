@@ -15,19 +15,8 @@
       "url": "https://galaxy.scalar.com"
     },
     {
-      "url": "{protocol}://void.scalar.com/{path}",
-      "description": "Responds with your request data",
-      "variables": {
-        "protocol": {
-          "enum": [
-            "https"
-          ],
-          "default": "https"
-        },
-        "path": {
-          "default": ""
-        }
-      }
+      "url": "https://void.scalar.com",
+      "description": "Responds with your request data"
     }
   ],
   "security": [

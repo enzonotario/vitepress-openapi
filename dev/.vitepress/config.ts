@@ -15,6 +15,10 @@ export default defineConfigWithTheme({
     repo: 'https://github.com/enzonotario/vitepress-openapi',
     outline: [1, 3],
     sidebar: [
+      {
+        text: 'Introduction',
+        link: '/',
+      },
       ...sidebar.generateSidebarGroups(),
       {
         text: 'One Page',
@@ -26,12 +30,7 @@ export default defineConfigWithTheme({
       },
       {
         text: 'Multiple Specs',
-        items: [
-          {
-            text: 'Buy Tickets',
-            link: '/multiple-specs/buyMuseumTickets',
-          },
-        ],
+        link: '/multiple-specs',
       },
       {
         text: 'Other',
