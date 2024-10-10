@@ -1,18 +1,19 @@
 <script setup>
 import { Badge } from 'vitepress-openapi/components/ui/badge'
+import { OpenApi, useOpenapi } from 'vitepress-openapi'
 
-const { info, externalDocs } = defineProps({
-  info: {
+const { spec } = defineProps({
+  spec: {
     type: Object,
     required: false,
-    default: null,
-  },
-  externalDocs: {
-    type: Object,
-    required: false,
-    default: null,
   },
 })
+
+const openapi = OpenApi({ spec: spec || useOpenapi().json })
+
+const info = openapi.getInfo()
+
+const externalDocs = openapi.getExternalDocs()
 </script>
 
 <template>

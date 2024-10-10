@@ -1,3 +1,10 @@
-# vitepress-openapi
+---
+aside: false
+outline: false
+title: vitepress-openapi
+---
 
-VitePress OpenAPI.
+<OAInfo />
+
+<OAServers />
+

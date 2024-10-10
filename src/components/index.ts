@@ -20,6 +20,8 @@ import OASchemaPrimitiveProperty from './Schema/OASchemaPrimitiveProperty.vue'
 import OASchemaPropertyAttributes from './Schema/OASchemaPropertyAttributes.vue'
 import OASchemaTabs from './Schema/OASchemaTabs.vue'
 import OASecurity from './Security/OASecurity.vue'
+import OAInfo from './Common/OAInfo.vue'
+import OAServers from './Common/OAServers.vue'
 
 export {
   OASpec,
@@ -44,4 +46,6 @@ export {
   OASchemaPropertyAttributes,
   OASchemaTabs,
   OASecurity,
+  OAInfo,
+  OAServers,
 }
