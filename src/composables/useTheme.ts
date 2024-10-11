@@ -89,7 +89,12 @@ export function useTheme() {
     return getI18nConfig().locale.value
   }
 
+  /**
+   * @deprecated Use `setI18nConfig({ locale: value })` instead.
+   * @param value
+   */
   function setLocale(value: 'es' | 'en' | string) {
+    console.warn('`setLocale` is deprecated. Use `setI18nConfig({ locale: value })` instead.')
     setI18nConfig({ locale: value })
   }
 
