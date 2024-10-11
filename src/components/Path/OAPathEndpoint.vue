@@ -1,5 +1,5 @@
 <script setup>
-import { Badge } from 'vitepress-openapi/components/ui/badge'
+import OAMethodBadge from 'vitepress-openapi/components/Common/OAMethodBadge.vue'
 
 const props = defineProps({
   path: {
@@ -27,13 +27,7 @@ const props = defineProps({
 
 <template>
   <div class="flex flex-row items-center space-x-4 text-sm bg-muted rounded p-2 overflow-x-auto">
-    <Badge
-      variant="plain"
-      :class="[`OAMethodBadge--${props.method.toLowerCase()}`]"
-      class="px-2 py-1 rounded"
-    >
-      {{ props.method.toUpperCase() }}
-    </Badge>
+    <OAMethodBadge :method="props.method" />
     <span class="flex flex-row flex-shrink-0 text-gray-600 dark:text-gray-400">
       <span
         v-if="!props.hideBaseUrl"

@@ -35,5 +35,8 @@
   "Download file": "Download file",
   "Select...": "Select...",
   "operation.badgePrefix.operationId": "ID: ",
-  "Content-Type": "Content-Type"
+  "Content-Type": "Content-Type",
+  "Hide operations": "Hide operations",
+  "Show operations": "Show operations",
+  "Operations": "Operations"
 }

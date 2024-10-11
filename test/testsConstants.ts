@@ -36,6 +36,9 @@ export const spec = {
             bearerAuth: [],
           },
         ],
+        'tags': [
+          'users',
+        ],
       },
     },
     '/users/{id}': {
@@ -56,6 +59,9 @@ export const spec = {
             bearerAuth: [],
           },
         ],
+        tags: [
+          'users',
+        ],
       },
     },
     '/users/{id}/pets': {
@@ -70,6 +76,9 @@ export const spec = {
               type: 'integer',
             },
           },
+        ],
+        tags: [
+          'users',
         ],
       },
     },
@@ -105,6 +114,12 @@ export const spec = {
       },
     },
   },
+  tags: [
+    {
+      name: 'users',
+      description: 'Operations about users',
+    },
+  ],
 }
 
 export const specWithCircularRef = {

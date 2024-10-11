@@ -125,7 +125,7 @@ function setLoading(value) {
 
 <template>
   <div class="flex flex-col">
-    <Button @click="tryIt">
+    <Button variant="primary" @click="tryIt">
       {{ $t('Try it out') }}
     </Button>
 

@@ -29,6 +29,7 @@ export const theme = {
     const themeConfig = useTheme()
 
     const i18n = VueI18n.createI18n({
+      legacy: false,
       locale: themeConfig.getI18nConfig().locale.value,
       fallbackLocale: themeConfig.getI18nConfig().fallbackLocale.value,
       messages: themeConfig.getI18nConfig().messages,

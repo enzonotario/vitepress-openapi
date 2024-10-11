@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { OpenApi } from 'vitepress-openapi'
 import { spec } from '../testsConstants'
-import { useSidebar } from './src/composables/useSidebar'
 
 describe('openapi with spec', () => {
   const openapi = OpenApi({ spec })
@@ -27,8 +26,8 @@ describe('openapi with spec', () => {
   })
 
   it('returns the correct tags for getTags', () => {
-    const result = useSidebar().getTags()
-    expect(result).toEqual([])
+    const result = openapi.getOperationsTags()
+    expect(result).toEqual(['users'])
   })
 
   it('returns the correct security schemes for getSecuritySchemes', () => {
@@ -70,6 +69,127 @@ describe('openapi with spec', () => {
   it('returns the correct servers for getServers', () => {
     const result = openapi.getServers()
     expect(result).toEqual(spec.servers)
+  })
+
+  it('getOperationsTags returns all unique tags', () => {
+    const api = OpenApi({
+      spec: {
+        ...spec,
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'getUsers',
+              tags: ['users'],
+            },
+          },
+          '/profile': {
+            get: {
+              operationId: 'getProfile',
+              tags: ['profile'],
+            },
+          },
+        },
+      },
+    })
+    const tags = api.getOperationsTags()
+    expect(tags).toEqual(['users', 'profile'])
+  })
+
+  it('getOperationsTags returns empty array if no paths', () => {
+    const api = OpenApi({ spec: { openapi: '3.0.0' } })
+    const tags = api.getOperationsTags()
+    expect(tags).toEqual([])
+  })
+
+  it('getPathsByTags returns paths with specified tags', () => {
+    const api = OpenApi({
+      spec: {
+        ...spec,
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'getUsers',
+              tags: ['users'],
+            },
+          },
+          '/profile': {
+            get: {
+              operationId: 'getProfile',
+              tags: ['profile'],
+            },
+          },
+        },
+      },
+    })
+    const paths = api.getPathsByTags('users')
+    expect(paths).toMatchObject({
+      '/users': {
+        get: {
+          operationId: 'getUsers',
+          summary: 'GET /users',
+          tags: ['users'],
+        },
+      },
+    })
+  })
+
+  it('getPathsByTags returns empty object if no matching tags', () => {
+    const api = OpenApi({ spec })
+    const paths = api.getPathsByTags('nonexistent')
+    expect(paths).toMatchObject({})
+  })
+
+  it('getPathsWithoutTags returns paths without tags', () => {
+    const api = OpenApi({
+      spec: {
+        ...spec,
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'getUsers',
+              tags: ['users'],
+            },
+          },
+          '/no-tags': {
+            get: {
+              operationId: 'getNoTags',
+            },
+          },
+        },
+      },
+    })
+
+    const paths = api.getPathsWithoutTags()
+
+    expect(paths).toMatchObject({
+      '/no-tags': {
+        get: {
+          operationId: 'getNoTags',
+          summary: 'GET /no-tags',
+        },
+      },
+    })
+  })
+
+  it('getPathsWithoutTags returns empty array if no paths without tags', () => {
+    const api = OpenApi({ spec: { openapi: '3.0.0', paths: {} } })
+    const paths = api.getPathsWithoutTags()
+    expect(paths).toMatchObject({})
+  })
+
+  it('getTags returns tags object', () => {
+    const api = OpenApi({ spec })
+    const tags = api.getTags()
+    expect(tags).toEqual([{
+      name: 'users',
+      description: 'Operations about users',
+    }])
+  })
+
+  it('getTags returns empty array if no tags in spec', () => {
+    const api = OpenApi({ spec: { openapi: '3.0.0', paths: {} } })
+    const tags = api.getTags()
+    expect(tags).toEqual([])
   })
 })
 

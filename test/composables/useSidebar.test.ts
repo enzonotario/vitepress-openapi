@@ -13,11 +13,6 @@ describe('useSidebar', () => {
       </span>`)
   })
 
-  it('returns the correct tags for getTags', () => {
-    const result = sidebar.getTags()
-    expect(result).toEqual([])
-  })
-
   it('returns the correct sidebar items for generateSidebarGroups', () => {
     const result = sidebar.generateSidebarGroups()
     expect(result).toEqual([
@@ -36,7 +31,7 @@ describe('useSidebar', () => {
             text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}/pets'),
           },
         ],
-        text: '',
+        text: 'users',
       },
     ])
   })
@@ -88,7 +83,7 @@ describe('useSidebar with linkPrefix', () => {
             text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}/pets'),
           },
         ],
-        text: '',
+        text: 'users',
       },
     ])
   })
@@ -111,7 +106,7 @@ describe('useSidebar with linkPrefix', () => {
             text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}/pets'),
           },
         ],
-        text: '',
+        text: 'users',
       },
     ])
 
@@ -132,7 +127,7 @@ describe('useSidebar with linkPrefix', () => {
             text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}/pets'),
           },
         ],
-        text: '',
+        text: 'users',
       },
     ])
   })

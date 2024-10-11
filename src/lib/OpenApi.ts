@@ -210,6 +210,55 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
     return spec?.servers ?? []
   }
 
+  function getOperationsTags() {
+    if (!spec?.paths) {
+      return []
+    }
+
+    return Object.values(spec.paths).reduce((tags, path: any) => {
+      for (const verb of httpVerbs) {
+        if (path[verb]?.tags) {
+          path[verb].tags.forEach((tag: string) => {
+            if (!tags.includes(tag)) {
+              tags.push(tag)
+            }
+          })
+        }
+      }
+      return tags
+    }, [])
+  }
+
+  function filterPaths(predicate: (operation: any) => boolean) {
+    const paths = getPaths() ?? {}
+    const output = {}
+
+    for (const [path, methods] of Object.entries(paths)) {
+      for (const verb of httpVerbs) {
+        const operation = methods[verb]
+        if (operation && predicate(operation)) {
+          output[path] = output[path] || {}
+          output[path][verb] = operation
+        }
+      }
+    }
+
+    return output
+  }
+
+  function getPathsByTags(tags: string | string[]) {
+    const tagList = typeof tags === 'string' ? [tags] : tags
+    return filterPaths(operation => operation?.tags?.some(tag => tagList.includes(tag)))
+  }
+
+  function getPathsWithoutTags() {
+    return filterPaths(operation => !operation?.tags)
+  }
+
+  function getTags() {
+    return spec?.tags ?? []
+  }
+
   return {
     spec,
     parsedSpec,
@@ -226,5 +275,9 @@ export function OpenApi({ spec }: { spec: any } = { spec: null }) {
     getInfo,
     getExternalDocs,
     getServers,
+    getOperationsTags,
+    getPathsByTags,
+    getPathsWithoutTags,
+    getTags,
   }
 }

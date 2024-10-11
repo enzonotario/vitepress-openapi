@@ -118,6 +118,28 @@
     dark:group-hover/oaSidebarItem:bg-pink-700 dark:hover:bg-pink-700;
 }
 
+.text-method-get {
+  @apply text-green-800 dark:text-green-200;
+}
+.text-method-post {
+  @apply text-blue-800 dark:text-blue-200;
+}
+.text-method-put {
+  @apply text-yellow-800 dark:text-yellow-200;
+}
+.text-method-delete {
+  @apply text-red-800 dark:text-red-200;
+}
+.text-method-patch {
+  @apply text-purple-800 dark:text-purple-200;
+}
+.text-method-options {
+  @apply text-indigo-800 dark:text-indigo-200;
+}
+.text-method-head {
+  @apply text-pink-800 dark:text-pink-200;
+}
+
 /**
   Next links
  */
