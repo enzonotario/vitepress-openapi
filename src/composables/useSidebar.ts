@@ -33,7 +33,7 @@ export function useSidebar({
   function sidebarItemTemplate(method: string, title: string) {
     return `<span class="OASidebarItem group/oaSidebarItem">
         <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
-        <p class="OASidebarItem-text text">${title}</p>
+        <span class="OASidebarItem-text text">${title}</span>
       </span>`
   }
 
