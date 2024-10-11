@@ -29,8 +29,8 @@ export const theme = {
     const themeConfig = useTheme()
 
     const i18n = VueI18n.createI18n({
-      locale: themeConfig.getI18nConfig().locale,
-      fallbackLocale: themeConfig.getI18nConfig().fallbackLocale,
+      locale: themeConfig.getI18nConfig().locale.value,
+      fallbackLocale: themeConfig.getI18nConfig().fallbackLocale.value,
       messages: themeConfig.getI18nConfig().messages,
     })
     app.use(i18n)

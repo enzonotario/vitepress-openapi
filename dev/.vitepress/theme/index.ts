@@ -11,7 +11,9 @@ export default {
 
     // Configure the theme.
     const themeConfig = useTheme()
-    themeConfig.setLocale('es')
+    themeConfig.setI18nConfig({
+      locale: 'es',
+    })
 
     // Use the theme.
     theme.enhanceApp({ app })
