@@ -9,7 +9,7 @@ describe('useSidebar', () => {
     const result = useSidebar().sidebarItemTemplate('get', 'GET /users With a Long Title')
     expect(result).toBe(`<span class="OASidebarItem group/oaSidebarItem">
         <span class="OASidebarItem-badge OAMethodBadge--get">GET</span>
-        <p class="OASidebarItem-text text">GET /users With a Long Title</p>
+        <span class="OASidebarItem-text text">GET /users With a Long Title</span>
       </span>`)
   })
 
