@@ -5,6 +5,8 @@ import OAFooter from './Common/OAFooter.vue'
 import OACodeBlock from './Common/OACodeBlock.vue'
 import OAMarkdown from './Common/OAMarkdown.vue'
 import OAPath from './Path/OAPath.vue'
+import OAPaths from './Path/OAPaths.vue'
+import OAPathsByTags from './Path/OAPathsByTags.vue'
 import OAPathEndpoint from './Path/OAPathEndpoint.vue'
 import OAResponses from './Response/OAResponses.vue'
 import OAResponse from './Response/OAResponse.vue'
@@ -31,6 +33,8 @@ export {
   OACodeBlock,
   OAMarkdown,
   OAPath,
+  OAPaths,
+  OAPathsByTags,
   OAPathEndpoint,
   OAResponses,
   OAResponse,

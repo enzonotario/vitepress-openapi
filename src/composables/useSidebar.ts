@@ -93,7 +93,7 @@ export function useSidebar({
     tags,
     linkPrefix,
   }: GenerateSidebarGroupsOptions = {}) {
-    tags = tags || getTags()
+    tags = tags || openapi.getOperationsTags()
     linkPrefix = linkPrefix || options.linkPrefix
 
     if (!openapi.getPaths()) {
@@ -122,30 +122,10 @@ export function useSidebar({
     return groups
   }
 
-  function getTags(): string[] {
-    if (!openapi.getPaths()) {
-      return []
-    }
-
-    return Object.values(openapi.getPaths()).reduce((tags, path: any) => {
-      for (const verb of httpVerbs) {
-        if (path[verb]?.tags) {
-          path[verb].tags.forEach((tag: string) => {
-            if (!tags.includes(tag)) {
-              tags.push(tag)
-            }
-          })
-        }
-      }
-      return tags
-    }, [])
-  }
-
   return {
     sidebarItemTemplate,
     generateSidebarItem,
     generateSidebarGroup,
     generateSidebarGroups,
-    getTags,
   }
 }

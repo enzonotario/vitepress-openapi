@@ -84,6 +84,12 @@ const i18nConfig: I18nConfig = {
   messages: locales,
 }
 
+const specConfig = {
+  groupByTags: ref(true),
+  collapsePaths: ref(false),
+  showPathsSummary: ref(true),
+}
+
 export function useTheme() {
   function getLocale(): 'es' | 'en' | string {
     return getI18nConfig().locale.value
@@ -222,6 +228,24 @@ export function useTheme() {
     }
   }
 
+  function getSpecConfig() {
+    return specConfig
+  }
+
+  function setSpecConfig(config: Partial<typeof specConfig>) {
+    if (config.groupByTags !== undefined) {
+      specConfig.groupByTags.value = config.groupByTags
+    }
+
+    if (config.collapsePaths !== undefined) {
+      specConfig.collapsePaths.value = config.collapsePaths
+    }
+
+    if (config.showPathsSummary !== undefined) {
+      specConfig.showPathsSummary.value = config.showPathsSummary
+    }
+  }
+
   return {
     schemaConfig,
     securityConfig,
@@ -253,5 +277,7 @@ export function useTheme() {
     setOperationBadges,
     getI18nConfig,
     setI18nConfig,
+    getSpecConfig,
+    setSpecConfig,
   }
 }

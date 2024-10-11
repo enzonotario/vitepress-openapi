@@ -69,6 +69,13 @@ export default {
                 },
             },
         })
+        
+        // Set spec configuration.
+        themeConfig.setSpecConfig({
+            groupByTags: true,
+            collapsePaths: false,
+            showPathsSummary: true,
+        })
     }
 }
 ```
@@ -124,3 +131,9 @@ export default {
 | Function        | Description                  | Default Value                                               | Allowed Values                                                                                                                   |
 |-----------------|------------------------------|-------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | `setI18nConfig` | Sets the i18n configuration. | `{ locale: 'en', fallbackLocale: 'en', messages: locales }` | `{ locale: 'es' \| 'en', fallbackLocale: 'es' \| 'en', messages: Record<'es' \| 'en', Record<string, Record<string, string>>> }` |
+
+## Spec Configuration
+
+| Function        | Description                  | Default Value                                                         | Allowed Values                                                                |
+|-----------------|------------------------------|-----------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean }` |

@@ -9,6 +9,7 @@ module.exports = {
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
+    './dev/.vitepress/theme/**/*.{js,vue,ts,json,md}',
   ],
   theme: {
     container: {

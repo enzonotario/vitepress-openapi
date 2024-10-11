@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { unref } from 'vue'
 import { useTheme } from './src/composables/useTheme'
 
 describe('useTheme', () => {
@@ -176,5 +177,22 @@ describe('useTheme', () => {
     theme.setI18nConfig({ locale: 'es' })
     const result = theme.getI18nConfig()
     expect(result.locale.value).toBe('es')
+  })
+
+  it('returns the spec config', () => {
+    const result = theme.getSpecConfig()
+    expect(result).toEqual({
+      groupByTags: expect.any(Object),
+      collapsePaths: expect.any(Object),
+      showPathsSummary: expect.any(Object),
+    })
+  })
+
+  it('sets spec config', () => {
+    theme.setSpecConfig({ groupByTags: false, collapsePaths: true, showPathsSummary: false })
+    const result = theme.getSpecConfig()
+    result.groupByTags.value = false
+    result.collapsePaths.value = true
+    result.showPathsSummary.value = false
   })
 })

@@ -1,5 +1,5 @@
 <script setup>
-import { OpenApi, useOpenapi } from 'vitepress-openapi'
+import { OpenApi, useOpenapi, useTheme } from 'vitepress-openapi'
 import OAInfo from 'vitepress-openapi/components/Common/OAInfo.vue'
 import OAServers from 'vitepress-openapi/components/Common/OAServers.vue'
 
@@ -21,11 +21,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  groupByTags: {
+    type: Boolean,
+    default: null,
+  },
+  hideDefaultFooter: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const openapi = OpenApi({ spec: props.spec || useOpenapi().json })
+const themeConfig = useTheme()
 
-const paths = openapi.getPaths()
+const spec = props.spec || useOpenapi().json
+
+const openapi = OpenApi({ spec })
 
 const servers = openapi.getServers()
 
@@ -34,38 +44,27 @@ const info = openapi.getInfo()
 const showInfo = !props.hideInfo && Object.keys(info).length
 
 const showServers = !props.hideServers && servers.length
+
+const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig().groupByTags
 </script>
 
 <template>
   <div class="flex flex-col space-y-10">
     <div v-if="showInfo || showServers">
-      <OAInfo v-if="showInfo" :spec="props.spec" />
+      <OAInfo v-if="showInfo" :spec="spec" />
 
-      <OAServers v-if="showServers" :spec="props.spec" :servers="servers" />
+      <OAServers v-if="showServers" :spec="spec" :servers="servers" />
     </div>
 
     <hr v-if="showInfo || showServers">
 
-    <div
-      v-for="path in paths"
-      :key="path.id"
-      class="flex flex-col space-y-10"
-    >
-      <template v-for="method in Object.keys(path)">
-        <OAOperation
-          v-if="path[method].operationId"
-          :key="`${method}-${path.id}`"
-          :operation-id="path[method].operationId"
-          :spec="props.spec"
-          :is-dark="props.isDark"
-          prefix-headings
-          hide-default-footer
-        />
-      </template>
+    <template v-if="groupByTags && openapi.getOperationsTags().length">
+      <OAPathsByTags :spec="spec" :paths="openapi.getPaths()" />
+    </template>
+    <template v-else>
+      <OAPaths :spec="spec" :paths="openapi.getPaths()" />
+    </template>
 
-      <hr>
-    </div>
-
-    <OAFooter />
+    <OAFooter v-if="!props.hideDefaultFooter" />
   </div>
 </template>

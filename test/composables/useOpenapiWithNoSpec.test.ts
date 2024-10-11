@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { OpenApi } from 'vitepress-openapi'
-import { useSidebar } from './src/composables/useSidebar'
 
 describe('useOpenapi with no spec', () => {
   const openapi = OpenApi()
@@ -26,7 +25,7 @@ describe('useOpenapi with no spec', () => {
   })
 
   it('returns empty array for getTags when paths are not defined', () => {
-    const result = useSidebar().getTags()
+    const result = openapi.getTags()
     expect(result).toEqual([])
   })
 })
