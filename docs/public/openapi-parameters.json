@@ -1,0 +1,112 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Parameter Testing API",
+    "description": "Example of an OpenAPI document with different types of parameters.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com"
+    }
+  ],
+  "paths": {
+    "/users/{userId}": {
+      "get": {
+        "summary": "Get user information by ID",
+        "description": "Returns information for a specific user.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user",
+            "schema": {
+              "type": "string",
+              "example": "123"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "required": false,
+            "description": "The age of the user to filter",
+            "schema": {
+              "type": "integer",
+              "example": 25
+            }
+          },
+          {
+            "name": "acceptsCookies",
+            "in": "query",
+            "required": true,
+            "description": "Whether the user accepts cookies",
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          },
+          {
+            "name": "isSubscribed",
+            "in": "query",
+            "required": false,
+            "description": "Whether the user is subscribed to the newsletter",
+            "schema": {
+              "type": "boolean",
+              "example": false
+            }
+          },
+          {
+            "name": "X-Custom-Header",
+            "in": "header",
+            "required": false,
+            "description": "A custom header for testing purposes",
+            "schema": {
+              "type": "string",
+              "example": "custom-value"
+            }
+          },
+          {
+            "name": "sessionToken",
+            "in": "cookie",
+            "required": false,
+            "description": "User's session token",
+            "schema": {
+              "type": "string",
+              "example": "abc123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "age": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    }
+  }
+}

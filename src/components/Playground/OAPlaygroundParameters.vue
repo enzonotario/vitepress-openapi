@@ -99,7 +99,7 @@ function buildRequest() {
       continue
     }
 
-    if (!value) {
+    if (value === undefined || value === '') {
       continue
     }
 
@@ -113,7 +113,7 @@ function buildRequest() {
       continue
     }
 
-    if (!value) {
+    if (value === undefined || value === '') {
       continue
     }
 
@@ -127,7 +127,7 @@ function buildRequest() {
       continue
     }
 
-    if (!value) {
+    if (value === undefined || value === '') {
       continue
     }
 

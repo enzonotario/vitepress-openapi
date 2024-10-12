@@ -119,6 +119,10 @@ export default defineConfigWithTheme({
                 text: 'Schemas',
                 link: '/example/schemas',
               },
+              {
+                text: 'Parameters',
+                link: '/example/parameters',
+              },
             ],
           },
         ],
