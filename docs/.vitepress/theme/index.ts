@@ -4,7 +4,7 @@ import spec from '../../public/openapi.json' assert {type: 'json'}
 import 'vitepress-openapi/dist/style.css'
 
 export default {
-  ...DefaultTheme,
+  extends: DefaultTheme,
   enhanceApp({ app }) {
     // Set the OpenAPI specification.
     const openapi = useOpenapi()

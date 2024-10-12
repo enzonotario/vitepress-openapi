@@ -43,7 +43,7 @@ import DefaultTheme from 'vitepress/theme'
 import 'vitepress-openapi/dist/style.css'
 
 export default {
-    ...DefaultTheme,
+    extends: DefaultTheme,
     enhanceApp({ app }) {
         // Optionally, set the i18n configuration.
         const themeConfig = useTheme()
