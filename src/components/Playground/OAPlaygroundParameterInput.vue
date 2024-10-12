@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from 'vitepress-openapi/components/ui/select'
 import { Input } from 'vitepress-openapi/components/ui/input'
+import { Checkbox } from 'vitepress-openapi/components/ui/checkbox'
 
 const props = defineProps({
   parameter: {
@@ -51,6 +52,12 @@ onMounted(() => {
       :placeholder="parameter.example ?? parameter.schema?.example ?? ''"
       class="bg-muted"
       @update:model-value="emits('update:modelValue', $event)"
+    />
+
+    <Checkbox
+      v-if="['boolean'].includes(parameter.schema?.type)"
+      :checked="String(modelValue) === '' ? 'indeterminate' : (modelValue as boolean)"
+      @update:checked="emits('update:modelValue', $event)"
     />
 
     <Select
