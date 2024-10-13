@@ -61,12 +61,16 @@ const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig().groupByTags
     <hr v-if="showInfo || showServers">
 
     <OAPathsByTags
-      v-if="groupByTags && openapi.getOperationsTags().length" :spec="spec"
-      :parsed-spec="parsedSpec" :paths="openapi.getPaths()"
+      v-if="groupByTags && openapi.getOperationsTags().length"
+      :spec="spec"
+      :parsed-spec="parsedSpec"
+      :paths="openapi.getPaths()"
     />
     <OAPaths
-      v-else :spec="spec"
-      :parsed-spec="parsedSpec" :paths="openapi.getPaths()"
+      v-else
+      :spec="spec"
+      :parsed-spec="parsedSpec"
+      :paths="openapi.getPaths()"
     />
 
     <OAFooter v-if="!props.hideDefaultFooter" />
