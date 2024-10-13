@@ -1,22 +1,19 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Scalar Galaxy",
-    "description": "The Scalar Galaxy is an example OpenAPI specification to test OpenAPI tools and libraries. It’s a fictional universe with fictional planets and fictional data. Get all the data for [all planets](#getAllData).\n\n## Resources\n\n* https://github.com/scalar/scalar\n* https://github.com/OAI/OpenAPI-Specification\n* https://scalar.com\n\n## Markdown Support\n\nAll descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub supports the syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax), chances are we’re supporting it, too. You can even create [internal links to reference endpoints](#createUser).\n\n<details>\n  <summary>Examples</summary>\n\n  **Blockquotes**\n\n  > I love OpenAPI. <3\n\n  **Tables**\n\n  | Feature          | Availability |\n  | ---------------- | ------------ |\n  | Markdown Support | ✓            |\n\n  **Accordion**\n\n  ```html\n  <details>\n    <summary>Using Details Tags</summary>\n    <p>HTML Example</p>\n  </details>\n  ```\n\n  **Images**\n\n  Yes, there’s support for images, too!\n\n  ![Empty placeholder image showing the width/height](https://images.placeholders.dev/?width=1280&height=720)\n\n</details>\n",
+    "title": "Argentine Rock Legends",
+    "description": "The Argentine Rock Legends is an example OpenAPI specification to test OpenAPI tools and libraries. Get all the data for [all artists](#getAllArtists).\n\n>Inspired by [Scalar Galaxy](https://galaxy.scalar.com/)\n\n## Resources\n\n* https://github.com/enzonotario/vitepress-openapi\n* https://github.com/OAI/OpenAPI-Specification\n\n## Markdown Support\n\nAll descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub supports the syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax), chances are we’re supporting it, too. You can even create [internal links to reference endpoints](#createArtist).\n\n<details>\n  <summary>Examples</summary>\n\n  **Blockquotes**\n\n  > I love Argentine Rock. <3\n\n  **Tables**\n\n  | Feature          | Availability |\n  | ---------------- | ------------ |\n  | Markdown Support | ✓            |\n\n  **Accordion**\n\n  ```html\n  <details>\n    <summary>Using Details Tags</summary>\n    <p>HTML Example</p>\n  </details>\n  ```\n\n  **Images**\n\n  Yes, there’s support for images, too!\n\n  ![Placeholder image](https://images.placeholders.dev/?width=1280&height=720)\n\n</details>\n",
     "version": "1.0.0",
     "contact": {
-      "name": "Marc from Scalar",
-      "url": "https://scalar.com",
-      "email": "marc@scalar.com"
+      "name": "Enzo Notario",
+      "url": "https://enzonotario.me",
+      "email": "hi@enzonotario.me"
     }
   },
   "servers": [
     {
-      "url": "https://galaxy.scalar.com"
-    },
-    {
-      "url": "https://void.scalar.com",
-      "description": "Responds with your request data"
+      "url": "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792",
+      "description": "Mock Server"
     }
   ],
   "security": [
@@ -24,19 +21,7 @@
       "bearerAuth": []
     },
     {
-      "basicAuth": []
-    },
-    {
-      "apiKeyQuery": []
-    },
-    {
       "apiKeyHeader": []
-    },
-    {
-      "apiKeyCookie": []
-    },
-    {
-      "oauth2": []
     }
   ],
   "tags": [
@@ -45,19 +30,19 @@
       "description": "Some endpoints are public, but some require authentication. We provide all the required endpoints to create an account and authorize yourself."
     },
     {
-      "name": "Planets",
-      "description": "Everything about planets"
+      "name": "Artists",
+      "description": "Everything about Argentine Rock artists"
     }
   ],
   "paths": {
-    "/planets": {
+    "/api/v1/artists": {
       "get": {
         "tags": [
-          "Planets"
+          "Artists"
         ],
-        "summary": "Get all planets",
-        "description": "It’s easy to say you know them all, but do you really? Retrieve all the planets and check whether you missed one.",
-        "operationId": "getAllData",
+        "summary": "Get all artists",
+        "description": "Get a list of all legendary Argentine Rock artists and explore their contributions to the music scene.",
+        "operationId": "getAllArtists",
         "security": [
           {}
         ],
@@ -82,7 +67,7 @@
                         "data": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/Planet"
+                            "$ref": "#/components/schemas/Artist"
                           }
                         }
                       }
@@ -99,17 +84,17 @@
       },
       "post": {
         "tags": [
-          "Planets"
+          "Artists"
         ],
-        "summary": "Create a planet",
-        "description": "Time to play god and create a new planet. What do you think? Ah, don’t think too much. What could go wrong anyway?",
-        "operationId": "createPlanet",
+        "summary": "Add a new artist",
+        "description": "Add a new legendary Argentine Rock artist. Make sure they truly deserve the title!",
+        "operationId": "createArtist",
         "requestBody": {
-          "description": "Planet",
+          "description": "Artist data",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Planet"
+                "$ref": "#/components/schemas/Artist"
               }
             }
           }
@@ -120,7 +105,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Planet"
+                  "$ref": "#/components/schemas/Artist"
                 }
               }
             }
@@ -130,7 +115,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/BadRequest"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -140,7 +125,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/Forbidden"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -148,39 +133,39 @@
         }
       }
     },
-    "/planets/{planetId}": {
+    "/api/v1/artists/{artistId}": {
       "get": {
         "tags": [
-          "Planets"
+          "Artists"
         ],
-        "summary": "Get a planet",
-        "description": "You’ll better learn a little bit more about the planets. It might come in handy once space travel is available for everyone.",
-        "operationId": "getPlanet",
+        "summary": "Get an artist",
+        "description": "Learn more about a specific Argentine Rock artist and their legacy.",
+        "operationId": "getArtist",
         "security": [
           {}
         ],
         "parameters": [
           {
-            "$ref": "#/components/parameters/planetId"
+            "$ref": "#/components/parameters/artistId"
           }
         ],
         "responses": {
           "200": {
-            "description": "Planet Found",
+            "description": "Artist Found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Planet"
+                  "$ref": "#/components/schemas/Artist"
                 }
               }
             }
           },
           "404": {
-            "description": "Planet Not Found",
+            "description": "Artist Not Found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/NotFound"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -189,33 +174,33 @@
       },
       "put": {
         "tags": [
-          "Planets"
+          "Artists"
         ],
-        "summary": "Update a planet",
-        "description": "Sometimes you make mistakes, that’s fine. No worries, you can update all planets.",
-        "operationId": "updatePlanet",
+        "summary": "Update an artist",
+        "description": "Update the information of a legendary Argentine Rock artist. Make sure to provide accurate data.",
+        "operationId": "updateArtist",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/artistId"
+          }
+        ],
         "requestBody": {
-          "description": "New information about the planet",
+          "description": "Artist data",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Planet"
+                "$ref": "#/components/schemas/Artist"
               }
             }
           }
         },
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/planetId"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Planet"
+                  "$ref": "#/components/schemas/Artist"
                 }
               }
             }
@@ -225,7 +210,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/BadRequest"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -235,17 +220,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/Forbidden"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/responses/NotFound"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -254,100 +229,34 @@
       },
       "delete": {
         "tags": [
-          "Planets"
+          "Artists"
         ],
-        "summary": "Delete a planet",
-        "operationId": "deletePlanet",
-        "description": "This endpoint was used to delete planets. Unfortunately, that caused a lot of trouble for planets with life. So, this endpoint is now deprecated and should not be used anymore.",
+        "summary": "Delete an artist",
+        "operationId": "deleteArtist",
+        "description": "This endpoint was used to delete artists. Unfortunately, that caused a lot of controversy. So, this endpoint is now deprecated and should not be used anymore.",
         "deprecated": true,
         "parameters": [
           {
-            "$ref": "#/components/parameters/planetId"
+            "$ref": "#/components/parameters/artistId"
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/planets/{planetId}/image": {
-      "post": {
-        "tags": [
-          "Planets"
-        ],
-        "summary": "Upload an image to a planet",
-        "description": "Got a crazy good photo of a planet? Share it with the world!",
-        "operationId": "uploadImage",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/planetId"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "image": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Image uploaded",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "examples": [
-                        "Image uploaded successfully"
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
           "400": {
-            "description": "Bad Upload Request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/BadRequest"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
           },
           "403": {
-            "description": "Upload Forbidden",
+            "description": "Forbidden",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/Forbidden"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Failed to Upload Image, Planet Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/responses/NotFound"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -355,13 +264,119 @@
         }
       }
     },
-    "/user/signup": {
+    "/api/v1/artists/{artistId}/albums": {
+      "get": {
+        "tags": [
+          "Artists"
+        ],
+        "summary": "Get all albums",
+        "description": "Get a list of all albums from a legendary Argentine Rock artist.",
+        "operationId": "getAllAlbums",
+        "security": [
+          {}
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/artistId"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Album"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$ref": "#/components/schemas/PaginatedResource"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Artists"
+        ],
+        "summary": "Add a new album",
+        "description": "Add a new album to a legendary Argentine Rock artist. Make sure it’s a masterpiece!",
+        "operationId": "createAlbum",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/artistId"
+          }
+        ],
+        "requestBody": {
+          "description": "Album data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Album"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Album"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/signup": {
       "post": {
         "tags": [
           "Authentication"
         ],
         "summary": "Create a user",
-        "description": "Time to create a user account, eh?",
+        "description": "Create a user account to access exclusive content about Argentine Rock legends.",
         "operationId": "createUser",
         "security": [
           {}
@@ -373,18 +388,18 @@
                 "$ref": "#/components/schemas/NewUser"
               },
               "examples": {
-                "Marc": {
+                "Carlos": {
                   "value": {
-                    "name": "Marc",
-                    "email": "marc@scalar.com",
-                    "password": "i-love-scalar"
+                    "name": "Carlos",
+                    "email": "carlos@rock-legends.com",
+                    "password": "i-love-rock"
                   }
                 },
-                "Cam": {
+                "Maria": {
                   "value": {
-                    "name": "Cam",
-                    "email": "cam@scalar.com",
-                    "password": "scalar-is-cool"
+                    "name": "Maria",
+                    "email": "maria@rock-legends.com",
+                    "password": "rock-n-roll"
                   }
                 }
               }
@@ -407,100 +422,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/responses/BadRequest"
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/auth/token": {
-      "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Get a token",
-        "description": "Yeah, this is the boring security stuff. Just get your super secret token and move on.",
-        "operationId": "getToken",
-        "security": [
-          {}
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Credentials"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Token Created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Token"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/me": {
-      "get": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Get authenticated user",
-        "description": "Find yourself they say. That’s what you can do here.",
-        "operationId": "getMe",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/responses/Forbidden"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "newPlanet": {
-      "post": {
-        "tags": [
-          "Planets"
-        ],
-        "requestBody": {
-          "description": "Information about a new planet",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Planet"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
           }
         }
       }
@@ -512,49 +437,15 @@
         "type": "http",
         "scheme": "bearer"
       },
-      "basicAuth": {
-        "type": "http",
-        "scheme": "basic"
-      },
       "apiKeyHeader": {
         "type": "apiKey",
         "in": "header",
         "name": "X-API-Key"
-      },
-      "apiKeyQuery": {
-        "type": "apiKey",
-        "in": "query",
-        "name": "api_key"
-      },
-      "apiKeyCookie": {
-        "type": "apiKey",
-        "in": "cookie",
-        "name": "api_key"
-      },
-      "oauth2": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://galaxy.scalar.com/oauth/authorize",
-            "scopes": {
-              "write:planets": "modify planets in your account",
-              "read:planets": "read your planets"
-            }
-          },
-          "authorizationCode": {
-            "authorizationUrl": "https://galaxy.scalar.com/oauth/authorize",
-            "tokenUrl": "https://galaxy.scalar.com/oauth/token",
-            "scopes": {
-              "write:planets": "modify planets in your account",
-              "read:planets": "read your planets"
-            }
-          }
-        }
       }
     },
     "parameters": {
-      "planetId": {
-        "name": "planetId",
+      "artistId": {
+        "name": "artistId",
         "in": "path",
         "required": true,
         "schema": {
@@ -632,24 +523,24 @@
           "name": {
             "type": "string",
             "examples": [
-              "Hans",
-              "Brynn"
+              "Carlos",
+              "Maria"
             ]
           },
           "email": {
             "type": "string",
             "format": "email",
             "examples": [
-              "hans@scalar.com",
-              "brynn@scalar.com"
+              "carlos@rock-legends.com",
+              "maria@rock-legends.com"
             ]
           },
           "password": {
             "type": "string",
             "minLength": 8,
             "examples": [
-              "i-love-scalar",
-              "scalar-is-cool"
+              "i-love-rock",
+              "rock-n-roll"
             ]
           }
         }
@@ -672,52 +563,19 @@
           "name": {
             "type": "string",
             "examples": [
-              "Marc"
+              "Carlos"
             ]
           },
           "email": {
             "type": "string",
             "format": "email",
             "examples": [
-              "marc@scalar.com"
+              "carlos@rock-legends.com"
             ]
           }
         }
       },
-      "Credentials": {
-        "type": "object",
-        "required": [
-          "email",
-          "password"
-        ],
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "examples": [
-              "marc@scalar.com"
-            ]
-          },
-          "password": {
-            "type": "string",
-            "examples": [
-              "i-love-scalar"
-            ]
-          }
-        }
-      },
-      "Token": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "examples": [
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-            ]
-          }
-        }
-      },
-      "Planet": {
+      "Artist": {
         "type": "object",
         "required": [
           "id",
@@ -730,12 +588,12 @@
             "examples": [
               1
             ],
-            "x-variable": "planetId"
+            "x-variable": "artistId"
           },
           "name": {
             "type": "string",
             "examples": [
-              "Mars"
+              "Charly García"
             ]
           },
           "description": {
@@ -744,18 +602,57 @@
               "null"
             ],
             "examples": [
-              "The red planet"
+              "One of the most influential rock musicians in Argentine history."
             ]
           },
           "image": {
             "type": "string",
             "nullable": true,
             "examples": [
-              "https://cdn.scalar.com/photos/mars.jpg"
+              "https://cdn.rock-legends.com/photos/charly.jpg"
             ]
           },
-          "creator": {
-            "$ref": "#/components/schemas/User"
+          "band": {
+            "type": "string",
+            "examples": [
+              "Sui Generis"
+            ]
+          }
+        }
+      },
+      "Album": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "examples": [
+              1
+            ]
+          },
+          "name": {
+            "type": "string",
+            "examples": [
+              "La Máquina de Hacer Pájaros"
+            ]
+          },
+          "year": {
+            "type": "integer",
+            "format": "int64",
+            "examples": [
+              1976
+            ]
+          },
+          "image": {
+            "type": "string",
+            "nullable": true,
+            "examples": [
+              "https://cdn.rock-legends.com/photos/la-maquina.jpg"
+            ]
           }
         }
       },
@@ -792,7 +689,7 @@
                   "null"
                 ],
                 "examples": [
-                  "/planets?limit=10&offset=10"
+                  "/artists?limit=10&offset=10"
                 ]
               }
             }
