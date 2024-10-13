@@ -9,7 +9,7 @@ export function hasExample(schema: any, visited: Set<any> = new Set(), level: nu
 
   visited.add(schema)
 
-  if (schema?.example) {
+  if (schema?.example || schema?.examples) {
     return true
   }
 
