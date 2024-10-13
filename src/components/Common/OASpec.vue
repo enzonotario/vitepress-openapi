@@ -37,6 +37,8 @@ const spec = props.spec || useOpenapi().json
 
 const openapi = OpenApi({ spec })
 
+const parsedSpec = openapi.getParsedSpec()
+
 const servers = openapi.getServers()
 
 const info = openapi.getInfo()
@@ -58,12 +60,14 @@ const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig().groupByTags
 
     <hr v-if="showInfo || showServers">
 
-    <template v-if="groupByTags && openapi.getOperationsTags().length">
-      <OAPathsByTags :spec="spec" :paths="openapi.getPaths()" />
-    </template>
-    <template v-else>
-      <OAPaths :spec="spec" :paths="openapi.getPaths()" />
-    </template>
+    <OAPathsByTags
+      v-if="groupByTags && openapi.getOperationsTags().length" :spec="spec"
+      :parsed-spec="parsedSpec" :paths="openapi.getPaths()"
+    />
+    <OAPaths
+      v-else :spec="spec"
+      :parsed-spec="parsedSpec" :paths="openapi.getPaths()"
+    />
 
     <OAFooter v-if="!props.hideDefaultFooter" />
   </div>
