@@ -73,7 +73,14 @@ async function tryIt() {
 
     const data = await fetch(props.request.url ?? defaultRequestUrl, {
       method: props.method.toUpperCase(),
-      headers: props.request.headers,
+      headers: {
+        ...props.request.headers,
+        ...(props.request.body
+          ? {
+              'Content-Type': 'application/json',
+            }
+          : {}),
+      },
       body: props.request.body ? JSON.stringify(props.request.body) : null,
     })
 
