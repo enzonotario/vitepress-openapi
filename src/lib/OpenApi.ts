@@ -6,9 +6,16 @@ import { generateMissingSummary } from './generateMissingSummary'
 
 const DEFAULT_SERVER_URL = 'http://localhost'
 
-export function OpenApi({ spec }: { spec: any } = { spec: null }) {
-  let parsedSpec: any = null
-
+export function OpenApi({
+  spec,
+  parsedSpec,
+}: {
+  spec: any
+  parsedSpec?: any
+} = {
+  spec: null,
+  parsedSpec: null,
+}) {
   transformSpec()
 
   function transformSpec() {

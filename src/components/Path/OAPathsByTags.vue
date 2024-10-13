@@ -11,6 +11,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  parsedSpec: {
+    type: Object,
+    required: false,
+  },
   paths: {
     type: Object,
     required: true,
@@ -27,7 +31,7 @@ const themeConfig = useTheme()
 
 const spec = props.spec || useOpenapi().json
 
-const openapi = OpenApi({ spec })
+const openapi = OpenApi({ spec, parsedSpec: props.parsedSpec })
 
 const tags = openapi.getTags()
 
@@ -117,7 +121,11 @@ function onPathClick(tagPaths, hash) {
       <hr>
 
       <div class="flex flex-col space-y-10" :class="[{ hidden: !tagPaths.isOpen }]">
-        <OAPaths :spec="spec" :paths="tagPaths.paths" />
+        <OAPaths
+          :spec="spec"
+          :parsed-spec="parsedSpec"
+          :paths="tagPaths.paths"
+        />
       </div>
     </Collapsible>
   </div>

@@ -6,6 +6,10 @@ const { spec, paths, isDark } = defineProps({
     type: Object,
     required: true,
   },
+  parsedSpec: {
+    type: Object,
+    required: false,
+  },
   paths: {
     type: Object,
     required: true,
@@ -30,6 +34,7 @@ const { spec, paths, isDark } = defineProps({
       <OAOperation
         :operation-id="path[method].operationId"
         :spec="spec"
+        :parsed-spec="parsedSpec"
         :is-dark="isDark"
         prefix-headings
         hide-default-footer

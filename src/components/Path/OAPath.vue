@@ -12,11 +12,15 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  parsedSpec: {
+    type: Object,
+    required: false,
+  },
 })
 
 const theme = useTheme()
 
-const openapi = OpenApi({ spec: props.spec || useOpenapi().json })
+const openapi = OpenApi({ spec: props.spec || useOpenapi().json, parsedSpec: props.parsedSpec })
 
 const operation = openapi.getOperation(props.id)
 
