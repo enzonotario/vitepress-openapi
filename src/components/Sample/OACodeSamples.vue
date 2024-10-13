@@ -52,6 +52,7 @@ const samples = generateCodeSamples(url, props.method)
         :label="sample.label"
         :is-dark="props.isDark"
         :class="{ active: key === 'curl' }"
+        class="!mb-0"
       />
     </div>
   </div>
