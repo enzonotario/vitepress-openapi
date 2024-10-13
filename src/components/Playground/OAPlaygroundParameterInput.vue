@@ -10,6 +10,7 @@ import {
 } from 'vitepress-openapi/components/ui/select'
 import { Input } from 'vitepress-openapi/components/ui/input'
 import { Checkbox } from 'vitepress-openapi/components/ui/checkbox'
+import { getExample } from 'vitepress-openapi/lib/getExample'
 
 const props = defineProps({
   parameter: {
@@ -38,9 +39,11 @@ function inputType(parameter: any) {
 
 onMounted(() => {
   if (props.parameter.schema?.enum) {
-    emits('update:modelValue', props.parameter.example ?? props.parameter.schema.enum[0])
+    emits('update:modelValue', getExample(props.parameter) ?? props.parameter.schema.enum[0])
   }
 })
+
+const parameterExample = getExample(props.parameter)
 </script>
 
 <template>
@@ -49,7 +52,7 @@ onMounted(() => {
       v-if="['string', 'number', 'integer'].includes(parameter.schema?.type) && !parameter.schema?.enum"
       :value="modelValue"
       :type="inputType(parameter)"
-      :placeholder="parameter.example ?? parameter.schema?.example ?? ''"
+      :placeholder="String(parameterExample ?? '')"
       class="bg-muted"
       @update:model-value="emits('update:modelValue', $event)"
     />
@@ -65,7 +68,7 @@ onMounted(() => {
       @update:model-value="emits('update:modelValue', $event)"
     >
       <SelectTrigger>
-        <SelectValue :placeholder="String(parameter.example ?? parameter.schema?.example ?? 'Seleccionar...')" />
+        <SelectValue :placeholder="String(parameterExample ?? 'Seleccionar...')" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

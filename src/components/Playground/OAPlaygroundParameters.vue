@@ -6,6 +6,7 @@ import { usePlayground, useTheme } from 'vitepress-openapi'
 import { useStorage } from '@vueuse/core'
 import OAPlaygroundParameterInput from 'vitepress-openapi/components/Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from 'vitepress-openapi/components/Playground/OAPlaygroundSecurityInput.vue'
+import { getExample } from 'vitepress-openapi/lib/getExample'
 
 interface SecurityScheme {
   type: string
@@ -66,15 +67,15 @@ const queryParameters = props.parameters.filter(parameter => parameter && parame
 
 const variables = ref({
   ...headerParameters.reduce((acc, parameter) => {
-    acc[parameter.name] = parameter.example ?? parameter.schema?.example ?? ''
+    acc[parameter.name] = getExample(parameter) ?? ''
     return acc
   }, {}),
   ...pathParameters.reduce((acc, parameter) => {
-    acc[parameter.name] = parameter.example ?? parameter.schema?.example ?? ''
+    acc[parameter.name] = getExample(parameter) ?? ''
     return acc
   }, {}),
   ...queryParameters.reduce((acc, parameter) => {
-    acc[parameter.name] = parameter.example ?? parameter.schema?.example ?? ''
+    acc[parameter.name] = getExample(parameter) ?? ''
     return acc
   }, {}),
 })

@@ -32,7 +32,11 @@ function propertiesTypesXmlRecursive(schema: any, useExample = false): string {
 }
 
 function getPropertyValueXml(property: any, useExample: boolean): string {
-  const { type, example } = property
+  const { type, example, examples } = property
+
+  if (useExample && examples) {
+    return examples[Math.floor(Math.random() * examples.length)]
+  }
 
   if (useExample && example) {
     return example
