@@ -84,15 +84,7 @@ async function tryIt() {
       body: props.request.body ? JSON.stringify(props.request.body) : null,
     })
 
-    if (!data.ok) {
-      innerResponse.body = await data.json()
-      innerResponse.type = 'application/json'
-      innerResponse.status = data.status
-
-      return
-    }
-
-    const contentType = data.headers.get('Content-Type') || ''
+    const contentType = data.headers.get('Content-Type') || 'text/plain'
     innerResponse.type = contentType
 
     if (/json/i.test(contentType)) {
