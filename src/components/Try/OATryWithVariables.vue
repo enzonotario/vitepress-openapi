@@ -52,17 +52,15 @@ const request = ref({
 const loading = ref(false)
 
 const curl = computed(() => {
+  const headers = request.value.headers
+  if (!headers?.['Content-Type']) {
+    headers['Content-Type'] = 'application/json'
+  }
+
   return fetchToCurl({
     method: props.method.toUpperCase(),
     url: request.value.url,
-    headers: {
-      ...request.value.headers,
-      ...(request.value.body
-        ? {
-            'Content-Type': 'application/json',
-          }
-        : {}),
-    },
+    headers,
     body: request.value.body ? formatJson(request.value.body) : null,
   })
 })
