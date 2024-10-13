@@ -72,6 +72,7 @@ export default {
 ---
 
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue'
 import { useData } from 'vitepress'
 import { useTheme } from 'vitepress-openapi'
 import spec from '../public/openapi.json'
@@ -79,7 +80,14 @@ import spec from '../public/openapi.json'
 const { isDark } = useData()
 
 const themeConfig = useTheme()
-themeConfig.setOperationBadges(['deprecated', 'operationId'])
+
+onMounted(() => {
+    themeConfig.setOperationBadges(['deprecated', 'operationId'])
+})
+
+onUnmounted(() => {
+    themeConfig.setOperationBadges(['deprecated'])
+})
 </script>
 
 <OAOperation :spec="spec" operationId="getAllArtists" :isDark="isDark" />

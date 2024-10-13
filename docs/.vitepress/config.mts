@@ -141,6 +141,15 @@ export default defineConfigWithTheme({
       message: 'Released under the <a href="https://github.com/enzonotario/vitepress-openapi/blob/main/LICENSE">MIT License</a>.',
       copyright: 'Copyright © 2023-present <a href="https://enzonotario.me">Enzo Notario</a>',
     },
+
+    search: {
+      provider: 'algolia',
+      options: {
+        appId: 'T9RNA19F9U',
+        apiKey: '568c214f39b4ab57b9ba5848972dfdd3',
+        indexName: 'docs',
+      },
+    },
   },
   head: [
     [
