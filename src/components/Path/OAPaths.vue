@@ -23,16 +23,19 @@ const { spec, paths, isDark } = defineProps({
     :key="pathName"
     class="flex flex-col space-y-10"
   >
-    <OAOperation
+    <template
       v-for="method in Object.keys(path).filter(m => path[m].operationId)"
       :key="`${method}-${path.id}`"
-      :operation-id="path[method].operationId"
-      :spec="spec"
-      :is-dark="isDark"
-      prefix-headings
-      hide-default-footer
-    />
+    >
+      <OAOperation
+        :operation-id="path[method].operationId"
+        :spec="spec"
+        :is-dark="isDark"
+        prefix-headings
+        hide-default-footer
+      />
 
-    <hr>
+      <hr>
+    </template>
   </div>
 </template>
