@@ -71,16 +71,14 @@ async function tryIt() {
     innerResponse.body = '{}'
     setLoading(true)
 
+    const headers = props.request.headers ?? {}
+    if (props.request.body && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json'
+    }
+
     const data = await fetch(props.request.url ?? defaultRequestUrl, {
       method: props.method.toUpperCase(),
-      headers: {
-        ...props.request.headers,
-        ...(props.request.body
-          ? {
-              'Content-Type': 'application/json',
-            }
-          : {}),
-      },
+      headers,
       body: props.request.body ? JSON.stringify(props.request.body) : null,
     })
 
