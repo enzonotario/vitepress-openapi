@@ -1,4 +1,5 @@
 import { formatJson } from './formatJson'
+import { getExample } from './getExample'
 
 export function generateSchemaJson(schema: any, useExample = false) {
   if (schema === null || schema === undefined) {
@@ -55,10 +56,13 @@ export function propertiesTypesJsonRecursive(schema: any, useExample = false, vi
 }
 
 function getPropertyValue(property: any, useExample: boolean, visited: Set<any>, level: number) {
-  const { type, example } = property
+  const { type } = property
 
-  if (useExample && example) {
-    return example
+  if (useExample) {
+    const example = getExample(property)
+    if (example !== null) {
+      return example
+    }
   }
 
   switch (type) {
