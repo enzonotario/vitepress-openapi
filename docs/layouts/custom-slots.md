@@ -61,7 +61,7 @@ const route = useRoute()
 const { isDark } = useData()
 </script>
 
-<OAOperation operationId="getAllData" :isDark="isDark">
+<OAOperation operationId="getAllArtists" :isDark="isDark">
 
 <template #description="description">
 

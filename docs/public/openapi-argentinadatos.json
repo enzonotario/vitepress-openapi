@@ -3,7 +3,7 @@
   "info": {
     "title": "ArgentinaDatos API",
     "version": "1.0.0",
-    "description": "API desarrollada en <a href=\"https://es.js.org?ref=argentinadatos.com\" target=\"_blank\">EsJS</a> que brinda datos de interés para los argentinos.\n\n¿Encontraste útil esta API? <strong>¡Dejá tu ⭐ en <a href=\"https://github.com/enzonotario/esjs-argentina-datos-api\" alt=\"GitHub\" target=\"_blank\">GitHub</a>!</strong>"
+    "description": "API desarrollada en <a href=\"https://es.js.org?ref=argentinadatos.com\" target=\"_blank\">EsJS</a> que brinda información actualizada sobre diferentes datos de Argentina.\n\n¿Encontraste útil esta API? <strong>¡Dejá tu ⭐ en <a href=\"https://github.com/enzonotario/esjs-argentina-datos-api\" alt=\"GitHub\" target=\"_blank\">GitHub</a>!</strong>"
   },
   "servers": [
     {
@@ -111,6 +111,7 @@
                 "oficial",
                 "blue",
                 "bolsa",
+                "contadoconliqui",
                 "cripto",
                 "mayorista",
                 "solidario",
@@ -163,6 +164,7 @@
                 "oficial",
                 "blue",
                 "bolsa",
+                "contadoconliqui",
                 "cripto",
                 "mayorista",
                 "solidario",
