@@ -66,19 +66,17 @@ const pathParameters = props.parameters.filter(parameter => parameter && paramet
 const queryParameters = props.parameters.filter(parameter => parameter && parameter.in === 'query')
 
 const variables = ref({
-  ...headerParameters.reduce((acc, parameter) => {
-    acc[parameter.name] = getExample(parameter) ?? ''
-    return acc
-  }, {}),
-  ...pathParameters.reduce((acc, parameter) => {
-    acc[parameter.name] = getExample(parameter) ?? ''
-    return acc
-  }, {}),
-  ...queryParameters.reduce((acc, parameter) => {
-    acc[parameter.name] = getExample(parameter) ?? ''
-    return acc
-  }, {}),
+  ...initializeVariables(headerParameters),
+  ...initializeVariables(pathParameters),
+  ...initializeVariables(queryParameters),
 })
+
+function initializeVariables(parameters) {
+  return parameters.reduce((acc, parameter) => {
+    acc[parameter.name] = getExample(parameter) ?? ''
+    return acc
+  }, {})
+}
 
 const selectedSchemeName = computed(() => {
   return themeConfig.securityConfig.selectedScheme.value
