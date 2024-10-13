@@ -36,10 +36,6 @@ export default defineConfigWithTheme({
         text: 'Other',
         items: [
           {
-            text: 'Scalar Galaxy',
-            link: '/scalar-galaxy',
-          },
-          {
             text: 'Plant Store',
             link: '/plant-store',
           },
