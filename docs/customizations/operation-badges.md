@@ -32,7 +32,7 @@ const themeConfig = useTheme()
 themeConfig.setOperationBadges(['deprecated', 'operationId'])
 </script>
 
-<OAOperation :spec="spec" operationId="getAllData" :isDark="isDark" />
+<OAOperation :spec="spec" operationId="getAllArtists" :isDark="isDark" />
 ```
 
 You can also customize the prefix of the badges by setting the `operation.badgePrefix.{badgeName}` key in the i18n messages. For example, in your `.vitepress/theme/index.ts`, before calling `theme.enhanceApp({ app })`, you can set the following:
@@ -82,4 +82,4 @@ const themeConfig = useTheme()
 themeConfig.setOperationBadges(['deprecated', 'operationId'])
 </script>
 
-<OAOperation :spec="spec" operationId="getAllData" :isDark="isDark" />
+<OAOperation :spec="spec" operationId="getAllArtists" :isDark="isDark" />

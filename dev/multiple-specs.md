@@ -13,7 +13,7 @@ import specV2 from '../docs/public/openapi-v2.json'
 const { isDark } = useData()
 </script>
 
-<OAOperation operationId="getAllData" :spec="spec" :isDark="isDark" />
+<OAOperation operationId="getAllArtists" :spec="spec" :isDark="isDark" />
 
 ---
 
