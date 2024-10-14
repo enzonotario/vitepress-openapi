@@ -6,8 +6,8 @@ export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
     // Set the OpenAPI specification.
-    const openapi = useOpenapi()
-    openapi.setSpec(spec)
+    const openapi = useOpenapi({ spec })
+    app.provide('openapi', openapi)
 
     // Configure the theme.
     const themeConfig = useTheme()
@@ -16,6 +16,6 @@ export default {
     })
 
     // Use the theme.
-    theme.enhanceApp({ app })
+    theme.enhanceApp({ app, openapi })
   },
 }

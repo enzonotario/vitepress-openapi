@@ -55,6 +55,7 @@ export default {
     async enhanceApp({app, router, siteData}) {
         // Set the OpenAPI specification.
         const openapi = useOpenapi({ spec })
+        app.provide('openapi', openapi)
 
         // Use the theme.
         theme.enhanceApp({ app })
