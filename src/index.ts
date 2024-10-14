@@ -16,6 +16,7 @@ export { useTheme } from './composables/useTheme'
 export { useShiki } from './composables/useShiki'
 export { usePlayground } from './composables/usePlayground'
 export { OpenApi } from './lib/OpenApi'
+export { getOpenApiInstance } from './lib/getOpenApiInstance'
 export { locales } from './locales'
 
 interface VPTheme {

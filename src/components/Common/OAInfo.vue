@@ -1,6 +1,7 @@
 <script setup>
 import { Badge } from 'vitepress-openapi/components/ui/badge'
-import { OpenApi, useOpenapi } from 'vitepress-openapi'
+import { inject } from 'vue'
+import { getOpenApiInstance } from 'vitepress-openapi'
 
 const { spec } = defineProps({
   spec: {
@@ -9,7 +10,10 @@ const { spec } = defineProps({
   },
 })
 
-const openapi = OpenApi({ spec: spec || useOpenapi().json })
+const openapi = getOpenApiInstance({
+  custom: { spec },
+  injected: inject('openapi', undefined),
+})
 
 const info = openapi.getInfo()
 
