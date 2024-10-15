@@ -16,6 +16,6 @@ export default {
     })
 
     // Use the theme.
-    theme.enhanceApp({ app, openapi })
+    theme.enhanceApp({ app })
   },
 }
