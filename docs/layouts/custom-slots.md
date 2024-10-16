@@ -3,7 +3,6 @@ aside: false
 outline: false
 ---
 
-
 # Custom Slots
 
 The `OAOperation` component provides several slots for customizing the operation layout.

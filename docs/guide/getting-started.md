@@ -52,7 +52,7 @@ import spec from '../../public/openapi.json' assert { type: 'json' }
 
 export default {
     extends: DefaultTheme,
-    async enhanceApp({app, router, siteData}) {
+    async enhanceApp({ app, router, siteData }) {
         // Set the OpenAPI specification.
         const openapi = useOpenapi({ spec })
         app.provide('openapi', openapi)
