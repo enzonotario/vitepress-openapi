@@ -50,6 +50,8 @@ const showServers = !props.hideServers && servers.length
 const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig().groupByTags
 
 const operationsTags = openapi.getOperationsTags()
+
+const paths = openapi.getPaths()
 </script>
 
 <template>
@@ -67,13 +69,13 @@ const operationsTags = openapi.getOperationsTags()
       :spec="spec"
       :parsed-spec="parsedSpec"
       :tags="operationsTags"
-      :paths="openapi.getPaths()"
+      :paths="paths"
     />
     <OAPaths
       v-else
       :spec="spec"
       :parsed-spec="parsedSpec"
-      :paths="openapi.getPaths()"
+      :paths="paths"
     />
 
     <OAFooter v-if="!props.hideDefaultFooter" />
