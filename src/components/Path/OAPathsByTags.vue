@@ -15,6 +15,10 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  tags: {
+    type: Array,
+    required: false,
+  },
   paths: {
     type: Object,
     required: true,
@@ -33,9 +37,9 @@ const spec = props.spec || useOpenapi().json
 
 const openapi = OpenApi({ spec, parsedSpec: props.parsedSpec })
 
-const tags = openapi.getTags()
+const tagsInfo = openapi.getTags()
 
-const operationsTags = openapi.getOperationsTags()
+const operationsTags = props.tags ?? openapi.getOperationsTags()
 
 const pathsByTags = operationsTags.map((tag) => {
   return {
@@ -97,8 +101,8 @@ function onPathClick(tagPaths, hash) {
         class="grid grid-cols-1 gap-10"
       >
         <div>
-          <p v-if="tags.find(tag => tag.name === tagPaths.tag)?.description">
-            {{ tags.find(tag => tag.name === tagPaths.tag).description }}
+          <p v-if="tagsInfo.find(tag => tag.name === tagPaths.tag)?.description">
+            {{ tagsInfo.find(tag => tag.name === tagPaths.tag).description }}
           </p>
         </div>
 

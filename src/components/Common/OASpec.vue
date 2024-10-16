@@ -48,6 +48,8 @@ const showInfo = !props.hideInfo && Object.keys(info).length
 const showServers = !props.hideServers && servers.length
 
 const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig().groupByTags
+
+const operationsTags = openapi.getOperationsTags()
 </script>
 
 <template>
@@ -61,9 +63,10 @@ const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig().groupByTags
     <hr v-if="showInfo || showServers">
 
     <OAPathsByTags
-      v-if="groupByTags && openapi.getOperationsTags().length"
+      v-if="groupByTags && operationsTags.length"
       :spec="spec"
       :parsed-spec="parsedSpec"
+      :tags="operationsTags"
       :paths="openapi.getPaths()"
     />
     <OAPaths
