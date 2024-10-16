@@ -18,7 +18,7 @@ export default defineConfig({
       fileName: format => `vitepress-openapi.${format}.js`,
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', 'vitepress'],
       output: {
         globals: {
           vue: 'Vue',
