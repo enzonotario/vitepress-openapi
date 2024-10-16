@@ -145,9 +145,9 @@ export default defineConfigWithTheme({
     search: {
       provider: 'algolia',
       options: {
-        appId: 'T9RNA19F9U',
-        apiKey: '568c214f39b4ab57b9ba5848972dfdd3',
-        indexName: 'docs',
+        appId: 'U57RORD73L',
+        apiKey: '0f569871e30000cc3a091f2ebeb76dc5',
+        indexName: 'vitepress-openapi',
       },
     },
   },
