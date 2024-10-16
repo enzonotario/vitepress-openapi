@@ -18,7 +18,7 @@ All slots *can* contain ~~tons of text~~ **Markdown**. [If GitHub supports the s
 
 You can also include custom Vue components or HTML elements:
 
-<button @click="confetti()" class="p-2 bg-muted rounded">:tada: Celebrate :tada:</button>
+<button @click="confetti()" class="p-2 bg-muted rounded" aria-label="Trigger celebration confetti">:tada: Celebrate :tada:</button>
 
 </template>
 
