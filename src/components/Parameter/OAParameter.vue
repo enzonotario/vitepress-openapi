@@ -1,10 +1,15 @@
 <script setup>
+import { getExample } from 'vitepress-openapi/lib/getExample'
+import OACodeValue from 'vitepress-openapi/components/Common/OACodeValue.vue'
+
 const props = defineProps({
   parameter: {
     type: Object,
     required: true,
   },
 })
+
+const example = getExample(props.parameter)
 </script>
 
 <template>
@@ -46,6 +51,7 @@ const props = defineProps({
           class="text-sm text-red-500"
         >{{ $t('Required') }}</span>
       </div>
+
       <div
         v-if="props.parameter.schema.enum"
         class="flex flex-row space-x-2"
@@ -54,6 +60,14 @@ const props = defineProps({
         <span class="text-sm text-gray-600 dark:text-gray-300">
           {{ props.parameter.schema.enum.join(', ') }}
         </span>
+      </div>
+
+      <div
+        v-if="example"
+        class="flex flex-row space-x-2"
+      >
+        <span class="text-sm font-bold">{{ $t('Example') }}</span>
+        <OACodeValue :value="example" />
       </div>
     </div>
   </div>
