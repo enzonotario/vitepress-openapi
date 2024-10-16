@@ -180,14 +180,10 @@ export function OpenApi({
   }
 
   function getPaths() {
-    return spec?.paths
+    return spec?.paths ?? {}
   }
 
   function getPathsByVerbs() {
-    if (!getPaths()) {
-      return []
-    }
-
     return Object.keys(getPaths())
       .flatMap((path) => {
         return httpVerbs
