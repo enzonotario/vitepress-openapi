@@ -118,15 +118,6 @@ const operationResponses = operationParsed?.responses
         </div>
 
         <div class="flex flex-col">
-          <slot
-            name="end-top"
-            :operation-id="props.id"
-            :operation="operation"
-            :method="operationMethod"
-            :base-url="baseUrl"
-            :path="operationPath"
-          />
-
           <div class="OAPathContentEnd sticky top-[100px] inset-x-0 flex flex-col space-y-4">
             <slot
               name="path"
