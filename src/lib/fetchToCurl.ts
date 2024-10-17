@@ -3,6 +3,7 @@
  * @author [leoek](https://github.com/leoek)
  * @author [enzonotario](https://github.com/enzonotario)
  */
+import { formatJson } from './formatJson'
 
 function removeLastBackslash(str: string): string {
   return str.replace(/ \\$/, '')
@@ -99,7 +100,7 @@ export function generateBody(body: any): string {
   }
 
   if (typeof body === 'object') {
-    return ` --data '${escapeBody(JSON.stringify(body))}'`
+    return ` --data '${escapeBody(formatJson(body))}'`
   }
 
   return ` --data '${escapeBody(body)}'`

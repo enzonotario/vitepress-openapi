@@ -14,8 +14,14 @@ describe('fetchToCurl', () => {
     const method = 'POST'
     const body = { key: 'value', nested: { key: 'value' } }
     const result = fetchToCurl({ url, method, body })
-    expect(result).toBe(`curl -X POST \\\n'${url}' \\
- --data '{"key":"value","nested":{"key":"value"}}'`)
+    expect(result).toBe(`curl -X POST \\
+'https://api.example.com/path/testOperation' \\
+ --data '{
+  "key": "value",
+  "nested": {
+    "key": "value"
+  }
+}'`)
   })
 
   it('handles body and multiple headers correctly', () => {
@@ -27,7 +33,12 @@ describe('fetchToCurl', () => {
     expect(result).toBe(`curl -X POST \\\n'${url}' \\
  -H "Content-Type: application/json" \\
  -H "Authorization: Bearer token" \\
- --data '{"key":"value","nested":{"key":"value"}}'`)
+ --data '{
+  "key": "value",
+  "nested": {
+    "key": "value"
+  }
+}'`)
   })
 
   it('handles headers correctly', () => {
