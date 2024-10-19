@@ -63,14 +63,24 @@ const internalTags = ref([
   }),
 ])
 
-function scrollIntoViewWithOffset(selector, offset) {
-  window.scrollTo({
-    behavior: 'smooth',
-    top:
-        document.querySelector(selector).getBoundingClientRect().top
-        - document.body.getBoundingClientRect().top
-        - offset,
-  })
+function scrollIntoViewWithOffset(hash, offset) {
+  if (!import.meta.env.SSR) {
+    const element = document.querySelector(hash)
+
+    if (!element) {
+      return
+    }
+
+    window.scrollTo({
+      behavior: 'smooth',
+      top:
+          element.getBoundingClientRect().top
+          - document.body.getBoundingClientRect().top
+          - offset,
+    })
+
+    window.location.hash = hash
+  }
 }
 
 function onPathClick(tagPaths, hash) {
