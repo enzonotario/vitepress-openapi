@@ -1,6 +1,22 @@
-import { OpenApi } from '../lib/OpenApi'
+import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types'
+import { createOpenApiInstance } from '../lib/createOpenApiInstance'
 
-let openapi = null
+export type OpenAPI = OpenAPIV3.Document | OpenAPIV3_1.Document
+
+export interface OpenAPIData {
+  id: string
+  spec: OpenAPI
+  openapi: any
+  config: any
+}
+
+export type Schemas = Map<string, OpenAPIData>
+
+export const DEFAULT_SCHEMA = 'main'
+
+const schemas: Schemas = new Map()
+
+let mainSchema = null
 
 export function useOpenapi({ spec } = { spec: null }) {
   if (spec !== null) {
@@ -12,13 +28,25 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function setupOpenApi({ spec }) {
-    openapi = OpenApi({ spec })
+    addSchema({ id: DEFAULT_SCHEMA, spec })
+    mainSchema = schemas.get(DEFAULT_SCHEMA)
+  }
+
+  function addSchema({ id, spec }) {
+    const openapi = createOpenApiInstance({ spec })
+    schemas.set(id, {
+      id,
+      spec,
+      openapi,
+      config: {},
+    })
   }
 
   return {
-    ...(openapi || {}),
-    spec: openapi?.parsedSpec,
-    json: openapi?.spec,
+    ...(mainSchema?.openapi || {}),
+    spec: mainSchema?.parsedSpec,
+    json: mainSchema?.spec,
     setSpec,
+    schemas,
   }
 }
