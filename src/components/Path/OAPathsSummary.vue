@@ -2,10 +2,6 @@
 import { defineProps } from 'vue'
 
 const { paths } = defineProps({
-  spec: {
-    type: Object,
-    required: true,
-  },
   paths: {
     type: Object,
     required: true,

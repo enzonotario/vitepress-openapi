@@ -1,14 +1,10 @@
 <script setup>
 import { defineProps } from 'vue'
 
-const { spec, paths, isDark } = defineProps({
-  spec: {
+const { openapi, paths, isDark } = defineProps({
+  openapi: {
     type: Object,
     required: true,
-  },
-  parsedSpec: {
-    type: Object,
-    required: false,
   },
   paths: {
     type: Object,
@@ -33,8 +29,7 @@ const { spec, paths, isDark } = defineProps({
     >
       <OAOperation
         :operation-id="path[method].operationId"
-        :spec="spec"
-        :parsed-spec="parsedSpec"
+        :openapi="openapi"
         :is-dark="isDark"
         prefix-headings
         hide-default-footer

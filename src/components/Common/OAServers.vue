@@ -2,15 +2,19 @@
 import { inject } from 'vue'
 import { getOpenApiInstance } from 'vitepress-openapi'
 
-const { spec } = defineProps({
+const props = defineProps({
   spec: {
+    type: Object,
+    required: false,
+  },
+  openapi: {
     type: Object,
     required: false,
   },
 })
 
-const openapi = getOpenApiInstance({
-  custom: { spec },
+const openapi = props.openapi || getOpenApiInstance({
+  custom: { spec: props.spec },
   injected: inject('openapi', undefined),
 })
 
