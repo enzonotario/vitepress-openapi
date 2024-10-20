@@ -42,8 +42,8 @@
     "test:run": "vitest --run"
   },
   "peerDependencies": {
-    "vue": "^3.0.0",
-    "vitepress": ">=1.0.0"
+    "vitepress": ">=1.0.0",
+    "vue": "^3.0.0"
   },
   "dependencies": {
     "@vueuse/core": "^10.11.0",
@@ -66,6 +66,7 @@
     "eslint": "^9.9.1",
     "eslint-plugin-cypress": "^3.5.0",
     "eslint-plugin-format": "^0.1.2",
+    "flatted": "^3.3.1",
     "globals": "^15.9.0",
     "json-editor-vue": "^0.16.0",
     "markdown-it": "^14.1.0",
@@ -77,13 +78,13 @@
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4",
     "vite": "^5.4.2",
+    "vitepress": "^1.4.1",
     "vitest": "^2.0.5",
     "vue": "^3.4.38",
     "vue-i18n": "^9.13.1",
     "vue-json-pretty": "^2.4.0",
     "vue-tsc": "^2.1.4",
-    "xml-formatter": "^3.6.3",
-    "vitepress": "^1.4.1"
+    "xml-formatter": "^3.6.3"
   },
   "resolutions": {
     "@typescript-eslint/utils": "^8.2.0"

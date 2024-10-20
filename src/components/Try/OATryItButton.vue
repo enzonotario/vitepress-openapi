@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { Button } from 'vitepress-openapi/components/ui/button'
 import { Badge } from 'vitepress-openapi/components/ui/badge'
+import { formatJson } from 'vitepress-openapi/lib/formatJson'
 
 interface PlaygroundResponse {
   body: any
@@ -79,7 +80,7 @@ async function tryIt() {
     const data = await fetch(props.request.url ?? defaultRequestUrl, {
       method: props.method.toUpperCase(),
       headers,
-      body: props.request.body ? JSON.stringify(props.request.body) : null,
+      body: props.request.body ? formatJson(props.request.body) : null,
     })
 
     const contentType = data.headers.get('Content-Type') || 'text/plain'
