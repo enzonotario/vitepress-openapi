@@ -21,30 +21,20 @@ To create operation pages, create a directory named `operations` in the `docs` d
 Example of `[operationId].paths.js`:
 
 ```ts
-import { useOpenapi, httpVerbs } from 'vitepress-openapi'
+import { usePaths } from 'vitepress-openapi'
 import spec from '../public/openapi.json' assert { type: 'json' }
 
 export default {
     paths() {
-        const openapi = useOpenapi({ spec })
-
-        if (!openapi?.json?.paths) {
-            return []
-        }
-
-        return Object.keys(openapi.json.paths)
-            .flatMap((path) => {
-                return httpVerbs
-                    .filter((verb) => openapi.json.paths[path][verb])
-                    .map((verb) => {
-                        const { operationId, summary } = openapi.json.paths[path][verb]
-                        return {
-                            params: {
-                                operationId,
-                                pageTitle: `${summary} - vitepress-openapi`,
-                            },
-                        }
-                    })
+        return usePaths({ spec })
+            .getPathsByVerbs()
+            .map(({ operationId, summary }) => {
+                return {
+                    params: {
+                        operationId,
+                        pageTitle: `${summary} - vitepress-openapi`,
+                    },
+                }
             })
     },
 }
