@@ -1,6 +1,6 @@
-import { OpenApi } from '../lib/OpenApi'
+import { DEFAULT_SCHEMA, vitepressOpenAPI } from '../vitepress-openapi'
 
-let openapi = null
+let mainSchema = null
 
 export function useOpenapi({ spec } = { spec: null }) {
   if (spec !== null) {
@@ -12,13 +12,14 @@ export function useOpenapi({ spec } = { spec: null }) {
   }
 
   function setupOpenApi({ spec }) {
-    openapi = OpenApi({ spec })
+    const schemas = vitepressOpenAPI({ spec })
+    mainSchema = schemas.get(DEFAULT_SCHEMA)
   }
 
   return {
-    ...(openapi || {}),
-    spec: openapi?.parsedSpec,
-    json: openapi?.spec,
+    ...(mainSchema?.openapi || {}),
+    spec: mainSchema?.parsedSpec,
+    json: mainSchema?.spec,
     setSpec,
   }
 }

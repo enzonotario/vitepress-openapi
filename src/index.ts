@@ -10,6 +10,7 @@ import 'tailwindcss/tailwind.css'
 import './style.css'
 import './json.css'
 
+export { vitepressOpenAPI } from './vitepress-openapi'
 export { useSidebar } from './composables/useSidebar'
 export { useOpenapi } from './composables/useOpenapi'
 export { useTheme } from './composables/useTheme'
@@ -26,7 +27,11 @@ interface VPTheme {
 }
 
 export const theme = {
-  enhanceApp({ app }) {
+  enhanceApp({ app, openapi }) {
+    if (openapi) {
+      app.provide('openapi', openapi)
+    }
+
     const themeConfig = useTheme()
 
     const i18n = VueI18n.createI18n({

@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, inject } from 'vue'
+import { defineProps } from 'vue'
 import { useTheme } from 'vitepress-openapi/composables/useTheme'
 import { getOpenApiInstance } from 'vitepress-openapi'
 
@@ -8,11 +8,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  spec: {
-    type: Object,
-    required: false,
-  },
-  parsedSpec: {
+  openapi: {
     type: Object,
     required: false,
   },
@@ -20,13 +16,7 @@ const props = defineProps({
 
 const theme = useTheme()
 
-const openapi = getOpenApiInstance({
-  custom: {
-    spec: props.spec,
-    parsedSpec: props.parsedSpec,
-  },
-  injected: inject('openapi', undefined),
-})
+const openapi = props.openapi || getOpenApiInstance()
 
 const operation = openapi.getOperation(props.id)
 
