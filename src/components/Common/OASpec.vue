@@ -1,7 +1,8 @@
 <script setup>
-import { OpenApi, useOpenapi, useTheme } from 'vitepress-openapi'
+import { getOpenApiInstance, useTheme } from 'vitepress-openapi'
 import OAInfo from 'vitepress-openapi/components/Common/OAInfo.vue'
 import OAServers from 'vitepress-openapi/components/Common/OAServers.vue'
+import { inject } from 'vue'
 
 const props = defineProps({
   spec: {
@@ -33,11 +34,10 @@ const props = defineProps({
 
 const themeConfig = useTheme()
 
-const spec = props.spec || useOpenapi().json
-
-const openapi = OpenApi({ spec })
-
-const parsedSpec = openapi.getParsedSpec()
+const openapi = getOpenApiInstance({
+  custom: { spec: props.spec },
+  injected: inject('openapi', undefined),
+})
 
 const servers = openapi.getServers()
 
@@ -57,24 +57,22 @@ const paths = openapi.getPaths()
 <template>
   <div class="flex flex-col space-y-10">
     <div v-if="showInfo || showServers">
-      <OAInfo v-if="showInfo" :spec="spec" />
+      <OAInfo v-if="showInfo" :openapi="openapi" />
 
-      <OAServers v-if="showServers" :spec="spec" :servers="servers" />
+      <OAServers v-if="showServers" :openapi="openapi" />
     </div>
 
     <hr v-if="showInfo || showServers">
 
     <OAPathsByTags
       v-if="groupByTags && operationsTags.length"
-      :spec="spec"
-      :parsed-spec="parsedSpec"
+      :openapi="openapi"
       :tags="operationsTags"
       :paths="paths"
     />
     <OAPaths
       v-else
-      :spec="spec"
-      :parsed-spec="parsedSpec"
+      :openapi="openapi"
       :paths="paths"
     />
 

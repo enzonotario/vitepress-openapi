@@ -1,36 +1,24 @@
 import { httpVerbs } from 'vitepress-openapi'
-import { dereferenceSync } from '@trojs/openapi-dereference'
-import { merge } from 'allof-merge'
-import { generateMissingOperationIds } from './generateMissingOperationIds'
-import { generateMissingSummary } from './generateMissingSummary'
+import { parseSpec } from './parseSpec'
+import { transformSpec } from './transformSpec'
 
 const DEFAULT_SERVER_URL = 'http://localhost'
 
 export function OpenApi({
   spec,
   parsedSpec,
+  transformedSpec,
 }: {
   spec: any
+  transformedSpec?: any
   parsedSpec?: any
 } = {
   spec: null,
+  transformedSpec: null,
   parsedSpec: null,
 }) {
-  transformSpec()
-
-  function transformSpec() {
-    if (!spec) {
-      return
-    }
-
-    if (!spec.openapi || !spec.openapi.startsWith('3.')) {
-      throw new Error('Only OpenAPI 3.x is supported')
-    }
-
-    if (spec?.paths) {
-      spec = generateMissingOperationIds(spec)
-      spec = generateMissingSummary(spec)
-    }
+  if (!transformedSpec) {
+    transformedSpec = transformSpec(spec)
   }
 
   function findOperation(paths: any, operationId: string) {
@@ -46,13 +34,7 @@ export function OpenApi({
 
   function getParsedSpec() {
     if (!parsedSpec) {
-      try {
-        const mergedSpec = merge(spec)
-        parsedSpec = dereferenceSync(mergedSpec)
-      } catch (error) {
-        console.warn('Failed to parse OpenAPI spec:', error)
-        parsedSpec = { ...spec }
-      }
+      parsedSpec = parseSpec(transformedSpec)
     }
 
     return parsedSpec
@@ -184,18 +166,21 @@ export function OpenApi({
   }
 
   function getPathsByVerbs() {
-    return Object.keys(getPaths())
+    const paths = getPaths() ?? {}
+
+    return Object.keys(paths)
       .flatMap((path) => {
         return httpVerbs
-          .filter(verb => getPaths()[path][verb])
+          .filter(verb => paths[path][verb])
           .map((verb) => {
-            const { operationId, summary } = getPaths()[path][verb]
+            const { operationId, summary, tags } = paths[path][verb]
 
             return {
               path,
               verb,
               operationId,
               summary,
+              tags,
             }
           })
       })

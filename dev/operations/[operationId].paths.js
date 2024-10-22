@@ -1,9 +1,9 @@
-import { OpenApi } from 'vitepress-openapi'
+import { useOpenapi } from 'vitepress-openapi'
 import spec from '../../docs/public/openapi.json' assert { type: 'json' }
 
 export default {
     paths() {
-        const openapi = OpenApi({ spec })
+        const openapi = useOpenapi({ spec })
 
         return openapi.getPathsByVerbs().map(({ operationId, summary }) => {
             return {

@@ -26,7 +26,11 @@ interface VPTheme {
 }
 
 export const theme = {
-  enhanceApp({ app }) {
+  enhanceApp({ app, openapi }) {
+    if (openapi) {
+      app.provide('openapi', openapi)
+    }
+
     const themeConfig = useTheme()
 
     const i18n = VueI18n.createI18n({
