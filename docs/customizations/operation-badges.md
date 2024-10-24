@@ -10,7 +10,7 @@ Each operation can have different badges that indicate its state, for example if
 - `deprecated`
 - `operationId`
 
-By default, only the `deprecated` badge is shown, as appropriate. You can customize the operation badges using the `useTheme().setOperationBadges()` method. **The order in which you set the badges is the order in which they will be displayed.**
+By default, only the `deprecated` badge is shown, as appropriate. You can customize the operation badges using the `useTheme({ operation: { badges: string[] })` function. **The order in which you set the badges is the order in which they will be displayed.**
 
 For example:
 
@@ -28,8 +28,11 @@ import spec from '../public/openapi.json'
 
 const { isDark } = useData()
 
-const themeConfig = useTheme()
-themeConfig.setOperationBadges(['deprecated', 'operationId'])
+useTheme({
+    operation: {
+        badges: ['deprecated', 'operationId'],
+    },
+})
 </script>
 
 <OAOperation :spec="spec" operationId="getAllArtists" :isDark="isDark" />
@@ -45,17 +48,17 @@ import 'vitepress-openapi/dist/style.css'
 export default {
     extends: DefaultTheme,
     enhanceApp({ app }) {
-        // Optionally, set the i18n configuration.
-        const themeConfig = useTheme()
-        themeConfig.setI18nConfig({
-            messages: {
-                en: {
-                    ...locales.en,
-                    'operation.badgePrefix.operationId': 'Operation ID: ',
-                },
-                es: {
-                    ...locales.es,
-                    'operation.badgePrefix.operationId': 'ID de operación: ',
+        useTheme({
+            i18n: {
+                messages: {
+                    en: {
+                        ...locales.en,
+                        'operation.badgePrefix.operationId': 'Operation ID: ',
+                    },
+                    es: {
+                        ...locales.es,
+                        'operation.badgePrefix.operationId': 'ID de operación: ',
+                    },
                 },
             },
         })
@@ -79,14 +82,20 @@ import spec from '../public/openapi.json'
 
 const { isDark } = useData()
 
-const themeConfig = useTheme()
-
 onMounted(() => {
-    themeConfig.setOperationBadges(['deprecated', 'operationId'])
+    useTheme({
+        operation: {
+            badges: ['deprecated', 'operationId'],
+        },
+    })
 })
 
 onUnmounted(() => {
-    themeConfig.setOperationBadges(['deprecated'])
+    useTheme({
+        operation: {
+            badges: ['deprecated'],
+        },
+    })
 })
 </script>
 

@@ -81,16 +81,16 @@ const { isDark } = useData()
 
 const openapi = useOpenapi()
 
-const themeConfig = useTheme()
-
 const operationId = route.data.params.operationId
 
 const operation = openapi.getOperation(operationId)
 
 // Set the response code selector to select if there are more than 3 responses
-themeConfig.setResponseCodeSelector(
-    Object.keys(operation.responses).length > 3 ? 'select' : 'tabs'
-)
+useTheme({
+    response: {
+        codeSelector: Object.keys(operation.responses).length > 3 ? 'select' : 'tabs',
+    },
+})
 </script>
 
 <OAOperation :operationId="operationId" :isDark="isDark" />

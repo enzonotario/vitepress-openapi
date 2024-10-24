@@ -79,7 +79,7 @@ function initializeVariables(parameters) {
 }
 
 const selectedSchemeName = computed(() => {
-  return themeConfig.securityConfig.selectedScheme.value
+  return themeConfig.getSecuritySelectedScheme()
 })
 
 const selectedScheme = computed(() => {

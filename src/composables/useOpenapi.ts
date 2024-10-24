@@ -1,5 +1,7 @@
 import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types'
 import { createOpenApiInstance } from '../lib/createOpenApiInstance'
+import type { UseThemeConfig } from './useTheme'
+import { useTheme } from './useTheme'
 
 export type OpenAPI = OpenAPIV3.Document | OpenAPIV3_1.Document
 
@@ -16,11 +18,20 @@ export const DEFAULT_SCHEMA = 'main'
 
 const schemas: Schemas = new Map()
 
-let mainSchema = null
+let mainSchema: OpenAPIData | null = null
 
-export function useOpenapi({ spec } = { spec: null }) {
+export function useOpenapi({
+  spec,
+  config,
+}: {
+  spec: OpenAPI | null
+  config: UseThemeConfig | null
+} = {
+  spec: null,
+  config: null,
+}) {
   if (spec !== null) {
-    setupOpenApi({ spec })
+    setupOpenApi({ spec, config })
   }
 
   /**
@@ -31,17 +42,20 @@ export function useOpenapi({ spec } = { spec: null }) {
     setupOpenApi({ spec: value })
   }
 
-  function setupOpenApi({ spec }) {
-    addSchema({ id: DEFAULT_SCHEMA, spec })
+  function setupOpenApi({ spec, config }) {
+    addSchema({ id: DEFAULT_SCHEMA, spec, config })
     mainSchema = schemas.get(DEFAULT_SCHEMA)
   }
 
-  function addSchema({ id, spec }) {
+  function addSchema({ id, spec, config }) {
     const openapi = createOpenApiInstance({ spec })
+    if (config) {
+      useTheme(config)
+    }
     schemas.set(id, {
       ...openapi,
       id,
-      config: {},
+      config,
     })
   }
 
