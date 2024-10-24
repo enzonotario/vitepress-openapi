@@ -14,9 +14,9 @@ const props = defineProps({
   },
 })
 
-const theme = useTheme()
+const themeConfig = useTheme()
 
-const openapi = props.openapi || getOpenApiInstance()
+const openapi = props.openapi ?? getOpenApiInstance()
 
 const operation = openapi.getOperation(props.id)
 
@@ -62,7 +62,7 @@ const operationResponses = operationParsed?.responses
               :method="operationMethod"
               :base-url="baseUrl"
               :path="operationPath"
-              :hide-base-url="!theme.getShowBaseURL()"
+              :hide-base-url="!themeConfig.getShowBaseURL()"
               :deprecated="operation.deprecated"
             />
 
@@ -116,7 +116,7 @@ const operationResponses = operationParsed?.responses
               :method="operationMethod"
               :base-url="baseUrl"
               :path="operationPath"
-              :hide-base-url="!theme.getShowBaseURL()"
+              :hide-base-url="!themeConfig.getShowBaseURL()"
               :deprecated="operation.deprecated"
             />
 

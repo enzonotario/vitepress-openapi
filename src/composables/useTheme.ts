@@ -1,9 +1,30 @@
 import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
+import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
 
-interface HeadingLevels {
+export interface ThemeConfig {
+  highlighterTheme: {
+    light: any
+    dark: any
+  }
+}
+
+export interface RequestConfig {
+  defaultView: Ref<'schema' | 'contentType'>
+  showBaseURL: Ref<boolean>
+}
+
+export interface JsonViewerConfig {
+  deep: Ref<number>
+}
+
+export interface SchemaViewerConfig {
+  deep: Ref<number>
+}
+
+export interface HeadingLevels {
   h1: number
   h2: number
   h3: number
@@ -12,87 +33,191 @@ interface HeadingLevels {
   h6: number
 }
 
+export interface ResponseConfig {
+  responseCodeSelector: Ref<'tabs' | 'select'>
+  maxTabs: Ref<number>
+}
+
 type PlaygroundJsonEditorMode = 'text' | 'tree' | 'table'
 
-const themeConfig = {
-  highlighterTheme: {
-    light: vitesseLight,
-    dark: vitesseDark,
-  },
-}
-
-const schemaConfig = {
-  defaultView: ref<'schema' | 'contentType'>('contentType'),
-  showBaseURL: ref<boolean>(false),
-}
-
-const jsonViewerConfig = {
-  deep: ref<number>(Infinity),
-}
-
-const schemaViewerConfig = {
-  deep: ref<number>(Infinity),
-}
-
-const headingLevels: HeadingLevels = {
-  h1: 1,
-  h2: 2,
-  h3: 3,
-  h4: 4,
-  h5: 5,
-  h6: 6,
-}
-
-const responseConfig = {
-  responseCodeSelector: ref<'tabs', 'select'>('tabs'),
-  maxTabs: ref<number>(5),
-}
-
-const playgroundConfig = {
-  /**
-   * See:
-   * - https://github.com/cloydlau/json-editor-vue?tab=readme-ov-file#props
-   * - https://github.com/josdejong/svelte-jsoneditor/#properties
-   */
+export interface PlaygroundConfig {
   jsonEditor: {
-    mode: ref<PlaygroundJsonEditorMode>('tree'),
-    mainMenuBar: ref<boolean>(false),
-    navigationBar: ref<boolean>(false),
-  },
+    mode: Ref<PlaygroundJsonEditorMode>
+    mainMenuBar: Ref<boolean>
+    navigationBar: Ref<boolean>
+  }
 }
 
-const securityConfig = {
-  defaultScheme: ref<string | null>(null),
-  selectedScheme: ref<string | null>(null),
+export interface SecurityConfig {
+  defaultScheme: Ref<string | null>
+  selectedScheme: Ref<string | null>
 }
 
 type OperationBadges = 'deprecated' | 'operationId'
 
-const operationConfig = {
-  badges: ref<OperationBadges[]>(['deprecated']),
+export interface OperationConfig {
+  badges: Ref<OperationBadges[]>
 }
 
-interface I18nConfig {
+export interface I18nConfig {
   locale: Ref<'es' | 'en' | string>
   fallbackLocale: Ref<'es' | 'en' | string>
   messages: Record<'es' | 'en', Record<string, Record<string, string>>>
 }
 
-const i18nConfig: I18nConfig = {
-  locale: ref<'es' | 'en'>('en'),
-  fallbackLocale: ref<'es' | 'en'>('en'),
-  messages: locales,
+export interface SpecConfig {
+  groupByTags: Ref<boolean>
+  collapsePaths: Ref<boolean>
+  showPathsSummary: Ref<boolean>
 }
 
-const specConfig = {
-  groupByTags: ref(true),
-  collapsePaths: ref(false),
-  showPathsSummary: ref(true),
+export interface UseThemeConfig {
+  theme?: Partial<ThemeConfig>
+  request?: Partial<RequestConfig>
+  jsonViewer?: Partial<JsonViewerConfig>
+  schemaViewer?: Partial<SchemaViewerConfig>
+  headingLevels?: Partial<HeadingLevels>
+  response?: Partial<ResponseConfig>
+  playground?: Partial<PlaygroundConfig>
+  security?: Partial<SecurityConfig>
+  operation?: Partial<OperationConfig>
+  i18n?: Partial<I18nConfig>
+  spec?: Partial<SpecConfig>
 }
 
-export function useTheme() {
+const themeConfig: UseThemeConfig = {
+  theme: {
+    highlighterTheme: {
+      light: vitesseLight,
+      dark: vitesseDark,
+    },
+  },
+  request: {
+    defaultView: ref<'schema' | 'contentType'>('contentType'),
+    showBaseURL: ref<boolean>(false),
+  },
+  jsonViewer: {
+    deep: ref<number>(Number.POSITIVE_INFINITY),
+  },
+  schemaViewer: {
+    deep: ref<number>(Number.POSITIVE_INFINITY),
+  },
+  headingLevels: {
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    h5: 5,
+    h6: 6,
+  },
+  response: {
+    responseCodeSelector: ref<'tabs' | 'select'>('tabs'),
+    maxTabs: ref<number>(5),
+  },
+  playground: {
+    jsonEditor: {
+      mode: ref<PlaygroundJsonEditorMode>('tree'),
+      mainMenuBar: ref<boolean>(false),
+      navigationBar: ref<boolean>(false),
+    },
+  },
+  security: {
+    defaultScheme: ref<string | null>(null),
+    selectedScheme: ref<string | null>(null),
+  },
+  operation: {
+    badges: ref<OperationBadges[]>(['deprecated']),
+  },
+  i18n: {
+    locale: ref<'es' | 'en'>('en'),
+    fallbackLocale: ref<'es' | 'en'>('en'),
+    messages: locales,
+  },
+  spec: {
+    groupByTags: ref(true),
+    collapsePaths: ref(false),
+    showPathsSummary: ref(true),
+  },
+}
+
+const defaultThemeConfig = { ...deepUnref(themeConfig) }
+
+export function useTheme(config: Partial<UseThemeConfig> = {}) {
+  if (Object.keys(config).length) {
+    if (config?.theme?.highlighterTheme) {
+      themeConfig.theme.highlighterTheme = {
+        ...themeConfig.theme.highlighterTheme,
+        ...config.theme.highlighterTheme,
+      }
+    }
+
+    if (config?.request?.defaultView !== undefined) {
+      setSchemaDefaultView(config.request.defaultView)
+    }
+
+    if (config?.request?.showBaseURL !== undefined) {
+      setShowBaseURL(config.request.showBaseURL)
+    }
+
+    if (config?.jsonViewer?.deep !== undefined) {
+      setJsonViewerDeep(config.jsonViewer.deep)
+    }
+
+    if (config?.schemaViewer?.deep !== undefined) {
+      setSchemaViewerDeep(config.schemaViewer.deep)
+    }
+
+    if (config?.headingLevels !== undefined) {
+      setHeadingLevels(config.headingLevels)
+    }
+
+    if (config?.response?.responseCodeSelector !== undefined) {
+      setResponseCodeSelector(config.response.responseCodeSelector)
+    }
+
+    if (config?.response?.maxTabs !== undefined) {
+      setResponseCodeMaxTabs(config.response.maxTabs)
+    }
+
+    if (config?.playground?.jsonEditor?.mode !== undefined) {
+      setPlaygroundJsonEditorMode(config.playground.jsonEditor.mode)
+    }
+
+    if (config?.playground?.jsonEditor?.mainMenuBar !== undefined) {
+      setPlaygroundJsonEditorMainMenuBar(config.playground.jsonEditor.mainMenuBar)
+    }
+
+    if (config?.playground?.jsonEditor?.navigationBar !== undefined) {
+      setPlaygroundJsonEditorNavigationBar(config.playground.jsonEditor.navigationBar)
+    }
+
+    if (config?.security?.defaultScheme !== undefined) {
+      setSecurityDefaultScheme(config.security.defaultScheme)
+    }
+
+    if (config?.security?.selectedScheme !== undefined) {
+      setSecuritySelectedScheme(config.security.selectedScheme)
+    }
+
+    if (config?.operation?.badges !== undefined) {
+      setOperationBadges(config.operation.badges)
+    }
+
+    if (config?.i18n !== undefined) {
+      setI18nConfig(config.i18n)
+    }
+
+    if (config?.spec !== undefined) {
+      setSpecConfig(config.spec)
+    }
+  }
+
+  function reset() {
+    useTheme({ ...defaultThemeConfig })
+  }
+
   function getLocale(): 'es' | 'en' | string {
-    return getI18nConfig().locale.value
+    return themeConfig.i18n.locale.value
   }
 
   /**
@@ -101,51 +226,51 @@ export function useTheme() {
    */
   function setLocale(value: 'es' | 'en' | string) {
     console.warn('`setLocale` is deprecated. Use `setI18nConfig({ locale: value })` instead.')
-    setI18nConfig({ locale: value })
+    themeConfig.i18n.locale.value = value
   }
 
   function getHighlighterTheme() {
-    return themeConfig.highlighterTheme
+    return themeConfig.theme.highlighterTheme
   }
 
   function getSchemaDefaultView(): 'schema' | 'contentType' {
-    return schemaConfig.defaultView.value
+    return themeConfig.request.defaultView.value
   }
 
   function setSchemaDefaultView(value: 'schema' | 'contentType') {
-    schemaConfig.defaultView.value = value
+    themeConfig.request.defaultView.value = value
   }
 
   function getShowBaseURL(): boolean {
-    return schemaConfig.showBaseURL.value
+    return themeConfig.request.showBaseURL.value
   }
 
   function setShowBaseURL(value: boolean) {
-    schemaConfig.showBaseURL.value = value
+    themeConfig.request.showBaseURL.value = value
   }
 
   function getJsonViewerDeep(): number {
-    return jsonViewerConfig.deep.value
+    return themeConfig.jsonViewer.deep.value
   }
 
   function setJsonViewerDeep(value: number) {
-    jsonViewerConfig.deep.value = value
+    themeConfig.jsonViewer.deep.value = value
   }
 
   function getSchemaViewerDeep(): number {
-    return schemaViewerConfig.deep.value
+    return themeConfig.schemaViewer.deep.value
   }
 
   function setSchemaViewerDeep(value: number) {
-    schemaViewerConfig.deep.value = value
+    themeConfig.schemaViewer.deep.value = value
   }
 
   function getHeadingLevels() {
-    return headingLevels
+    return themeConfig.headingLevels
   }
 
   function getHeadingLevel(level: keyof HeadingLevels): `h${1 | 2 | 3 | 4 | 5 | 6}` {
-    const headingLevel = headingLevels[level]
+    const headingLevel = themeConfig.headingLevels[level]
     if (headingLevel < 1 || headingLevel > 6) {
       throw new Error(`Heading level for ${level} must be between 1 and 6.`)
     }
@@ -159,96 +284,112 @@ export function useTheme() {
         throw new Error(`Heading level for ${key} must be between 1 and 6.`)
       }
     }
-    Object.assign(headingLevels, levels)
+    Object.assign(themeConfig.headingLevels, levels)
   }
 
   function getResponseCodeSelector(): 'tabs' | 'select' {
-    return responseConfig.responseCodeSelector.value
+    return themeConfig.response.responseCodeSelector.value
   }
 
   function setResponseCodeSelector(value: 'tabs' | 'select') {
-    responseConfig.responseCodeSelector.value = value
+    themeConfig.response.responseCodeSelector.value = value
   }
 
   function getResponseCodeMaxTabs(): number {
-    return responseConfig.maxTabs.value
+    return themeConfig.response.maxTabs.value
   }
 
   function setResponseCodeMaxTabs(value: number) {
-    responseConfig.maxTabs.value = value
+    themeConfig.response.maxTabs.value = value
   }
 
   function getPlaygroundJsonEditorMode(): PlaygroundJsonEditorMode {
-    return playgroundConfig.jsonEditor.mode.value
+    return themeConfig.playground.jsonEditor.mode.value
   }
 
   function setPlaygroundJsonEditorMode(value: PlaygroundJsonEditorMode) {
-    playgroundConfig.jsonEditor.mode.value = value
+    themeConfig.playground.jsonEditor.mode.value = value
   }
 
   function getPlaygroundJsonEditorMainMenuBar(): boolean {
-    return playgroundConfig.jsonEditor.mainMenuBar.value
+    return themeConfig.playground.jsonEditor.mainMenuBar.value
   }
 
   function setPlaygroundJsonEditorMainMenuBar(value: boolean) {
-    playgroundConfig.jsonEditor.mainMenuBar.value = value
+    themeConfig.playground.jsonEditor.mainMenuBar.value = value
   }
 
   function getPlaygroundJsonEditorNavigationBar(): boolean {
-    return playgroundConfig.jsonEditor.navigationBar.value
+    return themeConfig.playground.jsonEditor.navigationBar.value
   }
 
   function setPlaygroundJsonEditorNavigationBar(value: boolean) {
-    playgroundConfig.jsonEditor.navigationBar.value = value
+    themeConfig.playground.jsonEditor.navigationBar.value = value
+  }
+
+  function getSecurityDefaultScheme(): string | null {
+    return themeConfig.security.defaultScheme.value
+  }
+
+  function setSecurityDefaultScheme(value: string | null) {
+    themeConfig.security.defaultScheme.value = value
+  }
+
+  function getSecuritySelectedScheme(): string | null {
+    return themeConfig.security.selectedScheme.value
+  }
+
+  function setSecuritySelectedScheme(value: string | null) {
+    themeConfig.security.selectedScheme.value = value
   }
 
   function getOperationBadges(): OperationBadges[] {
-    return [...operationConfig.badges.value]
+    return [...themeConfig.operation.badges.value]
   }
 
   function setOperationBadges(value: OperationBadges[]) {
-    operationConfig.badges.value = value
+    themeConfig.operation.badges.value = value
   }
 
   function getI18nConfig(): I18nConfig {
-    return i18nConfig
+    return themeConfig.i18n
   }
 
   function setI18nConfig(config: Partial<I18nConfig>) {
     if (config.locale) {
-      i18nConfig.locale.value = config.locale
+      themeConfig.i18n.locale.value = config.locale
     }
 
     if (config.fallbackLocale) {
-      i18nConfig.fallbackLocale.value = config.fallbackLocale
+      themeConfig.i18n.fallbackLocale.value = config.fallbackLocale
     }
 
     if (config.messages) {
-      i18nConfig.messages = config.messages
+      themeConfig.i18n.messages = config.messages
     }
   }
 
   function getSpecConfig() {
-    return specConfig
+    return themeConfig.spec
   }
 
   function setSpecConfig(config: Partial<typeof specConfig>) {
     if (config.groupByTags !== undefined) {
-      specConfig.groupByTags.value = config.groupByTags
+      themeConfig.spec.groupByTags.value = config.groupByTags
     }
 
     if (config.collapsePaths !== undefined) {
-      specConfig.collapsePaths.value = config.collapsePaths
+      themeConfig.spec.collapsePaths.value = config.collapsePaths
     }
 
     if (config.showPathsSummary !== undefined) {
-      specConfig.showPathsSummary.value = config.showPathsSummary
+      themeConfig.spec.showPathsSummary.value = config.showPathsSummary
     }
   }
 
   return {
-    schemaConfig,
-    securityConfig,
+    schemaConfig: themeConfig.request,
+    reset,
     getLocale,
     setLocale,
     getHighlighterTheme,
@@ -273,6 +414,10 @@ export function useTheme() {
     setPlaygroundJsonEditorMainMenuBar,
     getPlaygroundJsonEditorNavigationBar,
     setPlaygroundJsonEditorNavigationBar,
+    getSecurityDefaultScheme,
+    setSecurityDefaultScheme,
+    getSecuritySelectedScheme,
+    setSecuritySelectedScheme,
     getOperationBadges,
     setOperationBadges,
     getI18nConfig,
