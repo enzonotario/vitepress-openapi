@@ -13,7 +13,7 @@ const props = defineProps({
   },
 })
 
-const openapi = props.openapi || getOpenApiInstance({
+const openapi = props.openapi ?? getOpenApiInstance({
   custom: { spec: props.spec },
   injected: inject('openapi', undefined),
 })

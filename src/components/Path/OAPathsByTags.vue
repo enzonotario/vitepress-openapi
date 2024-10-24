@@ -29,7 +29,7 @@ const { t } = useI18n()
 
 const themeConfig = useTheme()
 
-const openapi = props.openapi || getOpenApiInstance()
+const openapi = props.openapi ?? getOpenApiInstance()
 
 const tagsInfo = openapi.getTags()
 

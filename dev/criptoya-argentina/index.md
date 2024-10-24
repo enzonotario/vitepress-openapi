@@ -14,12 +14,30 @@ const route = useRoute()
 
 const { isDark } = useData()
 
-useTheme().setJsonViewerDeep(1)
-useTheme().setSchemaViewerDeep(1)
+useTheme({
+    jsonViewer: {
+        deep: 1,
+    },
+    schemaViewer: {
+        deep: 1,
+    },
+    request: {
+        defaultView: 'schema',
+    },
+})
 
 onUnmounted(() => {
-    useTheme().setJsonViewerDeep(Infinity)
-    useTheme().setSchemaViewerDeep(Infinity)
+    useTheme({
+        jsonViewer: {
+            deep: Infinity,
+        },
+        schemaViewer: {
+            deep: Infinity,
+        },
+        request: {
+            defaultView: 'json',
+        },
+    })
 })
 </script>
 

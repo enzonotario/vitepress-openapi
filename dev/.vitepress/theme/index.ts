@@ -8,6 +8,11 @@ export default {
     // Set the OpenAPI specification.
     const openapi = useOpenapi({
       spec,
+      config: {
+        i18n: {
+          locale: 'es',
+        },
+      },
     })
 
     // Use the theme.

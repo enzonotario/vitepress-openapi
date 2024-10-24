@@ -1,23 +1,159 @@
 import { describe, expect, it } from 'vitest'
-import { unref } from 'vue'
-import { useTheme } from './src/composables/useTheme'
+import { useTheme } from '../../src/composables/useTheme'
+
+describe('composition API', () => {
+  it('can config', () => {
+    const theme = useTheme({
+      highlighterTheme: {
+        light: {},
+        dark: {},
+      },
+      request: {
+        defaultView: 'schema',
+        showBaseURL: true,
+      },
+      jsonViewer: {
+        deep: 5,
+      },
+      schemaViewer: {
+        deep: 3,
+      },
+      playground: {
+        jsonEditor: {
+          mode: 'text',
+          mainMenuBar: true,
+          navigationBar: true,
+        },
+      },
+      headingLevels: {
+        h1: 2,
+        h2: 3,
+      },
+      operation: {
+        badges: ['operationId'],
+      },
+      response: {
+        maxTabs: 10,
+        responseCodeSelector: 'select',
+      },
+      security: {
+        defaultScheme: 'bearer',
+        selectedScheme: 'bearer',
+      },
+      theme: {
+        highlighterTheme: {
+          light: {},
+          dark: {},
+        },
+      },
+      i18n: {
+        locale: 'es',
+      },
+      spec: {
+        groupByTags: false,
+        collapsePaths: true,
+        showPathsSummary: false,
+      },
+    })
+
+    expect(theme.getHighlighterTheme()).toEqual({
+      light: {},
+      dark: {},
+    })
+    expect(theme.getSchemaDefaultView()).toBe('schema')
+    expect(theme.getShowBaseURL()).toBe(true)
+    expect(theme.getJsonViewerDeep()).toBe(5)
+    expect(theme.getSchemaViewerDeep()).toBe(3)
+    expect(theme.getPlaygroundJsonEditorMode()).toBe('text')
+    expect(theme.getPlaygroundJsonEditorMainMenuBar()).toBe(true)
+    expect(theme.getPlaygroundJsonEditorNavigationBar()).toBe(true)
+    expect(theme.getHeadingLevels()).toEqual({
+      h1: 2,
+      h2: 3,
+      h3: 3,
+      h4: 4,
+      h5: 5,
+      h6: 6,
+    })
+    expect(theme.getOperationBadges()).toEqual(['operationId'])
+    expect(theme.getResponseCodeMaxTabs()).toBe(10)
+    expect(theme.getResponseCodeSelector()).toBe('select')
+    expect(theme.getSecurityDefaultScheme()).toBe('bearer')
+    expect(theme.getSecuritySelectedScheme()).toBe('bearer')
+    expect(theme.getI18nConfig().locale.value).toBe('es')
+    expect(theme.getSpecConfig()).toEqual({
+      groupByTags: expect.any(Object),
+      collapsePaths: expect.any(Object),
+      showPathsSummary: expect.any(Object),
+    })
+  })
+
+  it('can reset', () => {
+    const theme = useTheme({
+      jsonViewer: {
+        deep: 7,
+      },
+      schemaViewer: {
+        deep: 5,
+      },
+      headingLevels: {
+        h1: 3,
+        h2: 4,
+      },
+      operation: {
+        badges: ['operationId'],
+      },
+      i18n: {
+        locale: 'es',
+      },
+    })
+
+    expect(theme.getJsonViewerDeep()).toBe(7)
+    expect(theme.getSchemaViewerDeep()).toBe(5)
+    expect(theme.getHeadingLevels()).toEqual({
+      h1: 3,
+      h2: 4,
+      h3: 3,
+      h4: 4,
+      h5: 5,
+      h6: 6,
+    })
+    expect(theme.getOperationBadges()).toEqual(['operationId'])
+    expect(theme.getI18nConfig().locale.value).toBe('es')
+
+    theme.reset()
+
+    expect(theme.getJsonViewerDeep()).toBe(Number.POSITIVE_INFINITY)
+    expect(theme.getSchemaViewerDeep()).toBe(Number.POSITIVE_INFINITY)
+    expect(theme.getHeadingLevels()).toEqual({
+      h1: 1,
+      h2: 2,
+      h3: 3,
+      h4: 4,
+      h5: 5,
+      h6: 6,
+    })
+    expect(theme.getOperationBadges()).toEqual(['deprecated'])
+    expect(theme.getI18nConfig().locale.value).toBe('en')
+  })
+})
 
 describe('useTheme', () => {
-  const theme = useTheme()
+  const themeConfig = useTheme()
 
   it('returns the default locale', () => {
-    const result = theme.getLocale()
+    const result = themeConfig.getLocale()
     expect(result).toBe('en')
   })
 
   it('sets and gets the locale', () => {
-    theme.setLocale('es')
-    const result = theme.getLocale()
+    themeConfig.setLocale('es')
+    const result = themeConfig.getLocale()
     expect(result).toBe('es')
   })
 
-  it('returns the highlighter theme', () => {
-    const result = theme.getHighlighterTheme()
+  it('returns the highlighter themeConfig', () => {
+    const result = themeConfig.getHighlighterTheme()
     expect(result).toEqual({
       light: expect.any(Object),
       dark: expect.any(Object),
@@ -25,51 +161,51 @@ describe('useTheme', () => {
   })
 
   it('returns the default schema view', () => {
-    const result = theme.getSchemaDefaultView()
+    const result = themeConfig.getSchemaDefaultView()
     expect(result).toBe('contentType')
   })
 
   it('sets and gets the schema default view', () => {
-    theme.setSchemaDefaultView('schema')
-    const result = theme.getSchemaDefaultView()
+    themeConfig.setSchemaDefaultView('schema')
+    const result = themeConfig.getSchemaDefaultView()
     expect(result).toBe('schema')
   })
 
   it('returns the default showBaseURL value', () => {
-    const result = theme.getShowBaseURL()
+    const result = themeConfig.getShowBaseURL()
     expect(result).toBe(false)
   })
 
   it('sets and gets the showBaseURL value', () => {
-    theme.setShowBaseURL(true)
-    const result = theme.getShowBaseURL()
+    themeConfig.setShowBaseURL(true)
+    const result = themeConfig.getShowBaseURL()
     expect(result).toBe(true)
   })
 
   it('returns the default jsonViewer deep value', () => {
-    const result = theme.getJsonViewerDeep()
-    expect(result).toBe(Infinity)
+    const result = themeConfig.getJsonViewerDeep()
+    expect(result).toBe(Number.POSITIVE_INFINITY)
   })
 
   it('sets and gets the jsonViewer deep value', () => {
-    theme.setJsonViewerDeep(5)
-    const result = theme.getJsonViewerDeep()
+    themeConfig.setJsonViewerDeep(5)
+    const result = themeConfig.getJsonViewerDeep()
     expect(result).toBe(5)
   })
 
   it('returns the default schemaViewer deep value', () => {
-    const result = theme.getSchemaViewerDeep()
-    expect(result).toBe(Infinity)
+    const result = themeConfig.getSchemaViewerDeep()
+    expect(result).toBe(Number.POSITIVE_INFINITY)
   })
 
   it('sets and gets the schemaViewer deep value', () => {
-    theme.setSchemaViewerDeep(3)
-    const result = theme.getSchemaViewerDeep()
+    themeConfig.setSchemaViewerDeep(3)
+    const result = themeConfig.getSchemaViewerDeep()
     expect(result).toBe(3)
   })
 
   it('returns the heading levels', () => {
-    const result = theme.getHeadingLevels()
+    const result = themeConfig.getHeadingLevels()
     expect(result).toEqual({
       h1: 1,
       h2: 2,
@@ -81,13 +217,13 @@ describe('useTheme', () => {
   })
 
   it('returns the correct heading level', () => {
-    const result = theme.getHeadingLevel('h3')
+    const result = themeConfig.getHeadingLevel('h3')
     expect(result).toBe('h3')
   })
 
   it('sets and gets the heading levels', () => {
-    theme.setHeadingLevels({ h1: 2, h2: 3 })
-    const result = theme.getHeadingLevels()
+    themeConfig.setHeadingLevels({ h1: 2, h2: 3 })
+    const result = themeConfig.getHeadingLevels()
     expect(result).toEqual({
       h1: 2,
       h2: 3,
@@ -99,73 +235,73 @@ describe('useTheme', () => {
   })
 
   it('returns the default response code selector', () => {
-    const result = theme.getResponseCodeSelector()
+    const result = themeConfig.getResponseCodeSelector()
     expect(result).toBe('tabs')
   })
 
   it('sets and gets the response code selector', () => {
-    theme.setResponseCodeSelector('select')
-    const result = theme.getResponseCodeSelector()
+    themeConfig.setResponseCodeSelector('select')
+    const result = themeConfig.getResponseCodeSelector()
     expect(result).toBe('select')
   })
 
   it('returns the default response code max tabs', () => {
-    const result = theme.getResponseCodeMaxTabs()
+    const result = themeConfig.getResponseCodeMaxTabs()
     expect(result).toBe(5)
   })
 
   it('sets and gets the response code max tabs', () => {
-    theme.setResponseCodeMaxTabs(10)
-    const result = theme.getResponseCodeMaxTabs()
+    themeConfig.setResponseCodeMaxTabs(10)
+    const result = themeConfig.getResponseCodeMaxTabs()
     expect(result).toBe(10)
   })
 
   it('returns the default playground json editor mode', () => {
-    const result = theme.getPlaygroundJsonEditorMode()
+    const result = themeConfig.getPlaygroundJsonEditorMode()
     expect(result).toBe('tree')
   })
 
   it('sets and gets the playground json editor mode', () => {
-    theme.setPlaygroundJsonEditorMode('text')
-    const result = theme.getPlaygroundJsonEditorMode()
+    themeConfig.setPlaygroundJsonEditorMode('text')
+    const result = themeConfig.getPlaygroundJsonEditorMode()
     expect(result).toBe('text')
   })
 
   it('returns the default playground json editor main menu bar value', () => {
-    const result = theme.getPlaygroundJsonEditorMainMenuBar()
+    const result = themeConfig.getPlaygroundJsonEditorMainMenuBar()
     expect(result).toBe(false)
   })
 
   it('sets and gets the playground json editor main menu bar value', () => {
-    theme.setPlaygroundJsonEditorMainMenuBar(true)
-    const result = theme.getPlaygroundJsonEditorMainMenuBar()
+    themeConfig.setPlaygroundJsonEditorMainMenuBar(true)
+    const result = themeConfig.getPlaygroundJsonEditorMainMenuBar()
     expect(result).toBe(true)
   })
 
   it('returns the default playground json editor navigation bar value', () => {
-    const result = theme.getPlaygroundJsonEditorNavigationBar()
+    const result = themeConfig.getPlaygroundJsonEditorNavigationBar()
     expect(result).toBe(false)
   })
 
   it('sets and gets the playground json editor navigation bar value', () => {
-    theme.setPlaygroundJsonEditorNavigationBar(true)
-    const result = theme.getPlaygroundJsonEditorNavigationBar()
+    themeConfig.setPlaygroundJsonEditorNavigationBar(true)
+    const result = themeConfig.getPlaygroundJsonEditorNavigationBar()
     expect(result).toBe(true)
   })
 
   it('returns the operation badges', () => {
-    const result = theme.getOperationBadges()
+    const result = themeConfig.getOperationBadges()
     expect(result).toEqual(['deprecated'])
   })
 
   it('sets and gets the operation badges', () => {
-    theme.setOperationBadges(['operationId'])
-    const result = theme.getOperationBadges()
+    themeConfig.setOperationBadges(['operationId'])
+    const result = themeConfig.getOperationBadges()
     expect(result).toEqual(['operationId'])
   })
 
   it('returns the i18n config', () => {
-    const result = theme.getI18nConfig()
+    const result = themeConfig.getI18nConfig()
     expect(result).toEqual({
       locale: expect.any(Object),
       fallbackLocale: expect.any(Object),
@@ -174,13 +310,13 @@ describe('useTheme', () => {
   })
 
   it('sets and gets the i18n config', () => {
-    theme.setI18nConfig({ locale: 'es' })
-    const result = theme.getI18nConfig()
+    themeConfig.setI18nConfig({ locale: 'es' })
+    const result = themeConfig.getI18nConfig()
     expect(result.locale.value).toBe('es')
   })
 
   it('returns the spec config', () => {
-    const result = theme.getSpecConfig()
+    const result = themeConfig.getSpecConfig()
     expect(result).toEqual({
       groupByTags: expect.any(Object),
       collapsePaths: expect.any(Object),
@@ -189,8 +325,8 @@ describe('useTheme', () => {
   })
 
   it('sets spec config', () => {
-    theme.setSpecConfig({ groupByTags: false, collapsePaths: true, showPathsSummary: false })
-    const result = theme.getSpecConfig()
+    themeConfig.setSpecConfig({ groupByTags: false, collapsePaths: true, showPathsSummary: false })
+    const result = themeConfig.getSpecConfig()
     result.groupByTags.value = false
     result.collapsePaths.value = true
     result.showPathsSummary.value = false
