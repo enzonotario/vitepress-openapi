@@ -63,17 +63,19 @@ export function useSidebar({
     linkPrefix = linkPrefix || options.linkPrefix
     addedOperations = addedOperations || new Set()
 
-    if (!openapi.getPaths()) {
+    const paths = openapi.getPaths()
+
+    if (!paths) {
       return []
     }
 
     const includeTags = Array.isArray(tag) ? tag : [tag]
 
-    const sidebarGroupElements = Object.keys(openapi.getPaths())
+    const sidebarGroupElements = Object.keys(paths)
       .flatMap((path) => {
         return httpVerbs
           .map((method) => {
-            const operation = openapi.getPaths()[path][method]
+            const operation = paths[path][method]
             if (operation && !addedOperations.has(operation.operationId) && (includeTags.length === 0 || includeTags.every(tag => operation.tags?.includes(tag)))) {
               addedOperations.add(operation.operationId)
               return generateSidebarItem(method, path, linkPrefix)

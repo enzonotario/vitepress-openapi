@@ -1,6 +1,7 @@
 <script setup>
-import { computed, useSlots } from 'vue'
+import { computed, inject, useSlots } from 'vue'
 import OAHeaderBadges from 'vitepress-openapi/components/Common/OAHeaderBadges.vue'
+import { getOpenApiInstance } from 'vitepress-openapi'
 
 const props = defineProps({
   operationId: {
@@ -26,6 +27,11 @@ const props = defineProps({
   },
 })
 
+const openapi = props.openapi || getOpenApiInstance({
+  custom: { spec: props.spec },
+  injected: inject('openapi', undefined),
+})
+
 const slots = useSlots()
 
 const headingPrefix = computed(() => {
@@ -45,7 +51,7 @@ function hasSlot(name) {
   <OAPath
     v-if="props.operationId"
     :id="props.operationId"
-    :spec="props.spec"
+    :openapi="openapi"
   >
     <template
       v-if="hasSlot('header')"

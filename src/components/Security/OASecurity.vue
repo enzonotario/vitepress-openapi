@@ -28,8 +28,8 @@ const themeConfig = useTheme()
 const firstSecurityScheme = Object.keys(securitySchemes).find(Boolean)
 
 const selectedSchemeName = computed({
-  get: () => themeConfig.securityConfig.selectedScheme.value,
-  set: value => themeConfig.securityConfig.selectedScheme.value = value,
+  get: () => themeConfig.getSecuritySelectedScheme(),
+  set: value => themeConfig.setSecuritySelectedScheme(value),
 })
 
 const selectedScheme = computed(() => {

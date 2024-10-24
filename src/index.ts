@@ -15,8 +15,10 @@ export { useOpenapi } from './composables/useOpenapi'
 export { useTheme } from './composables/useTheme'
 export { useShiki } from './composables/useShiki'
 export { usePlayground } from './composables/usePlayground'
+export { usePaths } from './composables/usePaths'
 export { OpenApi } from './lib/OpenApi'
 export { getOpenApiInstance } from './lib/getOpenApiInstance'
+export { createOpenApiInstance } from './lib/createOpenApiInstance'
 export { locales } from './locales'
 
 interface VPTheme {
@@ -26,7 +28,11 @@ interface VPTheme {
 }
 
 export const theme = {
-  enhanceApp({ app }) {
+  enhanceApp({ app, openapi }) {
+    if (openapi) {
+      app.provide('openapi', openapi)
+    }
+
     const themeConfig = useTheme()
 
     const i18n = VueI18n.createI18n({

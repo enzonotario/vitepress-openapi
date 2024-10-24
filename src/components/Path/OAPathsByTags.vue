@@ -3,17 +3,13 @@ import { defineProps, ref } from 'vue'
 import { Collapsible, CollapsibleTrigger } from 'vitepress-openapi/components/ui/collapsible'
 import { Button } from 'vitepress-openapi/components/ui/button'
 import { useI18n } from 'vue-i18n'
-import { OpenApi, useOpenapi, useTheme } from 'vitepress-openapi'
+import { getOpenApiInstance, useTheme } from 'vitepress-openapi'
 import OAPathsSummary from 'vitepress-openapi/components/Path/OAPathsSummary.vue'
 
 const props = defineProps({
-  spec: {
+  openapi: {
     type: Object,
     required: true,
-  },
-  parsedSpec: {
-    type: Object,
-    required: false,
   },
   tags: {
     type: Array,
@@ -33,9 +29,7 @@ const { t } = useI18n()
 
 const themeConfig = useTheme()
 
-const spec = props.spec || useOpenapi().json
-
-const openapi = OpenApi({ spec, parsedSpec: props.parsedSpec })
+const openapi = props.openapi || getOpenApiInstance()
 
 const tagsInfo = openapi.getTags()
 
@@ -120,7 +114,12 @@ function onPathClick(tagPaths, hash) {
           v-if="themeConfig.getSpecConfig().showPathsSummary.value"
           class="flex-1 my-[16px]"
         >
-          <OAPathsSummary :spec="spec" :paths="tagPaths.paths" :is-dark="isDark" @path-click="onPathClick(tagPaths, $event)" />
+          <OAPathsSummary
+            :openapi="openapi"
+            :paths="tagPaths.paths"
+            :is-dark="isDark"
+            @path-click="onPathClick(tagPaths, $event)"
+          />
         </div>
       </div>
 
@@ -136,8 +135,7 @@ function onPathClick(tagPaths, hash) {
 
       <div class="flex flex-col space-y-10" :class="[{ hidden: !tagPaths.isOpen }]">
         <OAPaths
-          :spec="spec"
-          :parsed-spec="parsedSpec"
+          :openapi="openapi"
           :paths="tagPaths.paths"
         />
       </div>

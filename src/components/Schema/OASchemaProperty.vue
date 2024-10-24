@@ -1,10 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from 'vitepress-openapi/components/ui/collapsible'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from 'vitepress-openapi/components/ui/collapsible'
 import OASchemaBody from './OASchemaBody.vue'
 
 const props = defineProps({

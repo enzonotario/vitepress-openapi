@@ -9,72 +9,69 @@ import { useTheme, locales } from 'vitepress-openapi'
 
 export default {
     async enhanceApp({app, router, siteData}) {
-        const themeConfig = useTheme()
-        
-        // Set the default schema view.
-        themeConfig.setSchemaDefaultView('schema') // schema or contentType
-        
-        // Set the JSON viewer depth.
-        themeConfig.setJsonViewerDeep(Infinity)
-        
-        // Set the schema viewer depth.
-        themeConfig.setSchemaViewerDeep(Infinity)
-        
-        // Set the heading levels.
-        themeConfig.setHeadingLevels({
-            h1: 1,
-            h2: 2,
-            h3: 3,
-            h4: 4,
-            h5: 5,
-            h6: 6,
-        })
-        
-        // Set the response code selector.
-        themeConfig.setResponseCodeSelector('tabs') // tabs or select
-        
-        // Set the maximum number of tabs, after which a Select will be shown.
-        themeConfig.setResponseCodeMaxTabs(5)
-        
-        // Set the mode of the JSON editor.
-        themeConfig.setPlaygroundJsonEditorMode('tree') // text, tree, or table
-        
-        // Set the visibility of the main menu bar.
-        themeConfig.setPlaygroundJsonEditorMainMenuBar(false)
-        
-        // Set the visibility of the navigation bar.
-        themeConfig.setPlaygroundJsonEditorNavigationBar(false)
-        
-        // Get the current operation badges.
-        themeConfig.getOperationBadges() // ['deprecated']
-        
-        // Set the operation badges.
-        themeConfig.setOperationBadges(['deprecated'])
-        
-        // Get the current i18n configuration.
-        themeConfig.getI18nConfig() // { locale: 'en', fallbackLocale: 'en', messages: locales }
-        
-        // Set the i18n configuration.
-        themeConfig.setI18nConfig({
-            locale: 'en', // en or es
-            fallbackLocale: 'en', // en or es
-            messages: {
-                en: {
-                    ...locales.en,
-                    'operation.badgePrefix.operationId': 'Operation ID',
-                },
-                es: {
-                    ...locales.es,
-                    'operation.badgePrefix.operationId': 'ID de operación',
+        useTheme({
+            request: {
+                // Set the default schema view.
+                defaultView: 'schema', // schema or contentType
+            },
+            jsonViewer: {
+                // Set the JSON viewer depth.
+                deep: Infinity,
+            },
+            schemaViewer: {
+                // Set the schema viewer depth.
+                deep: Infinity,
+            },
+            // Set the heading levels.
+            headingLevels: {
+                h1: 1,
+                h2: 2,
+                h3: 3,
+                h4: 4,
+                h5: 5,
+                h6: 6,
+            },
+            response: {
+                // Set the response code selector.
+                codeSelector: 'tabs', // tabs or select
+                // Set the maximum number of tabs, after which a Select will be shown.
+                codeMaxTabs: 5,
+            },
+            playground: {
+                jsonEditor: {
+                    // Set the mode of the JSON editor.
+                    mode: 'tree', // text, tree, or table
+                    // Set the visibility of the main menu bar.
+                    mainMenuBar: false,
+                    // Set the visibility of the navigation bar.
+                    navigationBar: false,
                 },
             },
-        })
-        
-        // Set spec configuration.
-        themeConfig.setSpecConfig({
-            groupByTags: true,
-            collapsePaths: false,
-            showPathsSummary: true,
+            operation: {
+                // Set the operation badges. The order is respected.
+                badges: ['deprecated'],
+            },
+            // Set the i18n configuration.
+            i18n: {
+                locale: 'en', // en or es
+                fallbackLocale: 'en', // en or es
+                messages: {
+                    en: {
+                        ...locales.en,
+                        'operation.badgePrefix.operationId': 'Operation ID',
+                    },
+                    es: {
+                        ...locales.es,
+                        'operation.badgePrefix.operationId': 'ID de operación',
+                    },
+                },
+            },
+            // Set spec configuration.
+            spec: {
+                groupByTags: true,
+                collapsePaths: false,
+                showPathsSummary: true,
+            },
         })
     }
 }
