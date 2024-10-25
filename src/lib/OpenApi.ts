@@ -243,7 +243,7 @@ export function OpenApi({
   }
 
   return {
-    spec,
+    spec: parsedSpec ?? transformedSpec ?? spec,
     transformedSpec,
     parsedSpec,
     getBaseUrl,

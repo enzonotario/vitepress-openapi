@@ -17,17 +17,17 @@ function replaceCircularDependencies(content: any) {
   const cache = new Set()
 
   return JSON.stringify(
-      content,
-      (_, value) => {
-        if (typeof value === 'object' && value !== null) {
-          if (cache.has(value)) {
-            return '[Circular]'
-          }
-
-          cache.add(value)
+    content,
+    (_, value) => {
+      if (typeof value === 'object' && value !== null) {
+        if (cache.has(value)) {
+          return '[Circular]'
         }
-        return value
-      },
-      2,
+
+        cache.add(value)
+      }
+      return value
+    },
+    2,
   )
 }

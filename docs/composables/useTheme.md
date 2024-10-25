@@ -136,4 +136,3 @@ export default {
 | Function        | Description                  | Default Value                                                         | Allowed Values                                                                |
 |-----------------|------------------------------|-----------------------------------------------------------------------|-------------------------------------------------------------------------------|
 | `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true, avoidCirculars: false, lazyRendering: false }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean, avoidCirculars: boolean, lazyRendering: boolean }` |
-```

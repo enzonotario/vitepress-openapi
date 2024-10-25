@@ -144,7 +144,7 @@ const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
       <hr>
 
       <div
-        v-if="(!lazyRendering || (lazyRendering && tagPaths.isOpen))"
+        v-if="!lazyRendering || tagPaths.isOpen"
         class="flex flex-col space-y-10"
         :class="[{ hidden: !tagPaths.isOpen }]"
       >

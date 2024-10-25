@@ -330,10 +330,18 @@ describe('useTheme', () => {
   })
 
   it('sets spec config', () => {
-    themeConfig.setSpecConfig({ groupByTags: false, collapsePaths: true, showPathsSummary: false })
+    themeConfig.setSpecConfig({
+      groupByTags: false,
+      collapsePaths: true,
+      showPathsSummary: false,
+      avoidCirculars: true,
+      lazyRendering: true,
+    })
     const result = themeConfig.getSpecConfig()
     result.groupByTags.value = false
     result.collapsePaths.value = true
     result.showPathsSummary.value = false
+    result.avoidCirculars.value = true
+    result.lazyRendering.value = true
   })
 })
