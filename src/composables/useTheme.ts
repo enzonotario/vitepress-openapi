@@ -70,6 +70,7 @@ export interface SpecConfig {
   collapsePaths: Ref<boolean>
   showPathsSummary: Ref<boolean>
   avoidCirculars: Ref<boolean>
+  lazyRendering: Ref<boolean>
 }
 
 export interface UseThemeConfig {
@@ -139,6 +140,7 @@ const themeConfig: UseThemeConfig = {
     collapsePaths: ref(false),
     showPathsSummary: ref(true),
     avoidCirculars: ref(false),
+    lazyRendering: ref(false),
   },
 }
 
@@ -390,6 +392,10 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
 
     if (config.avoidCirculars !== undefined) {
       themeConfig.spec.avoidCirculars.value = config.avoidCirculars
+    }
+
+    if (config.lazyRendering !== undefined) {
+      themeConfig.spec.lazyRendering.value = config.lazyRendering
     }
   }
 

@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps } from 'vue'
+import OALazy from 'vitepress-openapi/components/Common/Lazy/OALazy.vue'
 
 const { openapi, paths, isDark } = defineProps({
   openapi: {
@@ -15,27 +16,33 @@ const { openapi, paths, isDark } = defineProps({
     default: false,
   },
 })
+
+const operations = Object.entries(paths).reduce((acc, [pathName, path]) => {
+  return [
+    ...acc,
+    ...Object.keys(path).filter(m => path[m].operationId).map((method) => {
+      return {
+        operationId: path[method].operationId,
+      }
+    }),
+  ]
+}, [])
 </script>
 
 <template>
-  <div
-    v-for="(path, pathName) in paths"
-    :key="pathName"
-    class="flex flex-col space-y-10"
+  <OALazy
+    v-for="(operation, operationIdx) in operations"
+    :key="operation.operationId"
+    :is-lazy="operationIdx > 0"
   >
-    <template
-      v-for="method in Object.keys(path).filter(m => path[m].operationId)"
-      :key="`${method}-${path.id}`"
-    >
-      <OAOperation
-        :operation-id="path[method].operationId"
-        :openapi="openapi"
-        :is-dark="isDark"
-        prefix-headings
-        hide-default-footer
-      />
+    <OAOperation
+      :operation-id="operation.operationId"
+      :openapi="openapi"
+      :is-dark="isDark"
+      prefix-headings
+      hide-default-footer
+    />
 
-      <hr>
-    </template>
-  </div>
+    <hr>
+  </OALazy>
 </template>
