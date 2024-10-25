@@ -1,4 +1,15 @@
+import { useTheme } from '../composables/useTheme'
+import { formatJson } from './formatJson'
+
 export function hasExample(schema: any, visited: Set<any> = new Set(), level: number = 0): boolean {
+  if (!schema) {
+    return false
+  }
+
+  if (useTheme().getSpecConfig().avoidCirculars.value) {
+    schema = JSON.parse(formatJson(schema))
+  }
+
   if (visited.has(schema)) {
     if (level > 10) {
       return false // Assume no example for circular references.
