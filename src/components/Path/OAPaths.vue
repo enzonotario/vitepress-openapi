@@ -17,7 +17,7 @@ const { openapi, paths, isDark } = defineProps({
   },
 })
 
-const operations = Object.entries(paths).reduce((acc, [pathName, path]) => {
+const operations = Object.entries(paths).reduce((acc, [_, path]) => {
   return [
     ...acc,
     ...Object.keys(path).filter(m => path[m].operationId).map((method) => {
