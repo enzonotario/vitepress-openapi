@@ -68,9 +68,11 @@ export default {
             },
             // Set spec configuration.
             spec: {
-                groupByTags: true,
-                collapsePaths: false,
-                showPathsSummary: true,
+                groupByTags: true, // Group paths by tags.
+                collapsePaths: false, // Collapse paths when grouping by tags.
+                showPathsSummary: true, // Show a summary of the paths when grouping by tags.
+                avoidCirculars: false, // Avoid circular references when parsing schemas.
+                lazyRendering: false, // Lazy render Paths and Tags components.
             },
         })
     }
@@ -133,4 +135,5 @@ export default {
 
 | Function        | Description                  | Default Value                                                         | Allowed Values                                                                |
 |-----------------|------------------------------|-----------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean }` |
+| `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true, avoidCirculars: false, lazyRendering: false }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean, avoidCirculars: boolean, lazyRendering: boolean }` |
+```

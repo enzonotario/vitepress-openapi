@@ -87,6 +87,7 @@ describe('composition API', () => {
       collapsePaths: ref(true),
       showPathsSummary: ref(false),
       avoidCirculars: ref(false),
+      lazyRendering: ref(false),
     })
   })
 
@@ -324,6 +325,7 @@ describe('useTheme', () => {
       collapsePaths: ref(false),
       showPathsSummary: ref(true),
       avoidCirculars: ref(false),
+      lazyRendering: ref(false),
     })
   })
 

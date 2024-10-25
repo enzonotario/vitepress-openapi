@@ -1,10 +1,11 @@
 <script setup>
-import { defineProps, ref } from 'vue'
+import { defineProps, nextTick, ref } from 'vue'
 import { Collapsible, CollapsibleTrigger } from 'vitepress-openapi/components/ui/collapsible'
 import { Button } from 'vitepress-openapi/components/ui/button'
 import { useI18n } from 'vue-i18n'
 import { getOpenApiInstance, useTheme } from 'vitepress-openapi'
 import OAPathsSummary from 'vitepress-openapi/components/Path/OAPathsSummary.vue'
+import OALazy from 'vitepress-openapi/components/Common/Lazy/OALazy.vue'
 
 const props = defineProps({
   openapi: {
@@ -42,12 +43,19 @@ const pathsByTags = operationsTags.map((tag) => {
   }
 })
 
+const pathsWithoutTags = openapi.getPathsWithoutTags()
+
 const internalTags = ref([
-  {
-    tag: t('Default'),
-    paths: openapi.getPathsWithoutTags(),
-    isOpen: !themeConfig.getSpecConfig().collapsePaths.value,
-  },
+  ...(pathsWithoutTags.length
+    ? [
+        {
+          tag: t('Default'),
+          paths: pathsWithoutTags,
+          isOpen: !themeConfig.getSpecConfig().collapsePaths.value,
+        },
+      ]
+    : []),
+
   ...pathsByTags.map((tag) => {
     return {
       tag: tag.tag,
@@ -80,17 +88,19 @@ function scrollIntoViewWithOffset(hash, offset) {
 function onPathClick(tagPaths, hash) {
   tagPaths.isOpen = true
 
-  setTimeout(() => {
+  nextTick(() => {
     scrollIntoViewWithOffset(hash, 120)
   })
 }
+
+const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
 </script>
 
 <template>
-  <div
-    v-for="tagPaths in internalTags"
+  <OALazy
+    v-for="(tagPaths, tagIdx) in internalTags"
     :key="tagPaths.tag"
-    class="flex flex-col space-y-10"
+    :is-lazy="tagIdx > 0"
   >
     <Collapsible
       v-if="Object.keys(tagPaths.paths).length"
@@ -133,12 +143,16 @@ function onPathClick(tagPaths, hash) {
 
       <hr>
 
-      <div class="flex flex-col space-y-10" :class="[{ hidden: !tagPaths.isOpen }]">
+      <div
+        v-if="(!lazyRendering || (lazyRendering && tagPaths.isOpen))"
+        class="flex flex-col space-y-10"
+        :class="[{ hidden: !tagPaths.isOpen }]"
+      >
         <OAPaths
           :openapi="openapi"
           :paths="tagPaths.paths"
         />
       </div>
     </Collapsible>
-  </div>
+  </OALazy>
 </template>
