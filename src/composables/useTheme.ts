@@ -69,6 +69,7 @@ export interface SpecConfig {
   groupByTags: Ref<boolean>
   collapsePaths: Ref<boolean>
   showPathsSummary: Ref<boolean>
+  avoidCirculars: Ref<boolean>
 }
 
 export interface UseThemeConfig {
@@ -137,6 +138,7 @@ const themeConfig: UseThemeConfig = {
     groupByTags: ref(true),
     collapsePaths: ref(false),
     showPathsSummary: ref(true),
+    avoidCirculars: ref(false),
   },
 }
 
@@ -384,6 +386,10 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
 
     if (config.showPathsSummary !== undefined) {
       themeConfig.spec.showPathsSummary.value = config.showPathsSummary
+    }
+
+    if (config.avoidCirculars !== undefined) {
+      themeConfig.spec.avoidCirculars.value = config.avoidCirculars
     }
   }
 

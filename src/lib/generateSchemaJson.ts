@@ -1,9 +1,14 @@
+import { useTheme } from '../composables/useTheme'
 import { formatJson } from './formatJson'
 import { getExample } from './getExample'
 
 export function generateSchemaJson(schema: any, useExample = false) {
   if (schema === null || schema === undefined) {
     return '{}'
+  }
+
+  if (useTheme().getSpecConfig().avoidCirculars.value) {
+    schema = JSON.parse(formatJson(schema))
   }
 
   const properties = propertiesTypesJsonRecursive(schema, useExample, new Set())
