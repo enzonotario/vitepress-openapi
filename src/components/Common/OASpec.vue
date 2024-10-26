@@ -1,8 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { getOpenApiInstance, useTheme } from 'vitepress-openapi'
 import OAInfo from 'vitepress-openapi/components/Common/OAInfo.vue'
 import OAServers from 'vitepress-openapi/components/Common/OAServers.vue'
 import { inject } from 'vue'
+import type { OperationSlot } from 'vitepress-openapi/types'
 
 const props = defineProps({
   spec: {
@@ -31,6 +32,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const slots = defineSlots<OperationSlot>()
 
 const themeConfig = useTheme()
 
@@ -69,12 +72,34 @@ const paths = openapi.getPaths()
       :openapi="openapi"
       :tags="operationsTags"
       :paths="paths"
-    />
+    >
+      <!-- Expose all slots upwards -->
+      <template
+        v-for="(_, name) in slots"
+        #[name]="slotProps"
+      >
+        <slot
+          :name="name"
+          v-bind="slotProps || {}"
+        />
+      </template>
+    </OAPathsByTags>
     <OAPaths
       v-else
       :openapi="openapi"
       :paths="paths"
-    />
+    >
+      <!-- Expose all slots upwards -->
+      <template
+        v-for="(_, name) in slots"
+        #[name]="slotProps"
+      >
+        <slot
+          :name="name"
+          v-bind="slotProps || {}"
+        />
+      </template>
+    </OAPaths>
 
     <OAFooter v-if="!props.hideDefaultFooter" />
   </div>

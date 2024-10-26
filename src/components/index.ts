@@ -1,5 +1,5 @@
 import OASpec from './Common/OASpec.vue'
-import OAOperation from './Common/OAOperation.vue'
+import OAOperation from './Operation/OAOperation.vue'
 import OAHeading from './Common/OAHeading.vue'
 import OAFooter from './Common/OAFooter.vue'
 import OACodeBlock from './Common/OACodeBlock.vue'
