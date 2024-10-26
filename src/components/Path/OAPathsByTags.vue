@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { defineProps, nextTick, ref } from 'vue'
 import { Collapsible, CollapsibleTrigger } from 'vitepress-openapi/components/ui/collapsible'
 import { Button } from 'vitepress-openapi/components/ui/button'
@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import { getOpenApiInstance, useTheme } from 'vitepress-openapi'
 import OAPathsSummary from 'vitepress-openapi/components/Path/OAPathsSummary.vue'
 import OALazy from 'vitepress-openapi/components/Common/Lazy/OALazy.vue'
+import type { OperationSlot } from 'vitepress-openapi/types'
 
 const props = defineProps({
   openapi: {
@@ -25,6 +26,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const slots = defineSlots<OperationSlot>()
 
 const { t } = useI18n()
 
@@ -151,7 +154,18 @@ const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
         <OAPaths
           :openapi="openapi"
           :paths="tagPaths.paths"
-        />
+        >
+          <!-- Expose all slots upwards -->
+          <template
+            v-for="(_, name) in slots"
+            #[name]="slotProps"
+          >
+            <slot
+              :name="name"
+              v-bind="slotProps || {}"
+            />
+          </template>
+        </OAPaths>
       </div>
     </Collapsible>
   </OALazy>

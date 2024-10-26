@@ -1,7 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { computed, inject, useSlots } from 'vue'
 import OAHeaderBadges from 'vitepress-openapi/components/Common/OAHeaderBadges.vue'
 import { getOpenApiInstance } from 'vitepress-openapi'
+import type { OperationSlot } from 'vitepress-openapi/types.js'
 
 const props = defineProps({
   operationId: {
@@ -26,6 +27,10 @@ const props = defineProps({
     default: false,
   },
 })
+
+defineSlots<{
+  [x in OperationSlot]: (props: OperationSlot) => any
+}>()
 
 const openapi = props.openapi ?? getOpenApiInstance({
   custom: { spec: props.spec },

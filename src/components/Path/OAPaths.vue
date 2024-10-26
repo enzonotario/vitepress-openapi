@@ -1,6 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { defineProps } from 'vue'
 import OALazy from 'vitepress-openapi/components/Common/Lazy/OALazy.vue'
+import type { OperationSlot } from 'vitepress-openapi/types'
 
 const { openapi, paths, isDark } = defineProps({
   openapi: {
@@ -16,6 +17,8 @@ const { openapi, paths, isDark } = defineProps({
     default: false,
   },
 })
+
+const slots = defineSlots<OperationSlot>()
 
 const operations = Object.entries(paths).reduce((acc, [_, path]) => {
   return [
@@ -41,7 +44,18 @@ const operations = Object.entries(paths).reduce((acc, [_, path]) => {
       :is-dark="isDark"
       prefix-headings
       hide-default-footer
-    />
+    >
+      <!-- Expose all slots upwards -->
+      <template
+        v-for="(_, name) in slots"
+        #[name]="slotProps"
+      >
+        <slot
+          :name="name"
+          v-bind="slotProps || {}"
+        />
+      </template>
+    </OAOperation>
 
     <hr>
   </OALazy>
