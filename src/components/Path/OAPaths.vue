@@ -43,7 +43,7 @@ const operations = Object.entries(paths).reduce((acc, [_, path]) => {
       :openapi="openapi"
       :is-dark="isDark"
       prefix-headings
-      hide-default-footer
+      hide-branding
     >
       <!-- Expose all slots upwards -->
       <template

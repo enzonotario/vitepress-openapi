@@ -23,8 +23,25 @@ const props = defineProps({
     default: false,
   },
   hideDefaultFooter: {
+    /**
+     * @deprecated Use `hideBranding` instead
+     */
     type: Boolean,
-    default: false,
+    default: undefined,
+  },
+  hideBranding: {
+    type: Boolean,
+    default: (props) => {
+      if (props.hideBranding === undefined && props.hideDefaultFooter !== undefined) {
+        console.warn(
+          '`hideDefaultFooter` is deprecated. Use `hideBranding` instead.',
+        )
+
+        return props.hideDefaultFooter
+      }
+
+      return false
+    },
   },
 })
 
@@ -307,6 +324,22 @@ function hasSlot(name) {
     </template>
 
     <template
+      v-if="hasSlot('branding')"
+      #branding="branding"
+    >
+      <slot
+        name="branding"
+        v-bind="branding"
+      />
+    </template>
+    <template
+      v-else-if="!props.hideBranding"
+      #branding="branding"
+    >
+      <OAFooter v-bind="branding" />
+    </template>
+
+    <template
       v-if="hasSlot('footer')"
       #footer="footer"
     >
@@ -314,12 +347,6 @@ function hasSlot(name) {
         name="footer"
         v-bind="footer"
       />
-    </template>
-    <template
-      v-else-if="!hideDefaultFooter"
-      #footer="footer"
-    >
-      <OAFooter v-bind="footer" />
     </template>
   </OAPath>
 </template>
