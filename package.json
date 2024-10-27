@@ -55,6 +55,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@amoutonbrady/lz-string": "^0.1.0",
     "@antfu/eslint-config": "^2.27.1",
     "@sindresorhus/slugify": "^2.2.1",
     "@trojs/openapi-dereference": "^0.2.3",
