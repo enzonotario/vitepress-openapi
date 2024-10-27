@@ -12,9 +12,12 @@ export interface ThemeConfig {
   }
 }
 
+export interface PathConfig {
+  showBaseURL: Ref<boolean>
+}
+
 export interface RequestConfig {
   defaultView: Ref<'schema' | 'contentType'>
-  showBaseURL: Ref<boolean>
 }
 
 export interface JsonViewerConfig {
@@ -79,7 +82,8 @@ export interface SpecConfig {
 
 export interface UseThemeConfig {
   theme?: Partial<ThemeConfig>
-  request?: Partial<RequestConfig>
+  path?: Partial<PathConfig>
+  requestBody?: Partial<RequestConfig>
   jsonViewer?: Partial<JsonViewerConfig>
   schemaViewer?: Partial<SchemaViewerConfig>
   headingLevels?: Partial<HeadingLevels>
@@ -111,9 +115,11 @@ const themeConfig: UseThemeConfig = {
       dark: vitesseDark,
     },
   },
-  request: {
-    defaultView: ref<'schema' | 'contentType'>('contentType'),
+  path: {
     showBaseURL: ref<boolean>(false),
+  },
+  requestBody: {
+    defaultView: ref<'schema' | 'contentType'>('contentType'),
   },
   jsonViewer: {
     deep: ref<number>(Number.POSITIVE_INFINITY),
@@ -175,12 +181,12 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
       }
     }
 
-    if (config?.request?.defaultView !== undefined) {
-      setSchemaDefaultView(config.request.defaultView)
+    if (config?.requestBody?.defaultView !== undefined) {
+      setSchemaDefaultView(config.requestBody.defaultView)
     }
 
-    if (config?.request?.showBaseURL !== undefined) {
-      setShowBaseURL(config.request.showBaseURL)
+    if (config?.path?.showBaseURL !== undefined) {
+      setShowBaseURL(config.path.showBaseURL)
     }
 
     if (config?.jsonViewer?.deep !== undefined) {
@@ -270,19 +276,19 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
   }
 
   function getSchemaDefaultView(): 'schema' | 'contentType' {
-    return themeConfig.request.defaultView.value
+    return themeConfig.requestBody.defaultView.value
   }
 
   function setSchemaDefaultView(value: 'schema' | 'contentType') {
-    themeConfig.request.defaultView.value = value
+    themeConfig.requestBody.defaultView.value = value
   }
 
   function getShowBaseURL(): boolean {
-    return themeConfig.request.showBaseURL.value
+    return themeConfig.path.showBaseURL.value
   }
 
   function setShowBaseURL(value: boolean) {
-    themeConfig.request.showBaseURL.value = value
+    themeConfig.path.showBaseURL.value = value
   }
 
   function getJsonViewerDeep(): number {
@@ -456,7 +462,7 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
   }
 
   return {
-    schemaConfig: themeConfig.request,
+    schemaConfig: themeConfig.requestBody,
     reset,
     getLocale,
     setLocale,
