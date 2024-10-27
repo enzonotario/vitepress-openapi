@@ -2,6 +2,7 @@
 import { defineProps } from 'vue'
 import OALazy from 'vitepress-openapi/components/Common/Lazy/OALazy.vue'
 import type { OperationSlot } from 'vitepress-openapi/types'
+import { useTheme } from 'vitepress-openapi'
 
 const { openapi, paths, isDark } = defineProps({
   openapi: {
@@ -20,6 +21,8 @@ const { openapi, paths, isDark } = defineProps({
 
 const slots = defineSlots<OperationSlot>()
 
+const themeConfig = useTheme()
+
 const operations = Object.entries(paths).reduce((acc, [_, path]) => {
   return [
     ...acc,
@@ -30,13 +33,15 @@ const operations = Object.entries(paths).reduce((acc, [_, path]) => {
     }),
   ]
 }, [])
+
+const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
 </script>
 
 <template>
   <OALazy
     v-for="(operation, operationIdx) in operations"
     :key="operation.operationId"
-    :is-lazy="operationIdx > 0"
+    :is-lazy="lazyRendering && operationIdx > 0"
   >
     <OAOperation
       :operation-id="operation.operationId"
