@@ -258,6 +258,10 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     useTheme({ ...defaultThemeConfig })
   }
 
+  function getState() {
+    return deepUnref(themeConfig)
+  }
+
   function getLocale(): 'es' | 'en' | string {
     return themeConfig.i18n.locale.value
   }
@@ -464,6 +468,7 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
   return {
     schemaConfig: themeConfig.requestBody,
     reset,
+    getState,
     getLocale,
     setLocale,
     getHighlighterTheme,
