@@ -107,29 +107,6 @@ function hasSlot(name) {
     </template>
 
     <template
-      v-if="hasSlot('path-mobile')"
-      #path-mobile="pathMobile"
-    >
-      <slot
-        name="path-mobile"
-        v-bind="pathMobile"
-      />
-    </template>
-    <template
-      v-else
-      #path-mobile="pathMobile"
-    >
-      <OAPathEndpoint
-        :path="pathMobile.path"
-        :method="pathMobile.method"
-        :base-url="pathMobile.baseUrl"
-        :hide-base-url="pathMobile.hideBaseUrl"
-        :deprecated="pathMobile.deprecated"
-        class="sm:hidden"
-      />
-    </template>
-
-    <template
       v-if="hasSlot('description')"
       #description="description"
     >
@@ -263,7 +240,6 @@ function hasSlot(name) {
         :base-url="path.baseUrl"
         :hide-base-url="path.hideBaseUrl"
         :deprecated="path.deprecated"
-        class="hidden sm:flex"
       />
     </template>
 

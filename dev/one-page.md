@@ -11,6 +11,10 @@ import ThemeConfiguration from './.vitepress/theme/components/ThemeConfiguration
 const { isDark } = useData()
 </script>
 
+<div class="relative flex flex-col gap-4">
+
 <ThemeConfiguration />
 
 <OASpec :isDark="isDark" />
+
+</div>
