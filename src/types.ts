@@ -4,7 +4,6 @@
 export type OperationSlot =
   | 'header'
   | 'path'
-  | 'path-mobile'
   | 'description'
   | 'security'
   | 'request-body'
@@ -13,3 +12,8 @@ export type OperationSlot =
   | 'code-samples'
   | 'branding'
   | 'footer'
+  // TODO: Implement these slots.
+  // | 'summary'
+  // | 'tags'
+  // | 'servers'
+  // | 'parameters'

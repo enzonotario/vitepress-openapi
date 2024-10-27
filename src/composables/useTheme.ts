@@ -3,6 +3,7 @@ import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
+import type { OperationSlot } from '../types'
 
 export interface ThemeConfig {
   highlighterTheme: {
@@ -56,7 +57,10 @@ export interface SecurityConfig {
 type OperationBadges = 'deprecated' | 'operationId'
 
 export interface OperationConfig {
-  badges: Ref<OperationBadges[]>
+  badges?: Ref<OperationBadges[]>
+  slots?: Ref<OperationSlot[]>
+  hiddenSlots?: Ref<OperationSlot[]>
+  cols?: Ref<1 | 2>
 }
 
 export interface I18nConfig {
@@ -86,6 +90,19 @@ export interface UseThemeConfig {
   i18n?: Partial<I18nConfig>
   spec?: Partial<SpecConfig>
 }
+
+export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
+  'header',
+  'path',
+  'description',
+  'security',
+  'request-body',
+  'responses',
+  'try-it',
+  'code-samples',
+  'branding',
+  'footer',
+]
 
 const themeConfig: UseThemeConfig = {
   theme: {
@@ -129,6 +146,9 @@ const themeConfig: UseThemeConfig = {
   },
   operation: {
     badges: ref<OperationBadges[]>(['deprecated']),
+    slots: ref(DEFAULT_OPERATION_SLOTS),
+    hiddenSlots: ref([]),
+    cols: ref(2),
   },
   i18n: {
     locale: ref<'es' | 'en'>('en'),
@@ -205,6 +225,18 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
 
     if (config?.operation?.badges !== undefined) {
       setOperationBadges(config.operation.badges)
+    }
+
+    if (config?.operation?.slots !== undefined) {
+      setOperationSlots(config.operation.slots)
+    }
+
+    if (config?.operation?.hiddenSlots !== undefined) {
+      setOperationHiddenSlots(config.operation.hiddenSlots)
+    }
+
+    if (config?.operation?.cols !== undefined) {
+      setOperationCols(config.operation.cols)
     }
 
     if (config?.i18n !== undefined) {
@@ -355,6 +387,30 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     themeConfig.operation.badges.value = value
   }
 
+  function getOperationSlots(): OperationSlot[] {
+    return themeConfig.operation.slots.value
+  }
+
+  function setOperationSlots(value: OperationSlot[]) {
+    themeConfig.operation.slots.value = value
+  }
+
+  function getOperationHiddenSlots(): OperationSlot[] {
+    return themeConfig.operation.hiddenSlots.value
+  }
+
+  function setOperationHiddenSlots(value: OperationSlot[]) {
+    themeConfig.operation.hiddenSlots.value = value
+  }
+
+  function getOperationCols(): 1 | 2 {
+    return themeConfig.operation.cols.value
+  }
+
+  function setOperationCols(value: number) {
+    themeConfig.operation.cols.value = value
+  }
+
   function getI18nConfig(): I18nConfig {
     return themeConfig.i18n
   }
@@ -432,6 +488,12 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     setSecuritySelectedScheme,
     getOperationBadges,
     setOperationBadges,
+    getOperationSlots,
+    setOperationSlots,
+    getOperationHiddenSlots,
+    setOperationHiddenSlots,
+    getOperationCols,
+    setOperationCols,
     getI18nConfig,
     setI18nConfig,
     getSpecConfig,

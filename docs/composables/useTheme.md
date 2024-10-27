@@ -50,6 +50,23 @@ export default {
             operation: {
                 // Set the operation badges. The order is respected.
                 badges: ['deprecated'],
+                // Slots to render in the OAOperation component.
+                slots: [
+                    'header',
+                    'path',
+                    'description',
+                    'security',
+                    'request-body',
+                    'responses',
+                    'try-it',
+                    'code-samples',
+                    'branding',
+                    'footer',
+                ],
+                // Slots to hide in the OAOperation component.
+                hiddenSlots: [],
+                // Set the number of columns to use in the OAOperation component.
+                cols: 2,
             },
             // Set the i18n configuration.
             i18n: {
