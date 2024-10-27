@@ -103,7 +103,7 @@ const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
   <OALazy
     v-for="(tagPaths, tagIdx) in internalTags"
     :key="tagPaths.tag"
-    :is-lazy="tagIdx > 0"
+    :is-lazy="lazyRendering && tagIdx > 0"
   >
     <Collapsible
       v-if="Object.keys(tagPaths.paths).length"
