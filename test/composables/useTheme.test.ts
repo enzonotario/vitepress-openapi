@@ -9,9 +9,11 @@ describe('composition API', () => {
         light: {},
         dark: {},
       },
-      request: {
-        defaultView: 'schema',
+      path: {
         showBaseURL: true,
+      },
+      requestBody: {
+        defaultView: 'schema',
       },
       jsonViewer: {
         deep: 5,

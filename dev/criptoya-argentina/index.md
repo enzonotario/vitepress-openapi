@@ -34,7 +34,7 @@ onUnmounted(() => {
         schemaViewer: {
             deep: Infinity,
         },
-        request: {
+        requestBody: {
             defaultView: 'json',
         },
     })
