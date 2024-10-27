@@ -12,7 +12,11 @@ const sticky = ref(true)
 const themeConfig = useTheme()
 
 watch(() => themeConfig.getState(), (state) => {
-  params.themeConfig = compressToURL(JSON.stringify(state))
+  params.themeConfig = compressToURL(JSON.stringify({
+    ...state,
+    theme: undefined,
+    i18n: undefined,
+  }))
 }, { deep: true })
 
 onMounted(() => {
