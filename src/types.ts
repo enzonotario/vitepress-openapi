@@ -11,4 +11,5 @@ export type OperationSlot =
   | 'responses'
   | 'try-it'
   | 'code-samples'
+  | 'branding'
   | 'footer'

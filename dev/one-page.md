@@ -13,16 +13,4 @@ const { isDark } = useData()
 
 <ThemeConfiguration />
 
-<OASpec :isDark="isDark" >
-
-<template #description="props">
-
-<div class="flex flex-wrap gap-2">
-<span v-for="tag in props.operation.tags" :key="tag" class="px-2 py-1 bg-muted rounded-full">{{tag}}</span>
-</div>
-
-{{props.operation.description}}
-
-</template>
-
-</OASpec>
+<OASpec :isDark="isDark" />

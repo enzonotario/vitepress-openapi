@@ -28,8 +28,25 @@ const props = defineProps({
     default: null,
   },
   hideDefaultFooter: {
+    /**
+     * @deprecated Use `hideBranding` instead
+     */
     type: Boolean,
-    default: false,
+    default: undefined,
+  },
+  hideBranding: {
+    type: Boolean,
+    default: (props) => {
+      if (props.hideBranding === undefined && props.hideDefaultFooter !== undefined) {
+        console.warn(
+          '`hideDefaultFooter` is deprecated. Use `hideBranding` instead.',
+        )
+
+        return props.hideDefaultFooter
+      }
+
+      return false
+    },
   },
 })
 
@@ -101,6 +118,6 @@ const paths = openapi.getPaths()
       </template>
     </OAPaths>
 
-    <OAFooter v-if="!props.hideDefaultFooter" />
+    <OAFooter v-if="!props.hideBranding" />
   </div>
 </template>

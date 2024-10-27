@@ -144,6 +144,15 @@ const operationResponses = operationParsed?.responses
       </div>
 
       <slot
+        name="branding"
+        :operation-id="props.id"
+        :operation="operation"
+        :method="operationMethod"
+        :base-url="baseUrl"
+        :path="operationPath"
+      />
+
+      <slot
         name="footer"
         :operation-id="props.id"
         :operation="operation"
