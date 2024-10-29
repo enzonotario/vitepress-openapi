@@ -100,6 +100,7 @@ export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
   'path',
   'description',
   'security',
+  'parameters',
   'request-body',
   'responses',
   'try-it',
