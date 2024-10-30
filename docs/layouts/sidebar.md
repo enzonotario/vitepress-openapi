@@ -29,3 +29,30 @@ module.exports = {
     },
 }
 ```
+
+## Items by tags
+
+To generate sidebar items by tags, you can use the `itemsByTags` function. Configure your `.vitepress/config.js` as follows:
+
+```ts
+import { useSidebar, useOpenapi } from 'vitepress-openapi'
+const spec = useOpenapi({ path: '../public/openapi.json' })
+
+const sidebar = useSidebar({ 
+    spec,
+    // Optionally, you can specify a link prefix for all generated sidebar items.
+    tagLinkPrefix: '/tags/',
+})
+
+module.exports = {
+    // ...
+    themeConfig: {
+        sidebar: [
+            ...sidebar.itemsByTags(),
+            
+            // Optionally, you can generate sidebar items with another link prefix.
+            ...sidebar.itemsByTags({ linkPrefix: '/v2/' }),
+        ],
+    },
+}
+```
