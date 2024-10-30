@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { TabsIndicator } from 'radix-vue'
 import { useTheme } from 'vitepress-openapi/composables/useTheme'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-openapi/components/ui/tabs'
 import { generateSchemaJson } from 'vitepress-openapi/lib/generateSchemaJson'
@@ -76,12 +75,11 @@ const hasSchemaContentType = computed(() => schemaContentType.value !== null)
 <template>
   <Tabs
     :default-value="hasSchemaContentType ? themeConfig.schemaConfig.defaultView : 'schema'"
-    class="rounded border"
   >
-    <TabsList class="relative flex flex-row justify-start rounded-t rounded-b-none p-0">
-      <TabsIndicator class="absolute left-0 h-[2px] bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded-full transition-[width,transform] duration-300 bg-black dark:bg-white" />
+    <TabsList class="relative flex flex-row justify-start">
       <TabsTrigger
         value="schema"
+        variant="schemaTabs"
         class="h-full"
       >
         {{ $t('Schema') }}
@@ -89,28 +87,23 @@ const hasSchemaContentType = computed(() => schemaContentType.value !== null)
       <TabsTrigger
         v-if="hasSchemaContentType"
         value="contentType"
+        variant="schemaTabs"
         class="h-full"
       >
         {{ contentTypeLabel }}
       </TabsTrigger>
     </TabsList>
-    <TabsContent
-      value="schema"
-      class="mt-0 p-2"
-    >
+    <TabsContent value="schema">
       <OASchemaBody
         :schema="props.schema"
         :deep="themeConfig.getSchemaViewerDeep()"
       />
     </TabsContent>
-    <TabsContent
-      value="contentType"
-      class="mt-0 p-2"
-    >
+    <TabsContent value="contentType">
       <div class="relative flex flex-col">
         <div
           v-if="schemaHasExample"
-          class="absolute right-14 top-5 z-10 flex flex-row items-center gap-1"
+          class="absolute right-14 top-1 z-10 flex flex-row items-center gap-1"
         >
           <Checkbox
             :id="checkboxId"
@@ -133,6 +126,7 @@ const hasSchemaContentType = computed(() => schemaContentType.value !== null)
           :lang="lang"
           :label="contentTypeLabel"
           :is-dark="props.isDark"
+          class="!my-0"
         />
       </div>
     </TabsContent>
