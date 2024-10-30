@@ -35,8 +35,8 @@ describe('usePaths', () => {
   it('returns the correct tags', () => {
     const result = paths.getTags()
     expect(result).toEqual([
-      { tag: 'users', description: null },
-      { tag: 'pets', description: null },
+      { name: 'users', description: 'Operations about users' },
+      { name: 'pets', description: 'Operations about pets' },
     ])
   })
 
