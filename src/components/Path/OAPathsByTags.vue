@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, nextTick, ref } from 'vue'
+import { computed, defineProps, nextTick, ref } from 'vue'
 import { Collapsible, CollapsibleTrigger } from 'vitepress-openapi/components/ui/collapsible'
 import { Button } from 'vitepress-openapi/components/ui/button'
 import { useI18n } from 'vue-i18n'
@@ -24,6 +24,10 @@ const props = defineProps({
   isDark: {
     type: Boolean,
     default: false,
+  },
+  hidePathsSummary: {
+    type: Boolean,
+    default: undefined,
   },
 })
 
@@ -97,6 +101,11 @@ function onPathClick(tagPaths, hash) {
 }
 
 const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
+
+const showPathsSummary = computed(() => props.hidePathsSummary === undefined
+  ? themeConfig.getSpecConfig().showPathsSummary.value
+  : !props.hidePathsSummary,
+)
 </script>
 
 <template>
@@ -114,7 +123,7 @@ const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
       </OAHeading>
 
       <div
-        :class="{ 'md:grid-cols-2': themeConfig.getSpecConfig().showPathsSummary.value }"
+        :class="{ 'md:grid-cols-2': showPathsSummary }"
         class="grid grid-cols-1 gap-10"
       >
         <div>
@@ -124,7 +133,7 @@ const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
         </div>
 
         <div
-          v-if="themeConfig.getSpecConfig().showPathsSummary.value"
+          v-if="showPathsSummary"
           class="flex-1 my-[16px]"
         >
           <OAPathsSummary
@@ -136,7 +145,10 @@ const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
         </div>
       </div>
 
-      <div class="flex justify-center">
+      <div
+        v-if="showPathsSummary || themeConfig.getSpecConfig().collapsePaths.value === true"
+        class="flex justify-center"
+      >
         <CollapsibleTrigger>
           <Button>
             {{ tagPaths.isOpen ? $t('Hide operations') : $t('Show operations') }}

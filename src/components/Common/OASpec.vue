@@ -27,6 +27,10 @@ const props = defineProps({
     type: Boolean,
     default: null,
   },
+  tags: {
+    type: Array,
+    default: undefined,
+  },
   hideDefaultFooter: {
     /**
      * @deprecated Use `hideBranding` instead
@@ -47,6 +51,10 @@ const props = defineProps({
 
       return false
     },
+  },
+  hidePathsSummary: {
+    type: Boolean,
+    default: undefined,
   },
 })
 
@@ -69,7 +77,7 @@ const showServers = !props.hideServers && servers.length
 
 const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig().groupByTags
 
-const operationsTags = openapi.getOperationsTags()
+const operationsTags = props.tags ?? openapi.getOperationsTags()
 
 const paths = openapi.getPaths()
 </script>
@@ -89,6 +97,7 @@ const paths = openapi.getPaths()
       :openapi="openapi"
       :tags="operationsTags"
       :paths="paths"
+      :hide-paths-summary="props.hidePathsSummary === undefined ? undefined : props.hidePathsSummary"
     >
       <!-- Expose all slots upwards -->
       <template
