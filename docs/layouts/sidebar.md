@@ -36,7 +36,7 @@ To generate sidebar items by tags, you can use the `itemsByTags` function. Confi
 
 ```ts
 import { useSidebar, useOpenapi } from 'vitepress-openapi'
-const spec = useOpenapi({ path: '../public/openapi.json' })
+import spec from '../public/openapi.json' assert { type: 'json' }
 
 const sidebar = useSidebar({ 
     spec,
