@@ -10,7 +10,8 @@ export function usePaths({
   const openapi = OpenApi({ spec, transformedSpec: transformSpec(spec) })
 
   function getTags() {
-    return openapi.getFilteredTests() }
+    return openapi.getFilteredTests()
+  }
 
   return {
     getPathsByVerbs: openapi.getPathsByVerbs,
