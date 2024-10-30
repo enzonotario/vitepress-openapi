@@ -1,4 +1,5 @@
 import { OpenApi, httpVerbs, useOpenapi } from 'vitepress-openapi'
+import type { OpenAPI } from './useOpenapi'
 
 interface GenerateSidebarGroupsOptions {
   tags?: string[] | null
@@ -22,6 +23,10 @@ export function useSidebar({
   spec,
   linkPrefix,
   tagLinkPrefix,
+}: {
+  spec?: OpenAPI
+  linkPrefix?: string
+  tagLinkPrefix?: string
 } = {
   ...defaultOptions,
 }) {
