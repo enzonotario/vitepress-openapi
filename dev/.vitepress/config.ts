@@ -16,21 +16,38 @@ export default defineConfigWithTheme({
     outline: [1, 3],
     sidebar: [
       {
-        text: 'Introduction',
-        link: '/',
-      },
-      ...sidebar.generateSidebarGroups(),
-      {
-        text: 'One Page',
-        link: '/one-page',
-      },
-      {
-        text: 'Custom Slots',
-        link: '/custom-slots',
+        text: 'By Tags',
+        items: [
+          {
+            text: 'Introduction',
+            link: '/',
+          },
+          ...sidebar.itemsByTags(),
+        ],
       },
       {
-        text: 'Multiple Specs',
-        link: '/multiple-specs',
+        text: 'By Operations',
+        items: [
+          ...sidebar.generateSidebarGroups(),
+
+        ],
+      },
+      {
+        text: 'Customizations',
+        items: [
+          {
+            text: 'One Page',
+            link: '/one-page',
+          },
+          {
+            text: 'Custom Slots',
+            link: '/custom-slots',
+          },
+          {
+            text: 'Multiple Specs',
+            link: '/multiple-specs',
+          },
+        ],
       },
       {
         text: 'Other',
