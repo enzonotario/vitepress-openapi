@@ -136,7 +136,7 @@ export function useSidebar({
     tags,
     linkPrefix,
   }: GenerateSidebarGroupsOptions = {}) {
-    tags = tags || openapi.getOperationsTags()
+    tags = tags || openapi.getFilteredTests().map(({ name }) => name)
     linkPrefix = linkPrefix || options.tagLinkPrefix
 
     if (!openapi.getPaths()) {

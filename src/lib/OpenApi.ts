@@ -246,6 +246,23 @@ export function OpenApi({
       }))
   }
 
+  function getFilteredTests() {
+    const operationsTags = getOperationsTags()
+
+    const tags = getTags()
+      .filter(({ name }) => operationsTags.includes(name))
+
+    return tags
+      .concat([
+        ...operationsTags
+          .filter(tag => !tags.map(({ name }) => name).includes(tag))
+          .map(tag => ({
+            name: tag,
+            description: null,
+          })),
+      ])
+  }
+
   return {
     spec: parsedSpec ?? transformedSpec ?? spec,
     transformedSpec,
@@ -267,5 +284,6 @@ export function OpenApi({
     getPathsByTags,
     getPathsWithoutTags,
     getTags,
+    getFilteredTests,
   }
 }
