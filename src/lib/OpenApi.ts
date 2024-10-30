@@ -239,7 +239,11 @@ export function OpenApi({
   }
 
   function getTags() {
-    return spec?.tags ?? []
+    return (spec?.tags ?? [])
+      .map(({ name, description }) => ({
+        name: name ?? null,
+        description: description ?? null,
+      }))
   }
 
   return {
