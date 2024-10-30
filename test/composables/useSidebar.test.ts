@@ -26,12 +26,17 @@ describe('useSidebar', () => {
             link: '/operations/getUser',
             text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
           },
-          {
-            link: '/operations/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}/pets'),
-          },
         ],
         text: 'users',
+      },
+      {
+        items: [
+          {
+            link: '/operations/getUserPets',
+            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+          },
+        ],
+        text: 'pets',
       },
     ])
   })
@@ -54,7 +59,7 @@ describe('useSidebar', () => {
         },
         {
           link: '/ref/getUserPets',
-          text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}/pets'),
+          text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
         },
       ],
       text: 'users',
@@ -78,12 +83,17 @@ describe('useSidebar with linkPrefix', () => {
             link: '/foo/getUser',
             text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
           },
-          {
-            link: '/foo/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}/pets'),
-          },
         ],
         text: 'users',
+      },
+      {
+        items: [
+          {
+            link: '/foo/getUserPets',
+            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+          },
+        ],
+        text: 'pets',
       },
     ])
   })
@@ -101,12 +111,17 @@ describe('useSidebar with linkPrefix', () => {
             link: '/foo/getUser',
             text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
           },
-          {
-            link: '/foo/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}/pets'),
-          },
         ],
         text: 'users',
+      },
+      {
+        items: [
+          {
+            link: '/foo/getUserPets',
+            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+          },
+        ],
+        text: 'pets',
       },
     ])
 
@@ -122,13 +137,52 @@ describe('useSidebar with linkPrefix', () => {
             link: '/bar/getUser',
             text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
           },
-          {
-            link: '/bar/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}/pets'),
-          },
         ],
         text: 'users',
       },
+      {
+        items: [
+          {
+            link: '/bar/getUserPets',
+            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+          },
+        ],
+        text: 'pets',
+      },
     ])
+  })
+})
+
+describe('itemsByTags', () => {
+  const sidebar = useSidebar({ spec })
+
+  it('returns the correct items for given tags', () => {
+    const result = sidebar.itemsByTags({ tags: ['users', 'pets'] })
+    expect(result).toEqual([
+      { text: 'users', link: '/tags/users' },
+      { text: 'pets', link: '/tags/pets' },
+    ])
+  })
+
+  it('returns the correct items with a custom linkPrefix', () => {
+    const result = sidebar.itemsByTags({ tags: ['users', 'pets'], linkPrefix: '/custom/' })
+    expect(result).toEqual([
+      { text: 'users', link: '/custom/users' },
+      { text: 'pets', link: '/custom/pets' },
+    ])
+  })
+
+  it('returns the correct items when no tags are provided', () => {
+    const result = sidebar.itemsByTags()
+    expect(result).toEqual([
+      { text: 'users', link: '/tags/users' },
+      { text: 'pets', link: '/tags/pets' },
+    ])
+  })
+
+  it('returns an empty array when there are no paths', () => {
+    const emptySidebar = useSidebar({ spec: {} })
+    const result = emptySidebar.itemsByTags()
+    expect(result).toEqual([])
   })
 })

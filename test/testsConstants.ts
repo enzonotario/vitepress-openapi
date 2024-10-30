@@ -78,8 +78,9 @@ export const spec = {
           },
         ],
         tags: [
-          'users',
+          'pets',
         ],
+        summary: 'Get a list of pets for a user',
       },
     },
   },
@@ -118,6 +119,10 @@ export const spec = {
     {
       name: 'users',
       description: 'Operations about users',
+    },
+    {
+      name: 'pets',
+      description: 'Operations about pets',
     },
   ],
 }

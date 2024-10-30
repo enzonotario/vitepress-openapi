@@ -15,17 +15,20 @@ interface GenerateSidebarGroupOptions {
 const defaultOptions = {
   spec: null,
   linkPrefix: '/operations/',
+  tagLinkPrefix: '/tags/',
 }
 
 export function useSidebar({
   spec,
   linkPrefix,
+  tagLinkPrefix,
 } = {
   ...defaultOptions,
 }) {
   const options = {
     spec: spec || useOpenapi().json,
     linkPrefix: linkPrefix || defaultOptions.linkPrefix,
+    tagLinkPrefix: tagLinkPrefix || defaultOptions.tagLinkPrefix,
   }
 
   const openapi = OpenApi({ spec: options.spec })
@@ -124,10 +127,29 @@ export function useSidebar({
     return groups
   }
 
+  function itemsByTags({
+    tags,
+    linkPrefix,
+  }: GenerateSidebarGroupsOptions = {}) {
+    tags = tags || openapi.getOperationsTags()
+    linkPrefix = linkPrefix || options.tagLinkPrefix
+
+    if (!openapi.getPaths()) {
+      return []
+    }
+
+    return tags.map(tag => ({
+      text: tag,
+      link: `${linkPrefix}${tag}`,
+    }))
+  }
+
   return {
     sidebarItemTemplate,
     generateSidebarItem,
     generateSidebarGroup,
     generateSidebarGroups,
+    itemsByTags,
+    // TODO: Add `itemsByOperations` function
   }
 }
