@@ -47,6 +47,10 @@ export default defineConfigWithTheme({
                 text: 'Info and Servers',
                 link: '/layouts/info-servers',
               },
+              {
+                text: 'Pages by Tags',
+                link: '/layouts/pages-by-tags',
+              },
             ],
           },
         ],
