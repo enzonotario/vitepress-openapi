@@ -56,10 +56,6 @@ export default defineConfigWithTheme({
         items: [
           {
             items: [
-              // {
-              //   text: 'useOpenapi',
-              //   link: '/composables/useOpenapi',
-              // },
               {
                 text: 'useTheme',
                 link: '/composables/useTheme',
@@ -93,13 +89,23 @@ export default defineConfigWithTheme({
             text: 'Introduction',
             link: '/example/introduction',
           },
-          ...sidebar.generateSidebarGroups().map(group => ({
-            ...group,
-            items: group.items.map(item => ({
-              ...item,
-              link: `/example${item.link}`,
-            })),
-          })),
+          {
+            text: 'By Tags',
+            items: [
+              ...sidebar.itemsByTags({
+                linkPrefix: '/example/tags/',
+              }),
+            ],
+          },
+          {
+            text: 'By Operations',
+            items: [
+              ...sidebar.generateSidebarGroups({
+                linkPrefix: '/example/operations/',
+              }),
+            ],
+          },
+
           {
             text: 'Additional',
             items: [
