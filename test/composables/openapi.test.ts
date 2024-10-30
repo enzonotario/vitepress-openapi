@@ -27,7 +27,7 @@ describe('openapi with spec', () => {
 
   it('returns the correct tags for getTags', () => {
     const result = openapi.getOperationsTags()
-    expect(result).toEqual(['users'])
+    expect(result).toEqual(['users', 'pets'])
   })
 
   it('returns the correct security schemes for getSecuritySchemes', () => {
@@ -180,10 +180,16 @@ describe('openapi with spec', () => {
   it('getTags returns tags object', () => {
     const api = createOpenApiInstance({ spec })
     const tags = api.getTags()
-    expect(tags).toEqual([{
-      name: 'users',
-      description: 'Operations about users',
-    }])
+    expect(tags).toEqual([
+      {
+        name: 'users',
+        description: 'Operations about users',
+      },
+      {
+        name: 'pets',
+        description: 'Operations about pets',
+      },
+    ])
   })
 
   it('getTags returns empty array if no tags in spec', () => {
