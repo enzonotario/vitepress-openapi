@@ -93,6 +93,13 @@ export interface UseThemeConfig {
   operation?: Partial<OperationConfig>
   i18n?: Partial<I18nConfig>
   spec?: Partial<SpecConfig>
+  codeSamples?: Partial<CodeSamplesConfig>
+}
+
+export interface CodeSamplesConfig {
+  langs: string[]
+  defaultLang: string
+  generator: (lang: string, code: string) => string
 }
 
 export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
@@ -168,6 +175,15 @@ const themeConfig: UseThemeConfig = {
     showPathsSummary: ref(true),
     avoidCirculars: ref(false),
     lazyRendering: ref(false),
+  },
+  codeSamples: {
+    langs: [
+      'curl',
+      'javascript',
+      'php',
+      'python',
+    ],
+    defaultLang: 'curl',
   },
 }
 
@@ -466,6 +482,18 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     }
   }
 
+  function getCodeSamplesLangs() {
+    return themeConfig.codeSamples.langs
+  }
+
+  function getCodeSamplesDefaultLang() {
+    return themeConfig.codeSamples.defaultLang
+  }
+
+  function getCodeSamplesGenerator() {
+    return themeConfig.codeSamples.generator
+  }
+
   return {
     schemaConfig: themeConfig.requestBody,
     reset,
@@ -510,5 +538,8 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     setI18nConfig,
     getSpecConfig,
     setSpecConfig,
+    getCodeSamplesLangs,
+    getCodeSamplesDefaultLang,
+    getCodeSamplesGenerator,
   }
 }

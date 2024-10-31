@@ -7,6 +7,7 @@ import { useStorage } from '@vueuse/core'
 import OAPlaygroundParameterInput from 'vitepress-openapi/components/Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from 'vitepress-openapi/components/Playground/OAPlaygroundSecurityInput.vue'
 import { getExample } from 'vitepress-openapi/lib/getExample'
+import { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
 
 interface SecurityScheme {
   type: string
@@ -18,10 +19,7 @@ interface SecurityScheme {
 const props = defineProps({
   request: { // v-model
     type: Object,
-    default: () => ({
-      url: '',
-      headers: {},
-    }),
+    default: () => (new OARequest()),
   },
   operationId: {
     type: String,
@@ -152,8 +150,10 @@ function buildRequest() {
 
   const newRequest = {
     url: url.toString(),
+    method: props.method,
     headers: Object.fromEntries(headers),
     body: body.value,
+    query: Object.fromEntries(url.searchParams),
   }
 
   emits('update:request', newRequest)

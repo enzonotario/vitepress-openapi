@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, inject, useSlots } from 'vue'
+import { computed, inject, ref, useSlots } from 'vue'
 import OAHeaderBadges from 'vitepress-openapi/components/Common/OAHeaderBadges.vue'
 import { getOpenApiInstance } from 'vitepress-openapi'
 import type { OperationSlot } from 'vitepress-openapi/types.js'
+import { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
 
 const props = defineProps({
   operationId: {
@@ -63,6 +64,14 @@ const headingPrefix = computed(() => {
 
   return props.operationId
 })
+
+const request = ref(new OARequest(
+  `${openapi.getBaseUrl()}${openapi.getOperationPath(props.operationId)}`,
+  openapi.getOperationMethod(props.operationId)?.toUpperCase(),
+  {},
+  {},
+  {},
+))
 
 function hasSlot(name) {
   return slots[name] !== undefined
@@ -258,6 +267,7 @@ function hasSlot(name) {
     >
       <ClientOnly>
         <OATryWithVariables
+          v-model:request="request"
           :operation-id="tryIt.operationId"
           :path="tryIt.path"
           :method="tryIt.method"
@@ -295,6 +305,7 @@ function hasSlot(name) {
         :path="codeSamples.path"
         :method="codeSamples.method"
         :base-url="codeSamples.baseUrl"
+        :request="request"
         :is-dark="isDark"
       />
     </template>

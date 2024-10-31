@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { Button } from 'vitepress-openapi/components/ui/button'
 import { Badge } from 'vitepress-openapi/components/ui/badge'
+import { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
 
 interface PlaygroundResponse {
   body: any
@@ -29,11 +30,7 @@ const props = defineProps({
   },
   request: {
     type: Object,
-    default: () => ({
-      url: '',
-      headers: {},
-      body: {},
-    }),
+    default: () => (new OARequest()),
   },
   isDark: {
     type: Boolean,
