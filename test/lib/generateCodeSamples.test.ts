@@ -3,6 +3,8 @@ import { generateCodeSamples } from '../../src/lib/codeSamples/generateCodeSampl
 import { OARequest } from '../../src/lib/codeSamples/request'
 import { generateCodeSampleJavaScript } from '../../src/lib/codeSamples/generateCodeSampleJavaScript'
 import { generateCodeSampleCurl } from '../../src/lib/codeSamples/generateCodeSampleCurl'
+import { generateCodeSamplePhp } from '../../src/lib/codeSamples/generateCodeSamplePhp'
+import { generateCodeSamplePython } from '../../src/lib/codeSamples/generateCodeSamplePython'
 
 describe('generateCodeSamples', () => {
   it('generates code samples for GET method', () => {
@@ -159,5 +161,82 @@ describe('generateCodeSampleCurl', () => {
  --data '{
   "key": "value"
 }'`)
+  })
+})
+
+describe('generateCodeSamplePhp', () => {
+  it('generates PHP code for GET request', () => {
+    const request = new OARequest('https://api.example.com/resource')
+    const result = generateCodeSamplePhp(request)
+    expect(result).toBe(`file_get_contents("https://api.example.com/resource");`)
+  })
+
+  it('generates PHP code for POST request with body', () => {
+    const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: 'value' })
+    const result = generateCodeSamplePhp(request)
+    expect(result).toBe(`$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://api.example.com/resource");
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+curl_setopt($ch, CURLOPT_POSTFIELDS, '{"key":"value"}');
+$response = curl_exec($ch);
+curl_close($ch);
+echo $response;`)
+  })
+})
+
+describe('generateCodeSamplePython', () => {
+  it('generates Python code for GET request', () => {
+    const request = new OARequest('https://api.example.com/resource')
+    const result = generateCodeSamplePython(request)
+    expect(result).toBe(`import requests
+
+url = 'https://api.example.com/resource'
+
+response = requests.get(url)
+print(response.json())
+`)
+  })
+
+  it('generates Python code for POST request with body', () => {
+    const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: 'value' })
+    const result = generateCodeSamplePython(request)
+    expect(result).toBe(`import requests
+
+url = 'https://api.example.com/resource'
+
+data = {
+    'key': 'value'
+}
+
+response = requests.post(url, json=data)
+print(response.json())
+`)
+  })
+
+  it('generates Python code for POST request with deep body', () => {
+    const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } })
+    const result = generateCodeSamplePython(request)
+    expect(result).toBe(`import requests
+
+url = 'https://api.example.com/resource'
+
+data = {
+    'key': {
+        'nested': 'value',
+        'nestedArray': [
+            1,
+            2,
+            {
+                'deep': 'value'
+            }
+        ]
+    }
+}
+
+response = requests.post(url, json=data)
+print(response.json())
+`)
   })
 })

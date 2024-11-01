@@ -2,6 +2,8 @@ import { useCodeSamples } from '../../composables/useCodeSamples'
 import { OARequest } from './request'
 import { generateCodeSampleJavaScript } from './generateCodeSampleJavaScript'
 import { generateCodeSampleCurl } from './generateCodeSampleCurl'
+import { generateCodeSamplePhp } from './generateCodeSamplePhp'
+import { generateCodeSamplePython } from './generateCodeSamplePython'
 
 export function generateCodeSamples(url, method) {
   const request = new OARequest(url, method)
@@ -29,24 +31,4 @@ export function generateCodeSample(lang: string, request: OARequest) {
     default:
       return null
   }
-}
-
-export function generateCodeSamplePhp(request: OARequest) {
-  const phpCode = request.method === 'GET'
-    ? `file_get_contents("${request.url}");`
-    : `$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "${request.url}");
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "${request.method}");
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-curl_close($ch);
-echo $response;`
-
-  return phpCode
-}
-
-export function generateCodeSamplePython(request: OARequest) {
-  return `import requests
-response = requests.${request.method?.toLowerCase()}("${request.url}")
-print(response.json())`
 }
