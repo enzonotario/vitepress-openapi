@@ -73,12 +73,12 @@ export interface I18nConfig {
 }
 
 export interface SpecConfig {
-  groupByTags: Ref<boolean>
-  collapsePaths: Ref<boolean>
-  showPathsSummary: Ref<boolean>
-  avoidCirculars: Ref<boolean>
-  lazyRendering: Ref<boolean>
-  defaultTag: string
+  groupByTags?: Ref<boolean>
+  collapsePaths?: Ref<boolean>
+  showPathsSummary?: Ref<boolean>
+  avoidCirculars?: Ref<boolean>
+  lazyRendering?: Ref<boolean>
+  defaultTag?: string
 }
 
 export interface UseThemeConfig {
