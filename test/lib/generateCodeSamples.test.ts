@@ -9,7 +9,9 @@ describe('generateCodeSamples', () => {
     const url = 'https://api.example.com/path/testOperation'
     const method = 'GET'
     const samples = generateCodeSamples(url, method)
-    expect(samples.find(s => s.lang === 'curl').source).toBe(`curl -X GET ${url}`)
+    expect(samples.find(s => s.lang === 'curl').source).toBe(`curl -X GET \\
+'${url}' \\
+ -H "Content-Type: application/json"`)
     expect(samples.find(s => s.lang === 'javascript').source).toBe(`fetch('${url}')
   .then(response => response.json())
   .then(data => console.log(data));`)
@@ -23,7 +25,9 @@ print(response.json())`)
     const url = 'https://api.example.com/path/testOperation'
     const method = 'POST'
     const samples = generateCodeSamples(url, method)
-    expect(samples.find(s => s.lang === 'curl').source).toBe(`curl -X POST ${url}`)
+    expect(samples.find(s => s.lang === 'curl').source).toBe(`curl -X POST \\
+'${url}' \\
+ -H "Content-Type: application/json"`)
     expect(samples.find(s => s.lang === 'javascript').source).toBe(`fetch('${url}', {method:'POST'})
   .then(response => response.json())
   .then(data => console.log(data));`)
@@ -43,7 +47,9 @@ print(response.json())`)
     const url = ''
     const method = 'GET'
     const samples = generateCodeSamples(url, method)
-    expect(samples.find(s => s.lang === 'curl').source).toBe(`curl -X GET `)
+    expect(samples.find(s => s.lang === 'curl').source).toBe(`curl -X GET \\
+'' \\
+ -H "Content-Type: application/json"`)
     expect(samples.find(s => s.lang === 'javascript').source).toBe(`fetch('')
   .then(response => response.json())
   .then(data => console.log(data));`)
