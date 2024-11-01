@@ -90,7 +90,7 @@ export default {
                 showPathsSummary: true, // Show a summary of the paths when grouping by tags.
                 avoidCirculars: false, // Avoid circular references when parsing schemas.
                 lazyRendering: false, // Lazy render Paths and Tags components.
-                defaultTag: 'default', // Default tag to use when a path has no tags.
+                defaultTag: 'Default', // Default tag to use when a path has no tags.
             },
         })
     }
