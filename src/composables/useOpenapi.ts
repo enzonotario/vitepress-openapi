@@ -30,6 +30,10 @@ export function useOpenapi({
   spec: null,
   config: null,
 }) {
+  if (config) {
+    useTheme(config)
+  }
+
   if (spec !== null) {
     setupOpenApi({ spec, config })
   }
@@ -49,9 +53,7 @@ export function useOpenapi({
 
   function addSchema({ id, spec, config }) {
     const openapi = createOpenApiInstance({ spec })
-    if (config) {
-      useTheme(config)
-    }
+
     schemas.set(id, {
       ...openapi,
       id,

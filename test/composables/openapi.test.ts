@@ -139,7 +139,7 @@ describe('openapi with spec', () => {
     expect(paths).toMatchObject({})
   })
 
-  it('getPathsWithoutTags returns paths without tags', () => {
+  it('sets defaultTag for operations without tags', () => {
     const api = createOpenApiInstance({
       spec: {
         ...spec,
@@ -159,16 +159,9 @@ describe('openapi with spec', () => {
       },
     })
 
-    const paths = api.getPathsWithoutTags()
+    expect(api.getPathsWithoutTags()).toMatchObject({})
 
-    expect(paths).toMatchObject({
-      '/no-tags': {
-        get: {
-          operationId: 'getNoTags',
-          summary: 'GET /no-tags',
-        },
-      },
-    })
+    expect(api.getOperationsTags()).toEqual(['users', 'Default'])
   })
 
   it('getPathsWithoutTags returns empty array if no paths without tags', () => {

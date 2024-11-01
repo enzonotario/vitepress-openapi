@@ -175,7 +175,7 @@ export function OpenApi({
               verb,
               operationId,
               summary,
-              tags,
+              tags: tags ?? [],
             }
           })
       })
@@ -235,7 +235,7 @@ export function OpenApi({
   }
 
   function getPathsWithoutTags() {
-    return filterPaths(operation => !operation?.tags)
+    return filterPaths(operation => !operation?.tags || operation.tags.length === 0)
   }
 
   function getTags() {
@@ -246,7 +246,7 @@ export function OpenApi({
       }))
   }
 
-  function getFilteredTests() {
+  function getFilteredTags() {
     const operationsTags = getOperationsTags()
 
     const tags = getTags()
@@ -284,6 +284,6 @@ export function OpenApi({
     getPathsByTags,
     getPathsWithoutTags,
     getTags,
-    getFilteredTests,
+    getFilteredTags,
   }
 }
