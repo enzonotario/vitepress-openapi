@@ -56,7 +56,7 @@ const internalTags = ref([
   ...(pathsWithoutTags.length
     ? [
         {
-          tag: t('Default'),
+          tag: t(useTheme().getSpecConfig.defaultTag),
           paths: pathsWithoutTags,
           isOpen: !themeConfig.getSpecConfig().collapsePaths.value,
         },

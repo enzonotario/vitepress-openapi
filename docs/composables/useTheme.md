@@ -90,6 +90,7 @@ export default {
                 showPathsSummary: true, // Show a summary of the paths when grouping by tags.
                 avoidCirculars: false, // Avoid circular references when parsing schemas.
                 lazyRendering: false, // Lazy render Paths and Tags components.
+                defaultTag: 'default', // Default tag to use when a path has no tags.
             },
         })
     }
@@ -150,6 +151,7 @@ export default {
 
 ## Spec Configuration
 
-| Function        | Description                  | Default Value                                                         | Allowed Values                                                                |
-|-----------------|------------------------------|-----------------------------------------------------------------------|-------------------------------------------------------------------------------|
-| `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true, avoidCirculars: false, lazyRendering: false }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean, avoidCirculars: boolean, lazyRendering: boolean }` |
+| Function        | Description                  | Default Value                                                                                                                             | Allowed Values                                                                |
+|-----------------|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true, avoidCirculars: false, lazyRendering: false, defaultTag: 'Default' }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean, avoidCirculars: boolean, lazyRendering: boolean, defaultTag: string }` |
+```

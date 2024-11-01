@@ -1,5 +1,7 @@
 import { OpenApi, httpVerbs, useOpenapi } from 'vitepress-openapi'
+import { transformSpec } from '../lib/transformSpec'
 import type { OpenAPI } from './useOpenapi'
+import { useTheme } from './useTheme'
 
 interface GenerateSidebarGroupsOptions {
   tags?: string[] | null
@@ -17,26 +19,38 @@ const defaultOptions = {
   spec: null,
   linkPrefix: '/operations/',
   tagLinkPrefix: '/tags/',
+  defaultTag: 'Default',
 }
 
 export function useSidebar({
   spec,
   linkPrefix,
   tagLinkPrefix,
+  defaultTag,
 }: {
   spec?: OpenAPI
   linkPrefix?: string
   tagLinkPrefix?: string
+  defaultTag?: string
 } = {
   ...defaultOptions,
 }) {
+  useTheme({
+    spec: {
+      defaultTag: defaultTag || defaultOptions.defaultTag,
+    },
+  })
+
   const options = {
     spec: spec || useOpenapi().json,
     linkPrefix: linkPrefix || defaultOptions.linkPrefix,
     tagLinkPrefix: tagLinkPrefix || defaultOptions.tagLinkPrefix,
   }
 
-  const openapi = OpenApi({ spec: options.spec })
+  const openapi = OpenApi({
+    spec: options.spec,
+    transformedSpec: transformSpec(options.spec),
+  })
 
   function sidebarItemTemplate(method: string, title: string) {
     return `<span class="OASidebarItem group/oaSidebarItem">
@@ -136,7 +150,7 @@ export function useSidebar({
     tags,
     linkPrefix,
   }: GenerateSidebarGroupsOptions = {}) {
-    tags = tags || openapi.getFilteredTests().map(({ name }) => name)
+    tags = tags || openapi.getFilteredTags().map(({ name }) => name)
     linkPrefix = linkPrefix || options.tagLinkPrefix
 
     if (!openapi.getPaths()) {

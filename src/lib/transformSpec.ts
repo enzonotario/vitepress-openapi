@@ -1,5 +1,6 @@
 import { generateMissingOperationIds } from './generateMissingOperationIds'
 import { generateMissingSummary } from './generateMissingSummary'
+import { generateMissingTags } from './generateMissingTags'
 
 export function transformSpec(spec) {
   if (import.meta.env.VITE_DEBUG) {
@@ -17,6 +18,7 @@ export function transformSpec(spec) {
   if (spec?.paths) {
     spec = generateMissingOperationIds(spec)
     spec = generateMissingSummary(spec)
+    spec = generateMissingTags(spec)
   }
 
   return Object.assign({}, spec)
