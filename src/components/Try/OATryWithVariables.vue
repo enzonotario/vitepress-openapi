@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref } from 'vue'
-import fetchToCurl from 'vitepress-openapi/lib/fetchToCurl'
-import { formatJson } from 'vitepress-openapi/lib/formatJson'
+import { defineEmits, defineProps, ref } from 'vue'
 import OAPlaygroundResponse from 'vitepress-openapi/components/Playground/OAPlaygroundResponse.vue'
 import OAPlaygroundParameters from 'vitepress-openapi/components/Playground/OAPlaygroundParameters.vue'
 import { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
@@ -54,18 +52,6 @@ const emits = defineEmits([
 ])
 
 const loading = ref(false)
-
-const curl = computed(() => {
-  return fetchToCurl({
-    method: props.method.toUpperCase(),
-    url: props.request.url,
-    headers: {
-      ...props.request.headers,
-      ...(!props.request.headers?.['Content-Type'] ? { 'Content-Type': 'application/json' } : {}),
-    },
-    body: props.request.body ? formatJson(props.request.body) : null,
-  })
-})
 </script>
 
 <template>
@@ -81,13 +67,6 @@ const curl = computed(() => {
       :schema="props.schema"
       :is-dark="props.isDark"
       @update:request="($event) => $emit('update:request', $event)"
-    />
-
-    <OACodeBlock
-      :code="curl"
-      lang="bash"
-      label="cURL"
-      :is-dark="props.isDark"
     />
 
     <OATryItButton

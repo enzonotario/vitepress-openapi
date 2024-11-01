@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { generateCodeSamples } from '../../src/lib/codeSamples/generateCodeSamples'
 import { OARequest } from '../../src/lib/codeSamples/request'
 import { generateCodeSampleJavaScript } from '../../src/lib/codeSamples/generateCodeSampleJavaScript'
+import { generateCodeSampleCurl } from '../../src/lib/codeSamples/generateCodeSampleCurl'
 
 describe('generateCodeSamples', () => {
   it('generates code samples for GET method', () => {
@@ -100,5 +101,57 @@ describe('generateCodeSampleJavaScript', () => {
     expect(result).toBe(`fetch('https://api.example.com/resource?search=query', {method:'PUT',headers:{'Content-Type':'application/json'},body:'{"key":"value"}'})
   .then(response => response.json())
   .then(data => console.log(data));`)
+  })
+})
+
+describe('generateCodeSampleCurl', () => {
+  it('generates curl command for GET request', () => {
+    const request = new OARequest('https://api.example.com/resource')
+    const result = generateCodeSampleCurl(request)
+    expect(result).toBe(`curl -X GET \\
+'https://api.example.com/resource' \\
+ -H "Content-Type: application/json"`)
+  })
+
+  it('generates curl command for POST request with body', () => {
+    const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: 'value' })
+    const result = generateCodeSampleCurl(request)
+    expect(result).toBe(`curl -X POST \\
+'https://api.example.com/resource' \\
+ -H "Content-Type: application/json" \\
+ --data '{
+  "key": "value"
+}'`)
+  })
+
+  it('generates curl command for POST request with deep body', () => {
+    const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } })
+    const result = generateCodeSampleCurl(request)
+    expect(result).toBe(`curl -X POST \\
+'https://api.example.com/resource' \\
+ -H "Content-Type: application/json" \\
+ --data '{
+  "key": {
+    "nested": "value",
+    "nestedArray": [
+      1,
+      2,
+      {
+        "deep": "value"
+      }
+    ]
+  }
+}'`)
+  })
+
+  it('generates curl command with all parameters', () => {
+    const request = new OARequest('https://api.example.com/resource', 'PUT', { 'Content-Type': 'application/json' }, { key: 'value' }, { search: 'query' })
+    const result = generateCodeSampleCurl(request)
+    expect(result).toBe(`curl -X PUT \\
+'https://api.example.com/resource?search=query' \\
+ -H "Content-Type: application/json" \\
+ --data '{
+  "key": "value"
+}'`)
   })
 })

@@ -1,6 +1,7 @@
 import { useCodeSamples } from '../../composables/useCodeSamples'
 import { OARequest } from './request'
 import { generateCodeSampleJavaScript } from './generateCodeSampleJavaScript'
+import { generateCodeSampleCurl } from './generateCodeSampleCurl'
 
 export function generateCodeSamples(url, method) {
   const request = new OARequest(url, method)
@@ -29,9 +30,6 @@ export function generateCodeSample(lang: string, request: OARequest) {
       return null
   }
 }
-
-export function generateCodeSampleCurl(request: OARequest) {
-  return `curl -X ${request.method} ${request.url}` }
 
 export function generateCodeSamplePhp(request: OARequest) {
   const phpCode = request.method === 'GET'
