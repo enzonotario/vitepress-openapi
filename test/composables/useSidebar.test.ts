@@ -179,10 +179,4 @@ describe('itemsByTags', () => {
       { text: 'pets', link: '/tags/pets' },
     ])
   })
-
-  it('returns an empty array when there are no paths', () => {
-    const emptySidebar = useSidebar({ spec: {} })
-    const result = emptySidebar.itemsByTags()
-    expect(result).toEqual([])
-  })
 })

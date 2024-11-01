@@ -90,6 +90,7 @@ describe('composition API', () => {
       showPathsSummary: ref(false),
       avoidCirculars: ref(false),
       lazyRendering: ref(false),
+      defaultTag: 'Default',
     })
   })
 
@@ -328,6 +329,7 @@ describe('useTheme', () => {
       showPathsSummary: ref(true),
       avoidCirculars: ref(false),
       lazyRendering: ref(false),
+      defaultTag: 'Default',
     })
   })
 
