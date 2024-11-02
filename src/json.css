@@ -242,6 +242,7 @@
 .oa-jse .jse-main {
   @apply rounded p-2;
   background-color: var(--vp-code-block-bg);
+  min-height: 100px !important;
 }
 .oa-jse .jse-modal-bg {
   left: calc(var(--vp-sidebar-width) + max(32px, calc((100% - (var(--vp-layout-max-width) - 64px)) / 2))) !important;
