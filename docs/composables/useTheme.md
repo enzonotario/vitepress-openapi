@@ -10,7 +10,7 @@ import { useTheme, locales } from 'vitepress-openapi'
 export default {
     async enhanceApp({app, router, siteData}) {
         useTheme({
-            request: {
+            requestBody: {
                 // Set the default schema view.
                 defaultView: 'schema', // schema or contentType
             },
