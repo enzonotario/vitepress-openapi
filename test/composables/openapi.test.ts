@@ -182,6 +182,10 @@ describe('openapi with spec', () => {
         name: 'pets',
         description: 'Operations about pets',
       },
+      {
+        name: 'Default',
+        description: '',
+      },
     ])
   })
 

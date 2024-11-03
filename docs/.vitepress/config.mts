@@ -3,7 +3,9 @@ import { useSidebar } from 'vitepress-openapi'
 import spec from '../public/openapi.json' assert { type: 'json' }
 import { defineConfigWithTheme } from 'vitepress'
 
-const sidebar = useSidebar({ spec })
+const sidebar = useSidebar({
+  spec,
+})
 
 const gaId = 'G-ELG8ZW19X4'
 

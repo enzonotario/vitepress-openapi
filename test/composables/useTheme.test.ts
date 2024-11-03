@@ -91,6 +91,7 @@ describe('composition API', () => {
       avoidCirculars: ref(false),
       lazyRendering: ref(false),
       defaultTag: 'Default',
+      defaultTagDescription: '',
     })
   })
 
@@ -330,6 +331,7 @@ describe('useTheme', () => {
       avoidCirculars: ref(false),
       lazyRendering: ref(false),
       defaultTag: 'Default',
+      defaultTagDescription: '',
     })
   })
 

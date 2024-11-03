@@ -79,6 +79,7 @@ export interface SpecConfig {
   avoidCirculars?: Ref<boolean>
   lazyRendering?: Ref<boolean>
   defaultTag?: string
+  defaultTagDescription?: string
 }
 
 export interface UseThemeConfig {
@@ -170,6 +171,7 @@ const themeConfig: UseThemeConfig = {
     avoidCirculars: ref(false),
     lazyRendering: ref(false),
     defaultTag: 'Default',
+    defaultTagDescription: '',
   },
 }
 
@@ -469,6 +471,10 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
 
     if (config.defaultTag !== undefined) {
       themeConfig.spec.defaultTag = config.defaultTag
+    }
+
+    if (config.defaultTagDescription !== undefined) {
+      themeConfig.spec.defaultTagDescription = config.defaultTagDescription
     }
   }
 
