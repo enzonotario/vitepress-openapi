@@ -27,6 +27,10 @@ export function OpenApi({
     return null
   }
 
+  function getSpec() {
+    return parsedSpec ?? transformedSpec ?? spec ?? {}
+  }
+
   function getParsedSpec() {
     if (!parsedSpec) {
       parsedSpec = parseSpec(transformedSpec ?? spec)
@@ -39,7 +43,7 @@ export function OpenApi({
     if (operationId) {
       const operationPath = getOperationPath(operationId)
       if (operationPath) {
-        const pathServers = spec.paths[operationPath]?.servers
+        const pathServers = getSpec().paths[operationPath]?.servers
         if (pathServers && pathServers.length > 0) {
           try {
             const firstUrl = pathServers[0].url
@@ -57,12 +61,12 @@ export function OpenApi({
       }
     }
 
-    if (!spec?.servers || spec.servers.length === 0) {
+    if (!getSpec().servers || getSpec().servers.length === 0) {
       return DEFAULT_SERVER_URL
     }
 
     try {
-      const firstUrl = spec.servers[0].url
+      const firstUrl = getSpec().servers[0].url
 
       const isValid = new URL(firstUrl)
       if (!isValid) {
@@ -71,25 +75,25 @@ export function OpenApi({
 
       return firstUrl
     } catch {
-      console.warn('Invalid server URL:', spec.servers)
+      console.warn('Invalid server URL:', getSpec().servers)
       return DEFAULT_SERVER_URL
     }
   }
 
   function getOperation(operationId: string) {
-    if (!spec?.paths) {
+    if (!getSpec().paths) {
       return null
     }
 
-    return findOperation(spec.paths, operationId)
+    return findOperation(getSpec().paths, operationId)
   }
 
   function getOperationPath(operationId: string) {
-    if (!spec?.paths) {
+    if (!getSpec().paths) {
       return null
     }
 
-    for (const [path, methods] of Object.entries(spec.paths)) {
+    for (const [path, methods] of Object.entries(getSpec().paths)) {
       for (const verb of httpVerbs) {
         if (methods[verb]?.operationId === operationId) {
           return path
@@ -101,11 +105,11 @@ export function OpenApi({
   }
 
   function getOperationMethod(operationId: string) {
-    if (!spec?.paths) {
+    if (!getSpec().paths) {
       return null
     }
 
-    for (const path of Object.values(spec.paths)) {
+    for (const path of Object.values(getSpec().paths)) {
       for (const verb of httpVerbs) {
         if (path[verb]?.operationId === operationId) {
           return verb
@@ -157,7 +161,7 @@ export function OpenApi({
   }
 
   function getPaths() {
-    return spec?.paths ?? {}
+    return getSpec().paths ?? {}
   }
 
   function getPathsByVerbs() {
@@ -182,23 +186,23 @@ export function OpenApi({
   }
 
   function getInfo() {
-    return spec?.info ?? {}
+    return getSpec().info ?? {}
   }
 
   function getExternalDocs() {
-    return spec?.externalDocs ?? {}
+    return getSpec().externalDocs ?? {}
   }
 
   function getServers() {
-    return spec?.servers ?? []
+    return getSpec().servers ?? []
   }
 
   function getOperationsTags() {
-    if (!spec?.paths) {
+    if (!getSpec().paths) {
       return []
     }
 
-    return Object.values(spec.paths).reduce((tags, path: any) => {
+    return Object.values(getSpec().paths).reduce((tags, path: any) => {
       for (const verb of httpVerbs) {
         if (path[verb]?.tags) {
           path[verb].tags.forEach((tag: string) => {
@@ -239,7 +243,7 @@ export function OpenApi({
   }
 
   function getTags() {
-    return (spec?.tags ?? [])
+    return (getSpec().tags ?? [])
       .map(({ name, description }) => ({
         name: name ?? null,
         description: description ?? null,
@@ -264,7 +268,7 @@ export function OpenApi({
   }
 
   return {
-    spec: parsedSpec ?? transformedSpec ?? spec,
+    spec: getSpec(),
     transformedSpec,
     parsedSpec,
     getBaseUrl,

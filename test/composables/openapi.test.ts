@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createOpenApiInstance } from 'vitepress-openapi'
+import { createOpenApiInstance, useOpenapi } from 'vitepress-openapi'
 import { spec } from '../testsConstants'
 
 describe('openapi with spec', () => {
@@ -182,6 +182,10 @@ describe('openapi with spec', () => {
         name: 'pets',
         description: 'Operations about pets',
       },
+      {
+        name: 'Default',
+        description: '',
+      },
     ])
   })
 
@@ -234,5 +238,41 @@ describe('spec with different servers for specific path', () => {
   it('returns local server for useLocalServer', () => {
     const result = openapi.getBaseUrl('useLocalServer')
     expect(result).toBe('https://api.local.com')
+  })
+})
+
+describe('custom specs', () => {
+  it('supports custom default tag name and description', () => {
+    const customTag = 'Custom'
+    const customDescription = 'Custom default description'
+    const openapi = useOpenapi({
+      spec: {
+        openapi: '3.0.0',
+        paths: {
+          '/no-tags': {
+            get: {
+              operationId: 'getNoTags',
+            },
+          },
+        },
+      },
+      config: {
+        spec: {
+          defaultTag: customTag,
+          defaultTagDescription: customDescription,
+        },
+      },
+    })
+
+    expect(openapi.getOperationsTags()).toEqual([customTag])
+
+    const tags = openapi.getTags()
+
+    expect(tags).toEqual([
+      {
+        name: customTag,
+        description: customDescription,
+      },
+    ])
   })
 })
