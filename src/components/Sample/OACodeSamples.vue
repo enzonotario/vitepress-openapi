@@ -1,7 +1,7 @@
 <script setup>
 import { useTheme } from 'vitepress-openapi'
 import { useCodeSamples } from 'vitepress-openapi/composables/useCodeSamples'
-import { generateCodeSample } from 'vitepress-openapi/lib/codeSamples/generateCodeSamples'
+import { generateCodeSample } from 'vitepress-openapi/lib/codeSamples/generateCodeSample'
 import { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
 import { computed } from 'vue'
 
@@ -31,7 +31,13 @@ const samples = computed(() => availableLanguages
   .map((availableLanguage) => {
     return {
       ...availableLanguage,
-      source: generateCodeSample(availableLanguage.lang, props.request),
+      source: generateCodeSample(availableLanguage.lang, {
+        ...props.request,
+        headers: {
+          ...props.request.headers,
+          ...(!props.request.headers?.['Content-Type'] ? { 'Content-Type': 'application/json' } : {}),
+        },
+      }),
     }
   }),
 )

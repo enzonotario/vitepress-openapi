@@ -5,14 +5,14 @@ export function generateCodeSamplePhp({ url, method, headers, body, query }: OAR
 
   phpCode += `$url = '${url}';\n`
 
-  phpCode += `$method = '${method}';\n\n`
+  phpCode += `$method = '${method}';\n`
 
   if (Object.keys(headers).length > 0) {
     phpCode += `$headers = [\n`
     for (const [key, value] of Object.entries(headers)) {
       phpCode += `    '${key}' => '${value}',\n`
     }
-    phpCode += `];\n\n`
+    phpCode += `];\n`
   }
 
   if (Object.keys(query).length > 0) {
@@ -20,14 +20,14 @@ export function generateCodeSamplePhp({ url, method, headers, body, query }: OAR
     for (const [key, value] of Object.entries(query)) {
       phpCode += `    '${key}' => '${value}',\n`
     }
-    phpCode += `]);\n\n`
+    phpCode += `]);\n`
   }
 
   if (body) {
-    phpCode += `$body = json_encode(${JSON.stringify(body)});\n\n`
+    phpCode += `$body = json_encode(${JSON.stringify(body)});\n`
   }
 
-  phpCode += `$ch = curl_init();\n`
+  phpCode += `\n$ch = curl_init();\n`
   phpCode += `curl_setopt($ch, CURLOPT_URL, $url${Object.keys(query).length ? ` . '?' . $query` : ''});\n`
   phpCode += `curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n`
   phpCode += `curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);\n`
@@ -41,8 +41,8 @@ export function generateCodeSamplePhp({ url, method, headers, body, query }: OAR
   }
 
   phpCode += `\n$response = curl_exec($ch);\n`
-  phpCode += `curl_close($ch);\n\n`
-  phpCode += `echo $response;\n`
+  phpCode += `curl_close($ch);\n`
+  phpCode += `\necho $response;\n`
 
   phpCode += `?>`
 
