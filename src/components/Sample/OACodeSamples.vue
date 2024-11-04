@@ -52,7 +52,7 @@ const defaultLang = useTheme().getCodeSamplesDefaultLang()
           :id="`tab-${props.operationId}-${sample.lang}`"
           type="radio"
           :name="`group-${props.operationId}`"
-          :checked="sample.lang === 'curl'"
+          :checked="sample.lang === defaultLang"
         >
         <label :for="`tab-${props.operationId}-${sample.lang}`">{{ sample.label || sample.lang }}</label>
       </template>
