@@ -2,12 +2,11 @@
 import { computed, defineEmits, defineProps, ref, watch } from 'vue'
 import OAJSONEditor from 'vitepress-openapi/components/Common/OAJSONEditor.vue'
 import { propertiesTypesJsonRecursive } from 'vitepress-openapi/lib/generateSchemaJson'
-import { usePlayground, useTheme } from 'vitepress-openapi'
+import { OARequest, usePlayground, useTheme } from 'vitepress-openapi'
 import { useStorage } from '@vueuse/core'
 import OAPlaygroundParameterInput from 'vitepress-openapi/components/Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from 'vitepress-openapi/components/Playground/OAPlaygroundSecurityInput.vue'
 import { getExample } from 'vitepress-openapi/lib/getExample'
-import { OARequest } from 'vitepress-openapi'
 
 interface SecurityScheme {
   type: string

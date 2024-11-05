@@ -1,6 +1,5 @@
 <script setup>
-import { useTheme } from 'vitepress-openapi'
-import { OARequest } from 'vitepress-openapi'
+import { OARequest, useTheme } from 'vitepress-openapi'
 import { computed } from 'vue'
 
 const props = defineProps({

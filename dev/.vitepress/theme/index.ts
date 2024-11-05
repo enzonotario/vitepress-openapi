@@ -12,26 +12,6 @@ export default {
         i18n: {
           locale: 'es',
         },
-        // codeSamples: {
-        //   langs: [
-        //     'esjs',
-        //     'typescript',
-        //   ],
-        //   availableLanguages: [
-        //     {
-        //       lang: 'esjs',
-        //       label: 'EsJS',
-        //     },
-        //     {
-        //       lang: 'typescript',
-        //       label: 'TypeScript',
-        //     },
-        //   ],
-        //   defaultLang: 'esjs',
-        //   generator: (lang, request) => {
-        //     return `${lang} code sample for ${request.method} ${request.url}`
-        //   },
-        // },
       },
     })
 
