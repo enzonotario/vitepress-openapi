@@ -7,6 +7,10 @@ outline: false
 
 The `OAOperation` component provides several slots for customizing the operation layout.
 
+<ExampleBlock>
+
+<template #code>
+
 ## Description
 
 The `description` slot allows you to customize the operation description.
@@ -21,11 +25,15 @@ title: vitepress-openapi
 <!--@include: ./parts/custom-slots-example.md-->
 ```
 
-This will render the following:
+</template>
 
-::: info Custom description slot 
+<template #example>
+
 <!--@include: ./parts/custom-slots-example.md-->
-:::
+
+</template>
+
+</ExampleBlock>
 
 ## WIP
 

@@ -12,7 +12,9 @@ Each operation can have different badges that indicate its state, for example if
 
 By default, only the `deprecated` badge is shown, as appropriate. You can customize the operation badges using the `useTheme({ operation: { badges: string[] })` function. **The order in which you set the badges is the order in which they will be displayed.**
 
-For example:
+<ExampleBlock>
+
+<template #code>
 
 ```markdown
 ---
@@ -21,22 +23,20 @@ outline: false
 title: vitepress-openapi
 ---
 
-<script setup lang="ts">
-import { useData } from 'vitepress'
-import { useTheme } from 'vitepress-openapi'
-import spec from '../public/openapi.json'
-
-const { isDark } = useData()
-
-useTheme({
-    operation: {
-        badges: ['deprecated', 'operationId'],
-    },
-})
-</script>
-
-<OAOperation :spec="spec" operationId="getAllArtists" :isDark="isDark" />
+<!--@include: ./parts/operation-badges-example.md-->
 ```
+
+</template>
+
+<template #example>
+
+<!--@include: ./parts/operation-badges-example.md-->
+
+</template>
+
+</ExampleBlock>
+
+# Custom Prefix
 
 You can also customize the prefix of the badges by setting the `operation.badgePrefix.{badgeName}` key in the i18n messages. For example, in your `.vitepress/theme/index.ts`, before calling `theme.enhanceApp({ app })`, you can set the following:
 
@@ -67,36 +67,3 @@ export default {
         theme.enhanceApp({ app })
     },
 }
-
-```
-
-## Example
-
----
-
-<script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { useData } from 'vitepress'
-import { useTheme } from 'vitepress-openapi'
-import spec from '../public/openapi.json'
-
-const { isDark } = useData()
-
-onMounted(() => {
-    useTheme({
-        operation: {
-            badges: ['deprecated', 'operationId'],
-        },
-    })
-})
-
-onUnmounted(() => {
-    useTheme({
-        operation: {
-            badges: ['deprecated'],
-        },
-    })
-})
-</script>
-
-<OAOperation :spec="spec" operationId="getAllArtists" :isDark="isDark" />
