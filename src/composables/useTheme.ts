@@ -1,11 +1,11 @@
 import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
+import type { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
+import { generateCodeSample } from 'vitepress-openapi/lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
 import type { OperationSlot } from '../types'
-import type { OARequest } from 'vitepress-openapi'
-import { generateCodeSample } from 'vitepress-openapi'
 
 export interface ThemeConfig {
   highlighterTheme: {
