@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useData } from 'vitepress'
 import { useTheme } from 'vitepress-openapi'
-import spec from '../public/openapi.json'
 
 const { isDark } = useData()
 
@@ -12,4 +11,4 @@ useTheme({
 })
 </script>
 
-<OAOperation :spec="spec" operationId="getAllArtists" :isDark="isDark" />
+<OASpec :isDark="isDark" />
