@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { OARequest } from '../../src/lib/codeSamples/request'
+import { OARequest } from 'vitepress-openapi'
 import { generateCodeSampleJavaScript } from '../../src/lib/codeSamples/generateCodeSampleJavaScript'
 import { generateCodeSampleCurl } from '../../src/lib/codeSamples/generateCodeSampleCurl'
 import { generateCodeSamplePhp } from '../../src/lib/codeSamples/generateCodeSamplePhp'

@@ -2,7 +2,7 @@
 import { defineEmits, defineProps, ref } from 'vue'
 import OAPlaygroundResponse from 'vitepress-openapi/components/Playground/OAPlaygroundResponse.vue'
 import OAPlaygroundParameters from 'vitepress-openapi/components/Playground/OAPlaygroundParameters.vue'
-import { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
+import { OARequest } from 'vitepress-openapi'
 
 const props = defineProps({
   operationId: {

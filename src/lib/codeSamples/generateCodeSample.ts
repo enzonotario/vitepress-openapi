@@ -4,7 +4,7 @@ import { generateCodeSampleCurl } from './generateCodeSampleCurl'
 import { generateCodeSamplePhp } from './generateCodeSamplePhp'
 import { generateCodeSamplePython } from './generateCodeSamplePython'
 
-export function generateCodeSample(lang: string, request: OARequest) {
+export function generateCodeSample(lang: string, request: OARequest): string {
   switch (lang) {
     case 'curl':
       return generateCodeSampleCurl(request)
@@ -15,6 +15,6 @@ export function generateCodeSample(lang: string, request: OARequest) {
     case 'python':
       return generateCodeSamplePython(request)
     default:
-      return null
+      return ''
   }
 }

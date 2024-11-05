@@ -4,6 +4,8 @@ import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
 import type { OperationSlot } from '../types'
+import type { OARequest } from 'vitepress-openapi'
+import { generateCodeSample } from 'vitepress-openapi'
 
 export interface ThemeConfig {
   highlighterTheme: {
@@ -99,7 +101,7 @@ export interface UseThemeConfig {
 export interface CodeSamplesConfig {
   langs: string[]
   defaultLang: string
-  generator: (lang: string, code: string) => string
+  generator: (lang: string, request: OARequest) => string
 }
 
 export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
@@ -114,6 +116,29 @@ export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
   'code-samples',
   'branding',
   'footer',
+]
+
+const availableLanguages = [
+  {
+    lang: 'curl',
+    label: 'cURL',
+    highlighter: 'bash',
+  },
+  {
+    lang: 'javascript',
+    label: 'JavaScript',
+    highlighter: 'javascript',
+  },
+  {
+    lang: 'php',
+    label: 'PHP',
+    highlighter: 'php',
+  },
+  {
+    lang: 'python',
+    label: 'Python',
+    highlighter: 'python',
+  },
 ]
 
 const themeConfig: UseThemeConfig = {
@@ -184,6 +209,8 @@ const themeConfig: UseThemeConfig = {
       'python',
     ],
     defaultLang: 'curl',
+    availableLanguages,
+    generator: (lang: string, request: OARequest) => generateCodeSample(lang, request),
   },
 }
 
@@ -268,6 +295,10 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
 
     if (config?.spec !== undefined) {
       setSpecConfig(config.spec)
+    }
+
+    if (config?.codeSamples !== undefined) {
+      setCodeSamplesConfig(config.codeSamples)
     }
   }
 
@@ -490,8 +521,30 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     return themeConfig.codeSamples.defaultLang
   }
 
+  function getCodeSamplesAvailableLanguages() {
+    return themeConfig.codeSamples.availableLanguages
+  }
+
   function getCodeSamplesGenerator() {
     return themeConfig.codeSamples.generator
+  }
+
+  function setCodeSamplesConfig(config: Partial<CodeSamplesConfig>) {
+    if (config.langs) {
+      themeConfig.codeSamples.langs = config.langs
+    }
+
+    if (config.defaultLang) {
+      themeConfig.codeSamples.defaultLang = config.defaultLang
+    }
+
+    if (config.availableLanguages) {
+      themeConfig.codeSamples.availableLanguages = config.availableLanguages
+    }
+
+    if (config.generator) {
+      themeConfig.codeSamples.generator = config.generator
+    }
   }
 
   return {
@@ -540,6 +593,8 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     setSpecConfig,
     getCodeSamplesLangs,
     getCodeSamplesDefaultLang,
+    getCodeSamplesAvailableLanguages,
     getCodeSamplesGenerator,
+    setCodeSamplesConfig,
   }
 }

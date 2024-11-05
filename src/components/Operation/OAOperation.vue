@@ -3,7 +3,7 @@ import { computed, inject, ref, useSlots } from 'vue'
 import OAHeaderBadges from 'vitepress-openapi/components/Common/OAHeaderBadges.vue'
 import { getOpenApiInstance } from 'vitepress-openapi'
 import type { OperationSlot } from 'vitepress-openapi/types.js'
-import { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
+import { OARequest } from 'vitepress-openapi'
 
 const props = defineProps({
   operationId: {

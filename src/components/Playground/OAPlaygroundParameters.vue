@@ -7,7 +7,7 @@ import { useStorage } from '@vueuse/core'
 import OAPlaygroundParameterInput from 'vitepress-openapi/components/Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from 'vitepress-openapi/components/Playground/OAPlaygroundSecurityInput.vue'
 import { getExample } from 'vitepress-openapi/lib/getExample'
-import { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
+import { OARequest } from 'vitepress-openapi'
 
 interface SecurityScheme {
   type: string
