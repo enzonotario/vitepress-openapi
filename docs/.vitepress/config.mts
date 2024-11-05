@@ -81,6 +81,10 @@ export default defineConfigWithTheme({
                 text: 'Operation Badges',
                 link: '/customizations/operation-badges',
               },
+              {
+                text: 'Code Samples',
+                link: '/customizations/code-samples',
+              },
             ],
           },
         ],
