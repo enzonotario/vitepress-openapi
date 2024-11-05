@@ -20,6 +20,7 @@ export { OpenApi } from './lib/OpenApi'
 export { getOpenApiInstance } from './lib/getOpenApiInstance'
 export { createOpenApiInstance } from './lib/createOpenApiInstance'
 export { OARequest } from './lib/codeSamples/request'
+export type { IOARequest } from './lib/codeSamples/request'
 export { generateCodeSample } from './lib/codeSamples/generateCodeSample'
 export { locales } from './locales'
 

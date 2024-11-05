@@ -1,3 +1,11 @@
+export interface IOARequest {
+  url: string
+  method: string
+  headers: Record<string, string>
+  body: any
+  query: Record<string, string>
+}
+
 export class OARequest {
   constructor(
     public url: string = '',

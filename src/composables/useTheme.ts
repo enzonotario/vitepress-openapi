@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
-import type { OARequest } from 'vitepress-openapi/lib/codeSamples/request'
-import { generateCodeSample } from 'vitepress-openapi/lib/codeSamples/generateCodeSample'
+import type { IOARequest } from '../lib/codeSamples/request'
+import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
 import type { OperationSlot } from '../types'
@@ -101,7 +101,7 @@ export interface UseThemeConfig {
 export interface CodeSamplesConfig {
   langs: string[]
   defaultLang: string
-  generator: (lang: string, request: OARequest) => string
+  generator: (lang: string, request: IOARequest) => string
 }
 
 export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
@@ -210,7 +210,7 @@ const themeConfig: UseThemeConfig = {
     ],
     defaultLang: 'curl',
     availableLanguages,
-    generator: (lang: string, request: OARequest) => generateCodeSample(lang, request),
+    generator: (lang: string, request: IOARequest) => generateCodeSample(lang, request),
   },
 }
 
