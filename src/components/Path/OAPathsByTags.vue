@@ -74,7 +74,11 @@ const internalTags = ref([
 
 function scrollIntoViewWithOffset(hash, offset) {
   if (!import.meta.env.SSR) {
-    const element = document.querySelector(hash)
+    const element = document.querySelector(
+      hash
+        // . escape { and } characters
+        .replace(/([{}])/g, '\\$1'),
+    )
 
     if (!element) {
       return
