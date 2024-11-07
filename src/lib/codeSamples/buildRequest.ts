@@ -49,8 +49,8 @@ function getHeaders(variables, headerParameters, authScheme) {
   return headers
 }
 
-function getUrl(baseUrl, path, variables, queryParameters) {
-  const url = new URL(`${baseUrl}${path}`)
+function getQuery(variables, queryParameters) {
+  const query = {}
 
   for (const [key, value] of Object.entries(variables)) {
     if (!queryParameters.find(parameter => parameter.name === key)) {
@@ -61,9 +61,10 @@ function getUrl(baseUrl, path, variables, queryParameters) {
       continue
     }
 
-    url.searchParams.set(key, value)
+    query[key] = value
   }
-  return url
+
+  return query
 }
 
 export function buildRequest({
@@ -93,17 +94,17 @@ export function buildRequest({
     })
   }
 
-  path = getPath(variables, pathParameters, path)
+  const resolvedPath = getPath(variables, pathParameters, path)
 
-  const url = getUrl(baseUrl, path, variables, queryParameters)
+  const query = getQuery(variables, queryParameters)
 
   const headers = getHeaders(variables, headerParameters, authScheme)
 
   return new OARequest(
-    url.origin + url.pathname,
+    `${baseUrl}${resolvedPath}`,
     method,
     Object.fromEntries(headers),
     body,
-    Object.fromEntries(url.searchParams),
+    query,
   )
 }
