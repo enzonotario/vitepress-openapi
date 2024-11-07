@@ -73,7 +73,12 @@ async function tryIt() {
       headers['Content-Type'] = 'application/json'
     }
 
-    const data = await fetch(props.request.url ?? defaultRequestUrl, {
+    const url = new URL(props.request.url ?? defaultRequestUrl)
+    for (const [key, value] of Object.entries(props.request.query)) {
+      url.searchParams.set(key, value)
+    }
+
+    const data = await fetch(url.toString(), {
       method: props.method.toUpperCase(),
       headers,
       body: props.request.body ? JSON.stringify(props.request.body) : null,
