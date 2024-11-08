@@ -1,8 +1,9 @@
 import { OARequest } from './request'
 
 function processParameters(variables, parameters, callback) {
+  const parameterNames = new Set(parameters.map(parameter => parameter.name))
   for (const [key, value] of Object.entries(variables)) {
-    if (!parameters.find(parameter => parameter.name === key)) {
+    if (!parameterNames.has(key)) {
       continue
     }
     if (value === undefined || value === '') {
