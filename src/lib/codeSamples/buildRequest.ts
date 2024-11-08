@@ -1,34 +1,31 @@
 import { OARequest } from './request'
 
-function getPath(variables, pathParameters, path) {
+function processParameters(variables, parameters, callback) {
   for (const [key, value] of Object.entries(variables)) {
-    if (!pathParameters.find(parameter => parameter.name === key)) {
+    if (!parameters.find(parameter => parameter.name === key)) {
       continue
     }
-
     if (value === undefined || value === '') {
       continue
     }
-
-    path = path.replace(`{${key}}`, value)
+    callback(key, value)
   }
-  return path
+}
+
+function getPath(variables, pathParameters, path) {
+  let resolvedPath = path
+  processParameters(variables, pathParameters, (key, value) => {
+    resolvedPath = resolvedPath.replace(`{${key}}`, value)
+  })
+  return resolvedPath
 }
 
 function getHeaders(variables, headerParameters, authScheme) {
   const headers = new Headers({})
 
-  for (const [key, value] of Object.entries(variables)) {
-    if (!headerParameters.find(parameter => parameter.name === key)) {
-      continue
-    }
-
-    if (value === undefined || value === '') {
-      continue
-    }
-
+  processParameters(variables, headerParameters, (key, value) => {
     headers.set(key, value)
-  }
+  })
 
   if (authScheme) {
     switch (authScheme.type) {
@@ -52,17 +49,9 @@ function getHeaders(variables, headerParameters, authScheme) {
 function getQuery(variables, queryParameters) {
   const query = {}
 
-  for (const [key, value] of Object.entries(variables)) {
-    if (!queryParameters.find(parameter => parameter.name === key)) {
-      continue
-    }
-
-    if (value === undefined || value === '') {
-      continue
-    }
-
+  processParameters(variables, queryParameters, (key, value) => {
     query[key] = value
-  }
+  })
 
   return query
 }
