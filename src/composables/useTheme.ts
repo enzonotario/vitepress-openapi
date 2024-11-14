@@ -103,6 +103,7 @@ export interface CodeSamplesConfig {
   defaultLang: string
   availableLanguages: LanguageConfig[]
   generator: GeneratorFunction
+  defaultHeaders: Record<string, string>
 }
 
 interface LanguageConfig {
@@ -220,6 +221,9 @@ const themeConfig: UseThemeConfig = {
     defaultLang: 'curl',
     availableLanguages,
     generator: (lang: string, request: IOARequest) => generateCodeSample(lang, request),
+    defaultHeaders: {
+      'Content-Type': 'application/json',
+    },
   },
 }
 
@@ -538,6 +542,10 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     return themeConfig.codeSamples.generator
   }
 
+  function getCodeSamplesDefaultHeaders() {
+    return themeConfig.codeSamples.defaultHeaders
+  }
+
   function setCodeSamplesConfig(config: Partial<CodeSamplesConfig>) {
     if (config.langs) {
       themeConfig.codeSamples.langs = config.langs
@@ -553,6 +561,10 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
 
     if (config.generator) {
       themeConfig.codeSamples.generator = config.generator
+    }
+
+    if (config.defaultHeaders) {
+      themeConfig.codeSamples.defaultHeaders = config.defaultHeaders
     }
   }
 
@@ -604,6 +616,7 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     getCodeSamplesDefaultLang,
     getCodeSamplesAvailableLanguages,
     getCodeSamplesGenerator,
+    getCodeSamplesDefaultHeaders,
     setCodeSamplesConfig,
   }
 }

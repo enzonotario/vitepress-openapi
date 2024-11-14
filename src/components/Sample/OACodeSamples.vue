@@ -17,11 +17,13 @@ const props = defineProps({
   },
 })
 
-const availableLanguages = useTheme().getCodeSamplesAvailableLanguages()
+const themeConfig = useTheme()
 
-const configuredLanguages = useTheme().getCodeSamplesLangs()
+const availableLanguages = themeConfig.getCodeSamplesAvailableLanguages()
 
-const generator = useTheme().getCodeSamplesGenerator()
+const configuredLanguages = themeConfig.getCodeSamplesLangs()
+
+const generator = themeConfig.getCodeSamplesGenerator()
 
 const samples = computed(() => availableLanguages
   .filter((availableLanguage) => {
@@ -34,13 +36,13 @@ const samples = computed(() => availableLanguages
         ...props.request,
         headers: {
           ...props.request.headers,
-          ...(!props.request.headers?.['Content-Type'] ? { 'Content-Type': 'application/json' } : {}),
+          ...(themeConfig.getCodeSamplesDefaultHeaders() || {}),
         },
       }),
     }
   }),
 )
-const defaultLang = useTheme().getCodeSamplesDefaultLang()
+const defaultLang = themeConfig.getCodeSamplesDefaultLang()
 </script>
 
 <template>
