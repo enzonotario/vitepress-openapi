@@ -59,21 +59,9 @@ module.exports = {
 
 ## Method Aliases
 
-By default, the following method aliases are used:
+By default, the methods are displayed in uppercase.
 
-```ts
-{
-    get: 'GET',
-    post: 'POST',
-    put: 'PUT',
-    delete: 'DELETE',
-    patch: 'PATCH',
-    options: 'OPTIONS',
-    head: 'HEAD',
-}
-```
-
-You can customize them by passing the `methodAliases` option to the `useSidebar` function.
+You can specify aliases for the methods by passing the `methodAliases` option to the `useSidebar` composable.
 
 ```ts
 const sidebar = useSidebar({ 
