@@ -1,7 +1,9 @@
 <script setup>
-import { computed, defineProps } from 'vue'
+import { computed, defineProps, ref } from 'vue'
 import { useTheme } from 'vitepress-openapi/composables/useTheme'
 import { getOpenApiInstance } from 'vitepress-openapi'
+import { buildRequest } from 'vitepress-openapi/lib/codeSamples/buildRequest'
+import { propertiesTypesJsonRecursive } from 'vitepress-openapi/lib/generateSchemaJson'
 
 const props = defineProps({
   id: {
@@ -39,6 +41,26 @@ const operationResponses = operationParsed?.responses
 const operationSlots = computed(() => themeConfig.getOperationSlots().filter(slot => !themeConfig.getOperationHiddenSlots().includes(slot)))
 
 const operationCols = computed(() => themeConfig.getOperationCols())
+
+const shouldBuildRequest = computed(() => ['try-it', 'code-samples'].some(slot => operationSlots.value.includes(slot)))
+
+const request = ref(
+  shouldBuildRequest.value
+    ? buildRequest({
+      path: operationPath,
+      method: operationMethod,
+      baseUrl,
+      parameters: operationParameters ?? [],
+      authScheme: securitySchemes.length ? securitySchemes[0] : undefined,
+      body: operationRequestBody ? propertiesTypesJsonRecursive(operationRequestBody, true) : undefined,
+      variables: {},
+    })
+    : {},
+)
+
+function updateRequest(newRequest) {
+  request.value = newRequest
+}
 </script>
 
 <template>
@@ -171,6 +193,8 @@ const operationCols = computed(() => themeConfig.getOperationCols())
                 :parameters="operationParameters"
                 :schema="operationRequestBody"
                 :security-schemes="securitySchemes"
+                :request="request"
+                :update-request="updateRequest"
               />
             </template>
 
@@ -182,6 +206,8 @@ const operationCols = computed(() => themeConfig.getOperationCols())
                 :method="operationMethod"
                 :base-url="baseUrl"
                 :path="operationPath"
+                :request="request"
+                :update-request="updateRequest"
               />
             </template>
           </div>

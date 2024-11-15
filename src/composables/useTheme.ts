@@ -1,6 +1,8 @@
 import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
+import type { IOARequest } from '../lib/codeSamples/request'
+import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
 import type { OperationSlot } from '../types'
@@ -95,7 +97,24 @@ export interface UseThemeConfig {
   operation?: Partial<OperationConfig>
   i18n?: Partial<I18nConfig>
   spec?: Partial<SpecConfig>
+  codeSamples?: Partial<CodeSamplesConfig>
 }
+
+export interface CodeSamplesConfig {
+  langs: string[]
+  defaultLang: string
+  availableLanguages: LanguageConfig[]
+  generator: GeneratorFunction
+  defaultHeaders: Record<string, string>
+}
+
+interface LanguageConfig {
+  lang: string
+  label: string
+  highlighter: string
+}
+
+type GeneratorFunction = (lang: string, request: IOARequest) => string
 
 export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
   'header',
@@ -109,6 +128,29 @@ export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
   'code-samples',
   'branding',
   'footer',
+]
+
+const availableLanguages: LanguageConfig[] = [
+  {
+    lang: 'curl',
+    label: 'cURL',
+    highlighter: 'bash',
+  },
+  {
+    lang: 'javascript',
+    label: 'JavaScript',
+    highlighter: 'javascript',
+  },
+  {
+    lang: 'php',
+    label: 'PHP',
+    highlighter: 'php',
+  },
+  {
+    lang: 'python',
+    label: 'Python',
+    highlighter: 'python',
+  },
 ]
 
 const themeConfig: UseThemeConfig = {
@@ -172,6 +214,20 @@ const themeConfig: UseThemeConfig = {
     lazyRendering: ref(false),
     defaultTag: 'Default',
     defaultTagDescription: '',
+  },
+  codeSamples: {
+    langs: [
+      'curl',
+      'javascript',
+      'php',
+      'python',
+    ],
+    defaultLang: 'curl',
+    availableLanguages,
+    generator: (lang: string, request: IOARequest) => generateCodeSample(lang, request),
+    defaultHeaders: {
+      'Content-Type': 'application/json',
+    },
   },
 }
 
@@ -256,6 +312,10 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
 
     if (config?.spec !== undefined) {
       setSpecConfig(config.spec)
+    }
+
+    if (config?.codeSamples !== undefined) {
+      setCodeSamplesConfig(config.codeSamples)
     }
   }
 
@@ -478,6 +538,48 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     }
   }
 
+  function getCodeSamplesLangs() {
+    return themeConfig.codeSamples.langs
+  }
+
+  function getCodeSamplesDefaultLang() {
+    return themeConfig.codeSamples.defaultLang
+  }
+
+  function getCodeSamplesAvailableLanguages() {
+    return themeConfig.codeSamples.availableLanguages
+  }
+
+  function getCodeSamplesGenerator() {
+    return themeConfig.codeSamples.generator
+  }
+
+  function getCodeSamplesDefaultHeaders() {
+    return themeConfig.codeSamples.defaultHeaders
+  }
+
+  function setCodeSamplesConfig(config: Partial<CodeSamplesConfig>) {
+    if (config.langs) {
+      themeConfig.codeSamples.langs = config.langs
+    }
+
+    if (config.defaultLang) {
+      themeConfig.codeSamples.defaultLang = config.defaultLang
+    }
+
+    if (config.availableLanguages) {
+      themeConfig.codeSamples.availableLanguages = config.availableLanguages
+    }
+
+    if (config.generator) {
+      themeConfig.codeSamples.generator = config.generator
+    }
+
+    if (config.defaultHeaders) {
+      themeConfig.codeSamples.defaultHeaders = config.defaultHeaders
+    }
+  }
+
   return {
     schemaConfig: themeConfig.requestBody,
     reset,
@@ -522,5 +624,11 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     setI18nConfig,
     getSpecConfig,
     setSpecConfig,
+    getCodeSamplesLangs,
+    getCodeSamplesDefaultLang,
+    getCodeSamplesAvailableLanguages,
+    getCodeSamplesGenerator,
+    getCodeSamplesDefaultHeaders,
+    setCodeSamplesConfig,
   }
 }

@@ -114,10 +114,11 @@ export const fetchToCurl = ({
   method,
   headers,
   body,
-}: { url: string, method: string, headers: any, body: any }): string => {
+  query,
+}: { url: string, method: string, headers: any, body: any, query: any }): string => {
   const headersArgument = generateHeadersArgument(headers)
 
-  let output = `curl ${generateMethodArgument(method)}'${url}'`
+  let output = `curl ${generateMethodArgument(method)}'${url}${Object.keys(query ?? {}).length ? `?${new URLSearchParams(query).toString()}` : ''}'`
 
   if (headersArgument.params) {
     output += ` \\\n${headersArgument.params}`

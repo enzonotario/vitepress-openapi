@@ -2,11 +2,12 @@
 import { computed, defineEmits, defineProps, ref, watch } from 'vue'
 import OAJSONEditor from 'vitepress-openapi/components/Common/OAJSONEditor.vue'
 import { propertiesTypesJsonRecursive } from 'vitepress-openapi/lib/generateSchemaJson'
-import { usePlayground, useTheme } from 'vitepress-openapi'
+import { OARequest, usePlayground, useTheme } from 'vitepress-openapi'
 import { useStorage } from '@vueuse/core'
 import OAPlaygroundParameterInput from 'vitepress-openapi/components/Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from 'vitepress-openapi/components/Playground/OAPlaygroundSecurityInput.vue'
 import { getExample } from 'vitepress-openapi/lib/getExample'
+import { buildRequest } from 'vitepress-openapi/lib/codeSamples/buildRequest'
 
 interface SecurityScheme {
   type: string
@@ -18,10 +19,7 @@ interface SecurityScheme {
 const props = defineProps({
   request: { // v-model
     type: Object,
-    default: () => ({
-      url: '',
-      headers: {},
-    }),
+    default: () => (new OARequest()),
   },
   operationId: {
     type: String,
@@ -90,77 +88,6 @@ const authScheme = ref(null)
 
 const body = ref(props.schema ? propertiesTypesJsonRecursive(props.schema, true) : null)
 
-function buildRequest() {
-  let requestPath = props.path
-
-  for (const [key, value] of Object.entries(variables.value)) {
-    if (!pathParameters.find(parameter => parameter.name === key)) {
-      continue
-    }
-
-    if (value === undefined || value === '') {
-      continue
-    }
-
-    requestPath = requestPath.replace(`{${key}}`, value)
-  }
-
-  const url = new URL(`${props.baseUrl}${requestPath}`)
-
-  for (const [key, value] of Object.entries(variables.value)) {
-    if (!queryParameters.find(parameter => parameter.name === key)) {
-      continue
-    }
-
-    if (value === undefined || value === '') {
-      continue
-    }
-
-    url.searchParams.set(key, value)
-  }
-
-  const headers = new Headers({})
-
-  for (const [key, value] of Object.entries(variables.value)) {
-    if (!headerParameters.find(parameter => parameter.name === key)) {
-      continue
-    }
-
-    if (value === undefined || value === '') {
-      continue
-    }
-
-    headers.set(key, value)
-  }
-
-  if (authScheme.value) {
-    switch (authScheme.value.type) {
-      case 'http':
-        headers.set('Authorization', `${authScheme.value.scheme === 'basic' ? 'Basic' : 'Bearer'} ${authScheme.value.value}`)
-        break
-      case 'apiKey':
-        headers.set(authScheme.value.name, authScheme.value.value)
-        break
-      case 'openIdConnect':
-        headers.set('Authorization', `Bearer ${authScheme.value.value}`)
-        break
-      case 'oauth2':
-        headers.set('Authorization', `Bearer ${authScheme.value.value}`)
-        break
-    }
-  }
-
-  const newRequest = {
-    url: url.toString(),
-    headers: Object.fromEntries(headers),
-    body: body.value,
-  }
-
-  emits('update:request', newRequest)
-
-  return newRequest
-}
-
 function setAuthScheme(scheme: SecurityScheme) {
   const name = selectedSchemeName.value
 
@@ -172,7 +99,17 @@ function setAuthScheme(scheme: SecurityScheme) {
   }
 }
 
-watch([variables, authScheme, body], buildRequest, { deep: true, immediate: true })
+watch([variables, authScheme, body], () => {
+  emits('update:request', buildRequest({
+    baseUrl: props.baseUrl,
+    method: props.method,
+    path: props.path,
+    variables: variables.value,
+    authScheme: authScheme.value,
+    body: body.value,
+    parameters: props.parameters,
+  }))
+}, { deep: true })
 
 watch(selectedScheme, () => {
   if (!selectedScheme.value) {

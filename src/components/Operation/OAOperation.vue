@@ -258,6 +258,7 @@ function hasSlot(name) {
     >
       <ClientOnly>
         <OATryWithVariables
+          :request="tryIt.request"
           :operation-id="tryIt.operationId"
           :path="tryIt.path"
           :method="tryIt.method"
@@ -266,6 +267,7 @@ function hasSlot(name) {
           :schema="tryIt.schema"
           :security-schemes="tryIt.securitySchemes"
           :is-dark="isDark"
+          @update:request="tryIt.updateRequest"
         />
       </ClientOnly>
     </template>
@@ -295,6 +297,7 @@ function hasSlot(name) {
         :path="codeSamples.path"
         :method="codeSamples.method"
         :base-url="codeSamples.baseUrl"
+        :request="codeSamples.request"
         :is-dark="isDark"
       />
     </template>

@@ -1,20 +1,9 @@
 <script setup>
-import { generateCodeSamples } from '../../lib/generateCodeSamples'
+import { OARequest, useTheme } from 'vitepress-openapi'
+import { computed } from 'vue'
 
 const props = defineProps({
   operationId: {
-    type: String,
-    required: true,
-  },
-  path: {
-    type: String,
-    required: true,
-  },
-  method: {
-    type: String,
-    default: 'GET',
-  },
-  baseUrl: {
     type: String,
     required: true,
   },
@@ -22,36 +11,63 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  request: {
+    type: Object,
+    default: () => (new OARequest()),
+  },
 })
 
-const url = props.baseUrl + props.path
+const themeConfig = useTheme()
 
-const samples = generateCodeSamples(url, props.method)
+const availableLanguages = themeConfig.getCodeSamplesAvailableLanguages()
+
+const configuredLanguages = themeConfig.getCodeSamplesLangs()
+
+const generator = themeConfig.getCodeSamplesGenerator()
+
+const samples = computed(() => availableLanguages
+  .filter((availableLanguage) => {
+    return configuredLanguages.includes(availableLanguage.lang)
+  })
+  .map((availableLanguage) => {
+    return {
+      ...availableLanguage,
+      source: generator(availableLanguage.lang, {
+        ...props.request,
+        headers: {
+          ...(themeConfig.getCodeSamplesDefaultHeaders() || {}),
+          ...props.request.headers,
+        },
+      }),
+    }
+  }),
+)
+const defaultLang = themeConfig.getCodeSamplesDefaultLang()
 </script>
 
 <template>
   <div class="vp-code-group vp-adaptive-theme">
     <div class="tabs">
-      <template v-for="(sample, key) in samples" :key="key">
+      <template v-for="sample in samples" :key="sample.lang">
         <input
-          :id="`tab-${props.operationId}-${key}`"
+          :id="`tab-${props.operationId}-${sample.lang}`"
           type="radio"
           :name="`group-${props.operationId}`"
-          :checked="key === 'curl'"
+          :checked="sample.lang === defaultLang"
         >
-        <label :for="`tab-${props.operationId}-${key}`">{{ sample.label || sample.lang }}</label>
+        <label :for="`tab-${props.operationId}-${sample.lang}`">{{ sample.label || sample.lang }}</label>
       </template>
     </div>
 
     <div class="blocks">
       <OACodeBlock
-        v-for="(sample, key) in samples"
-        :key="key"
+        v-for="sample in samples"
+        :key="sample.lang"
         :code="sample.source"
-        :lang="sample.lang"
+        :lang="sample.highlighter"
         :label="sample.label"
         :is-dark="props.isDark"
-        :class="{ active: key === 'curl' }"
+        :class="{ active: sample.lang === defaultLang }"
         class="!mb-0"
       />
     </div>
