@@ -56,3 +56,37 @@ module.exports = {
     },
 }
 ```
+
+## Method Aliases
+
+By default, the following method aliases are used:
+
+```ts
+{
+    get: 'GET',
+    post: 'POST',
+    put: 'PUT',
+    delete: 'DELETE',
+    patch: 'PATCH',
+    options: 'OPTIONS',
+    head: 'HEAD',
+}
+```
+
+You can customize them by passing the `methodAliases` option to the `useSidebar` function.
+
+```ts
+const sidebar = useSidebar({ 
+    spec,
+    methodAliases: {
+        get: 'GE',
+        post: 'PO',
+        put: 'PU',
+        delete: 'DE',
+        patch: 'PA',
+        options: 'OP',
+        head: 'HE',
+    },
+})
+```
+
