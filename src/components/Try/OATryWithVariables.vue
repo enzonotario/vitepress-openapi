@@ -66,7 +66,7 @@ const loading = ref(false)
       :security-schemes="props.securitySchemes ?? {}"
       :schema="props.schema"
       :is-dark="props.isDark"
-      @update:request="($event) => $emit('update:request', $event)"
+      @update:request="($event) => emits('update:request', $event)"
     />
 
     <OATryItButton
