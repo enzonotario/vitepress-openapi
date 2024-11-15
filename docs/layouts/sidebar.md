@@ -56,3 +56,25 @@ module.exports = {
     },
 }
 ```
+
+## Method Aliases
+
+By default, the methods are displayed in uppercase.
+
+You can specify aliases for the methods by passing the `methodAliases` option to the `useSidebar` composable.
+
+```ts
+const sidebar = useSidebar({ 
+    spec,
+    methodAliases: {
+        get: 'GE',
+        post: 'PO',
+        put: 'PU',
+        delete: 'DE',
+        patch: 'PA',
+        options: 'OP',
+        head: 'HE',
+    },
+})
+```
+

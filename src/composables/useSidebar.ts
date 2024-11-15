@@ -27,11 +27,13 @@ export function useSidebar({
   linkPrefix,
   tagLinkPrefix,
   defaultTag,
+  methodAliases,
 }: {
   spec?: OpenAPI
   linkPrefix?: string
   tagLinkPrefix?: string
   defaultTag?: string
+  methodAliases?: Record<string, string>
 } = {
   ...defaultOptions,
 }) {
@@ -53,8 +55,10 @@ export function useSidebar({
   })
 
   function sidebarItemTemplate(method: string, title: string) {
+    const resolvedMethod = methodAliases?.[method] || method.toUpperCase()
+
     return `<span class="OASidebarItem group/oaSidebarItem">
-        <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
+        <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${resolvedMethod}</span>
         <span class="OASidebarItem-text text">${title}</span>
       </span>`
   }
