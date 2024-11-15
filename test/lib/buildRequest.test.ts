@@ -89,4 +89,23 @@ describe('buildRequest', () => {
     })
     expect(request.url).toBe('https://api.example.com/users/{userId}')
   })
+
+  it('builds request with path, query, headers with examples', () => {
+    const request = buildRequest({
+      path: '/users/{userId}',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [
+        { name: 'userId', in: 'path', example: '123' },
+        { name: 'search', in: 'query', example: 'test' },
+        { name: 'Authorization', in: 'header', example: 'Bearer YOUR_TOKEN' },
+      ],
+      authScheme: null,
+      body: null,
+      variables: {},
+    })
+    expect(request.url).toBe('https://api.example.com/users/123')
+    expect(request.query.search).toBe('test')
+    expect(request.headers.authorization).toBe('Bearer YOUR_TOKEN')
+  })
 })

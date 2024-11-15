@@ -1,3 +1,4 @@
+import { getExample } from '../getExample'
 import { OARequest } from './request'
 
 function processParameters(variables, parameters, callback) {
@@ -57,6 +58,21 @@ function getQuery(variables, queryParameters) {
   return query
 }
 
+function setExamplesAsVariables(parameters, variables) {
+  parameters.forEach((parameter) => {
+    if (variables[parameter.name] !== undefined) {
+      return
+    }
+
+    const example = getExample(parameter)
+    if (example !== null) {
+      variables[parameter.name] = example
+    }
+  })
+
+  return variables
+}
+
 export function buildRequest({
   path,
   method,
@@ -66,6 +82,8 @@ export function buildRequest({
   body,
   variables,
 }) {
+  const resolvedVariables = setExamplesAsVariables(parameters, variables)
+
   const pathParameters = parameters.filter(parameter => parameter.in === 'path')
   const queryParameters = parameters.filter(parameter => parameter.in === 'query')
   const headerParameters = parameters.filter(parameter => parameter.in === 'header')
@@ -80,15 +98,15 @@ export function buildRequest({
       headerParameters,
       authScheme,
       body,
-      variables,
+      resolvedVariables,
     })
   }
 
-  const resolvedPath = getPath(variables, pathParameters, path)
+  const resolvedPath = getPath(resolvedVariables, pathParameters, path)
 
-  const query = getQuery(variables, queryParameters)
+  const query = getQuery(resolvedVariables, queryParameters)
 
-  const headers = getHeaders(variables, headerParameters, authScheme)
+  const headers = getHeaders(resolvedVariables, headerParameters, authScheme)
 
   return new OARequest(
     `${baseUrl}${resolvedPath}`,
