@@ -35,8 +35,8 @@ const samples = computed(() => availableLanguages
       source: generator(availableLanguage.lang, {
         ...props.request,
         headers: {
-          ...props.request.headers,
           ...(themeConfig.getCodeSamplesDefaultHeaders() || {}),
+          ...props.request.headers,
         },
       }),
     }

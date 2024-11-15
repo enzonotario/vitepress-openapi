@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
-import type { IOARequest, OARequest } from '../lib/codeSamples/request'
+import type { IOARequest } from '../lib/codeSamples/request'
 import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
@@ -112,7 +112,7 @@ interface LanguageConfig {
   highlighter: string
 }
 
-type GeneratorFunction = (lang: string, request: OARequest) => string
+type GeneratorFunction = (lang: string, request: IOARequest) => string
 
 export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
   'header',
