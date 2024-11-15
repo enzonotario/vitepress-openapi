@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { generateMissingOperationIds } from '../../src/lib/generateMissingOperationIds';
+import { describe, expect, it } from 'vitest'
+import { generateMissingOperationIds } from '../../src/lib/generateMissingOperationIds'
 
 describe('generateMissingOperationIds', () => {
   it('adds operationId to verbs without operationId', () => {
@@ -10,11 +10,11 @@ describe('generateMissingOperationIds', () => {
           post: { operationId: 'existingOperationId' },
         },
       },
-    };
-    const result = generateMissingOperationIds(input);
-    expect(result.paths['/users'].get.operationId).toBe('get-users');
-    expect(result.paths['/users'].post.operationId).toBe('existingOperationId');
-  });
+    }
+    const result = generateMissingOperationIds(input)
+    expect(result.paths['/users'].get.operationId).toBe('get-users')
+    expect(result.paths['/users'].post.operationId).toBe('existingOperationId')
+  })
 
   it('does not modify paths that already have operationId', () => {
     const input = {
@@ -24,11 +24,11 @@ describe('generateMissingOperationIds', () => {
           post: { operationId: 'existingPostOperationId' },
         },
       },
-    };
-    const result = generateMissingOperationIds(input);
-    expect(result.paths['/users'].get.operationId).toBe('existingGetOperationId');
-    expect(result.paths['/users'].post.operationId).toBe('existingPostOperationId');
-  });
+    }
+    const result = generateMissingOperationIds(input)
+    expect(result.paths['/users'].get.operationId).toBe('existingGetOperationId')
+    expect(result.paths['/users'].post.operationId).toBe('existingPostOperationId')
+  })
 
   it('handles multiple paths and verbs', () => {
     const input = {
@@ -42,13 +42,13 @@ describe('generateMissingOperationIds', () => {
           put: {},
         },
       },
-    };
-    const result = generateMissingOperationIds(input);
-    expect(result.paths['/users'].get.operationId).toBe('get-users');
-    expect(result.paths['/users'].post.operationId).toBe('post-users');
-    expect(result.paths['/products'].get.operationId).toBe('get-products');
-    expect(result.paths['/products'].put.operationId).toBe('put-products');
-  });
+    }
+    const result = generateMissingOperationIds(input)
+    expect(result.paths['/users'].get.operationId).toBe('get-users')
+    expect(result.paths['/users'].post.operationId).toBe('post-users')
+    expect(result.paths['/products'].get.operationId).toBe('get-products')
+    expect(result.paths['/products'].put.operationId).toBe('put-products')
+  })
 
   it('handles paths with special characters', () => {
     const input = {
@@ -57,14 +57,14 @@ describe('generateMissingOperationIds', () => {
           get: {},
         },
       },
-    };
-    const result = generateMissingOperationIds(input);
-    expect(result.paths['/users/{userId}'].get.operationId).toBe('get-users-{userId}');
-  });
+    }
+    const result = generateMissingOperationIds(input)
+    expect(result.paths['/users/{userId}'].get.operationId).toBe('get-users-{userId}')
+  })
 
   it('returns the same object if no paths are provided', () => {
-    const input = {};
-    const result = generateMissingOperationIds(input);
-    expect(result).toEqual(input);
-  });
-});
+    const input = {}
+    const result = generateMissingOperationIds(input)
+    expect(result).toEqual(input)
+  })
+})
