@@ -108,4 +108,30 @@ describe('buildRequest', () => {
     expect(request.query.search).toBe('test')
     expect(request.headers.authorization).toBe('Bearer YOUR_TOKEN')
   })
+
+  it('builds request with basic auth scheme', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [],
+      authScheme: { type: 'http', scheme: 'basic', value: 'username:password' },
+      body: null,
+      variables: {},
+    })
+    expect(request.headers.authorization).toBe('Basic username:password')
+  })
+
+  it('builds request with apiKey auth scheme', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [],
+      authScheme: { type: 'apiKey', name: 'x-api-key', in: 'header', value: 'key123' },
+      body: null,
+      variables: {},
+    })
+    expect(request.headers['x-api-key']).toBe('key123')
+  })
 })
