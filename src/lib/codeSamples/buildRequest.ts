@@ -80,7 +80,7 @@ export function buildRequest({
   parameters,
   authScheme,
   body,
-  variables,
+  variables = {},
 }) {
   const resolvedVariables = setExamplesAsVariables(parameters, variables)
 

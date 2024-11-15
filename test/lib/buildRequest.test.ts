@@ -77,7 +77,7 @@ describe('buildRequest', () => {
     expect(request.url).toBe('https://api.example.com/users/{userId}')
   })
 
-  it('handles missing path parameters', () => {
+  it('handles missing path parameters in variables', () => {
     const request = buildRequest({
       path: '/users/{userId}',
       method: 'GET',
@@ -133,5 +133,62 @@ describe('buildRequest', () => {
       variables: {},
     })
     expect(request.headers['x-api-key']).toBe('key123')
+  })
+
+  it('variables take precedence over examples', () => {
+    const request = buildRequest({
+      path: '/users/{userId}',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [
+        { name: 'userId', in: 'path', example: '123' },
+        { name: 'search', in: 'query', example: 'test' },
+      ],
+      authScheme: null,
+      body: null,
+      variables: {
+        userId: '456',
+        search: 'production',
+      },
+    })
+    expect(request.url).toBe('https://api.example.com/users/456')
+    expect(request.query.search).toBe('production')
+  })
+
+  it('handles URL-unsafe characters in parameters', () => {
+    const request = buildRequest({
+      path: '/users/{userId}',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [
+        { name: 'userId', in: 'path' },
+        { name: 'q', in: 'query' },
+      ],
+      authScheme: null,
+      body: null,
+      variables: {
+        userId: 'user/123',
+        q: 'test&special=true',
+      },
+    })
+    expect(request.url).toBe('https://api.example.com/users/user/123')
+    expect(request.query.q).toBe('test&special=true')
+  })
+
+  it('handles duplicate query parameters', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [
+        { name: 'tag', in: 'query' },
+      ],
+      authScheme: null,
+      body: null,
+      variables: {
+        tag: ['urgent', 'important'],
+      },
+    })
+    expect(request.query.tag).toEqual(['urgent', 'important'])
   })
 })
