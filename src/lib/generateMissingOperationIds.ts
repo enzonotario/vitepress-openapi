@@ -1,21 +1,19 @@
-import { httpVerbs } from 'vitepress-openapi'
+import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
 
-export function generateMissingOperationIds(value: any) {
-  if (!value.paths) {
-    return value
+export function generateMissingOperationIds(spec: OpenAPI.Document): OpenAPI.Document {
+  spec.paths = spec.paths || {}
+
+  for (const path of Object.keys(spec.paths)) {
+    const pathValue = spec.paths[path] as Record<string, OpenAPIV3.OperationObject>
+
+    for (const verb of Object.keys(pathValue) as OpenAPIV3.HttpMethods[]) {
+      const operation = pathValue[verb]
+
+      if (!operation.operationId) {
+        operation.operationId = `${verb}${path.replace(/\//g, '-')}`
+      }
+    }
   }
 
-  return {
-    ...value,
-    paths: Object.fromEntries(
-      Object.entries(value.paths).map(([path, pathValue]) => {
-        httpVerbs.forEach((verb) => {
-          if (pathValue[verb] && !pathValue[verb].operationId) {
-            pathValue[verb].operationId = `${verb}${path.replace(/\//g, '-')}`
-          }
-        })
-        return [path, pathValue]
-      }),
-    ),
-  }
+  return spec
 }

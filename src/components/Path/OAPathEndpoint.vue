@@ -1,5 +1,5 @@
 <script setup>
-import OAMethodBadge from 'vitepress-openapi/components/Common/OAMethodBadge.vue'
+import OAMethodBadge from '../Common/OAMethodBadge.vue'
 
 const props = defineProps({
   path: {

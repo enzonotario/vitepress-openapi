@@ -29,9 +29,9 @@ describe('securityScheme default values', () => {
     expect(playground.getSecuritySchemeDefaultValue(scheme)).toBe('Custom API Key')
   })
 
-  it('returns scheme name if type is not in securitySchemeDefaultValues', () => {
+  it('returns empty string if type is not in securitySchemeDefaultValues', () => {
     const scheme = { type: 'customType', name: 'Custom Scheme' }
-    expect(playground.getSecuritySchemeDefaultValue(scheme)).toBe('Custom Scheme')
+    expect(playground.getSecuritySchemeDefaultValue(scheme)).toBe('')
   })
 
   it('returns empty string if type is not in securitySchemeDefaultValues and name is not provided', () => {

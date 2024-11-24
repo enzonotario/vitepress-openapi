@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref } from 'vue'
+import { computed, defineProps, ref } from 'vue'
 import {
   Select,
   SelectContent,
@@ -7,8 +7,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from 'vitepress-openapi/components/ui/select'
-import { Label } from 'vitepress-openapi/components/ui/label'
+} from '../ui/select'
+import { Label } from '../ui/label'
 
 const props = defineProps({
   operationId: {
@@ -31,9 +31,11 @@ const props = defineProps({
 
 const contentTypes = Object.keys(props.response.content ?? {})
 
-const contentType = ref(contentTypes[0] ?? '')
+const contentType = ref(contentTypes[0] ?? undefined)
 
-const schema = props.response.content?.[contentType.value]?.schema
+const schema = computed(() => props.response.content?.[contentType.value]?.ui)
+
+const schemaJson = computed(() => props.response.content?.[contentType.value]?.uiContentType)
 
 const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
 </script>
@@ -81,6 +83,7 @@ const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
     <OASchemaTabs
       v-if="schema"
       :schema="schema"
+      :schema-ui-content-type="schemaJson"
       :content-type="contentType"
       :is-dark="props.isDark"
     />

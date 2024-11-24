@@ -1,14 +1,15 @@
+import type { OpenAPI } from '@scalar/openapi-types'
 import { generateMissingOperationIds } from './generateMissingOperationIds'
 import { generateMissingSummary } from './generateMissingSummary'
 import { generateMissingTags } from './generateMissingTags'
 
-export function transformSpec(spec) {
+export function prepareOpenAPI(spec: OpenAPI.Document): OpenAPI.Document {
   if (import.meta.env.VITE_DEBUG) {
     console.warn('Transforming OpenAPI spec:', spec)
   }
 
   if (!spec) {
-    return
+    return {}
   }
 
   if (!spec.openapi || !spec.openapi.startsWith('3.')) {

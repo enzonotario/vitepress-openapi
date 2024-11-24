@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, onMounted } from 'vue'
+import { Input } from '../ui/input'
+import { Checkbox } from '../ui/checkbox'
+import { getExample } from '../../lib/getExample'
 import {
   Select,
   SelectContent,
@@ -7,10 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from 'vitepress-openapi/components/ui/select'
-import { Input } from 'vitepress-openapi/components/ui/input'
-import { Checkbox } from 'vitepress-openapi/components/ui/checkbox'
-import { getExample } from 'vitepress-openapi/lib/getExample'
+} from '../ui/select'
 
 const props = defineProps({
   parameter: {

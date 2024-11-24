@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed, defineProps, nextTick, ref } from 'vue'
-import { Collapsible, CollapsibleTrigger } from 'vitepress-openapi/components/ui/collapsible'
-import { Button } from 'vitepress-openapi/components/ui/button'
 import { useI18n } from 'vue-i18n'
-import { getOpenApiInstance, useTheme } from 'vitepress-openapi'
-import OAPathsSummary from 'vitepress-openapi/components/Path/OAPathsSummary.vue'
-import OALazy from 'vitepress-openapi/components/Common/Lazy/OALazy.vue'
-import type { OperationSlot } from 'vitepress-openapi/types'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
+import { useTheme } from '../../composables/useTheme'
+import OALazy from '../Common/Lazy/OALazy.vue'
+import OAPathsSummary from '../Path/OAPathsSummary.vue'
+import { Button } from '../ui/button'
+import { Collapsible, CollapsibleTrigger } from '../ui/collapsible'
+import type { OperationSlot } from '../../types'
 
 const props = defineProps({
   openapi: {
@@ -31,7 +33,7 @@ const props = defineProps({
   },
 })
 
-const slots = defineSlots<OperationSlot>()
+const slots = defineSlots<Record<string, OperationSlot>>()
 
 const { t } = useI18n()
 
@@ -39,11 +41,11 @@ const themeConfig = useTheme()
 
 const openapi = props.openapi ?? getOpenApiInstance()
 
-const tagsInfo = openapi.getTags()
+const tagsInfo: OpenAPIV3.TagObject[] = openapi.getTags()
 
 const operationsTags = props.tags ?? openapi.getOperationsTags()
 
-const pathsByTags = operationsTags.map((tag) => {
+const pathsByTags = operationsTags.map((tag: string) => {
   return {
     tag,
     paths: openapi.getPathsByTags(tag),
@@ -56,23 +58,23 @@ const internalTags = ref([
   ...(pathsWithoutTags.length
     ? [
         {
-          tag: t(useTheme().getSpecConfig.defaultTag),
+          tag: t(useTheme().getSpecConfig()?.defaultTag ?? 'Default'),
           paths: pathsWithoutTags,
-          isOpen: !themeConfig.getSpecConfig().collapsePaths.value,
+          isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
         },
       ]
     : []),
 
-  ...pathsByTags.map((tag) => {
+  ...pathsByTags.map((tag: { tag: string, paths: Record<string, any> }) => {
     return {
       tag: tag.tag,
       paths: tag.paths,
-      isOpen: !themeConfig.getSpecConfig().collapsePaths.value,
+      isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
     }
   }),
 ])
 
-function scrollIntoViewWithOffset(hash, offset) {
+function scrollIntoViewWithOffset(hash: string, offset: number) {
   if (!import.meta.env.SSR) {
     const element = document.querySelector(
       hash
@@ -96,7 +98,7 @@ function scrollIntoViewWithOffset(hash, offset) {
   }
 }
 
-function onPathClick(tagPaths, hash) {
+function onPathClick(tagPaths: { tag: string, paths: Record<string, any>, isOpen: boolean }, hash: string) {
   tagPaths.isOpen = true
 
   nextTick(() => {
@@ -104,10 +106,10 @@ function onPathClick(tagPaths, hash) {
   })
 }
 
-const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
+const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
 
 const showPathsSummary = computed(() => props.hidePathsSummary === undefined
-  ? themeConfig.getSpecConfig().showPathsSummary.value
+  ? themeConfig.getSpecConfig()?.showPathsSummary?.value
   : !props.hidePathsSummary,
 )
 </script>
@@ -132,7 +134,7 @@ const showPathsSummary = computed(() => props.hidePathsSummary === undefined
       >
         <div>
           <p v-if="tagsInfo.find(tag => tag.name === tagPaths.tag)?.description">
-            {{ tagsInfo.find(tag => tag.name === tagPaths.tag).description }}
+            {{ tagsInfo.find(tag => tag.name === tagPaths.tag)?.description }}
           </p>
         </div>
 
@@ -150,7 +152,7 @@ const showPathsSummary = computed(() => props.hidePathsSummary === undefined
       </div>
 
       <div
-        v-if="showPathsSummary || themeConfig.getSpecConfig().collapsePaths.value === true"
+        v-if="showPathsSummary || themeConfig.getSpecConfig()?.collapsePaths?.value === true"
         class="flex justify-center"
       >
         <CollapsibleTrigger>

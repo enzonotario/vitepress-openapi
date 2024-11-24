@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from 'vue'
 import { SelectSeparator, type SelectSeparatorProps } from 'radix-vue'
-import { cn } from 'vitepress-openapi/lib/utils'
+import { cn } from '../../../lib/utils'
 
 const props = defineProps<SelectSeparatorProps & { class?: HTMLAttributes['class'] }>()
 

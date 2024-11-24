@@ -1,7 +1,7 @@
 <script setup>
-import { Badge } from 'vitepress-openapi/components/ui/badge'
 import { inject } from 'vue'
-import { getOpenApiInstance } from 'vitepress-openapi'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
+import { Badge } from '../ui/badge'
 
 const props = defineProps({
   spec: {

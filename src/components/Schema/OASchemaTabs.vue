@@ -1,21 +1,25 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { useTheme } from 'vitepress-openapi/composables/useTheme'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-openapi/components/ui/tabs'
-import { generateSchemaJson } from 'vitepress-openapi/lib/generateSchemaJson'
-import { hasExample } from 'vitepress-openapi/lib/hasExample'
-import { generateSchemaXml } from 'vitepress-openapi/lib/generateSchemaXml'
-import { Checkbox } from 'vitepress-openapi/components/ui/checkbox'
-import { Label } from 'vitepress-openapi/components/ui/label'
+import { useTheme } from '../../composables/useTheme'
+import { hasExample } from '../../lib/hasExample'
+import { getSchemaUiContentType } from '../../lib/getSchemaUiContentType'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { Checkbox } from '../ui/checkbox'
+import { Label } from '../ui/label'
+import OASchemaUI from '../Schema/OASchemaUI.vue'
 
 const props = defineProps({
   schema: {
     type: Object,
     required: true,
   },
+  schemaUiContentType: {
+    type: [Object, String, Number, Boolean, Array],
+    required: true,
+  },
   contentType: {
     type: String,
-    default: 'application/json',
+    required: true,
   },
   isDark: {
     type: Boolean,
@@ -26,10 +30,6 @@ const props = defineProps({
 const themeConfig = useTheme()
 
 const useExample = ref(true)
-
-const schemaJson = computed(() => {
-  return generateSchemaJson(props.schema, useExample.value) ?? props.schema
-})
 
 const schemaHasExample = hasExample(props.schema)
 
@@ -45,20 +45,6 @@ const contentTypeLabel = computed(() => {
   return 'Schema'
 })
 
-const schemaXml = computed(() => {
-  return generateSchemaXml(props.schema, useExample.value)
-})
-
-const schemaContentType = computed(() => {
-  if (props.contentType.includes('json')) {
-    return schemaJson.value
-  }
-  if (props.contentType === 'application/xml') {
-    return schemaXml.value
-  }
-  return null
-})
-
 const lang = computed(() => {
   if (props.contentType.includes('json')) {
     return 'json'
@@ -69,7 +55,15 @@ const lang = computed(() => {
   return props.contentType
 })
 
-const hasSchemaContentType = computed(() => schemaContentType.value !== null)
+const hasSchemaContentType = computed(() => props.schemaUiContentType !== null)
+
+const schemaUiContentType = computed(() => {
+  if (useExample.value) {
+    return props.schemaUiContentType
+  }
+
+  return getSchemaUiContentType(props.contentType, props.schema, useExample.value)
+})
 </script>
 
 <template>
@@ -94,10 +88,13 @@ const hasSchemaContentType = computed(() => schemaContentType.value !== null)
       </TabsTrigger>
     </TabsList>
     <TabsContent value="schema">
-      <OASchemaBody
-        :schema="props.schema"
-        :deep="themeConfig.getSchemaViewerDeep()"
-      />
+      <div class="flex flex-col gap-2">
+        <OASchemaUI
+          :property="props.schema"
+          :schema="props.schema"
+          :deep="themeConfig.getSchemaViewerDeep()"
+        />
+      </div>
     </TabsContent>
     <TabsContent value="contentType">
       <div class="relative flex flex-col">
@@ -122,7 +119,7 @@ const hasSchemaContentType = computed(() => schemaContentType.value !== null)
 
         <OACodeBlock
           v-if="hasSchemaContentType"
-          :code="schemaContentType"
+          :code="schemaUiContentType"
           :lang="lang"
           :label="contentTypeLabel"
           :is-dark="props.isDark"

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import OALazy from 'vitepress-openapi/components/Common/Lazy/OALazy.vue'
-import type { OperationSlot } from 'vitepress-openapi/types'
-import { useTheme } from 'vitepress-openapi'
+import { useTheme } from '../../composables/useTheme'
+import OALazy from '../Common/Lazy/OALazy.vue'
+import type { OperationSlot } from '../../types'
 
 const { openapi, paths, isDark } = defineProps({
   openapi: {
@@ -19,11 +19,11 @@ const { openapi, paths, isDark } = defineProps({
   },
 })
 
-const slots = defineSlots<OperationSlot>()
+const slots = defineSlots<Record<string, OperationSlot>>()
 
 const themeConfig = useTheme()
 
-const operations = Object.entries(paths).reduce((acc, [_, path]) => {
+const operations = Object.entries(paths).reduce((acc: { operationId: string }[], [_, path]) => {
   return [
     ...acc,
     ...Object.keys(path).filter(m => path[m].operationId).map((method) => {
@@ -34,7 +34,7 @@ const operations = Object.entries(paths).reduce((acc, [_, path]) => {
   ]
 }, [])
 
-const lazyRendering = themeConfig.getSpecConfig().lazyRendering.value
+const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
 </script>
 
 <template>

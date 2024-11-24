@@ -1,7 +1,7 @@
 <script setup>
 import { computed, defineProps } from 'vue'
-import { useTheme } from 'vitepress-openapi'
-import { Badge } from 'vitepress-openapi/components/ui/badge'
+import { useTheme } from '../../composables/useTheme'
+import { Badge } from '../ui/badge'
 
 const { deprecated } = defineProps({
   operation: {

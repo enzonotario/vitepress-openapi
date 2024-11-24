@@ -1,9 +1,8 @@
 <script setup>
 import { computed, defineProps, ref } from 'vue'
-import { useTheme } from 'vitepress-openapi/composables/useTheme'
-import { getOpenApiInstance } from 'vitepress-openapi'
-import { buildRequest } from 'vitepress-openapi/lib/codeSamples/buildRequest'
-import { propertiesTypesJsonRecursive } from 'vitepress-openapi/lib/generateSchemaJson'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
+import { buildRequest } from '../../lib/codeSamples/buildRequest'
+import { useTheme } from '../../composables/useTheme'
 
 const props = defineProps({
   id: {
@@ -34,13 +33,17 @@ const operationParsed = openapi.getParsedOperation(props.id)
 
 const operationParameters = operationParsed?.parameters
 
-const operationRequestBody = operationParsed?.requestBody?.content?.['application/json']?.schema
+const operationRequestBody = operationParsed?.requestBody
 
 const operationResponses = operationParsed?.responses
 
 const operationSlots = computed(() => themeConfig.getOperationSlots().filter(slot => !themeConfig.getOperationHiddenSlots().includes(slot)))
 
 const operationCols = computed(() => themeConfig.getOperationCols())
+
+const bodyRequestContentTypes = computed(() => operationRequestBody ? Object.keys(operationRequestBody.content) : [])
+
+const bodyRequestContentType = computed(() => bodyRequestContentTypes.value.length ? bodyRequestContentTypes.value[0] : undefined)
 
 const shouldBuildRequest = computed(() => ['try-it', 'code-samples'].some(slot => operationSlots.value.includes(slot)))
 
@@ -52,7 +55,7 @@ const request = ref(
       baseUrl,
       parameters: operationParameters ?? [],
       authScheme: securitySchemes.length ? securitySchemes[0] : undefined,
-      body: operationRequestBody ? propertiesTypesJsonRecursive(operationRequestBody, true) : undefined,
+      body: operationRequestBody?.content?.[bodyRequestContentType]?.uiContentType,
       variables: {},
     })
     : {},
@@ -144,7 +147,8 @@ function updateRequest(newRequest) {
               v-if="operationRequestBody"
               name="request-body"
               :operation-id="props.id"
-              :schema="operationRequestBody"
+              :request-body="operationRequestBody"
+              :content-type="bodyRequestContentType"
             />
           </template>
 
@@ -191,8 +195,9 @@ function updateRequest(newRequest) {
                 :method="operationMethod"
                 :base-url="baseUrl"
                 :parameters="operationParameters"
-                :schema="operationRequestBody"
+                :request-body="operationRequestBody"
                 :security-schemes="securitySchemes"
+                :content-type="bodyRequestContentType"
                 :request="request"
                 :update-request="updateRequest"
               />

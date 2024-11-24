@@ -1,7 +1,10 @@
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import { unref } from 'vue'
 import { getExample } from '../getExample'
+import type { PlaygroundSecurityScheme } from '../../types'
 import { OARequest } from './request'
 
-function processParameters(variables, parameters, callback) {
+function processParameters(variables: Record<string, string>, parameters: OpenAPIV3.ParameterObject[], callback: (key: string, value: string) => void) {
   const parameterNames = new Set(parameters.map(parameter => parameter.name))
   for (const [key, value] of Object.entries(variables)) {
     if (!parameterNames.has(key)) {
@@ -14,7 +17,7 @@ function processParameters(variables, parameters, callback) {
   }
 }
 
-function getPath(variables, pathParameters, path) {
+function getPath(variables: Record<string, string>, pathParameters: OpenAPIV3.ParameterObject[], path: string) {
   let resolvedPath = path
   processParameters(variables, pathParameters, (key, value) => {
     resolvedPath = resolvedPath.replace(`{${key}}`, value)
@@ -22,44 +25,50 @@ function getPath(variables, pathParameters, path) {
   return resolvedPath
 }
 
-function getHeaders(variables, headerParameters, authScheme) {
+function getHeaders(variables: Record<string, string>, headerParameters: OpenAPIV3.ParameterObject[], authScheme: PlaygroundSecurityScheme | null) {
   const headers = new Headers({})
 
-  processParameters(variables, headerParameters, (key, value) => {
+  processParameters(variables, headerParameters, (key: string, value: string) => {
     headers.set(key, value)
   })
 
-  if (authScheme) {
-    switch (authScheme.type) {
-      case 'http':
-        headers.set('Authorization', `${authScheme.scheme === 'basic' ? 'Basic' : 'Bearer'} ${authScheme.value}`)
-        break
-      case 'apiKey':
-        headers.set(authScheme.name, authScheme.value)
-        break
-      case 'openIdConnect':
-        headers.set('Authorization', `Bearer ${authScheme.value}`)
-        break
-      case 'oauth2':
-        headers.set('Authorization', `Bearer ${authScheme.value}`)
-        break
-    }
+  if (!authScheme) {
+    return headers
   }
+
+  const value = unref(authScheme.playgroundValue)
+
+  if (authScheme.type === 'http') {
+    headers.set('Authorization', `${authScheme.scheme === 'basic' ? 'Basic' : 'Bearer'} ${value}`)
+  } else if (authScheme.type === 'apiKey') {
+    headers.set(authScheme.name ?? '', value)
+  } else if (authScheme.type === 'openIdConnect') {
+    headers.set('Authorization', `Bearer ${value}`)
+  } else if (authScheme.type === 'oauth2') {
+    headers.set('Authorization', `Bearer ${value}`)
+  } else {
+    console.warn('Unknown auth scheme:', authScheme)
+  }
+
   return headers
 }
 
-function getQuery(variables, queryParameters) {
-  const query = {}
+function getQuery(variables: Record<string, string>, queryParameters: OpenAPIV3.ParameterObject[]) {
+  const query: Record<string, string> = {}
 
-  processParameters(variables, queryParameters, (key, value) => {
+  processParameters(variables, queryParameters, (key: string, value: string) => {
     query[key] = value
   })
 
   return query
 }
 
-function setExamplesAsVariables(parameters, variables) {
+function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variables: Record<string, string>) {
   parameters.forEach((parameter) => {
+    if (!parameter.name) {
+      return
+    }
+
     if (variables[parameter.name] !== undefined) {
       return
     }
@@ -81,6 +90,14 @@ export function buildRequest({
   authScheme,
   body,
   variables = {},
+}: {
+  path: string
+  method: OpenAPIV3.HttpMethods
+  baseUrl: string
+  parameters: OpenAPIV3.ParameterObject[]
+  authScheme: PlaygroundSecurityScheme | null
+  body: any
+  variables: any
 }) {
   const resolvedVariables = setExamplesAsVariables(parameters, variables)
 

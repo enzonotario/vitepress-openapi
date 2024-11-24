@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from 'vue'
 import { TabsList, type TabsListProps } from 'radix-vue'
-import { cn } from 'vitepress-openapi/lib/utils'
+import { cn } from '../../../lib/utils'
 
 const props = defineProps<TabsListProps & { class?: HTMLAttributes['class'] }>()
 

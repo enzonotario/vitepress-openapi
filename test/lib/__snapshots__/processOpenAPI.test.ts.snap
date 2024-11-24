@@ -1,0 +1,3176 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`processOpenAPI > processes the OpenAPI spec 1`] = `
+{
+  "components": {
+    "parameters": {
+      "artistId": {
+        "in": "path",
+        "name": "artistId",
+        "required": true,
+        "schema": {
+          "examples": [
+            1,
+          ],
+          "format": "int64",
+          "type": "integer",
+        },
+      },
+      "limit": {
+        "description": "The number of items to return",
+        "in": "query",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "default": 10,
+          "format": "int64",
+          "type": "integer",
+        },
+      },
+      "offset": {
+        "description": "The number of items to skip before starting to collect the result set",
+        "in": "query",
+        "name": "offset",
+        "required": false,
+        "schema": {
+          "default": 0,
+          "format": "int64",
+          "type": "integer",
+        },
+      },
+    },
+    "responses": {
+      "BadRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+              "properties": {
+                "detail": {
+                  "examples": [
+                    "Unfortunately, we can’t provide further information.",
+                  ],
+                  "type": "string",
+                },
+                "status": {
+                  "examples": [
+                    403,
+                  ],
+                  "format": "int64",
+                  "type": "integer",
+                },
+                "title": {
+                  "examples": [
+                    "Something went wrong here.",
+                  ],
+                  "type": "string",
+                },
+                "type": {
+                  "examples": [
+                    "https://example.com/errors/generic-error",
+                  ],
+                  "type": "string",
+                },
+              },
+              "type": "object",
+            },
+          },
+        },
+        "description": "Bad Request",
+      },
+      "Forbidden": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+              "properties": {
+                "detail": {
+                  "examples": [
+                    "Unfortunately, we can’t provide further information.",
+                  ],
+                  "type": "string",
+                },
+                "status": {
+                  "examples": [
+                    403,
+                  ],
+                  "format": "int64",
+                  "type": "integer",
+                },
+                "title": {
+                  "examples": [
+                    "Something went wrong here.",
+                  ],
+                  "type": "string",
+                },
+                "type": {
+                  "examples": [
+                    "https://example.com/errors/generic-error",
+                  ],
+                  "type": "string",
+                },
+              },
+              "type": "object",
+            },
+          },
+        },
+        "description": "Forbidden",
+      },
+      "NotFound": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+              "properties": {
+                "detail": {
+                  "examples": [
+                    "Unfortunately, we can’t provide further information.",
+                  ],
+                  "type": "string",
+                },
+                "status": {
+                  "examples": [
+                    403,
+                  ],
+                  "format": "int64",
+                  "type": "integer",
+                },
+                "title": {
+                  "examples": [
+                    "Something went wrong here.",
+                  ],
+                  "type": "string",
+                },
+                "type": {
+                  "examples": [
+                    "https://example.com/errors/generic-error",
+                  ],
+                  "type": "string",
+                },
+              },
+              "type": "object",
+            },
+          },
+        },
+        "description": "NotFound",
+      },
+    },
+    "schemas": {
+      "Album": {
+        "properties": {
+          "id": {
+            "examples": [
+              1,
+            ],
+            "format": "int64",
+            "type": "integer",
+          },
+          "image": {
+            "examples": [
+              "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+            ],
+            "nullable": true,
+            "type": "string",
+          },
+          "name": {
+            "examples": [
+              "La Máquina de Hacer Pájaros",
+            ],
+            "type": "string",
+          },
+          "year": {
+            "examples": [
+              1976,
+            ],
+            "format": "int64",
+            "type": "integer",
+          },
+        },
+        "required": [
+          "id",
+          "name",
+        ],
+        "type": "object",
+      },
+      "Artist": {
+        "properties": {
+          "band": {
+            "examples": [
+              "Sui Generis",
+            ],
+            "type": "string",
+          },
+          "description": {
+            "examples": [
+              "One of the most influential rock musicians in Argentine history.",
+            ],
+            "type": [
+              "string",
+              "null",
+            ],
+          },
+          "id": {
+            "examples": [
+              1,
+            ],
+            "format": "int64",
+            "type": "integer",
+            "x-variable": "artistId",
+          },
+          "image": {
+            "examples": [
+              "https://cdn.rock-legends.com/photos/charly.jpg",
+            ],
+            "nullable": true,
+            "type": "string",
+          },
+          "name": {
+            "examples": [
+              "Charly García",
+            ],
+            "type": "string",
+          },
+        },
+        "required": [
+          "id",
+          "name",
+        ],
+        "type": "object",
+      },
+      "Error": {
+        "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+        "properties": {
+          "detail": {
+            "examples": [
+              "Unfortunately, we can’t provide further information.",
+            ],
+            "type": "string",
+          },
+          "status": {
+            "examples": [
+              403,
+            ],
+            "format": "int64",
+            "type": "integer",
+          },
+          "title": {
+            "examples": [
+              "Something went wrong here.",
+            ],
+            "type": "string",
+          },
+          "type": {
+            "examples": [
+              "https://example.com/errors/generic-error",
+            ],
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "NewUser": {
+        "properties": {
+          "email": {
+            "examples": [
+              "carlos@rock-legends.com",
+              "maria@rock-legends.com",
+            ],
+            "format": "email",
+            "type": "string",
+          },
+          "name": {
+            "examples": [
+              "Carlos",
+              "Maria",
+            ],
+            "type": "string",
+          },
+          "password": {
+            "examples": [
+              "i-love-rock",
+              "rock-n-roll",
+            ],
+            "minLength": 8,
+            "type": "string",
+          },
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+        ],
+        "type": "object",
+      },
+      "PaginatedResource": {
+        "properties": {
+          "meta": {
+            "properties": {
+              "limit": {
+                "examples": [
+                  10,
+                ],
+                "format": "int64",
+                "type": "integer",
+              },
+              "next": {
+                "examples": [
+                  "/artists?limit=10&offset=10",
+                ],
+                "type": [
+                  "string",
+                  "null",
+                ],
+              },
+              "offset": {
+                "examples": [
+                  0,
+                ],
+                "format": "int64",
+                "type": "integer",
+              },
+              "total": {
+                "examples": [
+                  100,
+                ],
+                "format": "int64",
+                "type": "integer",
+              },
+            },
+            "type": "object",
+          },
+        },
+        "type": "object",
+      },
+      "User": {
+        "properties": {
+          "email": {
+            "examples": [
+              "carlos@rock-legends.com",
+            ],
+            "format": "email",
+            "type": "string",
+          },
+          "id": {
+            "examples": [
+              1,
+            ],
+            "format": "int64",
+            "type": "integer",
+          },
+          "name": {
+            "examples": [
+              "Carlos",
+            ],
+            "type": "string",
+          },
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+        ],
+        "type": "object",
+      },
+    },
+    "securitySchemes": {
+      "apiKeyHeader": {
+        "in": "header",
+        "name": "X-API-Key",
+        "type": "apiKey",
+      },
+      "bearerAuth": {
+        "scheme": "bearer",
+        "type": "http",
+      },
+    },
+  },
+  "info": {
+    "contact": {
+      "email": "hi@enzonotario.me",
+      "name": "Enzo Notario",
+      "url": "https://enzonotario.me",
+    },
+    "description": "The Argentine Rock Legends is an example OpenAPI specification to test OpenAPI tools and libraries. Get all the data for [all artists](#getAllArtists).
+
+>Inspired by [Scalar Galaxy](https://galaxy.scalar.com/)
+
+## Resources
+
+* https://github.com/enzonotario/vitepress-openapi
+* https://github.com/OAI/OpenAPI-Specification
+
+## Markdown Support
+
+All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub supports the syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax), chances are we’re supporting it, too. You can even create [internal links to reference endpoints](#createArtist).
+
+<details>
+  <summary>Examples</summary>
+
+  **Blockquotes**
+
+  > I love Argentine Rock. <3
+
+  **Tables**
+
+  | Feature          | Availability |
+  | ---------------- | ------------ |
+  | Markdown Support | ✓            |
+
+  **Accordion**
+
+  \`\`\`html
+  <details>
+    <summary>Using Details Tags</summary>
+    <p>HTML Example</p>
+  </details>
+  \`\`\`
+
+  **Images**
+
+  Yes, there’s support for images, too!
+
+  ![Placeholder image](https://images.placeholders.dev/?width=1280&height=720)
+
+</details>
+",
+    "title": "Argentine Rock Legends",
+    "version": "1.0.0",
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/artists": {
+      "get": {
+        "description": "Get a list of all legendary Argentine Rock artists and explore their contributions to the music scene.",
+        "operationId": "getAllArtists",
+        "parameters": [
+          {
+            "description": "The number of items to return",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "format": "int64",
+              "type": "integer",
+            },
+          },
+          {
+            "description": "The number of items to skip before starting to collect the result set",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "format": "int64",
+              "type": "integer",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "properties": {
+                          "band": {
+                            "examples": [
+                              "Sui Generis",
+                            ],
+                            "type": "string",
+                          },
+                          "description": {
+                            "examples": [
+                              "One of the most influential rock musicians in Argentine history.",
+                            ],
+                            "type": [
+                              "string",
+                              "null",
+                            ],
+                          },
+                          "id": {
+                            "examples": [
+                              1,
+                            ],
+                            "format": "int64",
+                            "type": "integer",
+                            "x-variable": "artistId",
+                          },
+                          "image": {
+                            "examples": [
+                              "https://cdn.rock-legends.com/photos/charly.jpg",
+                            ],
+                            "nullable": true,
+                            "type": "string",
+                          },
+                          "name": {
+                            "examples": [
+                              "Charly García",
+                            ],
+                            "type": "string",
+                          },
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    "meta": {
+                      "properties": {
+                        "limit": {
+                          "examples": [
+                            10,
+                          ],
+                          "format": "int64",
+                          "type": "integer",
+                        },
+                        "next": {
+                          "examples": [
+                            "/artists?limit=10&offset=10",
+                          ],
+                          "type": [
+                            "string",
+                            "null",
+                          ],
+                        },
+                        "offset": {
+                          "examples": [
+                            0,
+                          ],
+                          "format": "int64",
+                          "type": "integer",
+                        },
+                        "total": {
+                          "examples": [
+                            100,
+                          ],
+                          "format": "int64",
+                          "type": "integer",
+                        },
+                      },
+                      "type": "object",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "name": "",
+                  "properties": [
+                    {
+                      "name": "data",
+                      "properties": [
+                        {
+                          "constraints": {
+                            "format": "int64",
+                          },
+                          "examples": [
+                            1,
+                          ],
+                          "meta": {
+                            "extra": {
+                              "x-variable": "artistId",
+                            },
+                          },
+                          "name": "id",
+                          "required": true,
+                          "types": [
+                            "integer",
+                          ],
+                        },
+                        {
+                          "examples": [
+                            "Charly García",
+                          ],
+                          "name": "name",
+                          "required": true,
+                          "types": [
+                            "string",
+                          ],
+                        },
+                        {
+                          "examples": [
+                            "One of the most influential rock musicians in Argentine history.",
+                          ],
+                          "name": "description",
+                          "required": false,
+                          "types": [
+                            "string",
+                            "null",
+                          ],
+                        },
+                        {
+                          "examples": [
+                            "https://cdn.rock-legends.com/photos/charly.jpg",
+                          ],
+                          "name": "image",
+                          "nullable": true,
+                          "required": false,
+                          "types": [
+                            "string",
+                          ],
+                        },
+                        {
+                          "examples": [
+                            "Sui Generis",
+                          ],
+                          "name": "band",
+                          "required": false,
+                          "types": [
+                            "string",
+                          ],
+                        },
+                      ],
+                      "required": false,
+                      "subtype": "object",
+                      "types": [
+                        "array",
+                      ],
+                    },
+                    {
+                      "name": "meta",
+                      "properties": [
+                        {
+                          "constraints": {
+                            "format": "int64",
+                          },
+                          "examples": [
+                            10,
+                          ],
+                          "name": "limit",
+                          "required": false,
+                          "types": [
+                            "integer",
+                          ],
+                        },
+                        {
+                          "constraints": {
+                            "format": "int64",
+                          },
+                          "examples": [
+                            0,
+                          ],
+                          "name": "offset",
+                          "required": false,
+                          "types": [
+                            "integer",
+                          ],
+                        },
+                        {
+                          "constraints": {
+                            "format": "int64",
+                          },
+                          "examples": [
+                            100,
+                          ],
+                          "name": "total",
+                          "required": false,
+                          "types": [
+                            "integer",
+                          ],
+                        },
+                        {
+                          "examples": [
+                            "/artists?limit=10&offset=10",
+                          ],
+                          "name": "next",
+                          "required": false,
+                          "types": [
+                            "string",
+                            "null",
+                          ],
+                        },
+                      ],
+                      "required": false,
+                      "types": [
+                        "object",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "data": [
+                    {
+                      "band": "Sui Generis",
+                      "description": "One of the most influential rock musicians in Argentine history.",
+                      "id": 1,
+                      "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+                      "name": "Charly García",
+                    },
+                  ],
+                  "meta": {
+                    "limit": 10,
+                    "next": "/artists?limit=10&offset=10",
+                    "offset": 0,
+                    "total": 100,
+                  },
+                },
+              },
+            },
+            "description": "OK",
+          },
+        },
+        "security": [
+          {},
+        ],
+        "summary": "Get all artists",
+        "tags": [
+          "Artists",
+        ],
+      },
+      "post": {
+        "description": "Add a new legendary Argentine Rock artist. Make sure they truly deserve the title!",
+        "operationId": "createArtist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "band": {
+                    "examples": [
+                      "Sui Generis",
+                    ],
+                    "type": "string",
+                  },
+                  "description": {
+                    "examples": [
+                      "One of the most influential rock musicians in Argentine history.",
+                    ],
+                    "type": [
+                      "string",
+                      "null",
+                    ],
+                  },
+                  "id": {
+                    "examples": [
+                      1,
+                    ],
+                    "format": "int64",
+                    "type": "integer",
+                    "x-variable": "artistId",
+                  },
+                  "image": {
+                    "examples": [
+                      "https://cdn.rock-legends.com/photos/charly.jpg",
+                    ],
+                    "nullable": true,
+                    "type": "string",
+                  },
+                  "name": {
+                    "examples": [
+                      "Charly García",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "id",
+                  "name",
+                ],
+                "type": "object",
+              },
+              "ui": {
+                "name": "",
+                "properties": [
+                  {
+                    "constraints": {
+                      "format": "int64",
+                    },
+                    "examples": [
+                      1,
+                    ],
+                    "meta": {
+                      "extra": {
+                        "x-variable": "artistId",
+                      },
+                    },
+                    "name": "id",
+                    "required": true,
+                    "types": [
+                      "integer",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "Charly García",
+                    ],
+                    "name": "name",
+                    "required": true,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "One of the most influential rock musicians in Argentine history.",
+                    ],
+                    "name": "description",
+                    "required": false,
+                    "types": [
+                      "string",
+                      "null",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "https://cdn.rock-legends.com/photos/charly.jpg",
+                    ],
+                    "name": "image",
+                    "nullable": true,
+                    "required": false,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "Sui Generis",
+                    ],
+                    "name": "band",
+                    "required": false,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                ],
+                "required": false,
+                "types": [
+                  "object",
+                ],
+              },
+              "uiContentType": {
+                "band": "Sui Generis",
+                "description": "One of the most influential rock musicians in Argentine history.",
+                "id": 1,
+                "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+                "name": "Charly García",
+              },
+            },
+          },
+          "description": "Artist data",
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "band": {
+                      "examples": [
+                        "Sui Generis",
+                      ],
+                      "type": "string",
+                    },
+                    "description": {
+                      "examples": [
+                        "One of the most influential rock musicians in Argentine history.",
+                      ],
+                      "type": [
+                        "string",
+                        "null",
+                      ],
+                    },
+                    "id": {
+                      "examples": [
+                        1,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                      "x-variable": "artistId",
+                    },
+                    "image": {
+                      "examples": [
+                        "https://cdn.rock-legends.com/photos/charly.jpg",
+                      ],
+                      "nullable": true,
+                      "type": "string",
+                    },
+                    "name": {
+                      "examples": [
+                        "Charly García",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                  ],
+                  "type": "object",
+                },
+                "ui": {
+                  "name": "",
+                  "properties": [
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        1,
+                      ],
+                      "meta": {
+                        "extra": {
+                          "x-variable": "artistId",
+                        },
+                      },
+                      "name": "id",
+                      "required": true,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Charly García",
+                      ],
+                      "name": "name",
+                      "required": true,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "One of the most influential rock musicians in Argentine history.",
+                      ],
+                      "name": "description",
+                      "required": false,
+                      "types": [
+                        "string",
+                        "null",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "https://cdn.rock-legends.com/photos/charly.jpg",
+                      ],
+                      "name": "image",
+                      "nullable": true,
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Sui Generis",
+                      ],
+                      "name": "band",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "band": "Sui Generis",
+                  "description": "One of the most influential rock musicians in Argentine history.",
+                  "id": 1,
+                  "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+                  "name": "Charly García",
+                },
+              },
+            },
+            "description": "Created",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Bad Request",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Forbidden",
+          },
+        },
+        "summary": "Add a new artist",
+        "tags": [
+          "Artists",
+        ],
+      },
+    },
+    "/api/v1/artists/{artistId}": {
+      "delete": {
+        "deprecated": true,
+        "description": "This endpoint was used to delete artists. Unfortunately, that caused a lot of controversy. So, this endpoint is now deprecated and should not be used anymore.",
+        "operationId": "deleteArtist",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "artistId",
+            "required": true,
+            "schema": {
+              "examples": [
+                1,
+              ],
+              "format": "int64",
+              "type": "integer",
+            },
+          },
+        ],
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Bad Request",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Forbidden",
+          },
+        },
+        "summary": "Delete an artist",
+        "tags": [
+          "Artists",
+        ],
+      },
+      "get": {
+        "description": "Learn more about a specific Argentine Rock artist and their legacy.",
+        "operationId": "getArtist",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "artistId",
+            "required": true,
+            "schema": {
+              "examples": [
+                1,
+              ],
+              "format": "int64",
+              "type": "integer",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "band": {
+                      "examples": [
+                        "Sui Generis",
+                      ],
+                      "type": "string",
+                    },
+                    "description": {
+                      "examples": [
+                        "One of the most influential rock musicians in Argentine history.",
+                      ],
+                      "type": [
+                        "string",
+                        "null",
+                      ],
+                    },
+                    "id": {
+                      "examples": [
+                        1,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                      "x-variable": "artistId",
+                    },
+                    "image": {
+                      "examples": [
+                        "https://cdn.rock-legends.com/photos/charly.jpg",
+                      ],
+                      "nullable": true,
+                      "type": "string",
+                    },
+                    "name": {
+                      "examples": [
+                        "Charly García",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                  ],
+                  "type": "object",
+                },
+                "ui": {
+                  "name": "",
+                  "properties": [
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        1,
+                      ],
+                      "meta": {
+                        "extra": {
+                          "x-variable": "artistId",
+                        },
+                      },
+                      "name": "id",
+                      "required": true,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Charly García",
+                      ],
+                      "name": "name",
+                      "required": true,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "One of the most influential rock musicians in Argentine history.",
+                      ],
+                      "name": "description",
+                      "required": false,
+                      "types": [
+                        "string",
+                        "null",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "https://cdn.rock-legends.com/photos/charly.jpg",
+                      ],
+                      "name": "image",
+                      "nullable": true,
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Sui Generis",
+                      ],
+                      "name": "band",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "band": "Sui Generis",
+                  "description": "One of the most influential rock musicians in Argentine history.",
+                  "id": 1,
+                  "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+                  "name": "Charly García",
+                },
+              },
+            },
+            "description": "Artist Found",
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Artist Not Found",
+          },
+        },
+        "security": [
+          {},
+        ],
+        "summary": "Get an artist",
+        "tags": [
+          "Artists",
+        ],
+      },
+      "put": {
+        "description": "Update the information of a legendary Argentine Rock artist. Make sure to provide accurate data.",
+        "operationId": "updateArtist",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "artistId",
+            "required": true,
+            "schema": {
+              "examples": [
+                1,
+              ],
+              "format": "int64",
+              "type": "integer",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "band": {
+                    "examples": [
+                      "Sui Generis",
+                    ],
+                    "type": "string",
+                  },
+                  "description": {
+                    "examples": [
+                      "One of the most influential rock musicians in Argentine history.",
+                    ],
+                    "type": [
+                      "string",
+                      "null",
+                    ],
+                  },
+                  "id": {
+                    "examples": [
+                      1,
+                    ],
+                    "format": "int64",
+                    "type": "integer",
+                    "x-variable": "artistId",
+                  },
+                  "image": {
+                    "examples": [
+                      "https://cdn.rock-legends.com/photos/charly.jpg",
+                    ],
+                    "nullable": true,
+                    "type": "string",
+                  },
+                  "name": {
+                    "examples": [
+                      "Charly García",
+                    ],
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "id",
+                  "name",
+                ],
+                "type": "object",
+              },
+              "ui": {
+                "name": "",
+                "properties": [
+                  {
+                    "constraints": {
+                      "format": "int64",
+                    },
+                    "examples": [
+                      1,
+                    ],
+                    "meta": {
+                      "extra": {
+                        "x-variable": "artistId",
+                      },
+                    },
+                    "name": "id",
+                    "required": true,
+                    "types": [
+                      "integer",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "Charly García",
+                    ],
+                    "name": "name",
+                    "required": true,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "One of the most influential rock musicians in Argentine history.",
+                    ],
+                    "name": "description",
+                    "required": false,
+                    "types": [
+                      "string",
+                      "null",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "https://cdn.rock-legends.com/photos/charly.jpg",
+                    ],
+                    "name": "image",
+                    "nullable": true,
+                    "required": false,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "Sui Generis",
+                    ],
+                    "name": "band",
+                    "required": false,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                ],
+                "required": false,
+                "types": [
+                  "object",
+                ],
+              },
+              "uiContentType": {
+                "band": "Sui Generis",
+                "description": "One of the most influential rock musicians in Argentine history.",
+                "id": 1,
+                "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+                "name": "Charly García",
+              },
+            },
+          },
+          "description": "Artist data",
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "band": {
+                      "examples": [
+                        "Sui Generis",
+                      ],
+                      "type": "string",
+                    },
+                    "description": {
+                      "examples": [
+                        "One of the most influential rock musicians in Argentine history.",
+                      ],
+                      "type": [
+                        "string",
+                        "null",
+                      ],
+                    },
+                    "id": {
+                      "examples": [
+                        1,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                      "x-variable": "artistId",
+                    },
+                    "image": {
+                      "examples": [
+                        "https://cdn.rock-legends.com/photos/charly.jpg",
+                      ],
+                      "nullable": true,
+                      "type": "string",
+                    },
+                    "name": {
+                      "examples": [
+                        "Charly García",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                  ],
+                  "type": "object",
+                },
+                "ui": {
+                  "name": "",
+                  "properties": [
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        1,
+                      ],
+                      "meta": {
+                        "extra": {
+                          "x-variable": "artistId",
+                        },
+                      },
+                      "name": "id",
+                      "required": true,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Charly García",
+                      ],
+                      "name": "name",
+                      "required": true,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "One of the most influential rock musicians in Argentine history.",
+                      ],
+                      "name": "description",
+                      "required": false,
+                      "types": [
+                        "string",
+                        "null",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "https://cdn.rock-legends.com/photos/charly.jpg",
+                      ],
+                      "name": "image",
+                      "nullable": true,
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Sui Generis",
+                      ],
+                      "name": "band",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "band": "Sui Generis",
+                  "description": "One of the most influential rock musicians in Argentine history.",
+                  "id": 1,
+                  "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+                  "name": "Charly García",
+                },
+              },
+            },
+            "description": "OK",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Bad Request",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Forbidden",
+          },
+        },
+        "summary": "Update an artist",
+        "tags": [
+          "Artists",
+        ],
+      },
+    },
+    "/api/v1/artists/{artistId}/albums": {
+      "get": {
+        "description": "Get a list of all albums from a legendary Argentine Rock artist.",
+        "operationId": "getAllAlbums",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "artistId",
+            "required": true,
+            "schema": {
+              "examples": [
+                1,
+              ],
+              "format": "int64",
+              "type": "integer",
+            },
+          },
+          {
+            "description": "The number of items to return",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "format": "int64",
+              "type": "integer",
+            },
+          },
+          {
+            "description": "The number of items to skip before starting to collect the result set",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "format": "int64",
+              "type": "integer",
+            },
+          },
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "examples": [
+                              1,
+                            ],
+                            "format": "int64",
+                            "type": "integer",
+                          },
+                          "image": {
+                            "examples": [
+                              "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+                            ],
+                            "nullable": true,
+                            "type": "string",
+                          },
+                          "name": {
+                            "examples": [
+                              "La Máquina de Hacer Pájaros",
+                            ],
+                            "type": "string",
+                          },
+                          "year": {
+                            "examples": [
+                              1976,
+                            ],
+                            "format": "int64",
+                            "type": "integer",
+                          },
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                        ],
+                        "type": "object",
+                      },
+                      "type": "array",
+                    },
+                    "meta": {
+                      "properties": {
+                        "limit": {
+                          "examples": [
+                            10,
+                          ],
+                          "format": "int64",
+                          "type": "integer",
+                        },
+                        "next": {
+                          "examples": [
+                            "/artists?limit=10&offset=10",
+                          ],
+                          "type": [
+                            "string",
+                            "null",
+                          ],
+                        },
+                        "offset": {
+                          "examples": [
+                            0,
+                          ],
+                          "format": "int64",
+                          "type": "integer",
+                        },
+                        "total": {
+                          "examples": [
+                            100,
+                          ],
+                          "format": "int64",
+                          "type": "integer",
+                        },
+                      },
+                      "type": "object",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "name": "",
+                  "properties": [
+                    {
+                      "name": "data",
+                      "properties": [
+                        {
+                          "constraints": {
+                            "format": "int64",
+                          },
+                          "examples": [
+                            1,
+                          ],
+                          "name": "id",
+                          "required": true,
+                          "types": [
+                            "integer",
+                          ],
+                        },
+                        {
+                          "examples": [
+                            "La Máquina de Hacer Pájaros",
+                          ],
+                          "name": "name",
+                          "required": true,
+                          "types": [
+                            "string",
+                          ],
+                        },
+                        {
+                          "constraints": {
+                            "format": "int64",
+                          },
+                          "examples": [
+                            1976,
+                          ],
+                          "name": "year",
+                          "required": false,
+                          "types": [
+                            "integer",
+                          ],
+                        },
+                        {
+                          "examples": [
+                            "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+                          ],
+                          "name": "image",
+                          "nullable": true,
+                          "required": false,
+                          "types": [
+                            "string",
+                          ],
+                        },
+                      ],
+                      "required": false,
+                      "subtype": "object",
+                      "types": [
+                        "array",
+                      ],
+                    },
+                    {
+                      "name": "meta",
+                      "properties": [
+                        {
+                          "constraints": {
+                            "format": "int64",
+                          },
+                          "examples": [
+                            10,
+                          ],
+                          "name": "limit",
+                          "required": false,
+                          "types": [
+                            "integer",
+                          ],
+                        },
+                        {
+                          "constraints": {
+                            "format": "int64",
+                          },
+                          "examples": [
+                            0,
+                          ],
+                          "name": "offset",
+                          "required": false,
+                          "types": [
+                            "integer",
+                          ],
+                        },
+                        {
+                          "constraints": {
+                            "format": "int64",
+                          },
+                          "examples": [
+                            100,
+                          ],
+                          "name": "total",
+                          "required": false,
+                          "types": [
+                            "integer",
+                          ],
+                        },
+                        {
+                          "examples": [
+                            "/artists?limit=10&offset=10",
+                          ],
+                          "name": "next",
+                          "required": false,
+                          "types": [
+                            "string",
+                            "null",
+                          ],
+                        },
+                      ],
+                      "required": false,
+                      "types": [
+                        "object",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "data": [
+                    {
+                      "id": 1,
+                      "image": "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+                      "name": "La Máquina de Hacer Pájaros",
+                      "year": 1976,
+                    },
+                  ],
+                  "meta": {
+                    "limit": 10,
+                    "next": "/artists?limit=10&offset=10",
+                    "offset": 0,
+                    "total": 100,
+                  },
+                },
+              },
+            },
+            "description": "OK",
+          },
+        },
+        "security": [
+          {},
+        ],
+        "summary": "Get all albums",
+        "tags": [
+          "Artists",
+        ],
+      },
+      "post": {
+        "description": "Add a new album to a legendary Argentine Rock artist. Make sure it’s a masterpiece!",
+        "operationId": "createAlbum",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "artistId",
+            "required": true,
+            "schema": {
+              "examples": [
+                1,
+              ],
+              "format": "int64",
+              "type": "integer",
+            },
+          },
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "id": {
+                    "examples": [
+                      1,
+                    ],
+                    "format": "int64",
+                    "type": "integer",
+                  },
+                  "image": {
+                    "examples": [
+                      "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+                    ],
+                    "nullable": true,
+                    "type": "string",
+                  },
+                  "name": {
+                    "examples": [
+                      "La Máquina de Hacer Pájaros",
+                    ],
+                    "type": "string",
+                  },
+                  "year": {
+                    "examples": [
+                      1976,
+                    ],
+                    "format": "int64",
+                    "type": "integer",
+                  },
+                },
+                "required": [
+                  "id",
+                  "name",
+                ],
+                "type": "object",
+              },
+              "ui": {
+                "name": "",
+                "properties": [
+                  {
+                    "constraints": {
+                      "format": "int64",
+                    },
+                    "examples": [
+                      1,
+                    ],
+                    "name": "id",
+                    "required": true,
+                    "types": [
+                      "integer",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "La Máquina de Hacer Pájaros",
+                    ],
+                    "name": "name",
+                    "required": true,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                  {
+                    "constraints": {
+                      "format": "int64",
+                    },
+                    "examples": [
+                      1976,
+                    ],
+                    "name": "year",
+                    "required": false,
+                    "types": [
+                      "integer",
+                    ],
+                  },
+                  {
+                    "examples": [
+                      "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+                    ],
+                    "name": "image",
+                    "nullable": true,
+                    "required": false,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                ],
+                "required": false,
+                "types": [
+                  "object",
+                ],
+              },
+              "uiContentType": {
+                "id": 1,
+                "image": "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+                "name": "La Máquina de Hacer Pájaros",
+                "year": 1976,
+              },
+            },
+          },
+          "description": "Album data",
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "id": {
+                      "examples": [
+                        1,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "image": {
+                      "examples": [
+                        "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+                      ],
+                      "nullable": true,
+                      "type": "string",
+                    },
+                    "name": {
+                      "examples": [
+                        "La Máquina de Hacer Pájaros",
+                      ],
+                      "type": "string",
+                    },
+                    "year": {
+                      "examples": [
+                        1976,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                  ],
+                  "type": "object",
+                },
+                "ui": {
+                  "name": "",
+                  "properties": [
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        1,
+                      ],
+                      "name": "id",
+                      "required": true,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "La Máquina de Hacer Pájaros",
+                      ],
+                      "name": "name",
+                      "required": true,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        1976,
+                      ],
+                      "name": "year",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+                      ],
+                      "name": "image",
+                      "nullable": true,
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "id": 1,
+                  "image": "https://cdn.rock-legends.com/photos/la-maquina.jpg",
+                  "name": "La Máquina de Hacer Pájaros",
+                  "year": 1976,
+                },
+              },
+            },
+            "description": "Created",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Bad Request",
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Forbidden",
+          },
+        },
+        "summary": "Add a new album",
+        "tags": [
+          "Artists",
+        ],
+      },
+    },
+    "/api/v1/user/signup": {
+      "post": {
+        "description": "Create a user account to access exclusive content about Argentine Rock legends.",
+        "operationId": "createUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "Carlos": {
+                  "value": {
+                    "email": "carlos@rock-legends.com",
+                    "name": "Carlos",
+                    "password": "i-love-rock",
+                  },
+                },
+                "Maria": {
+                  "value": {
+                    "email": "maria@rock-legends.com",
+                    "name": "Maria",
+                    "password": "rock-n-roll",
+                  },
+                },
+              },
+              "schema": {
+                "properties": {
+                  "email": {
+                    "examples": [
+                      "carlos@rock-legends.com",
+                      "maria@rock-legends.com",
+                    ],
+                    "format": "email",
+                    "type": "string",
+                  },
+                  "name": {
+                    "examples": [
+                      "Carlos",
+                      "Maria",
+                    ],
+                    "type": "string",
+                  },
+                  "password": {
+                    "examples": [
+                      "i-love-rock",
+                      "rock-n-roll",
+                    ],
+                    "minLength": 8,
+                    "type": "string",
+                  },
+                },
+                "required": [
+                  "name",
+                  "email",
+                  "password",
+                ],
+                "type": "object",
+              },
+              "ui": {
+                "name": "",
+                "properties": [
+                  {
+                    "examples": [
+                      "Carlos",
+                      "Maria",
+                    ],
+                    "name": "name",
+                    "required": true,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                  {
+                    "constraints": {
+                      "format": "email",
+                    },
+                    "examples": [
+                      "carlos@rock-legends.com",
+                      "maria@rock-legends.com",
+                    ],
+                    "name": "email",
+                    "required": true,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                  {
+                    "constraints": {
+                      "minLength": 8,
+                    },
+                    "examples": [
+                      "i-love-rock",
+                      "rock-n-roll",
+                    ],
+                    "name": "password",
+                    "required": true,
+                    "types": [
+                      "string",
+                    ],
+                  },
+                ],
+                "required": false,
+                "types": [
+                  "object",
+                ],
+              },
+              "uiContentType": {
+                "email": "carlos@rock-legends.com",
+                "name": "Carlos",
+                "password": "i-love-rock",
+              },
+            },
+          },
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "email": {
+                      "examples": [
+                        "carlos@rock-legends.com",
+                      ],
+                      "format": "email",
+                      "type": "string",
+                    },
+                    "id": {
+                      "examples": [
+                        1,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "name": {
+                      "examples": [
+                        "Carlos",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "email",
+                  ],
+                  "type": "object",
+                },
+                "ui": {
+                  "name": "",
+                  "properties": [
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        1,
+                      ],
+                      "name": "id",
+                      "required": true,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Carlos",
+                      ],
+                      "name": "name",
+                      "required": true,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "email",
+                      },
+                      "examples": [
+                        "carlos@rock-legends.com",
+                      ],
+                      "name": "email",
+                      "required": true,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "email": "carlos@rock-legends.com",
+                  "id": 1,
+                  "name": "Carlos",
+                },
+              },
+            },
+            "description": "Created",
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "properties": {
+                    "detail": {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "type": "string",
+                    },
+                    "status": {
+                      "examples": [
+                        403,
+                      ],
+                      "format": "int64",
+                      "type": "integer",
+                    },
+                    "title": {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "type": "string",
+                    },
+                    "type": {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "ui": {
+                  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+                  "name": "",
+                  "properties": [
+                    {
+                      "examples": [
+                        "https://example.com/errors/generic-error",
+                      ],
+                      "name": "type",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Something went wrong here.",
+                      ],
+                      "name": "title",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                    {
+                      "constraints": {
+                        "format": "int64",
+                      },
+                      "examples": [
+                        403,
+                      ],
+                      "name": "status",
+                      "required": false,
+                      "types": [
+                        "integer",
+                      ],
+                    },
+                    {
+                      "examples": [
+                        "Unfortunately, we can’t provide further information.",
+                      ],
+                      "name": "detail",
+                      "required": false,
+                      "types": [
+                        "string",
+                      ],
+                    },
+                  ],
+                  "required": false,
+                  "types": [
+                    "object",
+                  ],
+                },
+                "uiContentType": {
+                  "detail": "Unfortunately, we can’t provide further information.",
+                  "status": 403,
+                  "title": "Something went wrong here.",
+                  "type": "https://example.com/errors/generic-error",
+                },
+              },
+            },
+            "description": "Bad Request",
+          },
+        },
+        "security": [
+          {},
+        ],
+        "summary": "Create a user",
+        "tags": [
+          "Authentication",
+        ],
+      },
+    },
+  },
+  "security": [
+    {
+      "bearerAuth": [],
+    },
+    {
+      "apiKeyHeader": [],
+    },
+  ],
+  "servers": [
+    {
+      "description": "Mock Server",
+      "url": "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792",
+    },
+  ],
+  "tags": [
+    {
+      "description": "Some endpoints are public, but some require authentication. We provide all the required endpoints to create an account and authorize yourself.",
+      "name": "Authentication",
+    },
+    {
+      "description": "Everything about Argentine Rock artists",
+      "name": "Artists",
+    },
+  ],
+}
+`;

@@ -1,6 +1,8 @@
 <script setup>
 import { computed, defineProps, ref } from 'vue'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from 'vitepress-openapi/components/ui/tabs'
+import { TabsIndicator } from 'radix-vue'
+import { useTheme } from '../../composables/useTheme'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import {
   Select,
   SelectContent,
@@ -8,9 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from 'vitepress-openapi/components/ui/select'
-import { TabsIndicator } from 'radix-vue'
-import { useTheme } from 'vitepress-openapi'
+} from '../ui/select'
 
 const props = defineProps({
   operationId: {

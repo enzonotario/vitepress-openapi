@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { spec } from '../testsConstants'
-import { useSidebar } from './src/composables/useSidebar'
+import { useSidebar } from '../../src/composables/useSidebar'
 
 describe('useSidebar', () => {
   const sidebar = useSidebar({ spec })

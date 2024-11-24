@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref } from 'vue'
-import OAPlaygroundResponse from 'vitepress-openapi/components/Playground/OAPlaygroundResponse.vue'
-import OAPlaygroundParameters from 'vitepress-openapi/components/Playground/OAPlaygroundParameters.vue'
-import { OARequest } from 'vitepress-openapi'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import { OARequest } from '../../lib/codeSamples/request'
+import OAPlaygroundResponse from '../Playground/OAPlaygroundResponse.vue'
+import OAPlaygroundParameters from '../Playground/OAPlaygroundParameters.vue'
 
 const props = defineProps({
   operationId: {
@@ -30,16 +31,21 @@ const props = defineProps({
     default: false,
   },
   parameters: {
-    type: Object,
+    type: Array<OpenAPIV3.ParameterObject>,
     required: false,
   },
-  schema: {
+  requestBody: {
     type: Object,
     required: false,
   },
   securitySchemes: {
     type: Object,
     required: true,
+  },
+  contentType: {
+    type: String,
+    required: false,
+    default: 'application/json',
   },
   request: {
     type: Object,
@@ -64,7 +70,7 @@ const loading = ref(false)
       :base-url="props.baseUrl"
       :parameters="props.parameters ?? []"
       :security-schemes="props.securitySchemes ?? {}"
-      :schema="props.schema"
+      :schema-ui-content-type="props.requestBody?.content?.[props.contentType]?.uiContentType"
       :is-dark="props.isDark"
       @update:request="($event) => emits('update:request', $event)"
     />

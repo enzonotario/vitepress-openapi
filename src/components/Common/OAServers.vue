@@ -1,6 +1,6 @@
 <script setup>
-import { getOpenApiInstance } from 'vitepress-openapi'
 import { inject } from 'vue'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 
 const props = defineProps({
   spec: {

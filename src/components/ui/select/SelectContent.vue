@@ -8,7 +8,7 @@ import {
   SelectViewport,
   useForwardPropsEmits,
 } from 'radix-vue'
-import { cn } from 'vitepress-openapi/lib/utils'
+import { cn } from '../../../lib/utils'
 import { SelectScrollDownButton, SelectScrollUpButton } from '.'
 
 defineOptions({

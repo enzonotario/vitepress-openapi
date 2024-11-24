@@ -28,5 +28,5 @@ ${bodyString || ''}
 response = requests.${method.toLowerCase()}(url${queryString ? ', params=params' : ''}${headersString ? ', headers=headers' : ''}${bodyString ? ', json=data' : ''})
 print(response.json())
 `)
-    .replace(/\n{2,}/g, '\n\n') // Remove extra newlines
+    .replace(/\n{2,}/g, '\n\n') // Remove extra newlines.
 }

@@ -227,6 +227,7 @@ export const specWithCircularRefAndExample = {
         properties: {
           id: {
             type: 'string',
+            example: '123',
           },
           child: {
             $ref: '#/components/schemas/Child',

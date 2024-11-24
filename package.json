@@ -30,8 +30,9 @@
     "src"
   ],
   "scripts": {
-    "build": "rimraf dist && vite build",
+    "build": "vite build",
     "build-watch": "vite build --watch",
+    "postbuild": "vue-tsc --emitDeclarationOnly",
     "dev": "VITE_DEBUG=1 vitepress dev dev",
     "prepublishOnly": "pnpm run build",
     "lint": "eslint src",
@@ -39,7 +40,8 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "npm run build && vitepress build docs",
     "test": "vitest",
-    "test:run": "vitest --run"
+    "test:run": "vitest --run",
+    "typecheck": "vue-tsc --noEmit"
   },
   "peerDependencies": {
     "vitepress": ">=1.0.0",
@@ -57,6 +59,7 @@
   "devDependencies": {
     "@amoutonbrady/lz-string": "^0.1.0",
     "@antfu/eslint-config": "^2.27.1",
+    "@scalar/openapi-types": "^0.1.5",
     "@sindresorhus/slugify": "^2.2.1",
     "@trojs/openapi-dereference": "^0.2.3",
     "@types/node": "^22.5.1",
@@ -69,10 +72,10 @@
     "eslint-plugin-format": "^0.1.2",
     "globals": "^15.9.0",
     "json-editor-vue": "^0.16.0",
+    "json-xml-parse": "^1.3.0",
     "markdown-it": "^14.1.0",
     "postcss": "^8.4.42",
     "prettier": "^3.3.3",
-    "rimraf": "^6.0.1",
     "scule": "^1.3.0",
     "shiki": "^1.16.1",
     "tailwindcss": "^3.4.10",

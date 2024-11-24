@@ -1,13 +1,15 @@
-import { useTheme } from 'vitepress-openapi'
+import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
+import { useTheme } from '../composables/useTheme'
 
-export function generateMissingTags(spec: any) {
-  const defaultTag = useTheme().getSpecConfig().defaultTag
+export function generateMissingTags(spec: OpenAPI.Document): OpenAPI.Document {
+  const defaultTag = useTheme().getSpecConfig()?.defaultTag || 'Default'
 
   const operationTags = new Set<string>()
 
   spec.paths = spec.paths || {}
+
   for (const path of Object.values(spec.paths)) {
-    for (const verb of Object.keys(path)) {
+    for (const verb of Object.keys(path) as OpenAPIV3.HttpMethods[]) {
       const operation = path[verb]
       const tags = operation.tags || [defaultTag]
       operation.tags = tags
@@ -21,7 +23,7 @@ export function generateMissingTags(spec: any) {
     && !spec.tags.find((tag: any) => tag.name === defaultTag)) {
     spec.tags.push({
       name: defaultTag,
-      description: useTheme().getSpecConfig().defaultTagDescription,
+      description: useTheme().getSpecConfig()?.defaultTagDescription,
     })
   }
 
