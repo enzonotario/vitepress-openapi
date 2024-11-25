@@ -8,7 +8,7 @@ import xml from 'shiki/langs/xml.mjs'
 import python from 'shiki/langs/python.mjs'
 import bash from 'shiki/langs/bash.mjs'
 import php from 'shiki/langs/php.mjs'
-import type { HighlighterCore } from '@shikijs/core/types'
+import type { HighlighterCore } from 'shiki'
 import { useTheme } from './useTheme'
 
 const langs = [js, ts, markdown, json, xml, python, bash, php]
