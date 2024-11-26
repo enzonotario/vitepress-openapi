@@ -595,6 +595,96 @@ const fixtures = {
     },
   },
 
+  'array with items oneOf': {
+    jsonSchema: {
+      type: 'array',
+      items: {
+        oneOf: [
+          {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              age: { type: 'integer' },
+              addresses: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    street: { type: 'string' },
+                  },
+                },
+              },
+            },
+            required: ['name'],
+          },
+          {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              age: { type: 'integer' },
+            },
+            required: ['name'],
+          },
+        ],
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['array'],
+      required: false,
+      properties: [
+        {
+          name: '',
+          properties: [
+            { name: 'name', types: ['string'], required: true },
+            { name: 'age', types: ['integer'], required: false },
+            {
+              name: 'addresses',
+              properties: [
+                { name: 'street', types: ['string'], required: false },
+              ],
+              required: false,
+              types: ['array'],
+              subtype: 'object',
+            },
+          ],
+          types: ['object'],
+          required: false,
+          meta: {
+            isOneOfItem: true,
+          },
+        },
+        {
+          name: '',
+          properties: [
+            { name: 'name', types: ['string'], required: true },
+            { name: 'age', types: ['integer'], required: false },
+          ],
+          types: ['object'],
+          required: false,
+          meta: {
+            isOneOfItem: true,
+          },
+        },
+      ],
+      meta: {
+        isOneOf: true,
+      },
+    },
+    // Takes first oneOf schema as default.
+    schemaUiJson: [
+      {
+        name: 'string',
+        age: 0,
+        addresses: [
+          {
+            street: 'string',
+          },
+        ],
+      },
+    ],
+  },
+
   'schema with array property': {
     jsonSchema: {
       type: 'object',
@@ -860,13 +950,168 @@ const fixtures = {
     },
     useExample: true,
   },
+
+  'array of oneOf': {
+    jsonSchema: {
+      properties: {
+        executions: {
+          items: {
+            oneOf: [
+              {
+                properties: {
+                  account: {
+                    pattern: '^0x[a-f0-9]+$',
+                    type: 'string',
+                  },
+                  broadcasted: {
+                    type: 'boolean',
+                  },
+                  chainId: {
+                    pattern: '^0x[a-f0-9]+$',
+                    type: 'string',
+                  },
+                  checkinTime: {
+                    type: 'number',
+                  },
+                  expectedWorstCaseGasPrice: {
+                    type: 'string',
+                  },
+                  finalized: {
+                    type: 'boolean',
+                  },
+                  onBehalf: {
+                    pattern: '^0x[a-f0-9]+$',
+                    type: 'string',
+                  },
+                  payload: {
+                    type: 'string',
+                  },
+                  paymentReserve: {
+                    type: 'string',
+                  },
+                },
+                required: [
+                  'type',
+                  'chainId',
+                  'slot',
+                  'payload',
+                ],
+                type: 'object',
+              },
+              {
+                properties: {
+                  account: {
+                    pattern: '^0x[a-f0-9]+$',
+                    type: 'string',
+                  },
+                  broadcasted: {
+                    type: 'boolean',
+                  },
+                  chainId: {
+                    pattern: '^0x[a-f0-9]+$',
+                    type: 'string',
+                  },
+                  checkinTime: {
+                    type: 'number',
+                  },
+                },
+                required: [
+                  'type',
+                  'chainId',
+                  'slot',
+                  'executions',
+                ],
+                type: 'object',
+              },
+            ],
+          },
+          type: 'array',
+        },
+        success: {
+          const: true,
+        },
+      },
+      required: [
+        'success',
+        'executions',
+      ],
+      type: 'object',
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        {
+          name: 'executions',
+          properties: [
+            {
+              name: '',
+              properties: [
+                { name: 'account', constraints: { pattern: '^0x[a-f0-9]+$' }, required: false, types: ['string'] },
+                { name: 'broadcasted', required: false, types: ['boolean'] },
+                { name: 'chainId', constraints: { pattern: '^0x[a-f0-9]+$' }, required: true, types: ['string'] },
+                { name: 'checkinTime', required: false, types: ['number'] },
+                { name: 'expectedWorstCaseGasPrice', required: false, types: ['string'] },
+                { name: 'finalized', required: false, types: ['boolean'] },
+                { name: 'onBehalf', constraints: { pattern: '^0x[a-f0-9]+$' }, required: false, types: ['string'] },
+                { name: 'payload', required: true, types: ['string'] },
+                { name: 'paymentReserve', required: false, types: ['string'] },
+              ],
+              required: false,
+              types: ['object'],
+              meta: { isOneOfItem: true },
+            },
+            {
+              name: '',
+              properties: [
+                { name: 'account', constraints: { pattern: '^0x[a-f0-9]+$' }, required: false, types: ['string'] },
+                { name: 'broadcasted', required: false, types: ['boolean'] },
+                { name: 'chainId', constraints: { pattern: '^0x[a-f0-9]+$' }, required: true, types: ['string'] },
+                { name: 'checkinTime', required: false, types: ['number'] },
+              ],
+              required: false,
+              types: ['object'],
+              meta: { isOneOfItem: true },
+            },
+          ],
+          required: true,
+          types: ['array'],
+          meta: { isOneOf: true },
+        },
+        {
+          name: 'success',
+          required: false,
+          types: ['string'],
+          meta: { isConstant: true },
+          examples: [true],
+        },
+      ],
+      required: false,
+      types: ['object'],
+    },
+    schemaUiJson: {
+      executions: [
+        {
+          account: 'string',
+          broadcasted: true,
+          chainId: 'string',
+          checkinTime: 0,
+          expectedWorstCaseGasPrice: 'string',
+          finalized: true,
+          onBehalf: 'string',
+          payload: 'string',
+          paymentReserve: 'string',
+        },
+      ],
+      success: 'string',
+    },
+  },
 }
 
 describe('getSchemaUi and getSchemaUiJson from fixtures', () => {
   Object.entries(fixtures).forEach(([name, { jsonSchema, schemaUi, schemaUiJson, useExample }]) => {
     it(`parses ${name} schema`, () => {
       const result = getSchemaUi(jsonSchema)
-      // expect(result).toEqual(schemaUi)
+      expect(result).toEqual(schemaUi)
 
       const resultJson = getSchemaUiJson(result, useExample)
       expect(resultJson).toEqual(schemaUiJson)

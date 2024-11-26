@@ -160,6 +160,17 @@ class UiPropertyFactory {
           if (getExamples(schema.items)) {
             property.subexamples = getExamples(schema.items)
           }
+
+          if (schema.items.oneOf) {
+            property.meta = { isOneOf: true }
+            property.properties = schema.items.oneOf.map((prop) => {
+              const propSchema = { ...prop, type: schema.items.type }
+              return {
+                ...this.schemaToUiProperty('', propSchema),
+                meta: { isOneOfItem: true },
+              }
+            })
+          }
         }
         break
 

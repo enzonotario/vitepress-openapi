@@ -39,20 +39,25 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
       // Return the first property of the oneOf array.
       return uiPropertyToJson(property.properties![0], useExample)
     }
-    return ioPropertyObjectToJson(property.properties || [], useExample)
+    return uiPropertyObjectToJson(property.properties || [], useExample)
   }
 
   return {}
 }
 
 function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
+  if (isOneOfProperty(property)) {
+    // Return the first property of the oneOf array.
+    return [uiPropertyToJson(property.properties![0], useExample)]
+  }
+
   if (property.properties && Array.isArray(property.properties)) {
-    return [ioPropertyObjectToJson(property.properties, useExample)]
+    return [uiPropertyObjectToJson(property.properties, useExample)]
   }
 
   if (property.subtype) {
     if (property.subtype === 'object' && property.properties) {
-      return [ioPropertyObjectToJson(property.properties as OAProperty[], useExample)]
+      return [uiPropertyObjectToJson(property.properties as OAProperty[], useExample)]
     }
 
     return useExample ? [getExample(property) ?? getDefaultValueForType(property.subtype)] : [getDefaultValueForType(property.subtype)]
@@ -61,7 +66,7 @@ function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
   return []
 }
 
-function ioPropertyObjectToJson(properties: OAProperty[], useExample: boolean): Record<string, any> {
+function uiPropertyObjectToJson(properties: OAProperty[], useExample: boolean): Record<string, any> {
   return properties.reduce((result, property) => {
     if (isSingleType(property, 'array')) {
       // @ts-expect-error: index signature
