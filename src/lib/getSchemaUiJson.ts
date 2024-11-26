@@ -27,8 +27,11 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
   }
 
   if (hasAllLiteralTypes(property)) {
-    // Return the first literal type.
-    return uiPropertyLiteralToJson({ ...property, types: [property.types[0]] }, useExample)
+    // Return the first literal type, prioritizing a non-null type.
+    return uiPropertyLiteralToJson({
+      ...property,
+      types: [property.types.find(type => type !== 'null') ?? 'null'],
+    }, useExample)
   }
 
   if (isSingleType(property, 'object')) {

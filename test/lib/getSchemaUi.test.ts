@@ -807,14 +807,14 @@ const fixtures = {
     },
   },
 
-  'takes first type of multiple types when getting schemaUiJson': {
+  'takes first type of multiple types when getting schemaUiJson, prioritizing non-null types': {
     jsonSchema: {
       type: 'object',
       properties: {
         name: { type: ['string', 'null'] },
         age: { type: ['number', 'null'] },
         phone: { type: ['null', 'string'] },
-        phone2: { type: ['number', 'string', 'null'] },
+        phone2: { type: ['null', 'number', 'string'] },
       },
       required: ['name'],
     },
@@ -824,7 +824,7 @@ const fixtures = {
         { name: 'name', required: true, types: ['string', 'null'] },
         { name: 'age', required: false, types: ['number', 'null'] },
         { name: 'phone', required: false, types: ['null', 'string'] },
-        { name: 'phone2', required: false, types: ['number', 'string', 'null'] },
+        { name: 'phone2', required: false, types: ['null', 'number', 'string'] },
       ],
       types: ['object'],
       required: false,
@@ -832,7 +832,7 @@ const fixtures = {
     schemaUiJson: {
       name: 'string',
       age: 0,
-      phone: null,
+      phone: 'string',
       phone2: 0,
     },
   },
