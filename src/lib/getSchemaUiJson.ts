@@ -77,7 +77,7 @@ function ioPropertyObjectToJson(properties: OAProperty[], useExample: boolean): 
 function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any {
   if (useExample) {
     const example = getExample(property)
-    if (example !== undefined) {
+    if (example !== null) {
       return example
     }
   }
@@ -88,7 +88,7 @@ function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any
 function uiPropertyConstantToJson(property: OAProperty, useExample: boolean): any {
   if (useExample) {
     const example = getExample(property)
-    if (example !== undefined) {
+    if (example !== null) {
       return example
     }
   }
