@@ -29,7 +29,7 @@ export function useOpenapi({
     useTheme(config)
   }
 
-  if (spec !== null && spec !== undefined) {
+  if (spec) {
     setupOpenApi({ spec, config })
   }
 
