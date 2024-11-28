@@ -11,19 +11,22 @@ const props = defineProps({
 
 const keysToIgnore = ['name', 'types', 'description', 'properties', 'required', 'items', 'xml', 'allOf', 'anyOf', 'oneOf', 'not']
 
+const isNonEmptyValue = (value) => {
+  if (value === null || value === undefined) {
+    return false
+  }
+  if (Array.isArray(value)) {
+    return value.length > 0
+  }
+  if (typeof value === 'object') {
+    return Object.keys(value).length > 0
+  }
+  return true
+}
+
 const properties = Object.keys(props.property)
-  // Filter out ignored keys.
-  .filter(key => !keysToIgnore.includes(key))
-  // Filter out empty objects and arrays.
-  .filter((key) => {
-    if (typeof props.property[key] === 'object') {
-      return Object.keys(props.property[key]).length > 0
-    }
-    if (Array.isArray(props.property[key])) {
-      return props.property[key].length > 0
-    }
-    return props.property[key] !== null && props.property[key] !== undefined
-  })
+  .filter(key => !keysToIgnore.includes(key)) // Exclude specified keys
+  .filter(key => isNonEmptyValue(props.property[key])) // Keep only non-empty values
 </script>
 
 <template>
