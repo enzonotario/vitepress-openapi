@@ -70,6 +70,15 @@ describe('hasExample', () => {
     const schema = undefined
     expect(hasExample(schema)).toBe(false)
   })
+
+  it('returns false if example appears in a string that is not an example', () => {
+    const schema = {
+      properties: {
+        prop1: { description: 'This is an example of an example: "exampleValue"' },
+      },
+    }
+    expect(hasExample(schema)).toBe(false)
+  })
 })
 
 describe('schema with circular references', () => {
