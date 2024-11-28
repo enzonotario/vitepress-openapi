@@ -109,7 +109,11 @@ class UiPropertyFactory {
     required = false,
   ): OAProperty {
     if (!schema || Object.keys(schema).length === 0) {
-      return { name: '', types: [], required: false }
+      return {
+        name,
+        types: [],
+        required,
+      }
     }
 
     if (schema.circularReference) {

@@ -1105,6 +1105,26 @@ const fixtures = {
       success: 'string',
     },
   },
+
+  'property without type': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        name: {},
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        { name: 'name', required: false, types: [] },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      name: null,
+    },
+  },
 }
 
 describe('getSchemaUi and getSchemaUiJson from fixtures', () => {

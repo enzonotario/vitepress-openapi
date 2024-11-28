@@ -90,7 +90,7 @@ const isObjectOrArray = isObject || isArray || props.property.type === 'object' 
               </template>
               <template v-else-if="props.property.meta?.isConstant === true">
                 <span>{{ $t('const:') }}</span>
-                <span v-if="props.property.examples?.length > 0">{{ props.property.examples[0] }}</span>
+                <span v-if="props.property.examples?.length > 0" class="select-all">{{ props.property.examples[0] }}</span>
               </template>
               <template v-else>
                 <span v-for="(type, index) in props.property.types" :key="type">
