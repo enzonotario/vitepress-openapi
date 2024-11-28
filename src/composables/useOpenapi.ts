@@ -6,8 +6,8 @@ import { useTheme } from './useTheme'
 export interface OpenAPIData {
   id: string
   spec: OpenAPI.Document
-  openapi: any
-  config: any
+  openapi: ReturnType<typeof createOpenApiInstance>
+  config: UseThemeConfigUnref | null
 }
 
 export type Schemas = Map<string, OpenAPIData>
