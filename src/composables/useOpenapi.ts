@@ -42,11 +42,11 @@ export function useOpenapi({
   }
 
   function setupOpenApi({ spec, config }: { spec: OpenAPI.Document, config?: UseThemeConfigUnref }) {
-    addSchema({ id: DEFAULT_SCHEMA, spec, config })
-    mainSchema = schemas.get(DEFAULT_SCHEMA) as OpenAPI.Document
+    addSchema({ id: DEFAULT_SCHEMA, spec, config: config ?? null })
+    mainSchema = (schemas.get(DEFAULT_SCHEMA) ?? {}) as OpenAPI.Document
   }
 
-  function addSchema({ id, spec, config }: { id: string, spec: OpenAPI.Document, config?: UseThemeConfigUnref | null }) {
+  function addSchema({ id, spec, config }: { id: string, spec: OpenAPI.Document, config: UseThemeConfigUnref | null }) {
     const openapi = createOpenApiInstance({ spec })
 
     // @ts-expect-error: This adds all the properties of the OpenAPI instance to the schema.

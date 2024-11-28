@@ -6,6 +6,8 @@ import { useTheme } from './composables/useTheme'
 import { useShiki } from './composables/useShiki'
 import * as components from './components'
 
+import type { createOpenApiInstance } from './lib/createOpenApiInstance'
+
 import 'tailwindcss/tailwind.css'
 import './style.css'
 import './json.css'
@@ -25,7 +27,7 @@ export { generateCodeSample } from './lib/codeSamples/generateCodeSample'
 export { locales } from './locales'
 
 interface OAEnhanceAppContext extends EnhanceAppContext {
-  openapi: any
+  openapi: ReturnType<typeof createOpenApiInstance>
 }
 
 interface VPTheme {

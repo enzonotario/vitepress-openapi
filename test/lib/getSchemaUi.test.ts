@@ -4,7 +4,14 @@ import { getSchemaUi } from '../../src/lib/getSchemaUi'
 import { getSchemaUiJson } from '../../src/lib/getSchemaUiJson'
 import { specWithCircularRef } from '../testsConstants'
 
-const fixtures = {
+interface FixtureTest {
+  jsonSchema: any
+  schemaUi: any
+  schemaUiJson: any
+  useExample?: boolean
+}
+
+const fixtures: Record<string, FixtureTest> = {
   'simple object': {
     jsonSchema: {
       type: 'object',
