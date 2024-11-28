@@ -1,9 +1,9 @@
 export function getExamples(property: any) {
-  if (property.example) {
+  if (property?.example !== undefined) {
     return [property.example]
   }
 
-  if (property.examples) {
+  if (property?.examples !== undefined) {
     return property.examples
   }
 
