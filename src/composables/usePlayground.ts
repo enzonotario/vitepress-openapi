@@ -30,8 +30,9 @@ export function usePlayground() {
       return securitySchemeDefaultValues[schemeKey]
     }
 
-    if (scheme.type && Object.keys(securitySchemeDefaultValues).includes(scheme.type) && securitySchemeDefaultValues[scheme.type]) {
-      return securitySchemeDefaultValues[scheme.type] ?? ''
+    const schemeType = scheme.type as keyof SecuritySchemeDefaultValues
+    if (Object.keys(securitySchemeDefaultValues).includes(schemeType) && securitySchemeDefaultValues[schemeType] !== null) {
+      return securitySchemeDefaultValues[schemeType] ?? ''
     }
 
     if (scheme.type === 'apiKey' && scheme.name) {
