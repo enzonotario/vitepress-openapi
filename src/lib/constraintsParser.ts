@@ -20,10 +20,10 @@ export function hasConstraints(property: Record<string, unknown>): boolean {
 }
 
 export function getConstraints(property: Record<string, unknown>): Record<string, unknown> {
-  return Object.keys(property).reduce<Record<string, unknown>>((constraints, key) => {
-    if (VALIDATION_KEYWORDS.includes(key)) {
-      constraints[key] = property[key]
-    }
-    return constraints
-  }, {})
+  return Object.entries(property)
+    .filter(([key]) => VALIDATION_KEYWORDS.includes(key))
+    .reduce((constraints: Record<string, unknown>, [key, value]) => {
+      constraints[key] = value
+      return constraints
+    }, {})
 }
