@@ -56,6 +56,7 @@ const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
       </Label>
       <div class="flex-shrink-0">
         <Select
+          v-if="contentTypes.length > 1"
           :id="contentTypeId"
           v-model="contentType"
         >
@@ -77,6 +78,7 @@ const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
             </SelectGroup>
           </SelectContent>
         </Select>
+        <span v-else class="h-6 text-xs rounded-md bg-muted px-3 py-1">{{ contentType }}</span>
       </div>
     </div>
 
