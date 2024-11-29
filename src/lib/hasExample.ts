@@ -6,7 +6,9 @@ export function hasExample(schema: Partial<OpenAPI.SchemaObject>): boolean {
   }
   const visited = new Set()
   function containsExample(obj: any): boolean {
-    if (visited.has(obj)) { return false }
+    if (visited.has(obj)) {
+      return false
+    }
     visited.add(obj)
     if ('example' in obj || 'examples' in obj) {
       return true

@@ -166,12 +166,12 @@ class UiPropertyFactory {
           }
 
           if (schema.items.oneOf) {
-            property.meta = { isOneOf: true }
+            property.meta = { ...(property.meta || {}), isOneOf: true }
             property.properties = schema.items.oneOf.map((prop: any) => {
               const propSchema = { ...prop, type: schema.items.type }
               return {
                 ...this.schemaToUiProperty('', propSchema),
-                meta: { isOneOfItem: true },
+                meta: { ...(prop.meta || {}), isOneOfItem: true },
               }
             })
           }
