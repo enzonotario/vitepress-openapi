@@ -95,7 +95,7 @@ class UiPropertyFactory {
       types: ['object'],
       required: false,
       properties: oneOfProperties.map((prop) => {
-        const property = this.schemaToUiProperty('', prop)
+        const property = UiPropertyFactory.schemaToUiProperty('', prop)
         property.meta = { ...(property.meta || {}), isOneOfItem: true }
         return property
       }),
@@ -117,11 +117,11 @@ class UiPropertyFactory {
     }
 
     if (schema.circularReference) {
-      return this.createCircularReferenceProperty(name, schema.circularReference)
+      return UiPropertyFactory.createCircularReferenceProperty(name, schema.circularReference)
     }
 
     if (schema.oneOf) {
-      return this.createOneOfProperty(schema.oneOf, name)
+      return UiPropertyFactory.createOneOfProperty(schema.oneOf, name)
     }
 
     if (schema.const !== undefined) {
@@ -144,13 +144,13 @@ class UiPropertyFactory {
       }
     }
 
-    const property = this.createBaseProperty(name, schema, required)
+    const property = UiPropertyFactory.createBaseProperty(name, schema, required)
 
     switch (schema.type) {
       case 'array':
         if (schema.items) {
           property.properties = schema.items.type === 'object'
-            ? this.extractProperties(
+            ? UiPropertyFactory.extractProperties(
               schema.items.properties,
               schema.items.required || [],
               schema.items.additionalProperties,
@@ -170,7 +170,7 @@ class UiPropertyFactory {
             property.properties = schema.items.oneOf.map((prop: any) => {
               const propSchema = { ...prop, type: schema.items.type }
               return {
-                ...this.schemaToUiProperty('', propSchema),
+                ...UiPropertyFactory.schemaToUiProperty('', propSchema),
                 meta: { ...(prop.meta || {}), isOneOfItem: true },
               }
             })
@@ -179,7 +179,7 @@ class UiPropertyFactory {
         break
 
       case 'object':
-        property.properties = this.extractProperties(
+        property.properties = UiPropertyFactory.extractProperties(
           schema.properties,
           schema.required || [],
           schema.additionalProperties,
@@ -189,7 +189,7 @@ class UiPropertyFactory {
       case undefined:
         if (schema.properties || schema.additionalProperties) {
           property.types = ['object']
-          property.properties = this.extractProperties(
+          property.properties = UiPropertyFactory.extractProperties(
             schema.properties,
             schema.required || [],
             schema.additionalProperties,
@@ -211,7 +211,7 @@ class UiPropertyFactory {
     if (propertiesNode) {
       Object.entries(propertiesNode).forEach(([key, value]) => {
         const isRequired = requiredProperties.includes(key)
-        properties.push(this.schemaToUiProperty(key, value, isRequired))
+        properties.push(UiPropertyFactory.schemaToUiProperty(key, value, isRequired))
       })
     }
 
