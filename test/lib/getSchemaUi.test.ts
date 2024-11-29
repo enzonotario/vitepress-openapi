@@ -12,7 +12,7 @@ interface FixtureTest {
 }
 
 const fixtures: Record<string, FixtureTest> = {
-  'simple object': {
+  'object with required and optional properties': {
     jsonSchema: {
       type: 'object',
       properties: {
@@ -36,7 +36,7 @@ const fixtures: Record<string, FixtureTest> = {
     },
   },
 
-  'simple array': {
+  'array of objects': {
     jsonSchema: {
       type: 'array',
       items: {
@@ -56,7 +56,7 @@ const fixtures: Record<string, FixtureTest> = {
     schemaUiJson: [{ user: 'string' }],
   },
 
-  'string schema': {
+  'schema with circular reference': {
     jsonSchema: {
       type: 'object',
       properties: {
@@ -79,7 +79,7 @@ const fixtures: Record<string, FixtureTest> = {
     },
   },
 
-  'additional properties': {
+  'schema with additionalProperties': {
     jsonSchema: {
       type: 'object',
       additionalProperties: { type: 'string' },
@@ -104,13 +104,13 @@ const fixtures: Record<string, FixtureTest> = {
     },
   },
 
-  'empty schema': {
+  'empty schema returns empty array': {
     jsonSchema: {},
     schemaUi: [],
     schemaUiJson: [],
   },
 
-  'literal values': {
+  'schema with enum': {
     jsonSchema: {
       type: 'string',
       enum: ['foo', 'bar'],
