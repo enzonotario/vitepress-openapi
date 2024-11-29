@@ -74,7 +74,7 @@ function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variabl
     }
 
     const example = getExample(parameter)
-    if (example !== null) {
+    if (example != null) {
       variables[parameter.name] = example
     }
   })

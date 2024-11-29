@@ -14,7 +14,7 @@ export function hasExample(schema: Partial<OpenAPI.SchemaObject>): boolean {
       return true
     }
     for (const key in obj) {
-      if (typeof obj[key] === 'object' && obj[key] !== null) {
+      if (typeof obj[key] === 'object' && obj[key] != null) {
         if (containsExample(obj[key])) {
           return true
         }

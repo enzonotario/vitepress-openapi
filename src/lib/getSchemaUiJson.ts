@@ -80,7 +80,7 @@ function uiPropertyObjectToJson(properties: OAProperty[], useExample: boolean): 
 function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any {
   if (useExample) {
     const example = getExample(property)
-    if (example !== null) {
+    if (example != null) {
       return example
     }
   }
@@ -91,7 +91,7 @@ function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any
 function uiPropertyConstantToJson(property: OAProperty, useExample: boolean): any {
   if (useExample) {
     const example = getExample(property)
-    if (example !== null) {
+    if (example != null) {
       return example
     }
   }
@@ -126,7 +126,7 @@ function isSingleType(property: OAProperty, type: string): boolean {
 }
 
 function isLiteralType(property: OAProperty): boolean {
-  return property.types?.length === 1 && property.types[0] !== null && literalTypes.includes(property.types[0])
+  return property.types?.length === 1 && property.types[0] != null && literalTypes.includes(property.types[0])
 }
 
 function hasAllLiteralTypes(property: OAProperty): boolean {
