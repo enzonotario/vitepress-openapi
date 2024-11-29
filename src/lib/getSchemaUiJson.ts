@@ -67,12 +67,10 @@ function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
 }
 
 function uiPropertyObjectToJson(properties: OAProperty[], useExample: boolean): Record<string, any> {
-  return properties.reduce((result, property) => {
+  return properties.reduce((result: { [key: string]: any }, property) => {
     if (isSingleType(property, 'array')) {
-      // @ts-expect-error: index signature
       result[property.name] = uiPropertyArrayToJson(property, useExample)
     } else {
-      // @ts-expect-error: index signature
       result[property.name] = uiPropertyToJson(property, useExample)
     }
     return result
