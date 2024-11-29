@@ -69,10 +69,14 @@ export interface OperationConfig {
   cols?: Ref<1 | 2>
 }
 
+export type Languages = 'es' | 'en' | 'pt-BR' | string
+
+export type Messages = Record<Languages, Record<string, string>>
+
 export interface I18nConfig {
-  locale: Ref<'es' | 'en' | string>
-  fallbackLocale: Ref<'es' | 'en' | string>
-  messages: Record<'es' | 'en', Record<string, string>>
+  locale: Ref<Languages>
+  fallbackLocale: Ref<Languages>
+  messages: Messages
 }
 
 export interface SpecConfig {
@@ -244,8 +248,8 @@ const themeConfig: UseThemeConfig = {
     cols: ref(2),
   },
   i18n: {
-    locale: ref<'es' | 'en'>('en'),
-    fallbackLocale: ref<'es' | 'en'>('en'),
+    locale: ref<Languages>('en'),
+    fallbackLocale: ref<Languages>('en'),
     messages: locales,
   },
   spec: {
@@ -370,14 +374,14 @@ export function useTheme(config: Partial<UseThemeConfigUnref> = {}) {
     return deepUnref(themeConfig)
   }
 
-  function getLocale(): 'es' | 'en' | string {
+  function getLocale(): Languages {
     return themeConfig?.i18n?.locale?.value || 'en'
   }
 
   /**
    * @deprecated Use `setI18nConfig({ locale: value })` instead.
    */
-  function setLocale(value: 'es' | 'en' | string) {
+  function setLocale(value: Languages) {
     console.warn('`setLocale` is deprecated. Use `setI18nConfig({ locale: value })` instead.')
     // @ts-expect-error: This is a valid expression.
     themeConfig.i18n.locale.value = value
