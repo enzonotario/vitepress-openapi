@@ -846,6 +846,22 @@ const fixtures: Record<string, FixtureTest> = {
     useExample: true,
   },
 
+  'constants without example': {
+    jsonSchema: {
+      const: 'foo',
+    },
+    schemaUi: {
+      name: '',
+      types: ['string'],
+      required: false,
+      meta: {
+        isConstant: true,
+      },
+      examples: ['foo'],
+    },
+    schemaUiJson: 'foo',
+  },
+
   'null property': {
     jsonSchema: {
       type: 'object',
@@ -1109,7 +1125,7 @@ const fixtures: Record<string, FixtureTest> = {
           paymentReserve: 'string',
         },
       ],
-      success: 'string',
+      success: true,
     },
   },
 

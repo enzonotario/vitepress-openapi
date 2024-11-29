@@ -15,7 +15,7 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
   }
 
   if (property.meta?.isConstant) {
-    return uiPropertyConstantToJson(property, useExample)
+    return uiPropertyConstantToJson(property)
   }
 
   if (isSingleType(property, 'array')) {
@@ -88,15 +88,17 @@ function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any
   return getDefaultValueForType(property.types[0] ?? 'string')
 }
 
-function uiPropertyConstantToJson(property: OAProperty, useExample: boolean): any {
-  if (useExample) {
-    const example = getExample(property)
-    if (example != null) {
-      return example
-    }
+/**
+ * Constants always have an example (the constant), so `useExample` does not apply here.
+ */
+function uiPropertyConstantToJson(property: OAProperty): any {
+  const example = getExample(property)
+
+  if (example != null) {
+    return example
   }
 
-  return property.types[0] ?? 'string'
+  return getDefaultValueForType(property.types[0] ?? 'string')
 }
 
 function getDefaultValueForType(type: string): any {
@@ -117,7 +119,7 @@ function getDefaultValueForType(type: string): any {
     case 'object':
       return {}
     default:
-      return undefined // Fallback para tipos desconocidos
+      return undefined
   }
 }
 
