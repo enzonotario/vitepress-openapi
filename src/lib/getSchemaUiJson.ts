@@ -36,8 +36,7 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
 
   if (isSingleType(property, 'object')) {
     if (isOneOfProperty(property)) {
-      // Return the first property of the oneOf array.
-      return uiPropertyToJson(property.properties![0], useExample)
+      return resolveOneOfProperty(property, useExample)
     }
     return uiPropertyObjectToJson(property.properties || [], useExample)
   }
@@ -47,8 +46,7 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
 
 function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
   if (isOneOfProperty(property)) {
-    // Return the first property of the oneOf array.
-    return [uiPropertyToJson(property.properties![0], useExample)]
+    return [resolveOneOfProperty(property, useExample)]
   }
 
   if (property.properties && Array.isArray(property.properties)) {
@@ -137,4 +135,12 @@ function hasAllLiteralTypes(property: OAProperty): boolean {
 
 function isOneOfProperty(property: OAProperty): boolean {
   return !!property.meta?.isOneOf && Array.isArray(property.properties)
+}
+
+function resolveOneOfProperty(property: OAProperty, useExample: boolean): any {
+  if (property.properties && property.properties.length > 0) {
+    return uiPropertyToJson(property.properties[0], useExample)
+  } else {
+    return useExample ? getExample(property) : getDefaultValueForType(property.types[0] ?? 'string')
+  }
 }
