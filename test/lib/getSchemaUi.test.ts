@@ -1,14 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { getSchemaUi } from '../../src/lib/getSchemaUi'
-import { getSchemaUiJson } from '../../src/lib/getSchemaUiJson'
 import { specWithCircularRef } from '../testsConstants'
+import { getSchemaUiContentType } from '../../src/lib/getSchemaUiContentType'
 
 interface FixtureTest {
   jsonSchema: any
   schemaUi: any
   schemaUiJson: any
   useExample?: boolean
+  contentType?: string
 }
 
 const fixtures: Record<string, FixtureTest> = {
@@ -1148,16 +1149,44 @@ const fixtures: Record<string, FixtureTest> = {
       name: null,
     },
   },
+
+  'xml schema': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', xml: { name: 'name' } },
+        age: { type: 'integer', xml: { name: 'age' } },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        { name: 'name', required: false, types: ['string'] },
+        { name: 'age', required: false, types: ['integer'] },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: `<?xml version="1.0"?>
+<name>string</name>
+<age>0</age>
+`,
+    contentType: 'application/xml',
+  },
 }
 
 describe('getSchemaUi and getSchemaUiJson from fixtures', () => {
-  Object.entries(fixtures).forEach(([name, { jsonSchema, schemaUi, schemaUiJson, useExample }]) => {
+  Object.entries(fixtures).forEach(([name, { jsonSchema, schemaUi, schemaUiJson, useExample, contentType }]) => {
     it(`parses ${name} schema`, () => {
-      const result = getSchemaUi(jsonSchema)
-      expect(result).toEqual(schemaUi)
+      const parsedSchemaUi = getSchemaUi(jsonSchema)
+      expect(parsedSchemaUi).toEqual(schemaUi)
 
-      const resultJson = getSchemaUiJson(result, useExample)
-      expect(resultJson).toEqual(schemaUiJson)
+      const parsedSchemaUiContentType = getSchemaUiContentType(
+        contentType ?? 'application/json',
+        parsedSchemaUi,
+        useExample,
+      )
+      expect(parsedSchemaUiContentType).toEqual(schemaUiJson)
     })
   })
 })
