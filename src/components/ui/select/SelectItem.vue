@@ -2,7 +2,7 @@
 import { type HTMLAttributes, computed } from 'vue'
 import { SelectItem, SelectItemIndicator, type SelectItemProps, SelectItemText, useForwardProps } from 'radix-vue'
 import { Check } from 'lucide-vue-next'
-import { cn } from 'vitepress-openapi/lib/utils'
+import { cn } from '../../../lib/utils'
 
 const props = defineProps<SelectItemProps & { class?: HTMLAttributes['class'] }>()
 

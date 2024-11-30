@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, inject, useSlots } from 'vue'
-import OAHeaderBadges from 'vitepress-openapi/components/Common/OAHeaderBadges.vue'
-import { getOpenApiInstance } from 'vitepress-openapi'
-import type { OperationSlot } from 'vitepress-openapi/types.js'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
+import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
+import type { OperationSlot } from '../../types'
 
 const props = defineProps({
   operationId: {
@@ -10,6 +10,10 @@ const props = defineProps({
     required: true,
   },
   spec: {
+    type: Object,
+    required: false,
+  },
+  openapi: {
     type: Object,
     required: false,
   },
@@ -31,7 +35,7 @@ const props = defineProps({
   },
   hideBranding: {
     type: Boolean,
-    default: (props) => {
+    default: (props: { hideBranding?: boolean, hideDefaultFooter?: boolean }) => {
       if (props.hideBranding === undefined && props.hideDefaultFooter !== undefined) {
         console.warn(
           '`hideDefaultFooter` is deprecated. Use `hideBranding` instead.',
@@ -64,7 +68,7 @@ const headingPrefix = computed(() => {
   return props.operationId
 })
 
-function hasSlot(name) {
+function hasSlot(name: OperationSlot): boolean {
   return slots[name] !== undefined
 }
 </script>
@@ -194,7 +198,8 @@ function hasSlot(name) {
 
       <OARequestBody
         :operation-id="requestBody.operationId"
-        :schema="requestBody.schema"
+        :request-body="requestBody.requestBody"
+        :content-type="requestBody.contentType"
         :is-dark="isDark"
       />
     </template>
@@ -264,8 +269,9 @@ function hasSlot(name) {
           :method="tryIt.method"
           :base-url="tryIt.baseUrl"
           :parameters="tryIt.parameters"
-          :schema="tryIt.schema"
+          :request-body="tryIt.requestBody"
           :security-schemes="tryIt.securitySchemes"
+          :content-type="tryIt.contentType"
           :is-dark="isDark"
           @update:request="tryIt.updateRequest"
         />

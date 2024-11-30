@@ -26,9 +26,6 @@ const isArray = Array.isArray
 
 /**
  * Deeply unref a value, recursing into objects and arrays.
- *
- * @param val - The value to deeply unref
- * @returns The deeply unreffed value
  */
 export function deepUnref<T>(val: T): DeepUnref<T> {
   const checkedVal = isRef(val) ? unref(val) : val
@@ -46,9 +43,6 @@ export function deepUnref<T>(val: T): DeepUnref<T> {
 
 /**
  * Unref a value, recursing into it if it's an object.
- *
- * @param val - The value to unref
- * @returns The unreffed value
  */
 function smartUnref<T>(val: T): DeepUnref<T> {
   // Non-ref object? Go deeper!
@@ -61,9 +55,6 @@ function smartUnref<T>(val: T): DeepUnref<T> {
 
 /**
  * Unref an array, recursively.
- *
- * @param arr - The array to unref
- * @returns The unreffed array
  */
 function unrefArray<T>(arr: T[]): DeepUnrefArray<T> {
   return arr.map(item => smartUnref(item)) as DeepUnrefArray<T>
@@ -71,15 +62,13 @@ function unrefArray<T>(arr: T[]): DeepUnrefArray<T> {
 
 /**
  * Unref an object, recursively.
- *
- * @param obj - The object to unref
- * @returns The unreffed object
  */
 function unrefObject<T extends Record<string, unknown>>(obj: T): DeepUnrefObject<T> {
   const unreffed = {} as DeepUnrefObject<T>
 
   // Object? un-ref it!
   Object.keys(obj).forEach((key) => {
+    // @ts-expect-error: TS doesn't know that `key` is a key of `T`
     unreffed[key as keyof T] = smartUnref(obj[key])
   })
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { createOpenApiInstance, useOpenapi } from 'vitepress-openapi'
-import { spec } from '../testsConstants'
+import { createOpenApiInstance } from '../../src/lib/createOpenApiInstance'
+import { useOpenapi } from '../../src/composables/useOpenapi'
+import { spec, specWithSchemaAndContentTypes } from '../testsConstants'
 
 describe('openapi with spec', () => {
   const openapi = createOpenApiInstance({ spec })
@@ -274,5 +275,19 @@ describe('custom specs', () => {
         description: customDescription,
       },
     ])
+  })
+})
+
+describe('schemaParser', () => {
+  const openapi = useOpenapi({
+    spec: specWithSchemaAndContentTypes,
+  })
+
+  it('parses schema with content types', () => {
+    const getPetsOperation = openapi.getOperation('getPets')
+
+    const schemaUi = getPetsOperation.responses['400'].content['application/json'].ui
+
+    expect(schemaUi).toMatchSnapshot()
   })
 })

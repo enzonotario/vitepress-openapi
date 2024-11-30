@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, defineProps, onMounted } from 'vue'
-import OASecurityContent from 'vitepress-openapi/components/Security/OASecurityContent.vue'
+import { useTheme } from '../../composables/useTheme'
+import OASecurityContent from '../Security/OASecurityContent.vue'
 import {
   Select,
   SelectContent,
@@ -8,8 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from 'vitepress-openapi/components/ui/select'
-import { useTheme } from 'vitepress-openapi'
+} from '../ui/select'
 
 const { securitySchemes, headingPrefix } = defineProps({
   securitySchemes: {
@@ -28,12 +28,12 @@ const themeConfig = useTheme()
 const firstSecurityScheme = Object.keys(securitySchemes).find(Boolean)
 
 const selectedSchemeName = computed({
-  get: () => themeConfig.getSecuritySelectedScheme(),
+  get: () => themeConfig.getSecuritySelectedScheme() ?? firstSecurityScheme,
   set: value => themeConfig.setSecuritySelectedScheme(value),
 })
 
 const selectedScheme = computed(() => {
-  return securitySchemes[selectedSchemeName.value]
+  return securitySchemes[selectedSchemeName.value ?? '']
 })
 
 onMounted(() => {

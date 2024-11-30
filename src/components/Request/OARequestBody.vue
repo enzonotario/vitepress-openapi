@@ -4,8 +4,12 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  schema: {
+  requestBody: {
     type: Object,
+    required: true,
+  },
+  contentType: {
+    type: String,
     required: true,
   },
   isDark: {
@@ -17,7 +21,9 @@ const props = defineProps({
 
 <template>
   <OASchemaTabs
-    :schema="props.schema"
+    :schema="props.requestBody?.content?.[props.contentType]?.ui"
+    :schema-ui-content-type="props.requestBody?.content?.[props.contentType]?.uiContentType"
+    :content-type="props.contentType"
     :is-dark="props.isDark"
   />
 </template>

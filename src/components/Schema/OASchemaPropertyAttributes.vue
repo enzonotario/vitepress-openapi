@@ -1,6 +1,6 @@
 <script setup>
 import { titleCase } from 'scule'
-import OACodeValue from 'vitepress-openapi/components/Common/OACodeValue.vue'
+import OACodeValue from '../Common/OACodeValue.vue'
 
 const props = defineProps({
   property: {
@@ -9,9 +9,24 @@ const props = defineProps({
   },
 })
 
-const keysToIgnore = ['type', 'description', 'properties', 'required', 'items', 'xml', 'allOf', 'anyOf', 'oneOf', 'not']
+const keysToIgnore = ['name', 'types', 'description', 'properties', 'required', 'items', 'xml', 'allOf', 'anyOf', 'oneOf', 'not']
 
-const properties = Object.keys(props.property).filter(key => !keysToIgnore.includes(key))
+const isNonEmptyValue = (value) => {
+  if (value === null || value === undefined) {
+    return false
+  }
+  if (Array.isArray(value)) {
+    return value.length > 0
+  }
+  if (typeof value === 'object') {
+    return Object.keys(value).length > 0
+  }
+  return true
+}
+
+const properties = Object.keys(props.property)
+  .filter(key => !keysToIgnore.includes(key)) // Exclude specified keys
+  .filter(key => isNonEmptyValue(props.property[key])) // Keep only non-empty values
 </script>
 
 <template>

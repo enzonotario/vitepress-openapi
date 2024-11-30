@@ -1,14 +1,14 @@
-import type { OpenAPIData } from '../composables/useOpenapi'
-import { parseSpec } from './parseSpec'
-import { transformSpec } from './transformSpec'
+import type { OpenAPI } from '@scalar/openapi-types'
+import { processOpenAPI } from './processOpenAPI'
+import { prepareOpenAPI } from './prepareOpenAPI'
 import { OpenApi } from './OpenApi'
 
 export function createOpenApiInstance({
   spec,
 }: {
-  spec: OpenAPIData
-}): OpenApi {
-  const transformedSpec = transformSpec(spec)
-  const parsedSpec = parseSpec(transformedSpec)
+  spec: OpenAPI.Document
+}) {
+  const transformedSpec = prepareOpenAPI(spec)
+  const parsedSpec = processOpenAPI(transformedSpec)
   return OpenApi({ spec, transformedSpec, parsedSpec })
 }

@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { dereferenceSync } from '@trojs/openapi-dereference'
-import { merge } from 'allof-merge'
 import { hasExample } from '../../src/lib/hasExample'
 import { specWithCircularRef, specWithCircularRefAndExample } from '../testsConstants'
+import { getSchemaUi } from '../../src/lib/getSchemaUi'
 
 describe('hasExample', () => {
   it('returns true if schema has an example at the root level', () => {
@@ -71,18 +70,26 @@ describe('hasExample', () => {
     const schema = undefined
     expect(hasExample(schema)).toBe(false)
   })
+
+  it('returns false if example appears in a string that is not an example', () => {
+    const schema = {
+      properties: {
+        prop1: { description: 'This is an example of an example: "exampleValue"' },
+      },
+    }
+    expect(hasExample(schema)).toBe(false)
+  })
 })
 
 describe('schema with circular references', () => {
   it('returns false if schema with circular references has no example', () => {
-    const schema = dereferenceSync(merge(specWithCircularRef)).components.schemas.Parent
+    const schema = getSchemaUi(specWithCircularRef.components.schemas.Parent)
     const result = hasExample(schema)
     expect(result).toBe(false)
   })
 
   it('returns true if schema with circular references has an example', () => {
-    const schema = dereferenceSync(merge(specWithCircularRefAndExample)).components.schemas.Parent
-    schema.example = 'exampleValue'
+    const schema = getSchemaUi(specWithCircularRefAndExample.components.schemas.Parent)
     const result = hasExample(schema)
     expect(result).toBe(true)
   })

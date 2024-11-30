@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
+import type { Ref } from 'vue'
 import type { IOARequest } from '../lib/codeSamples/request'
 import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
@@ -68,10 +69,14 @@ export interface OperationConfig {
   cols?: Ref<1 | 2>
 }
 
+export type Languages = 'es' | 'en' | 'pt-BR' | string
+
+export type Messages = Record<Languages, Record<string, string>>
+
 export interface I18nConfig {
-  locale: Ref<'es' | 'en' | string>
-  fallbackLocale: Ref<'es' | 'en' | string>
-  messages: Record<'es' | 'en', Record<string, Record<string, string>>>
+  locale: Ref<Languages>
+  fallbackLocale: Ref<Languages>
+  messages: Messages
 }
 
 export interface SpecConfig {
@@ -95,6 +100,47 @@ export interface UseThemeConfig {
   playground?: Partial<PlaygroundConfig>
   security?: Partial<SecurityConfig>
   operation?: Partial<OperationConfig>
+  i18n?: Partial<I18nConfig>
+  spec?: Partial<SpecConfig>
+  codeSamples?: Partial<CodeSamplesConfig>
+}
+
+export interface UseThemeConfigUnref {
+  theme?: Partial<ThemeConfig>
+  path?: Partial<{
+    showBaseURL: boolean
+  }>
+  requestBody?: Partial<{
+    defaultView: 'schema' | 'contentType'
+  }>
+  jsonViewer?: Partial<{
+    deep: number
+  }>
+  schemaViewer?: Partial<{
+    deep: number
+  }>
+  headingLevels?: Partial<HeadingLevels>
+  response?: Partial<{
+    responseCodeSelector: 'tabs' | 'select'
+    maxTabs: number
+  }>
+  playground?: Partial<{
+    jsonEditor: {
+      mode: PlaygroundJsonEditorMode
+      mainMenuBar: boolean
+      navigationBar: boolean
+    }
+  }>
+  security?: Partial<{
+    defaultScheme: string | null
+    selectedScheme: string | null
+  }>
+  operation?: Partial<{
+    badges: OperationBadges[]
+    slots: OperationSlot[]
+    hiddenSlots: OperationSlot[]
+    cols: 1 | 2
+  }>
   i18n?: Partial<I18nConfig>
   spec?: Partial<SpecConfig>
   codeSamples?: Partial<CodeSamplesConfig>
@@ -202,8 +248,8 @@ const themeConfig: UseThemeConfig = {
     cols: ref(2),
   },
   i18n: {
-    locale: ref<'es' | 'en'>('en'),
-    fallbackLocale: ref<'es' | 'en'>('en'),
+    locale: ref<Languages>('en'),
+    fallbackLocale: ref<Languages>('en'),
     messages: locales,
   },
   spec: {
@@ -231,13 +277,14 @@ const themeConfig: UseThemeConfig = {
   },
 }
 
-const defaultThemeConfig = { ...deepUnref(themeConfig) }
+const defaultThemeConfig: UseThemeConfigUnref = { ...deepUnref(themeConfig) } as UseThemeConfigUnref
 
-export function useTheme(config: Partial<UseThemeConfig> = {}) {
+export function useTheme(config: Partial<UseThemeConfigUnref> = {}) {
   if (Object.keys(config).length) {
     if (config?.theme?.highlighterTheme) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.theme.highlighterTheme = {
-        ...themeConfig.theme.highlighterTheme,
+        ...themeConfig?.theme?.highlighterTheme,
         ...config.theme.highlighterTheme,
       }
     }
@@ -327,52 +374,56 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     return deepUnref(themeConfig)
   }
 
-  function getLocale(): 'es' | 'en' | string {
-    return themeConfig.i18n.locale.value
+  function getLocale(): Languages {
+    return themeConfig?.i18n?.locale?.value || 'en'
   }
 
   /**
    * @deprecated Use `setI18nConfig({ locale: value })` instead.
-   * @param value
    */
-  function setLocale(value: 'es' | 'en' | string) {
+  function setLocale(value: Languages) {
     console.warn('`setLocale` is deprecated. Use `setI18nConfig({ locale: value })` instead.')
+    // @ts-expect-error: This is a valid expression.
     themeConfig.i18n.locale.value = value
   }
 
   function getHighlighterTheme() {
-    return themeConfig.theme.highlighterTheme
+    return themeConfig?.theme?.highlighterTheme
   }
 
-  function getSchemaDefaultView(): 'schema' | 'contentType' {
-    return themeConfig.requestBody.defaultView.value
+  function getSchemaDefaultView(): 'schema' | 'contentType' | undefined {
+    return themeConfig?.requestBody?.defaultView?.value
   }
 
   function setSchemaDefaultView(value: 'schema' | 'contentType') {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.requestBody.defaultView.value = value
   }
 
-  function getShowBaseURL(): boolean {
-    return themeConfig.path.showBaseURL.value
+  function getShowBaseURL(): boolean | undefined {
+    return themeConfig?.path?.showBaseURL?.value
   }
 
   function setShowBaseURL(value: boolean) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.path.showBaseURL.value = value
   }
 
-  function getJsonViewerDeep(): number {
-    return themeConfig.jsonViewer.deep.value
+  function getJsonViewerDeep(): number | undefined {
+    return themeConfig?.jsonViewer?.deep?.value
   }
 
   function setJsonViewerDeep(value: number) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.jsonViewer.deep.value = value
   }
 
-  function getSchemaViewerDeep(): number {
-    return themeConfig.schemaViewer.deep.value
+  function getSchemaViewerDeep(): number | undefined {
+    return themeConfig?.schemaViewer?.deep?.value
   }
 
   function setSchemaViewerDeep(value: number) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.schemaViewer.deep.value = value
   }
 
@@ -381,125 +432,151 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
   }
 
   function getHeadingLevel(level: keyof HeadingLevels): `h${1 | 2 | 3 | 4 | 5 | 6}` {
-    const headingLevel = themeConfig.headingLevels[level]
+    if (!themeConfig.headingLevels) {
+      return `h${level}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+    }
+
+    const headingLevel = themeConfig.headingLevels[level] as number
+
     if (headingLevel < 1 || headingLevel > 6) {
       throw new Error(`Heading level for ${level} must be between 1 and 6.`)
     }
+
     return `h${headingLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
   }
 
   function setHeadingLevels(levels: Partial<HeadingLevels>) {
+    if (!themeConfig.headingLevels) {
+      themeConfig.headingLevels = { }
+    }
+
     for (const key of Object.keys(levels)) {
-      const value = levels[key as keyof HeadingLevels]
+      const value = levels[key as keyof HeadingLevels] as number
+
       if (value < 1 || value > 6) {
         throw new Error(`Heading level for ${key} must be between 1 and 6.`)
       }
     }
+
     Object.assign(themeConfig.headingLevels, levels)
   }
 
-  function getResponseCodeSelector(): 'tabs' | 'select' {
-    return themeConfig.response.responseCodeSelector.value
+  function getResponseCodeSelector(): 'tabs' | 'select' | undefined {
+    return themeConfig?.response?.responseCodeSelector?.value
   }
 
   function setResponseCodeSelector(value: 'tabs' | 'select') {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.response.responseCodeSelector.value = value
   }
 
-  function getResponseCodeMaxTabs(): number {
-    return themeConfig.response.maxTabs.value
+  function getResponseCodeMaxTabs(): number | undefined {
+    return themeConfig?.response?.maxTabs?.value
   }
 
   function setResponseCodeMaxTabs(value: number) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.response.maxTabs.value = value
   }
 
-  function getPlaygroundJsonEditorMode(): PlaygroundJsonEditorMode {
-    return themeConfig.playground.jsonEditor.mode.value
+  function getPlaygroundJsonEditorMode(): PlaygroundJsonEditorMode | undefined {
+    return themeConfig?.playground?.jsonEditor?.mode.value
   }
 
   function setPlaygroundJsonEditorMode(value: PlaygroundJsonEditorMode) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.playground.jsonEditor.mode.value = value
   }
 
-  function getPlaygroundJsonEditorMainMenuBar(): boolean {
-    return themeConfig.playground.jsonEditor.mainMenuBar.value
+  function getPlaygroundJsonEditorMainMenuBar(): boolean | undefined {
+    return themeConfig?.playground?.jsonEditor?.mainMenuBar?.value
   }
 
   function setPlaygroundJsonEditorMainMenuBar(value: boolean) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.playground.jsonEditor.mainMenuBar.value = value
   }
 
-  function getPlaygroundJsonEditorNavigationBar(): boolean {
-    return themeConfig.playground.jsonEditor.navigationBar.value
+  function getPlaygroundJsonEditorNavigationBar(): boolean | undefined {
+    return themeConfig?.playground?.jsonEditor?.navigationBar.value
   }
 
   function setPlaygroundJsonEditorNavigationBar(value: boolean) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.playground.jsonEditor.navigationBar.value = value
   }
 
-  function getSecurityDefaultScheme(): string | null {
-    return themeConfig.security.defaultScheme.value
+  function getSecurityDefaultScheme(): string | null | undefined {
+    return themeConfig?.security?.defaultScheme?.value
   }
 
   function setSecurityDefaultScheme(value: string | null) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.security.defaultScheme.value = value
   }
 
-  function getSecuritySelectedScheme(): string | null {
-    return themeConfig.security.selectedScheme.value
+  function getSecuritySelectedScheme(): string | null | undefined {
+    return themeConfig?.security?.selectedScheme?.value
   }
 
-  function setSecuritySelectedScheme(value: string | null) {
+  function setSecuritySelectedScheme(value: string | null | undefined) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.security.selectedScheme.value = value
   }
 
   function getOperationBadges(): OperationBadges[] {
-    return [...themeConfig.operation.badges.value]
+    return [...(themeConfig?.operation?.badges?.value || [])]
   }
 
   function setOperationBadges(value: OperationBadges[]) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.operation.badges.value = value
   }
 
-  function getOperationSlots(): OperationSlot[] {
-    return themeConfig.operation.slots.value
+  function getOperationSlots(): OperationSlot[] | undefined {
+    return themeConfig?.operation?.slots?.value
   }
 
   function setOperationSlots(value: OperationSlot[]) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.operation.slots.value = value
   }
 
-  function getOperationHiddenSlots(): OperationSlot[] {
-    return themeConfig.operation.hiddenSlots.value
+  function getOperationHiddenSlots(): OperationSlot[] | undefined {
+    return themeConfig?.operation?.hiddenSlots?.value
   }
 
   function setOperationHiddenSlots(value: OperationSlot[]) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.operation.hiddenSlots.value = value
   }
 
-  function getOperationCols(): 1 | 2 {
-    return themeConfig.operation.cols.value
+  function getOperationCols(): 1 | 2 | undefined {
+    return themeConfig?.operation?.cols?.value
   }
 
   function setOperationCols(value: number) {
+    // @ts-expect-error: This is a valid expression.
     themeConfig.operation.cols.value = value
   }
 
   function getI18nConfig(): I18nConfig {
-    return themeConfig.i18n
+    return themeConfig.i18n as I18nConfig
   }
 
   function setI18nConfig(config: Partial<I18nConfig>) {
     if (config.locale) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.i18n.locale.value = config.locale
     }
 
     if (config.fallbackLocale) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.i18n.fallbackLocale.value = config.fallbackLocale
     }
 
     if (config.messages) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.i18n.messages = config.messages
     }
   }
@@ -508,24 +585,33 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
     return themeConfig.spec
   }
 
-  function setSpecConfig(config: Partial<typeof specConfig>) {
+  function setSpecConfig(config: Partial<SpecConfig>) {
+    if (!themeConfig.spec) {
+      themeConfig.spec = {}
+    }
+
     if (config.groupByTags !== undefined) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.spec.groupByTags.value = config.groupByTags
     }
 
     if (config.collapsePaths !== undefined) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.spec.collapsePaths.value = config.collapsePaths
     }
 
     if (config.showPathsSummary !== undefined) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.spec.showPathsSummary.value = config.showPathsSummary
     }
 
     if (config.avoidCirculars !== undefined) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.spec.avoidCirculars.value = config.avoidCirculars
     }
 
     if (config.lazyRendering !== undefined) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.spec.lazyRendering.value = config.lazyRendering
     }
 
@@ -539,43 +625,48 @@ export function useTheme(config: Partial<UseThemeConfig> = {}) {
   }
 
   function getCodeSamplesLangs() {
-    return themeConfig.codeSamples.langs
+    return themeConfig?.codeSamples?.langs
   }
 
   function getCodeSamplesDefaultLang() {
-    return themeConfig.codeSamples.defaultLang
+    return themeConfig?.codeSamples?.defaultLang
   }
 
   function getCodeSamplesAvailableLanguages() {
-    return themeConfig.codeSamples.availableLanguages
+    return themeConfig?.codeSamples?.availableLanguages
   }
 
   function getCodeSamplesGenerator() {
-    return themeConfig.codeSamples.generator
+    return themeConfig?.codeSamples?.generator
   }
 
   function getCodeSamplesDefaultHeaders() {
-    return themeConfig.codeSamples.defaultHeaders
+    return themeConfig?.codeSamples?.defaultHeaders
   }
 
   function setCodeSamplesConfig(config: Partial<CodeSamplesConfig>) {
     if (config.langs) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.codeSamples.langs = config.langs
     }
 
     if (config.defaultLang) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.codeSamples.defaultLang = config.defaultLang
     }
 
     if (config.availableLanguages) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.codeSamples.availableLanguages = config.availableLanguages
     }
 
     if (config.generator) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.codeSamples.generator = config.generator
     }
 
     if (config.defaultHeaders) {
+      // @ts-expect-error: This is a valid expression.
       themeConfig.codeSamples.defaultHeaders = config.defaultHeaders
     }
   }

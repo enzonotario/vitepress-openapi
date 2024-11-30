@@ -1,20 +1,16 @@
 <script setup lang="ts">
 import { computed, defineEmits, defineProps, ref, watch } from 'vue'
-import OAJSONEditor from 'vitepress-openapi/components/Common/OAJSONEditor.vue'
-import { propertiesTypesJsonRecursive } from 'vitepress-openapi/lib/generateSchemaJson'
-import { OARequest, usePlayground, useTheme } from 'vitepress-openapi'
 import { useStorage } from '@vueuse/core'
-import OAPlaygroundParameterInput from 'vitepress-openapi/components/Playground/OAPlaygroundParameterInput.vue'
-import OAPlaygroundSecurityInput from 'vitepress-openapi/components/Playground/OAPlaygroundSecurityInput.vue'
-import { getExample } from 'vitepress-openapi/lib/getExample'
-import { buildRequest } from 'vitepress-openapi/lib/codeSamples/buildRequest'
-
-interface SecurityScheme {
-  type: string
-  scheme?: string
-  name?: string
-  in?: string
-}
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import { OARequest } from '../../lib/codeSamples/request'
+import { usePlayground } from '../../composables/usePlayground'
+import { useTheme } from '../../composables/useTheme'
+import type { PlaygroundSecurityScheme } from '../../types'
+import OAJSONEditor from '../Common/OAJSONEditor.vue'
+import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
+import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
+import { getExample } from '../../lib/getExample'
+import { buildRequest } from '../../lib/codeSamples/buildRequest'
 
 const props = defineProps({
   request: { // v-model
@@ -38,16 +34,20 @@ const props = defineProps({
     required: true,
   },
   parameters: {
-    type: Array,
+    type: Array<OpenAPIV3.ParameterObject>,
     required: true,
   },
   securitySchemes: {
     type: Object,
     required: true,
   },
-  schema: {
+  schemaUiContentType: {
     type: Object,
     required: false,
+  },
+  isDark: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -69,40 +69,45 @@ const variables = ref({
   ...initializeVariables(queryParameters),
 })
 
-function initializeVariables(parameters) {
-  return parameters.reduce((acc, parameter) => {
-    acc[parameter.name] = getExample(parameter) ?? ''
-    return acc
-  }, {})
+function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
+  return parameters
+    .reduce((acc: Record<string, string>, parameter: OpenAPIV3.ParameterObject) => {
+      if (!parameter.name) {
+        return acc
+      }
+
+      acc[parameter.name] = getExample(parameter) ?? ''
+      return acc
+    }, {})
 }
 
 const selectedSchemeName = computed(() => {
-  return themeConfig.getSecuritySelectedScheme()
+  return themeConfig.getSecuritySelectedScheme() ?? ''
 })
 
 const selectedScheme = computed(() => {
   return props.securitySchemes[selectedSchemeName.value]
 })
 
-const authScheme = ref(null)
+const authScheme = ref<PlaygroundSecurityScheme | null>(null)
 
-const body = ref(props.schema ? propertiesTypesJsonRecursive(props.schema, true) : null)
+const body = ref(props.schemaUiContentType)
 
-function setAuthScheme(scheme: SecurityScheme) {
-  const name = selectedSchemeName.value
+function setAuthScheme(scheme: PlaygroundSecurityScheme) {
+  const name = selectedSchemeName.value ?? ''
 
   authScheme.value = {
     type: scheme.type,
     scheme: scheme.scheme,
     name,
-    value: useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage),
+    playgroundValue: useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage),
   }
 }
 
 watch([variables, authScheme, body], () => {
   emits('update:request', buildRequest({
     baseUrl: props.baseUrl,
-    method: props.method,
+    method: props.method as OpenAPIV3.HttpMethods,
     path: props.path,
     variables: variables.value,
     authScheme: authScheme.value,
@@ -137,7 +142,7 @@ watch(selectedScheme, () => {
         </div>
         <div class="flex flex-row items-center space-x-2">
           <OAPlaygroundSecurityInput
-            v-model="authScheme.value"
+            v-model="authScheme.playgroundValue"
             :scheme="authScheme"
             class="w-full"
           />
@@ -169,7 +174,7 @@ watch(selectedScheme, () => {
           </div>
           <div class="flex flex-row items-center space-x-2">
             <OAPlaygroundParameterInput
-              v-model="variables[parameter.name]"
+              v-model="variables[parameter.name ?? '']"
               :parameter="parameter"
               class="w-full"
             />
@@ -211,7 +216,7 @@ watch(selectedScheme, () => {
           </div>
           <div class="w-1/2 flex flex-row items-center space-x-2">
             <OAPlaygroundParameterInput
-              v-model="variables[parameter.name]"
+              v-model="variables[parameter.name ?? '']"
               :parameter="parameter"
               class="w-full"
             />

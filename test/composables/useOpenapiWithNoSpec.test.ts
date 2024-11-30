@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { OpenApi } from 'vitepress-openapi'
+import { OpenApi } from '../../src/lib/OpenApi'
 
 describe('useOpenapi with no spec', () => {
   const openapi = OpenApi()

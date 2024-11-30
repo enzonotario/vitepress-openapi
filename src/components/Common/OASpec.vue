@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { getOpenApiInstance, useTheme } from 'vitepress-openapi'
-import OAInfo from 'vitepress-openapi/components/Common/OAInfo.vue'
-import OAServers from 'vitepress-openapi/components/Common/OAServers.vue'
 import { inject } from 'vue'
-import type { OperationSlot } from 'vitepress-openapi/types'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
+import { useTheme } from '../../composables/useTheme'
+import OAServers from '../Common/OAServers.vue'
+import OAInfo from '../Common/OAInfo.vue'
+import type { OperationSlot } from '../../types'
 
 const props = defineProps({
   spec: {
@@ -40,7 +41,7 @@ const props = defineProps({
   },
   hideBranding: {
     type: Boolean,
-    default: (props) => {
+    default: (props: { hideBranding?: boolean, hideDefaultFooter?: boolean }) => {
       if (props.hideBranding === undefined && props.hideDefaultFooter !== undefined) {
         console.warn(
           '`hideDefaultFooter` is deprecated. Use `hideBranding` instead.',
@@ -58,7 +59,7 @@ const props = defineProps({
   },
 })
 
-const slots = defineSlots<OperationSlot>()
+const slots = defineSlots<Record<string, OperationSlot>>()
 
 const themeConfig = useTheme()
 
@@ -75,7 +76,7 @@ const showInfo = !props.hideInfo && Object.keys(info).length
 
 const showServers = !props.hideServers && servers.length
 
-const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig().groupByTags
+const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig()?.groupByTags
 
 const operationsTags = props.tags ?? openapi.getOperationsTags()
 

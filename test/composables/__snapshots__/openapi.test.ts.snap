@@ -1,0 +1,57 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`schemaParser > parses schema with content types 1`] = `
+{
+  "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+  "name": "",
+  "properties": [
+    {
+      "examples": [
+        "https://example.com/errors/generic-error",
+      ],
+      "name": "type",
+      "required": false,
+      "types": [
+        "string",
+      ],
+    },
+    {
+      "examples": [
+        "Something went wrong here.",
+      ],
+      "name": "title",
+      "required": false,
+      "types": [
+        "string",
+      ],
+    },
+    {
+      "constraints": {
+        "format": "int64",
+      },
+      "examples": [
+        403,
+      ],
+      "name": "status",
+      "required": false,
+      "types": [
+        "integer",
+      ],
+    },
+    {
+      "examples": [
+        "Unfortunately, we can’t provide further information.",
+      ],
+      "name": "detail",
+      "required": false,
+      "types": [
+        "string",
+      ],
+    },
+  ],
+  "required": false,
+  "types": [
+    "object",
+  ],
+}
+`;

@@ -6,6 +6,8 @@ import { useTheme } from './composables/useTheme'
 import { useShiki } from './composables/useShiki'
 import * as components from './components'
 
+import type { createOpenApiInstance } from './lib/createOpenApiInstance'
+
 import 'tailwindcss/tailwind.css'
 import './style.css'
 import './json.css'
@@ -24,9 +26,13 @@ export type { IOARequest } from './lib/codeSamples/request'
 export { generateCodeSample } from './lib/codeSamples/generateCodeSample'
 export { locales } from './locales'
 
+interface OAEnhanceAppContext extends EnhanceAppContext {
+  openapi: ReturnType<typeof createOpenApiInstance>
+}
+
 interface VPTheme {
   Layout: Component
-  enhanceApp: (ctx: EnhanceAppContext) => Awaitable<void>
+  enhanceApp: (ctx: OAEnhanceAppContext) => Awaitable<void>
   extends?: Theme
 }
 
@@ -38,7 +44,7 @@ export const theme = {
 
     const themeConfig = useTheme()
 
-    const i18n = VueI18n.createI18n({
+    const i18n: any = VueI18n.createI18n({
       legacy: false,
       locale: themeConfig.getI18nConfig().locale.value,
       fallbackLocale: themeConfig.getI18nConfig().fallbackLocale.value,
@@ -56,3 +62,5 @@ export const theme = {
 } as VPTheme
 
 export const httpVerbs = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head']
+
+export const literalTypes = ['string', 'number', 'integer', 'boolean', 'null']

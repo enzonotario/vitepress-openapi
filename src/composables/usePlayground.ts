@@ -1,3 +1,5 @@
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+
 interface SecuritySchemeDefaultValues {
   'http-basic': string
   'http-bearer': string
@@ -22,16 +24,22 @@ export function usePlayground() {
     }
   }
 
-  function getSecuritySchemeDefaultValue(scheme) {
+  function getSecuritySchemeDefaultValue(scheme: OpenAPIV3.SecuritySchemeObject) {
     if (scheme.type === 'http') {
-      return securitySchemeDefaultValues[`http-${scheme.scheme}`]
+      const schemeKey = scheme.scheme === 'basic' ? 'http-basic' : 'http-bearer'
+      return securitySchemeDefaultValues[schemeKey]
     }
 
-    if (Object.keys(securitySchemeDefaultValues).includes(scheme.type)) {
-      return securitySchemeDefaultValues[scheme.type] ?? scheme.name
+    const schemeType = scheme.type as keyof SecuritySchemeDefaultValues
+    if (Object.keys(securitySchemeDefaultValues).includes(schemeType) && securitySchemeDefaultValues[schemeType] !== null) {
+      return securitySchemeDefaultValues[schemeType] ?? ''
     }
 
-    return scheme.name ?? ''
+    if (scheme.type === 'apiKey' && scheme.name) {
+      return scheme.name
+    }
+
+    return ''
   }
 
   return {

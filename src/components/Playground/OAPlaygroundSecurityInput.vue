@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineEmits, defineProps } from 'vue'
-import { usePlayground } from 'vitepress-openapi'
-import { Input } from 'vitepress-openapi/components/ui/input'
+import { usePlayground } from '../../composables/usePlayground'
+import { Input } from '../ui/input'
 
 const props = defineProps({
   scheme: {

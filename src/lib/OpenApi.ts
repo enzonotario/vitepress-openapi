@@ -1,5 +1,7 @@
-import { httpVerbs } from 'vitepress-openapi'
-import { parseSpec } from './parseSpec'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import { httpVerbs } from '../index'
+import type { ParsedOpenAPI } from '../types'
+import { processOpenAPI } from './processOpenAPI'
 
 const DEFAULT_SERVER_URL = 'http://localhost'
 
@@ -16,10 +18,10 @@ export function OpenApi({
   transformedSpec: null,
   parsedSpec: null,
 }) {
-  function findOperation(paths: any, operationId: string) {
+  function findOperation(paths: OpenAPIV3.PathsObject, operationId: string) {
     for (const path of Object.values(paths)) {
       for (const verb of httpVerbs) {
-        if (path[verb]?.operationId === operationId) {
+        if (path && path[verb]?.operationId === operationId) {
           return path[verb]
         }
       }
@@ -27,13 +29,13 @@ export function OpenApi({
     return null
   }
 
-  function getSpec() {
+  function getSpec(): ParsedOpenAPI {
     return parsedSpec ?? transformedSpec ?? spec ?? {}
   }
 
   function getParsedSpec() {
     if (!parsedSpec) {
-      parsedSpec = parseSpec(transformedSpec ?? spec)
+      parsedSpec = processOpenAPI(transformedSpec ?? spec)
     }
 
     return parsedSpec
@@ -47,6 +49,10 @@ export function OpenApi({
         if (pathServers && pathServers.length > 0) {
           try {
             const firstUrl = pathServers[0].url
+
+            if (!firstUrl) {
+              throw new Error('Invalid URL')
+            }
 
             const isValid = new URL(firstUrl)
             if (!isValid) {
@@ -134,12 +140,12 @@ export function OpenApi({
     const securitySchemes = getParsedSpec().components?.securitySchemes ?? {}
 
     if (operation?.security) {
-      const output = {}
+      const output: Record<string, OpenAPIV3.SecuritySchemeObject> = {}
 
       Object.entries(securitySchemes)
-        .filter(([key]) => operation.security.some(security => security[key]))
+        .filter(([key]) => operation.security.some((security: OpenAPIV3.SecuritySchemeObject) => key in security))
         .forEach(([key, value]) => {
-          output[key] = value
+          output[key] = value as OpenAPIV3.SecuritySchemeObject
         })
 
       return output
@@ -160,7 +166,7 @@ export function OpenApi({
     return findOperation(getParsedSpec().paths, operationId)
   }
 
-  function getPaths() {
+  function getPaths(): OpenAPIV3.PathsObject {
     return getSpec().paths ?? {}
   }
 
@@ -170,8 +176,12 @@ export function OpenApi({
     return Object.keys(paths)
       .flatMap((path) => {
         return httpVerbs
-          .filter(verb => paths[path][verb])
-          .map((verb) => {
+          .filter((verb: string) => paths && paths[path] && paths[path][verb])
+          .map((verb: string) => {
+            if (!paths || !paths[path] || !paths[path][verb]) {
+              return null
+            }
+
             const { operationId, summary, tags } = paths[path][verb]
 
             return {
@@ -197,12 +207,12 @@ export function OpenApi({
     return getSpec().servers ?? []
   }
 
-  function getOperationsTags() {
+  function getOperationsTags(): string[] {
     if (!getSpec().paths) {
       return []
     }
 
-    return Object.values(getSpec().paths).reduce((tags, path: any) => {
+    return Object.values(getSpec().paths).reduce((tags: string[], path) => {
       for (const verb of httpVerbs) {
         if (path[verb]?.tags) {
           path[verb].tags.forEach((tag: string) => {
@@ -218,11 +228,16 @@ export function OpenApi({
 
   function filterPaths(predicate: (operation: any) => boolean) {
     const paths = getPaths() ?? {}
-    const output = {}
+    const output: OpenAPIV3.PathsObject = {}
 
     for (const [path, methods] of Object.entries(paths)) {
+      if (!methods) {
+        continue
+      }
+
       for (const verb of httpVerbs) {
         const operation = methods[verb]
+
         if (operation && predicate(operation)) {
           output[path] = output[path] || {}
           output[path][verb] = operation
@@ -235,7 +250,7 @@ export function OpenApi({
 
   function getPathsByTags(tags: string | string[]) {
     const tagList = typeof tags === 'string' ? [tags] : tags
-    return filterPaths(operation => operation?.tags?.some(tag => tagList.includes(tag)))
+    return filterPaths(operation => operation?.tags?.some((tag: string) => tagList.includes(tag)))
   }
 
   function getPathsWithoutTags() {
@@ -244,22 +259,22 @@ export function OpenApi({
 
   function getTags() {
     return (getSpec().tags ?? [])
-      .map(({ name, description }) => ({
-        name: name ?? null,
-        description: description ?? null,
+      .map((tag: OpenAPIV3.TagObject) => ({
+        name: tag.name ?? null,
+        description: tag.description ?? null,
       }))
   }
 
-  function getFilteredTags() {
+  function getFilteredTags(): OpenAPIV3.TagObject[] {
     const operationsTags = getOperationsTags()
 
     const tags = getTags()
-      .filter(({ name }) => operationsTags.includes(name))
+      .filter((tag: OpenAPIV3.TagObject) => operationsTags.includes(tag.name ?? ''))
 
     return tags
       .concat([
         ...operationsTags
-          .filter(tag => !tags.map(({ name }) => name).includes(tag))
+          .filter(tag => !tags.map((tag: OpenAPIV3.TagObject) => tag.name).includes(tag))
           .map(tag => ({
             name: tag,
             description: null,

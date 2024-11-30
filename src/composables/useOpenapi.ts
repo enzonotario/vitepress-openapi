@@ -1,15 +1,13 @@
-import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types'
+import type { OpenAPI } from '@scalar/openapi-types'
 import { createOpenApiInstance } from '../lib/createOpenApiInstance'
-import type { UseThemeConfig } from './useTheme'
+import type { UseThemeConfigUnref } from './useTheme'
 import { useTheme } from './useTheme'
-
-export type OpenAPI = OpenAPIV3.Document | OpenAPIV3_1.Document
 
 export interface OpenAPIData {
   id: string
-  spec: OpenAPI
-  openapi: any
-  config: any
+  spec: OpenAPI.Document
+  openapi: ReturnType<typeof createOpenApiInstance>
+  config: UseThemeConfigUnref | null
 }
 
 export type Schemas = Map<string, OpenAPIData>
@@ -18,42 +16,40 @@ export const DEFAULT_SCHEMA = 'main'
 
 const schemas: Schemas = new Map()
 
-let mainSchema: OpenAPIData | null = null
+let mainSchema: OpenAPI.Document | null = null
 
 export function useOpenapi({
   spec,
   config,
 }: {
-  spec: OpenAPI | null
-  config: UseThemeConfig | null
-} = {
-  spec: null,
-  config: null,
-}) {
+  spec?: OpenAPI.Document
+  config?: UseThemeConfigUnref
+} = {}) {
   if (config) {
     useTheme(config)
   }
 
-  if (spec !== null) {
+  if (spec) {
     setupOpenApi({ spec, config })
   }
 
   /**
    * @deprecated Use `useOpenapi({ spec })` instead.
    */
-  function setSpec(value: any) {
+  function setSpec(value: OpenAPI.Document) {
     console.warn('Deprecated usage of `setSpec`. Use `useOpenapi({ spec })` instead.')
     setupOpenApi({ spec: value })
   }
 
-  function setupOpenApi({ spec, config }) {
-    addSchema({ id: DEFAULT_SCHEMA, spec, config })
-    mainSchema = schemas.get(DEFAULT_SCHEMA)
+  function setupOpenApi({ spec, config }: { spec: OpenAPI.Document, config?: UseThemeConfigUnref }) {
+    addSchema({ id: DEFAULT_SCHEMA, spec, config: config ?? null })
+    mainSchema = (schemas.get(DEFAULT_SCHEMA) ?? {}) as OpenAPI.Document
   }
 
-  function addSchema({ id, spec, config }) {
+  function addSchema({ id, spec, config }: { id: string, spec: OpenAPI.Document, config: UseThemeConfigUnref | null }) {
     const openapi = createOpenApiInstance({ spec })
 
+    // @ts-expect-error: This adds all the properties of the OpenAPI instance to the schema.
     schemas.set(id, {
       ...openapi,
       id,

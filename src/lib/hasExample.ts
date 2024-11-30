@@ -1,38 +1,26 @@
-import { useTheme } from '../composables/useTheme'
-import { formatJson } from './formatJson'
+import type { OpenAPI } from '@scalar/openapi-types'
 
-export function hasExample(schema: any, visited: Set<any> = new Set(), level: number = 0): boolean {
-  if (!schema) {
+export function hasExample(schema: Partial<OpenAPI.SchemaObject>): boolean {
+  if (!schema || typeof schema !== 'object') {
     return false
   }
-
-  if (useTheme().getSpecConfig().avoidCirculars.value) {
-    schema = JSON.parse(formatJson(schema))
-  }
-
-  if (visited.has(schema)) {
-    if (level > 10) {
-      return false // Assume no example for circular references.
+  const visited = new Set()
+  function containsExample(obj: any): boolean {
+    if (visited.has(obj)) {
+      return false
     }
-
-    visited = new Set()
+    visited.add(obj)
+    if ('example' in obj || 'examples' in obj) {
+      return true
+    }
+    for (const key in obj) {
+      if (typeof obj[key] === 'object' && obj[key] != null) {
+        if (containsExample(obj[key])) {
+          return true
+        }
+      }
+    }
+    return false
   }
-
-  visited.add(schema)
-
-  if (schema?.example || schema?.examples) {
-    return true
-  }
-
-  if (schema?.properties) {
-    return Object.values(schema.properties).some(property =>
-      hasExample(property, new Set(visited), level + 1),
-    )
-  }
-
-  if (schema?.items) {
-    return hasExample(schema.items, new Set(visited), level + 1)
-  }
-
-  return false
+  return containsExample(schema)
 }

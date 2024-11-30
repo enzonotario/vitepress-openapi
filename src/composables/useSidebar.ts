@@ -1,60 +1,74 @@
-import { OpenApi, httpVerbs, useOpenapi } from 'vitepress-openapi'
-import { transformSpec } from '../lib/transformSpec'
-import type { OpenAPI } from './useOpenapi'
+import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
+import { OpenApi } from '../lib/OpenApi'
+import { httpVerbs } from '../index'
+import { prepareOpenAPI } from '../lib/prepareOpenAPI'
+import { useOpenapi } from './useOpenapi'
 import { useTheme } from './useTheme'
 
-interface GenerateSidebarGroupsOptions {
-  tags?: string[] | null
-  linkPrefix?: string | null
+type MethodAliases = Record<string, string>
+
+interface SidebarConfig {
+  spec?: OpenAPI.Document | null
+  linkPrefix?: string
+  tagLinkPrefix?: string
+  defaultTag?: string
+  methodAliases?: MethodAliases
 }
 
-interface GenerateSidebarGroupOptions {
+interface SidebarGroupConfig {
   tag: string | string[]
   text?: string
   linkPrefix?: string
   addedOperations?: Set<string>
 }
 
-const defaultOptions = {
-  spec: null,
+interface SidebarGroupsConfig {
+  tags?: string[] | null
+  linkPrefix?: string | null
+}
+
+interface SidebarItem {
+  text: string
+  link: string
+}
+
+interface SidebarGroup {
+  text: string
+  items: SidebarItem[]
+}
+
+interface OpenAPIOperation extends OpenAPIV3.OperationObject {
+  'x-sidebar-title'?: string
+  'operationId': string
+}
+
+const DEFAULT_CONFIG: Required<Omit<SidebarConfig, 'methodAliases' | 'spec'>> = {
   linkPrefix: '/operations/',
   tagLinkPrefix: '/tags/',
   defaultTag: 'Default',
-}
+} as const
 
 export function useSidebar({
   spec,
-  linkPrefix,
-  tagLinkPrefix,
-  defaultTag,
+  linkPrefix = DEFAULT_CONFIG.linkPrefix,
+  tagLinkPrefix = DEFAULT_CONFIG.tagLinkPrefix,
+  defaultTag = DEFAULT_CONFIG.defaultTag,
   methodAliases,
-}: {
-  spec?: OpenAPI
-  linkPrefix?: string
-  tagLinkPrefix?: string
-  defaultTag?: string
-  methodAliases?: Record<string, string>
-} = {
-  ...defaultOptions,
-}) {
+}: SidebarConfig = {}) {
   useTheme({
     spec: {
-      defaultTag: defaultTag || defaultOptions.defaultTag,
+      defaultTag,
     },
   })
 
-  const options = {
-    spec: spec || useOpenapi().json,
-    linkPrefix: linkPrefix || defaultOptions.linkPrefix,
-    tagLinkPrefix: tagLinkPrefix || defaultOptions.tagLinkPrefix,
-  }
+  const apiSpec = spec || useOpenapi().json
 
   const openapi = OpenApi({
-    spec: options.spec,
-    transformedSpec: transformSpec(options.spec),
+    spec: apiSpec,
+    transformedSpec: prepareOpenAPI(apiSpec),
   })
 
-  function sidebarItemTemplate(method: string, title: string) {
+  function sidebarItemTemplate(method: OpenAPIV3.HttpMethods, title: string): string {
     const resolvedMethod = methodAliases?.[method] || method.toUpperCase()
 
     return `<span class="OASidebarItem group/oaSidebarItem">
@@ -63,8 +77,13 @@ export function useSidebar({
       </span>`
   }
 
-  function generateSidebarItem(method: string, path: string, linkPrefix = options.linkPrefix) {
-    const operation = openapi.getPaths()?.[path]?.[method]
+  function generateSidebarItem(
+    method: OpenAPIV3.HttpMethods,
+    path: string,
+    itemLinkPrefix: string = linkPrefix,
+  ): SidebarItem | null {
+    const operation = openapi.getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
+
     if (!operation) {
       return null
     }
@@ -74,96 +93,98 @@ export function useSidebar({
 
     return {
       text: sidebarItemTemplate(method, sidebarTitle),
-      link: `${linkPrefix}${operationId}`,
+      link: `${itemLinkPrefix}${operationId}`,
     }
   }
 
   function generateSidebarGroup({
     tag,
-    text,
-    linkPrefix,
-    addedOperations,
-  }: GenerateSidebarGroupOptions = {}) {
-    tag = tag || []
-    text = text || ''
-    linkPrefix = linkPrefix || options.linkPrefix
-    addedOperations = addedOperations || new Set()
-
+    text = '',
+    linkPrefix: groupLinkPrefix = linkPrefix,
+    addedOperations = new Set<string>(),
+  }: SidebarGroupConfig): SidebarGroup {
     const paths = openapi.getPaths()
 
     if (!paths) {
-      return []
+      return {
+        text: '',
+        items: [],
+      }
     }
 
     const includeTags = Array.isArray(tag) ? tag : [tag]
 
-    const sidebarGroupElements = Object.keys(paths)
-      .flatMap((path) => {
-        return httpVerbs
+    const items = Object.entries(paths)
+      .flatMap(([path, pathObject]) =>
+        httpVerbs
           .map((method) => {
-            const operation = paths[path][method]
-            if (operation && !addedOperations.has(operation.operationId) && (includeTags.length === 0 || includeTags.every(tag => operation.tags?.includes(tag)))) {
-              addedOperations.add(operation.operationId)
-              return generateSidebarItem(method, path, linkPrefix)
+            const operation = pathObject?.[method] as OpenAPIOperation | undefined
+
+            if (!operation || addedOperations.has(operation.operationId)) {
+              return null
             }
+
+            const shouldInclude = includeTags.length === 0
+              || includeTags.every(tag => operation.tags?.includes(tag))
+
+            if (shouldInclude) {
+              addedOperations.add(operation.operationId)
+              return generateSidebarItem(method as OpenAPIV3.HttpMethods, path, groupLinkPrefix)
+            }
+
             return null
           })
-          .filter(Boolean)
-      })
+          .filter((item): item is SidebarItem => item !== null),
+      )
 
     return {
-      text: text !== undefined ? text : includeTags.join(', ') || '',
-      items: sidebarGroupElements,
+      text: text || includeTags.join(', '),
+      items,
     }
   }
 
   function generateSidebarGroups({
-    tags,
-    linkPrefix,
-  }: GenerateSidebarGroupsOptions = {}) {
-    tags = tags || openapi.getOperationsTags()
-    linkPrefix = linkPrefix || options.linkPrefix
-
+    tags = openapi.getOperationsTags(),
+    linkPrefix: groupsLinkPrefix = linkPrefix,
+  }: SidebarGroupsConfig = {}): SidebarGroup[] {
     if (!openapi.getPaths()) {
       return []
     }
 
-    const addedOperations = new Set()
-    const groups = tags.map(tag => generateSidebarGroup({
-      tag,
-      text: tag,
-      linkPrefix,
-      addedOperations,
-    }))
+    const addedOperations = new Set<string>()
 
-    // Add a group for operations without tags
-    const noTagGroup = generateSidebarGroup({
+    const taggedGroups = (tags ?? []).map(tag =>
+      generateSidebarGroup({
+        tag,
+        text: tag,
+        linkPrefix: groupsLinkPrefix || tagLinkPrefix,
+        addedOperations,
+      }),
+    )
+
+    const untaggedGroup = generateSidebarGroup({
       tag: [],
       text: '',
-      linkPrefix,
+      linkPrefix: groupsLinkPrefix || tagLinkPrefix,
       addedOperations,
     })
-    if (noTagGroup.items.length > 0) {
-      groups.push(noTagGroup)
-    }
 
-    return groups
+    return untaggedGroup.items.length > 0
+      ? [...taggedGroups, untaggedGroup]
+      : taggedGroups
   }
 
   function itemsByTags({
-    tags,
-    linkPrefix,
-  }: GenerateSidebarGroupsOptions = {}) {
-    tags = tags || openapi.getFilteredTags().map(({ name }) => name)
-    linkPrefix = linkPrefix || options.tagLinkPrefix
-
-    if (!openapi.getPaths()) {
+    tags = openapi.getFilteredTags().map((tag: OpenAPIV3.TagObject) => tag.name || ''),
+    linkPrefix: tagsLinkPrefix = tagLinkPrefix,
+  }: SidebarGroupsConfig = {}): SidebarItem[] {
+    if (!openapi.getPaths() || !tags) {
       return []
     }
 
     return tags.map(tag => ({
       text: tag,
-      link: `${linkPrefix}${tag}`,
+      link: `${tagsLinkPrefix}${tag}`,
     }))
   }
 

@@ -1,6 +1,6 @@
 <script setup>
-import { getExample } from 'vitepress-openapi/lib/getExample'
-import OACodeValue from 'vitepress-openapi/components/Common/OACodeValue.vue'
+import { getExample } from '../../lib/getExample'
+import OACodeValue from '../Common/OACodeValue.vue'
 
 const props = defineProps({
   parameter: {

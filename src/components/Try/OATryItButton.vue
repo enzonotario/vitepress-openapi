@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button } from 'vitepress-openapi/components/ui/button'
-import { Badge } from 'vitepress-openapi/components/ui/badge'
-import { OARequest } from 'vitepress-openapi'
+import { OARequest } from '../../lib/codeSamples/request'
+import { Button } from '../ui/button'
+import { Badge } from '../ui/badge'
 
 interface PlaygroundResponse {
   body: any
@@ -50,6 +50,10 @@ const response = ref<PlaygroundResponse | null>(null)
 const loading = ref(false)
 
 async function tryIt() {
+  if (!props.request) {
+    return
+  }
+
   response.value = null
 
   const innerResponse: PlaygroundResponse = {
@@ -75,7 +79,7 @@ async function tryIt() {
 
     const url = new URL(props.request.url ?? defaultRequestUrl)
     for (const [key, value] of Object.entries(props.request.query)) {
-      url.searchParams.set(key, value)
+      url.searchParams.set(key, String(value))
     }
 
     const data = await fetch(url.toString(), {
@@ -101,8 +105,8 @@ async function tryIt() {
     }
 
     innerResponse.status = data.status
-  } catch (error) {
-    innerResponse.body = error.message
+  } catch (error: any) {
+    innerResponse.body = error?.message
     innerResponse.type = 'text/plain'
     innerResponse.status = 500
   } finally {
@@ -117,6 +121,7 @@ async function tryIt() {
 
 function trackTryIt() {
   try {
+    // @ts-expect-error: gtag is defined in the global scope
     window.gtag('event', 'try_it', {
       event_category: 'api',
       event_label: props.operationId,
@@ -124,7 +129,7 @@ function trackTryIt() {
   } catch { }
 }
 
-function setLoading(value) {
+function setLoading(value: boolean) {
   loading.value = value
   emits('loading', value)
 }

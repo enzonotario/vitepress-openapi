@@ -1,13 +1,13 @@
-import { OpenApi } from 'vitepress-openapi'
-import { transformSpec } from '../lib/transformSpec'
-import type { OpenAPI } from './useOpenapi'
+import type { OpenAPI } from '@scalar/openapi-types'
+import { OpenApi } from '../lib/OpenApi'
+import { prepareOpenAPI } from '../lib/prepareOpenAPI'
 
 export function usePaths({
   spec,
 }: {
-  spec: OpenAPI
+  spec: OpenAPI.Document
 }) {
-  const openapi = OpenApi({ spec, transformedSpec: transformSpec(spec) })
+  const openapi = OpenApi({ spec, transformedSpec: prepareOpenAPI(spec) })
 
   function getTags() {
     return openapi.getFilteredTags()

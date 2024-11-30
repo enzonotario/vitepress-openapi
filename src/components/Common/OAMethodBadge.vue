@@ -1,5 +1,5 @@
 <script setup>
-import { Badge } from 'vitepress-openapi/components/ui/badge'
+import { Badge } from '../ui/badge'
 
 const props = defineProps({
   method: {

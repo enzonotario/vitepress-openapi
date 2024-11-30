@@ -12,6 +12,6 @@
   "framework": "vite",
   "aliases": {
     "components": "src/components",
-    "utils": "vitepress-openapi/lib/utils"
+    "utils": "lib/utils"
   }
 }

@@ -1,6 +1,5 @@
 import type { Schemas } from '../composables/useOpenapi'
 import { DEFAULT_SCHEMA, useOpenapi } from '../composables/useOpenapi'
-import type { OpenApi } from './OpenApi'
 import { createOpenApiInstance } from './createOpenApiInstance'
 
 export function getOpenApiInstance({
@@ -9,9 +8,9 @@ export function getOpenApiInstance({
   injected,
 }: {
   id?: string
-  custom?: { spec: any, parsedSpec: any }
+  custom?: { spec: any, parsedSpec?: any }
   injected?: Schemas | any
-} = {}): OpenApi | null {
+} = {}) {
   if (id === undefined) {
     id = DEFAULT_SCHEMA
   }

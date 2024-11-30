@@ -31,7 +31,7 @@ describe('buildRequest', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [],
-      authScheme: { type: 'http', scheme: 'bearer', value: 'token' },
+      authScheme: { type: 'http', scheme: 'bearer', playgroundValue: 'token' },
       body: null,
       variables: {},
     })
@@ -115,7 +115,7 @@ describe('buildRequest', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [],
-      authScheme: { type: 'http', scheme: 'basic', value: 'username:password' },
+      authScheme: { type: 'http', scheme: 'basic', playgroundValue: 'username:password' },
       body: null,
       variables: {},
     })
@@ -128,7 +128,7 @@ describe('buildRequest', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [],
-      authScheme: { type: 'apiKey', name: 'x-api-key', in: 'header', value: 'key123' },
+      authScheme: { type: 'apiKey', name: 'x-api-key', in: 'header', playgroundValue: 'key123' },
       body: null,
       variables: {},
     })

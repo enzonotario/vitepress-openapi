@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from 'vue'
 import { TabsTrigger, type TabsTriggerProps, useForwardProps } from 'radix-vue'
-import { cn } from 'vitepress-openapi/lib/utils'
+import { cn } from '../../../lib/utils'
 import { type TabsTriggerVariants, tabsTriggerVariants } from './index'
 
 interface Props extends TabsTriggerProps {
