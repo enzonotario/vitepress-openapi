@@ -89,6 +89,10 @@ const selectedScheme = computed(() => {
   const scheme = props.securitySchemes[selectedSchemeName.value]
 
   if (!scheme) {
+    if (!Object.keys(props.securitySchemes).length) {
+      return null
+    }
+
     return props.securitySchemes[Object.keys(props.securitySchemes)[0]]
   }
 
