@@ -3,7 +3,7 @@ import { useTheme } from 'vitepress-openapi'
 import { onMounted, ref, watch } from 'vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import { compressToURL, decompressFromURL } from '@amoutonbrady/lz-string'
-import { DEFAULT_OPERATION_SLOTS } from '../../../../src/composables/useTheme'
+import { DEFAULT_OPERATION_SLOTS } from '../../../../src/index.js'
 
 const params = useUrlSearchParams('history')
 

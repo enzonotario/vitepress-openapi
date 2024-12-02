@@ -7,6 +7,7 @@ import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
 import type { OperationSlot } from '../types'
+import { DEFAULT_OPERATION_SLOTS } from '../index'
 
 export interface ThemeConfig {
   highlighterTheme: {
@@ -168,20 +169,6 @@ interface LanguageConfig {
 }
 
 type GeneratorFunction = (lang: string, request: IOARequest) => string
-
-export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
-  'header',
-  'path',
-  'description',
-  'security',
-  'parameters',
-  'request-body',
-  'responses',
-  'try-it',
-  'code-samples',
-  'branding',
-  'footer',
-]
 
 const availableLanguages: LanguageConfig[] = [
   {

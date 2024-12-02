@@ -11,6 +11,7 @@ import type { createOpenApiInstance } from './lib/createOpenApiInstance'
 import 'tailwindcss/tailwind.css'
 import './style.css'
 import './json.css'
+import type { OperationSlot } from './types'
 
 export { useSidebar } from './composables/useSidebar'
 export { useOpenapi } from './composables/useOpenapi'
@@ -64,3 +65,17 @@ export const theme = {
 export const httpVerbs = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head']
 
 export const literalTypes = ['string', 'number', 'integer', 'boolean', 'null']
+
+export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
+  'header',
+  'path',
+  'description',
+  'security',
+  'parameters',
+  'request-body',
+  'responses',
+  'try-it',
+  'code-samples',
+  'branding',
+  'footer',
+]
