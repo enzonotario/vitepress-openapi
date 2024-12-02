@@ -2,7 +2,7 @@ import * as VueI18n from 'vue-i18n'
 import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
 import type { Awaitable } from 'vitepress'
-import { useTheme } from './composables/useTheme'
+import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 import { useShiki } from './composables/useShiki'
 import * as components from './components'
 
@@ -11,8 +11,8 @@ import type { createOpenApiInstance } from './lib/createOpenApiInstance'
 import 'tailwindcss/tailwind.css'
 import './style.css'
 import './json.css'
-import type { OperationSlot } from './types'
 
+export { DEFAULT_OPERATION_SLOTS }
 export { useSidebar } from './composables/useSidebar'
 export { useOpenapi } from './composables/useOpenapi'
 export { useTheme } from './composables/useTheme'
@@ -65,17 +65,3 @@ export const theme = {
 export const httpVerbs = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head']
 
 export const literalTypes = ['string', 'number', 'integer', 'boolean', 'null']
-
-export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
-  'header',
-  'path',
-  'description',
-  'security',
-  'parameters',
-  'request-body',
-  'responses',
-  'try-it',
-  'code-samples',
-  'branding',
-  'footer',
-]
