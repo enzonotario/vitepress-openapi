@@ -70,7 +70,7 @@ function updateRequest(newRequest) {
   <div>
     <div
       v-if="operation"
-      class="OAPath flex flex-col space-y-8"
+      class="OAPath flex flex-col space-y-4"
     >
       <template v-if="operationSlots.includes('header')">
         <slot
