@@ -40,5 +40,6 @@
   "Show operations": "Show operations",
   "Operations": "Operations",
   "Default": "Default",
-  "Example": "Example"
+  "Example": "Example",
+  "tags.goTo": "View {tag} operations"
 }

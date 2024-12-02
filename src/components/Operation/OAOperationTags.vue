@@ -20,6 +20,7 @@ const prefix = themeConfig.getTagsLinkPrefix()
       v-for="(tag, index) in props.tags"
       :key="index"
       :href="`${prefix}${tag}`"
+      :aria-label="$t('tags.goTo', { tag })"
     >
       <Badge variant="outline">
         {{ tag }}
