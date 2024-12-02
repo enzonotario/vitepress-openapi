@@ -86,7 +86,13 @@ const selectedSchemeName = computed(() => {
 })
 
 const selectedScheme = computed(() => {
-  return props.securitySchemes[selectedSchemeName.value]
+  const scheme = props.securitySchemes[selectedSchemeName.value]
+
+  if (!scheme) {
+    return props.securitySchemes[Object.keys(props.securitySchemes)[0]]
+  }
+
+  return scheme
 })
 
 const authScheme = ref<PlaygroundSecurityScheme | null>(null)
