@@ -87,6 +87,10 @@ export default defineConfigWithTheme({
                 text: 'Code Samples',
                 link: '/customizations/code-samples',
               },
+              {
+                text: 'Operation tags slot',
+                link: '/customizations/operation-tags-slot',
+              },
             ],
           },
         ],
