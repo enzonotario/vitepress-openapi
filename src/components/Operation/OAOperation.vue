@@ -3,6 +3,7 @@ import { computed, inject, useSlots } from 'vue'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
 import type { OperationSlot } from '../../types'
+import OAOperationTags from './OAOperationTags.vue'
 
 const props = defineProps({
   operationId: {
@@ -108,6 +109,24 @@ function hasSlot(name: OperationSlot): boolean {
           {{ header.operation.summary }}
         </OAHeading>
       </div>
+    </template>
+
+    <template
+      v-if="hasSlot('tags')"
+      #tags="tags"
+    >
+      <slot
+        name="tags"
+        v-bind="tags"
+      />
+    </template>
+    <template
+      v-else
+      #tags="tags"
+    >
+      <OAOperationTags
+        :tags="tags.operation.tags"
+      />
     </template>
 
     <template

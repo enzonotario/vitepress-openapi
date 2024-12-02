@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { ref } from 'vue'
 import { useTheme } from '../../src/composables/useTheme'
 
@@ -147,6 +147,10 @@ describe('composition API', () => {
 
 describe('useTheme', () => {
   const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
 
   it('returns the default locale', () => {
     const result = themeConfig.getLocale()
@@ -349,5 +353,47 @@ describe('useTheme', () => {
     result.showPathsSummary.value = false
     result.avoidCirculars.value = true
     result.lazyRendering.value = true
+  })
+
+  it('returns the default links prefixes config', () => {
+    const result = themeConfig.getLinksPrefixesConfig()
+    expect(result).toEqual({
+      tags: '/tags/',
+      operations: '/operations/',
+    })
+  })
+
+  it('sets and gets the links prefixes config', () => {
+    themeConfig.setLinksPrefixesConfig({
+      tags: '/new-tags/',
+      operations: '/new-operations/',
+    })
+    const result = themeConfig.getLinksPrefixesConfig()
+    expect(result).toEqual({
+      tags: '/new-tags/',
+      operations: '/new-operations/',
+    })
+  })
+
+  it('returns the default tags link prefix', () => {
+    const result = themeConfig.getTagsLinkPrefix()
+    expect(result).toBe('/tags/')
+  })
+
+  it('returns the default operations link prefix', () => {
+    const result = themeConfig.getOperationsLinkPrefix()
+    expect(result).toBe('/operations/')
+  })
+
+  it('sets and gets the tags link prefix', () => {
+    themeConfig.setLinksPrefixesConfig({ tags: '/new-tags/' })
+    const result = themeConfig.getTagsLinkPrefix()
+    expect(result).toBe('/new-tags/')
+  })
+
+  it('sets and gets the operations link prefix', () => {
+    themeConfig.setLinksPrefixesConfig({ operations: '/new-operations/' })
+    const result = themeConfig.getOperationsLinkPrefix()
+    expect(result).toBe('/new-operations/')
   })
 })

@@ -103,6 +103,7 @@ export interface UseThemeConfig {
   i18n?: Partial<I18nConfig>
   spec?: Partial<SpecConfig>
   codeSamples?: Partial<CodeSamplesConfig>
+  linksPrefixes?: Partial<LinksPrefixesConfig>
 }
 
 export interface UseThemeConfigUnref {
@@ -144,6 +145,7 @@ export interface UseThemeConfigUnref {
   i18n?: Partial<I18nConfig>
   spec?: Partial<SpecConfig>
   codeSamples?: Partial<CodeSamplesConfig>
+  linksPrefixes?: Partial<LinksPrefixesConfig>
 }
 
 export interface CodeSamplesConfig {
@@ -152,6 +154,11 @@ export interface CodeSamplesConfig {
   availableLanguages: LanguageConfig[]
   generator: GeneratorFunction
   defaultHeaders: Record<string, string>
+}
+
+export interface LinksPrefixesConfig {
+  tags: string
+  operations: string
 }
 
 interface LanguageConfig {
@@ -275,12 +282,18 @@ const themeConfig: UseThemeConfig = {
       'Content-Type': 'application/json',
     },
   },
+  linksPrefixes: {
+    tags: '/tags/',
+    operations: '/operations/',
+  },
 }
 
 const defaultThemeConfig: UseThemeConfigUnref = { ...deepUnref(themeConfig) } as UseThemeConfigUnref
 
-export function useTheme(config: Partial<UseThemeConfigUnref> = {}) {
-  if (Object.keys(config).length) {
+export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
+  setConfig(initialConfig)
+
+  function setConfig(config: Partial<UseThemeConfigUnref>) {
     if (config?.theme?.highlighterTheme) {
       // @ts-expect-error: This is a valid expression.
       themeConfig.theme.highlighterTheme = {
@@ -364,10 +377,14 @@ export function useTheme(config: Partial<UseThemeConfigUnref> = {}) {
     if (config?.codeSamples !== undefined) {
       setCodeSamplesConfig(config.codeSamples)
     }
+
+    if (config?.linksPrefixes !== undefined) {
+      setLinksPrefixesConfig(config.linksPrefixes)
+    }
   }
 
   function reset() {
-    useTheme({ ...defaultThemeConfig })
+    setConfig(defaultThemeConfig)
   }
 
   function getState() {
@@ -671,6 +688,30 @@ export function useTheme(config: Partial<UseThemeConfigUnref> = {}) {
     }
   }
 
+  function getLinksPrefixesConfig() {
+    return themeConfig.linksPrefixes
+  }
+
+  function setLinksPrefixesConfig(config: Partial<LinksPrefixesConfig>) {
+    if (config.tags) {
+      // @ts-expect-error: This is a valid expression.
+      themeConfig.linksPrefixes.tags = config.tags
+    }
+
+    if (config.operations) {
+      // @ts-expect-error: This is a valid expression.
+      themeConfig.linksPrefixes.operations = config.operations
+    }
+  }
+
+  function getTagsLinkPrefix() {
+    return themeConfig?.linksPrefixes?.tags
+  }
+
+  function getOperationsLinkPrefix() {
+    return themeConfig?.linksPrefixes?.operations
+  }
+
   return {
     schemaConfig: themeConfig.requestBody,
     reset,
@@ -721,5 +762,9 @@ export function useTheme(config: Partial<UseThemeConfigUnref> = {}) {
     getCodeSamplesGenerator,
     getCodeSamplesDefaultHeaders,
     setCodeSamplesConfig,
+    getLinksPrefixesConfig,
+    setLinksPrefixesConfig,
+    getTagsLinkPrefix,
+    getOperationsLinkPrefix,
   }
 }

@@ -6,6 +6,7 @@ import type { RemovableRef } from '@vueuse/core'
  */
 export type OperationSlot =
   | 'header'
+  | 'tags'
   | 'path'
   | 'description'
   | 'security'

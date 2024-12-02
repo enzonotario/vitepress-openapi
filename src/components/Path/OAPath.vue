@@ -83,6 +83,17 @@ function updateRequest(newRequest) {
         />
       </template>
 
+      <template v-if="operationSlots.includes('tags')">
+        <slot
+          name="tags"
+          :operation="operation"
+          :method="operationMethod"
+          :base-url="baseUrl"
+          :path="operationPath"
+          :tags="operation.tags"
+        />
+      </template>
+
       <div
         :class="{
           'sm:grid-cols-1': operationCols === 1,
