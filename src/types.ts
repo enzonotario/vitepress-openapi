@@ -19,7 +19,6 @@ export type OperationSlot =
   | 'footer'
   // TODO: Implement these slots.
   // | 'summary'
-  // | 'tags'
   // | 'servers'
 
 export type ParsedOpenAPI = OpenAPI.Document & {

@@ -694,13 +694,11 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
 
   function setLinksPrefixesConfig(config: Partial<LinksPrefixesConfig>) {
     if (config.tags) {
-      // @ts-expect-error: This is a valid expression.
-      themeConfig.linksPrefixes.tags = config.tags
+      (themeConfig.linksPrefixes as LinksPrefixesConfig).tags = config.tags
     }
 
     if (config.operations) {
-      // @ts-expect-error: This is a valid expression.
-      themeConfig.linksPrefixes.operations = config.operations
+      (themeConfig.linksPrefixes as LinksPrefixesConfig).operations = config.operations
     }
   }
 
