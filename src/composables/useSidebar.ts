@@ -1,7 +1,10 @@
 import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
+import type { DefaultTheme } from 'vitepress'
 import { OpenApi } from '../lib/OpenApi'
 import { httpVerbs } from '../index'
 import { prepareOpenAPI } from '../lib/prepareOpenAPI'
+import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItemsByPaths'
+import { cleanSidebarItems } from '../lib/sidebar/cleanSidebarItems'
 import { useOpenapi } from './useOpenapi'
 import { useTheme } from './useTheme'
 
@@ -27,14 +30,10 @@ interface SidebarGroupsConfig {
   linkPrefix?: string | null
 }
 
-interface SidebarItem {
-  text: string
-  link: string
-}
-
-interface SidebarGroup {
-  text: string
-  items: SidebarItem[]
+export interface OASidebarItem extends DefaultTheme.SidebarItem {
+  path?: string
+  isOperation?: boolean
+  flattenedItems?: OASidebarItem[]
 }
 
 interface OpenAPIOperation extends OpenAPIV3.OperationObject {
@@ -77,11 +76,25 @@ export function useSidebar({
       </span>`
   }
 
+  function sidebarItemTemplateForMethodPath(method: OpenAPIV3.HttpMethods, path: string): string {
+    const operation = openapi.getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
+
+    if (!operation) {
+      return `[${method.toUpperCase()}] ${path}`
+    }
+
+    const { summary } = operation
+
+    const sidebarTitle = operation['x-sidebar-title'] || summary || `${method.toUpperCase()} ${path}`
+
+    return sidebarItemTemplate(method, sidebarTitle)
+  }
+
   function generateSidebarItem(
     method: OpenAPIV3.HttpMethods,
     path: string,
     itemLinkPrefix: string = linkPrefix,
-  ): SidebarItem | null {
+  ): OASidebarItem | null {
     const operation = openapi.getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
 
     if (!operation) {
@@ -102,7 +115,7 @@ export function useSidebar({
     text = '',
     linkPrefix: groupLinkPrefix = linkPrefix,
     addedOperations = new Set<string>(),
-  }: SidebarGroupConfig): SidebarGroup {
+  }: SidebarGroupConfig): OASidebarItem {
     const paths = openapi.getPaths()
 
     if (!paths) {
@@ -134,7 +147,7 @@ export function useSidebar({
 
             return null
           })
-          .filter((item): item is SidebarItem => item !== null),
+          .filter((item): item is OASidebarItem => item !== null),
       )
 
     return {
@@ -146,7 +159,7 @@ export function useSidebar({
   function generateSidebarGroups({
     tags = openapi.getOperationsTags(),
     linkPrefix: groupsLinkPrefix = linkPrefix,
-  }: SidebarGroupsConfig = {}): SidebarGroup[] {
+  }: SidebarGroupsConfig = {}): OASidebarItem[] {
     if (!openapi.getPaths()) {
       return []
     }
@@ -169,7 +182,7 @@ export function useSidebar({
       addedOperations,
     })
 
-    return untaggedGroup.items.length > 0
+    return untaggedGroup.items?.length
       ? [...taggedGroups, untaggedGroup]
       : taggedGroups
   }
@@ -177,7 +190,7 @@ export function useSidebar({
   function itemsByTags({
     tags = openapi.getFilteredTags().map((tag: OpenAPIV3.TagObject) => tag.name || ''),
     linkPrefix: tagsLinkPrefix = tagLinkPrefix,
-  }: SidebarGroupsConfig = {}): SidebarItem[] {
+  }: SidebarGroupsConfig = {}): OASidebarItem[] {
     if (!openapi.getPaths() || !tags) {
       return []
     }
@@ -188,12 +201,38 @@ export function useSidebar({
     }))
   }
 
+  function itemsByPaths({
+    startsWith = '',
+    collapsable = true,
+    depth = 6,
+    sidebarItemTemplate = sidebarItemTemplateForMethodPath,
+  }: {
+    startsWith?: string
+    collapsable?: boolean
+    depth?: number
+    sidebarItemTemplate?: (method: OpenAPIV3.HttpMethods, path: string) => string
+  } = {}): DefaultTheme.SidebarItem[] {
+    const paths = openapi.getPaths()
+
+    const sidebarItems = generateSidebarItemsByPaths({
+      paths,
+      startsWith,
+      collapsable,
+      depth,
+      itemLinkPrefix: linkPrefix,
+      sidebarItemTemplate,
+    })
+
+    return cleanSidebarItems(sidebarItems) as DefaultTheme.SidebarItem[]
+  }
+
   return {
     sidebarItemTemplate,
     generateSidebarItem,
     generateSidebarGroup,
     generateSidebarGroups,
     itemsByTags,
+    itemsByPaths,
     // TODO: Add `itemsByOperations` function
   }
 }
