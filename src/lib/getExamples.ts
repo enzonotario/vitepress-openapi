@@ -1,17 +1,17 @@
 export function getExamples(property: any): any {
-  if (property?.examples && property?.examples?.length > 0) {
+  if (property?.examples !== undefined) {
     return property.examples
   }
 
-  if (property?.schema?.examples && property?.schema?.examples?.length > 0) {
+  if (property?.schema?.examples !== undefined) {
     return property.schema.examples
   }
 
   if (property?.example !== undefined) {
-    return property.example
+    return [property.example]
   }
 
-  if (property?.subexamples && property?.subexamples?.length > 0) {
+  if (property?.subexamples !== undefined) {
     return property.subexamples
   }
 

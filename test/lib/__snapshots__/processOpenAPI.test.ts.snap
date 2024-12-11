@@ -23,12 +23,22 @@ exports[`processOpenAPI > processes the OpenAPI spec 1`] = `
         "required": false,
         "schema": {
           "default": 10,
+          "examples": [
+            10,
+            20,
+            50,
+          ],
           "format": "int64",
           "type": "integer",
         },
       },
       "offset": {
         "description": "The number of items to skip before starting to collect the result set",
+        "examples": [
+          1,
+          23,
+          456,
+        ],
         "in": "query",
         "name": "offset",
         "required": false,
@@ -450,12 +460,22 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
             "required": false,
             "schema": {
               "default": 10,
+              "examples": [
+                10,
+                20,
+                50,
+              ],
               "format": "int64",
               "type": "integer",
             },
           },
           {
             "description": "The number of items to skip before starting to collect the result set",
+            "examples": [
+              1,
+              23,
+              456,
+            ],
             "in": "query",
             "name": "offset",
             "required": false,
@@ -2158,12 +2178,22 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
             "required": false,
             "schema": {
               "default": 10,
+              "examples": [
+                10,
+                20,
+                50,
+              ],
               "format": "int64",
               "type": "integer",
             },
           },
           {
             "description": "The number of items to skip before starting to collect the result set",
+            "examples": [
+              1,
+              23,
+              456,
+            ],
             "in": "query",
             "name": "offset",
             "required": false,
