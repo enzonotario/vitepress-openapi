@@ -109,6 +109,11 @@ module.exports = {
                 depth: 6,
 
                 /**
+                 * Optionally, you can specify a link prefix for all generated sidebar items. Default is `/operations/`.
+                 */
+                linkPrefix: '/operations/',
+
+                /**
                  * Optionally, you can specify a template for the sidebar items. You can see the default valur
                  * in `sidebarItemTemplate` function in the `useSidebar` composable.
                  */
