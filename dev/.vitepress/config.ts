@@ -43,6 +43,7 @@ export default defineConfigWithTheme({
         items: [
           ...sidebar.itemsByPaths({
             depth: 2,
+            sidebarItemTemplate: (method, path) => `<span class="OASidebarItem group/oaSidebarItem"><span class="OASidebarItem-badge OAMethodBadge--${method}">${method.toUpperCase()}</span></span>`,
           }),
         ],
       },
