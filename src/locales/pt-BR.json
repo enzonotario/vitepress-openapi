@@ -40,5 +40,7 @@
   "Show operations": "Exibir operações",
   "Operations": "Operações",
   "Default": "Padrão",
-  "Example": "Exemplo"
+  "Example": "Exemplo",
+  "Examples": "Exemplos",
+  "tags.goTo": "Ver operações de {tag}"
 }

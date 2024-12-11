@@ -1,7 +1,7 @@
 <script setup>
-import { getExample } from '../../lib/getExample'
 import OACodeValue from '../Common/OACodeValue.vue'
 import { getConstraints } from '../../lib/constraintsParser'
+import { getExamples } from '../../lib/getExamples'
 
 const props = defineProps({
   parameter: {
@@ -10,7 +10,7 @@ const props = defineProps({
   },
 })
 
-const example = getExample(props.parameter)
+const examples = getExamples(props.parameter)
 
 const constraints = getConstraints(props.parameter.schema)
 </script>
@@ -66,11 +66,24 @@ const constraints = getConstraints(props.parameter.schema)
       </div>
 
       <div
-        v-if="example"
+        v-if="examples?.length === 1"
         class="flex flex-row space-x-2"
       >
         <span class="text-sm">{{ $t('Example') }}</span>
-        <OACodeValue :value="example" />
+        <OACodeValue :value="examples[0]" />
+      </div>
+      <div
+        v-if="examples?.length > 1"
+        class="flex flex-row flex-wrap items-center gap-2"
+      >
+        <span class="text-sm">{{ $t('Examples') }}</span>
+        <div
+          v-for="(example, idx) in examples"
+          :key="idx"
+          class="flex flex-wrap gap-2"
+        >
+          <OACodeValue :value="example" />
+        </div>
       </div>
 
       <template v-if="Object.keys(constraints).length > 0">
