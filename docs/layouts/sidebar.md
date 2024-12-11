@@ -114,7 +114,7 @@ module.exports = {
                 linkPrefix: '/operations/',
 
                 /**
-                 * Optionally, you can specify a template for the sidebar items. You can see the default valur
+                 * Optionally, you can specify a template for the sidebar items. You can see the default value
                  * in `sidebarItemTemplate` function in the `useSidebar` composable.
                  */
                 //sidebarItemTemplate: (method: string, path: string): string => `[${method}] ${path}`,
