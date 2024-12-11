@@ -12,7 +12,8 @@ export function mergeAdjacentGroups(items: OASidebarItem[]): OASidebarItem[] {
   return items.reduce<OASidebarItem[]>((mergedGroups, currentGroup) => {
     // If group has no items, return it as-is.
     if (!currentGroup.items?.length) {
-      return [...mergedGroups, currentGroup]
+      mergedGroups.push(currentGroup)
+      return mergedGroups
     }
 
     // Check if the group can be merged (single child, no direct operation links).
@@ -30,13 +31,15 @@ export function mergeAdjacentGroups(items: OASidebarItem[]): OASidebarItem[] {
       processedChildGroup.text = constructMergedGroupText(currentGroup.text as string, processedChildGroup.text as string)
       processedChildGroup.path = processedChildGroup.path || currentGroup.path
 
-      return [...mergedGroups, processedChildGroup]
+      mergedGroups.push(processedChildGroup)
+      return mergedGroups
     }
 
     // Recursively process nested groups.
     currentGroup.items = mergeAdjacentGroups(currentGroup.items as OASidebarItem[])
 
-    return [...mergedGroups, currentGroup]
+    mergedGroups.push(currentGroup)
+    return mergedGroups
   }, [])
 }
 
