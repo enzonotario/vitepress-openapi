@@ -12,9 +12,9 @@ describe('getExamples', () => {
     expect(getExamples(property)).toEqual(['example1', 'example2'])
   })
 
-  it('returns undefined if neither example nor examples properties exist', () => {
+  it('returns null if neither example nor examples properties exist', () => {
     const property = {}
-    expect(getExamples(property)).toBeUndefined()
+    expect(getExamples(property)).toBeNull()
   })
 
   it('returns an empty array if example property is an empty string', () => {
