@@ -119,7 +119,12 @@ export default defineConfigWithTheme({
               }),
             ],
           },
-          ...sidebar.itemsByPaths(),
+          {
+            text: 'By Paths',
+            items: [
+              ...sidebar.itemsByPaths(),
+            ],
+          },
           {
             text: 'By Paths Flatten',
             items: [
