@@ -1,6 +1,7 @@
 <script setup>
 import { getExample } from '../../lib/getExample'
 import OACodeValue from '../Common/OACodeValue.vue'
+import { getConstraints } from '../../lib/constraintsParser'
 
 const props = defineProps({
   parameter: {
@@ -10,6 +11,8 @@ const props = defineProps({
 })
 
 const example = getExample(props.parameter)
+
+const constraints = getConstraints(props.parameter.schema)
 </script>
 
 <template>
@@ -66,9 +69,22 @@ const example = getExample(props.parameter)
         v-if="example"
         class="flex flex-row space-x-2"
       >
-        <span class="text-sm font-bold">{{ $t('Example') }}</span>
+        <span class="text-sm">{{ $t('Example') }}</span>
         <OACodeValue :value="example" />
       </div>
+
+      <template v-if="Object.keys(constraints).length > 0">
+        <div
+          v-for="(value, name) in constraints"
+          :key="name"
+          class="flex flex-row flex-wrap items-center gap-2"
+        >
+          <span class="text-sm">
+            {{ name }}
+          </span>
+          <OACodeValue :value="value" />
+        </div>
+      </template>
     </div>
   </div>
 </template>

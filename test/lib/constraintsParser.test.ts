@@ -36,7 +36,7 @@ describe('getConstraints', () => {
   })
 })
 
-describe('vALIDATION_KEYWORDS', () => {
+describe('validation keywords', () => {
   it('extracts all validation keywords from property', () => {
     const property = {
       format: 'date-time',
@@ -53,6 +53,7 @@ describe('vALIDATION_KEYWORDS', () => {
       multipleOf: 2,
       pattern: '^\\d+$',
       uniqueItems: true,
+      default: 'custom',
       type: 'string', // non-validation keyword
     }
     const expectedConstraints = {
@@ -70,6 +71,7 @@ describe('vALIDATION_KEYWORDS', () => {
       multipleOf: 2,
       pattern: '^\\d+$',
       uniqueItems: true,
+      default: 'custom',
     }
     expect(getConstraints(property)).toEqual(expectedConstraints)
   })

@@ -13,6 +13,7 @@ const VALIDATION_KEYWORDS: ReadonlyArray<string> = [
   'multipleOf',
   'pattern',
   'uniqueItems',
+  'default',
 ]
 
 export function hasConstraints(property: Record<string, unknown>): boolean {
