@@ -206,11 +206,13 @@ export function useSidebar({
     collapsable = true,
     depth = 6,
     sidebarItemTemplate = sidebarItemTemplateForMethodPath,
+    linkPrefix: itemLinkPrefix = linkPrefix,
   }: {
     startsWith?: string
     collapsable?: boolean
     depth?: number
     sidebarItemTemplate?: (method: OpenAPIV3.HttpMethods, path: string) => string
+    linkPrefix?: string
   } = {}): DefaultTheme.SidebarItem[] {
     const paths = openapi.getPaths()
 
@@ -219,7 +221,7 @@ export function useSidebar({
       startsWith,
       collapsable,
       depth,
-      itemLinkPrefix: linkPrefix,
+      itemLinkPrefix,
       sidebarItemTemplate,
     })
 

@@ -339,6 +339,76 @@ describe('useSidebar itemsByPaths', () => {
     ])
   })
 
+  it('generate items witn linkPrefix option', () => {
+    const result = sidebar.itemsByPaths({
+      linkPrefix: '/custom-prefix/',
+      collapsable: false,
+    })
+
+    expect(
+      cleanResult(result),
+    ).toEqual([
+      {
+        text: '/api/v1',
+        items: [
+          {
+            text: '/1',
+            items: [
+              {
+                link: '/custom-prefix/get1',
+              },
+              {
+                link: '/custom-prefix/create1',
+              },
+              {
+                text: '/2',
+                items: [
+                  {
+                    link: '/custom-prefix/get12',
+                  },
+                  {
+                    link: '/custom-prefix/update12',
+                  },
+                  {
+                    link: '/custom-prefix/delete12',
+                  },
+                  {
+                    text: '/{x}',
+                    items: [
+                      {
+                        link: '/custom-prefix/get12x',
+                      },
+                      {
+                        link: '/custom-prefix/update12x',
+                      },
+                      {
+                        link: '/custom-prefix/delete12x',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            text: '/987',
+            items: [
+              {
+                link: '/custom-prefix/get121',
+              },
+              {
+                link: '/custom-prefix/update987',
+              },
+              {
+                link: '/custom-prefix/delete121',
+              },
+            ],
+          },
+        ],
+      },
+    ])
+  })
+
   it('generate items by path with depth 4', () => {
     const result = sidebar.itemsByPaths({
       depth: 4,

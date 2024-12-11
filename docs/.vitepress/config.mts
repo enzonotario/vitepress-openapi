@@ -122,7 +122,9 @@ export default defineConfigWithTheme({
           {
             text: 'By Paths',
             items: [
-              ...sidebar.itemsByPaths(),
+              ...sidebar.itemsByPaths({
+                linkPrefix: '/example/operations/',
+              }),
             ],
           },
           {
@@ -130,6 +132,7 @@ export default defineConfigWithTheme({
             items: [
               ...sidebar.itemsByPaths({
                 depth: 2,
+                linkPrefix: '/example/operations/',
               }),
             ],
           },
