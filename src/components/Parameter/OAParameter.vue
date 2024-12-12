@@ -2,6 +2,7 @@
 import OACodeValue from '../Common/OACodeValue.vue'
 import { getConstraints } from '../../lib/constraintsParser'
 import { getExamples } from '../../lib/getExamples'
+import { useTheme } from '../../composables/useTheme'
 
 const props = defineProps({
   parameter: {
@@ -13,6 +14,8 @@ const props = defineProps({
 const examples = getExamples(props.parameter)
 
 const constraints = getConstraints(props.parameter.schema)
+
+const wrapExamples = useTheme().getWrapExamples()
 </script>
 
 <template>
@@ -74,15 +77,26 @@ const constraints = getConstraints(props.parameter.schema)
       </div>
       <div
         v-if="examples?.length > 1"
-        class="flex flex-row flex-wrap items-center gap-2"
+        class="flex flex-row flex-wrap gap-2"
+        :class="{
+          'items-center': wrapExamples,
+        }"
       >
         <span class="text-sm">{{ $t('Examples') }}</span>
         <div
-          v-for="(example, idx) in examples"
-          :key="idx"
-          class="flex flex-wrap gap-2"
+          class="flex gap-2"
+          :class="{
+            'flex-col': !wrapExamples,
+            'flex-row flex-wrap': wrapExamples,
+          }"
         >
-          <OACodeValue :value="example" />
+          <OACodeValue
+            v-for="(example, idx) in examples"
+            :key="idx"
+            :value="example"
+          >
+            <OACodeValue />
+          </oacodevalue>
         </div>
       </div>
 

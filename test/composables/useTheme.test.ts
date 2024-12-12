@@ -92,7 +92,9 @@ describe('composition API', () => {
       lazyRendering: ref(false),
       defaultTag: 'Default',
       defaultTagDescription: '',
+      wrapExamples: true,
     })
+    expect(theme.getWrapExamples()).toBe(true)
   })
 
   it('can reset', () => {
@@ -336,6 +338,7 @@ describe('useTheme', () => {
       lazyRendering: ref(false),
       defaultTag: 'Default',
       defaultTagDescription: '',
+      wrapExamples: true,
     })
   })
 
@@ -346,6 +349,7 @@ describe('useTheme', () => {
       showPathsSummary: false,
       avoidCirculars: true,
       lazyRendering: true,
+      wrapExamples: false,
     })
     const result = themeConfig.getSpecConfig()
     result.groupByTags.value = false
@@ -353,6 +357,8 @@ describe('useTheme', () => {
     result.showPathsSummary.value = false
     result.avoidCirculars.value = true
     result.lazyRendering.value = true
+    result.wrapExamples = false
+    expect(themeConfig.getWrapExamples()).toBe(false)
   })
 
   it('returns the default links prefixes config', () => {
