@@ -203,13 +203,13 @@ export function useSidebar({
 
   function itemsByPaths({
     startsWith = '',
-    collapsable = true,
+    collapsible = true,
     depth = 6,
     sidebarItemTemplate = sidebarItemTemplateForMethodPath,
     linkPrefix: itemLinkPrefix = linkPrefix,
   }: {
     startsWith?: string
-    collapsable?: boolean
+    collapsible?: boolean
     depth?: number
     sidebarItemTemplate?: (method: OpenAPIV3.HttpMethods, path: string) => string
     linkPrefix?: string
@@ -219,7 +219,7 @@ export function useSidebar({
     const sidebarItems = generateSidebarItemsByPaths({
       paths,
       startsWith,
-      collapsable,
+      collapsible,
       depth,
       itemLinkPrefix,
       sidebarItemTemplate,

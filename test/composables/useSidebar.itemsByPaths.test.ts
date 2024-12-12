@@ -272,7 +272,7 @@ describe('useSidebar itemsByPaths', () => {
 
   it('generate items by path without collapsed option', () => {
     const result = sidebar.itemsByPaths({
-      collapsable: false,
+      collapsible: false,
     })
 
     expect(
@@ -342,7 +342,7 @@ describe('useSidebar itemsByPaths', () => {
   it('generate items witn linkPrefix option', () => {
     const result = sidebar.itemsByPaths({
       linkPrefix: '/custom-prefix/',
-      collapsable: false,
+      collapsible: false,
     })
 
     expect(
