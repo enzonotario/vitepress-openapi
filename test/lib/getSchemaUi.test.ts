@@ -1173,6 +1173,107 @@ const fixtures: Record<string, FixtureTest> = {
 `,
     contentType: 'application/xml',
   },
+
+  'array of items without type': {
+    jsonSchema: {
+      properties: {
+        objects: {
+          type: 'array',
+          items: {
+            properties: {
+              id: {},
+              name: {},
+            },
+          },
+        },
+        constStrings: {
+          type: 'array',
+          items: {
+            const: 'foo',
+          },
+        },
+        constNumbers: {
+          type: 'array',
+          items: {
+            const: 42,
+          },
+        },
+        constBooleans: {
+          type: 'array',
+          items: {
+            const: true,
+          },
+        },
+        constNulls: {
+          type: 'array',
+          items: {
+            const: null,
+          },
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        {
+          name: 'objects',
+          required: false,
+          types: ['array'],
+          properties: [
+            { name: 'id', required: false, types: [] },
+            { name: 'name', required: false, types: [] },
+          ],
+          subtype: 'object',
+        },
+        {
+          name: 'constStrings',
+          required: false,
+          types: ['array'],
+          properties: undefined,
+          subtype: 'string',
+          meta: { isConstant: true },
+        },
+        {
+          name: 'constNumbers',
+          required: false,
+          types: ['array'],
+          properties: undefined,
+          subtype: 'number',
+          meta: { isConstant: true },
+        },
+        {
+          name: 'constBooleans',
+          required: false,
+          types: ['array'],
+          properties: undefined,
+          subtype: 'boolean',
+          meta: { isConstant: true },
+        },
+        {
+          name: 'constNulls',
+          required: false,
+          types: ['array'],
+          properties: undefined,
+          subtype: 'null',
+          meta: { isConstant: true },
+        },
+      ],
+      required: false,
+      types: ['object'],
+    },
+    schemaUiJson: {
+      objects: [
+        {
+          id: null,
+          name: null,
+        },
+      ],
+      constStrings: ['string'],
+      constNumbers: [0],
+      constBooleans: [true],
+      constNulls: [null],
+    },
+  },
 }
 
 describe('getSchemaUi and getSchemaUiJson from fixtures', () => {
