@@ -149,7 +149,9 @@ class UiPropertyFactory {
     switch (schema.type) {
       case 'array':
         if (schema.items) {
-          property.properties = schema.items.type === 'object'
+          const schemaType = determineSchemaType(schema.items)
+
+          property.properties = schemaType === 'object'
             ? UiPropertyFactory.extractProperties(
               schema.items.properties,
               schema.items.required || [],
@@ -157,12 +159,16 @@ class UiPropertyFactory {
             )
             : undefined
 
-          if (schema.items.type) {
-            property.subtype = schema.items.type as JSONSchemaType
+          if (schemaType !== undefined) {
+            property.subtype = schemaType as JSONSchemaType
           }
 
           if (getExamples(schema.items)) {
             property.subexamples = getExamples(schema.items)
+          }
+
+          if (schema.items.const !== undefined) {
+            property.meta = { ...(property.meta || {}), isConstant: true }
           }
 
           if (schema.items.oneOf) {
@@ -240,4 +246,32 @@ export function getSchemaUi(jsonSchema: OpenAPI.SchemaObject): OAProperty | OAPr
   const resolvedSchema = resolveCircularRef(jsonSchema)
 
   return UiPropertyFactory.schemaToUiProperty('', resolvedSchema)
+}
+
+function determineSchemaType(schema: OpenAPI.SchemaObject): JSONSchemaType {
+  if (!schema.type && schema.properties) {
+    return 'object'
+  }
+
+  if (!schema.type && schema.items) {
+    return 'array'
+  }
+
+  if (!schema.type && schema.const !== undefined) {
+    if (Array.isArray(schema.const)) {
+      return 'array'
+    } else if (typeof schema.const === 'object' && schema.const !== null) {
+      return 'object'
+    } else if (typeof schema.const === 'string') {
+      return 'string'
+    } else if (typeof schema.const === 'number') {
+      return 'number'
+    } else if (typeof schema.const === 'boolean') {
+      return 'boolean'
+    } else {
+      return 'null'
+    }
+  }
+
+  return schema.type as JSONSchemaType
 }
