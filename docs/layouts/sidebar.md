@@ -99,9 +99,9 @@ module.exports = {
                 startsWith: '',
 
                 /**
-                 * Optionally, you can specify if the sidebar items are collapsable. Default is true.
+                 * Optionally, you can specify if the sidebar items are collapsible. Default is true.
                  */
-                collapsable: true,
+                collapsible: true,
                 
                 /**
                  * Optionally, you can specify a depth for the sidebar items. Default is 6, which is the maximum VitePress sidebar depth.

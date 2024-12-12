@@ -9,14 +9,14 @@ import { flatSidebarItems } from './flatSidebarItems'
 export function generateSidebarItemsByPaths({
   paths,
   startsWith = '',
-  collapsable = true,
+  collapsible = true,
   itemLinkPrefix = '',
   depth = 6,
   sidebarItemTemplate,
 }: {
   paths: OpenAPIV3.PathsObject
   startsWith?: string
-  collapsable?: boolean
+  collapsible?: boolean
   itemLinkPrefix?: string
   depth?: number
   sidebarItemTemplate?: (method: OpenAPIV3.HttpMethods, path: string) => string
@@ -74,7 +74,7 @@ export function generateSidebarItemsByPaths({
 
   sidebarItems = ensureGroupTextSlashPrefix(sidebarItems)
 
-  if (collapsable) {
+  if (collapsible) {
     sidebarItems = setItemCollapsedState(sidebarItems)
   }
 
