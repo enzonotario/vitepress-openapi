@@ -87,6 +87,7 @@ export interface SpecConfig {
   lazyRendering?: Ref<boolean>
   defaultTag?: string
   defaultTagDescription?: string
+  wrapExamples?: boolean
 }
 
 export interface UseThemeConfig {
@@ -267,6 +268,7 @@ const themeConfig: UseThemeConfig = {
     lazyRendering: ref(false),
     defaultTag: 'Default',
     defaultTagDescription: '',
+    wrapExamples: true,
   },
   codeSamples: {
     langs: [
@@ -602,6 +604,10 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
     return themeConfig.spec
   }
 
+  function getWrapExamples() {
+    return themeConfig?.spec?.wrapExamples
+  }
+
   function setSpecConfig(config: Partial<SpecConfig>) {
     if (!themeConfig.spec) {
       themeConfig.spec = {}
@@ -638,6 +644,10 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
 
     if (config.defaultTagDescription !== undefined) {
       themeConfig.spec.defaultTagDescription = config.defaultTagDescription
+    }
+
+    if (config.wrapExamples !== undefined) {
+      themeConfig.spec.wrapExamples = config.wrapExamples
     }
   }
 
@@ -753,6 +763,7 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
     getI18nConfig,
     setI18nConfig,
     getSpecConfig,
+    getWrapExamples,
     setSpecConfig,
     getCodeSamplesLangs,
     getCodeSamplesDefaultLang,

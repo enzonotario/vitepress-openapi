@@ -91,6 +91,7 @@ export default {
                 avoidCirculars: false, // Avoid circular references when parsing schemas.
                 lazyRendering: false, // Lazy render Paths and Tags components.
                 defaultTag: 'Default', // Default tag to use when a path has no tags.
+                wrapExamples: true, // Wrap examples in a row or show them in a column.
             },
         })
     }
@@ -153,4 +154,4 @@ export default {
 
 | Function        | Description                  | Default Value                                                                                                                             | Allowed Values                                                                                                                                     |
 |-----------------|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true, avoidCirculars: false, lazyRendering: false, defaultTag: 'Default' }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean, avoidCirculars: boolean, lazyRendering: boolean, defaultTag: string }` |
+| `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true, avoidCirculars: false, lazyRendering: false, defaultTag: 'Default', wrapExamples: true }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean, avoidCirculars: boolean, lazyRendering: boolean, defaultTag: string, wrapExamples: boolean }` |
