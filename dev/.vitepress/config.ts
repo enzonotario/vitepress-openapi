@@ -33,6 +33,21 @@ export default defineConfigWithTheme({
         ],
       },
       {
+        text: 'By Paths',
+        items: [
+          ...sidebar.itemsByPaths(),
+        ],
+      },
+      {
+        text: 'By Paths Flatten to depth 2',
+        items: [
+          ...sidebar.itemsByPaths({
+            depth: 2,
+            sidebarItemTemplate: (method, path) => `<span class="OASidebarItem group/oaSidebarItem"><span class="OASidebarItem-badge OAMethodBadge--${method}">${method.toUpperCase()}</span></span>`,
+          }),
+        ],
+      },
+      {
         text: 'Customizations',
         items: [
           {
