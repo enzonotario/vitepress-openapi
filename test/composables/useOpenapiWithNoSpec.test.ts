@@ -19,9 +19,14 @@ describe('useOpenapi with no spec', () => {
     expect(result).toEqual([])
   })
 
-  it('returns empty string for getBaseUrl when servers are not defined', () => {
-    const result = openapi.getBaseUrl()
-    expect(result).toBe('http://localhost')
+  it('returns empty array for getOperationServers when servers are not defined', () => {
+    const result = openapi.getOperationServers('someOperationId')
+    expect(result).toEqual([])
+  })
+
+  it('returns empty array for getServers when servers are not defined', () => {
+    const result = openapi.getServers()
+    expect(result).toEqual([])
   })
 
   it('returns empty array for getTags when paths are not defined', () => {
