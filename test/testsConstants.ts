@@ -39,6 +39,14 @@ export const spec = {
         'tags': [
           'users',
         ],
+        'servers': [
+          {
+            url: 'http://localhost:3000',
+          },
+          {
+            url: 'https://api.example.com',
+          },
+        ],
       },
     },
     '/users/{id}': {

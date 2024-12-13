@@ -741,6 +741,14 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         "security": [
           {},
         ],
+        "servers": [
+          {
+            "url": "https://localhost:3000",
+          },
+          {
+            "url": "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792",
+          },
+        ],
         "summary": "Get all artists",
         "tags": [
           "Artists",

@@ -114,7 +114,7 @@ function setAuthScheme(scheme: PlaygroundSecurityScheme) {
   }
 }
 
-watch([variables, authScheme, body], () => {
+watch([variables, authScheme, body, () => props.baseUrl], () => {
   emits('update:request', buildRequest({
     baseUrl: props.baseUrl,
     method: props.method as OpenAPIV3.HttpMethods,

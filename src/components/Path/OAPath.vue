@@ -1,5 +1,6 @@
 <script setup>
 import { computed, defineProps, ref } from 'vue'
+import { useStorage } from '@vueuse/core'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { useTheme } from '../../composables/useTheme'
@@ -25,8 +26,6 @@ const operationPath = openapi.getOperationPath(props.id)
 
 const operationMethod = openapi.getOperationMethod(props.id)?.toUpperCase()
 
-const baseUrl = openapi.getBaseUrl(props.id)
-
 const securitySchemes = openapi.getSecuritySchemes(props.id)
 
 const operationParsed = openapi.getParsedOperation(props.id)
@@ -45,6 +44,36 @@ const bodyRequestContentTypes = computed(() => operationRequestBody ? Object.key
 
 const bodyRequestContentType = computed(() => bodyRequestContentTypes.value.length ? bodyRequestContentTypes.value[0] : undefined)
 
+const customGetServers = themeConfig.getOperationServers()
+
+const servers = customGetServers
+  ? customGetServers({
+    method: operationMethod,
+    path: operationPath,
+    operation,
+  })
+  : openapi.getOperationServers(props.id)
+
+const defaultServer = servers.length ? servers[0]?.url : themeConfig.getOperationDefaultBaseUrl()
+
+const selectedServer = servers?.length > 1
+  ? useStorage(`--oa-operation-${props.id}-selectedServer`, defaultServer, localStorage, {
+    mergeDefaults: true,
+  })
+  : ref(defaultServer)
+
+const baseUrl = computed(() => {
+  const value = selectedServer.value
+
+  if (servers.length > 1 && !servers.some(server => server.url === value)) {
+    updateSelectedServer(servers[0]?.url)
+
+    return servers[0]?.url
+  }
+
+  return value
+})
+
 const shouldBuildRequest = computed(() => ['try-it', 'code-samples'].some(slot => operationSlots.value.includes(slot)))
 
 const request = ref(
@@ -52,7 +81,7 @@ const request = ref(
     ? buildRequest({
       path: operationPath,
       method: operationMethod,
-      baseUrl,
+      baseUrl: baseUrl.value,
       parameters: operationParameters ?? [],
       authScheme: securitySchemes.length ? securitySchemes[0] : undefined,
       body: operationRequestBody?.content?.[bodyRequestContentType]?.uiContentType,
@@ -63,6 +92,10 @@ const request = ref(
 
 function updateRequest(newRequest) {
   request.value = newRequest
+}
+
+function updateSelectedServer(server) {
+  selectedServer.value = server
 }
 </script>
 
@@ -118,6 +151,8 @@ function updateRequest(newRequest) {
                 :path="operationPath"
                 :hide-base-url="!themeConfig.getShowBaseURL()"
                 :deprecated="operation.deprecated"
+                :servers="servers"
+                :update-selected-server="updateSelectedServer"
               />
             </div>
 
@@ -195,6 +230,8 @@ function updateRequest(newRequest) {
                 :path="operationPath"
                 :hide-base-url="!themeConfig.getShowBaseURL()"
                 :deprecated="operation.deprecated"
+                :servers="servers"
+                :update-selected-server="updateSelectedServer"
               />
             </div>
 
@@ -211,6 +248,8 @@ function updateRequest(newRequest) {
                 :content-type="bodyRequestContentType"
                 :request="request"
                 :update-request="updateRequest"
+                :servers="servers"
+                :update-selected-server="updateSelectedServer"
               />
             </template>
 
