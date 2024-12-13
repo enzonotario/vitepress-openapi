@@ -5,13 +5,12 @@ title: vitepress-openapi
 ---
 
 <script setup lang="ts">
-import { useData } from 'vitepress'
-import spec from '../../docs/public/openapi-schemas.json'
-import { useTheme } from 'vitepress-openapi'
 import { onUnmounted } from 'vue'
+import { useData } from 'vitepress'
+import { useTheme } from 'vitepress-openapi'
+import spec from '../../docs/public/openapi-schemas.json'
 
 const { isDark } = useData()
-
 
 useTheme({
   operation: {
