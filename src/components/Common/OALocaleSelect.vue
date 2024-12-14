@@ -1,10 +1,13 @@
 <script setup>
+import { computed } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '../ui/select'
 
 const themeConfig = useTheme()
 
 const i18nConfig = themeConfig.getI18nConfig()
+
+const defaultLocale = computed(() => i18nConfig.locale?.value ?? 'en')
 
 function onLocaleChange(locale) {
   themeConfig.setI18nConfig({
@@ -16,7 +19,7 @@ function onLocaleChange(locale) {
 <template>
   <div class="self-center">
     <Select
-      :default-value="i18nConfig.locale?.value ?? 'en'"
+      :default-value="defaultLocale"
       :model-value="i18nConfig.locale"
       @update:model-value="onLocaleChange"
     >

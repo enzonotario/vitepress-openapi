@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { ref } from 'vue'
 import { useTheme } from '../../src/composables/useTheme'
 
 describe('composition API', () => {
@@ -317,7 +316,16 @@ describe('useTheme', () => {
       locale: expect.any(Object),
       fallbackLocale: expect.any(Object),
       messages: expect.any(Object),
-      availableLocales: expect.any(Array),
+      availableLocales: expect.arrayContaining([
+        {
+          code: 'en',
+          label: 'English',
+        },
+        {
+          code: 'es',
+          label: 'Español',
+        },
+      ]),
     })
   })
 
