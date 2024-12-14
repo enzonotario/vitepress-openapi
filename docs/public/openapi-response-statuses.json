@@ -25,13 +25,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "200 OK"
-                    }
-                  }
+                  "type": "string",
+                  "example": "200 OK"
                 }
               }
             }
@@ -50,13 +45,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "201 Created"
-                    }
-                  }
+                  "type": "string",
+                  "example": "201 Created"
                 }
               }
             }
@@ -75,13 +65,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "400 Bad Request"
-                    }
-                  }
+                  "type": "string",
+                  "example": "400 Bad Request"
                 }
               }
             }
@@ -100,13 +85,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "401 Unauthorized"
-                    }
-                  }
+                  "type": "string",
+                  "example": "401 Unauthorized"
                 }
               }
             }
@@ -125,13 +105,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "403 Forbidden"
-                    }
-                  }
+                  "type": "string",
+                  "example": "403 Forbidden"
                 }
               }
             }
@@ -150,13 +125,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "404 Not Found"
-                    }
-                  }
+                  "type": "string",
+                  "example": "404 Not Found"
                 }
               }
             }
@@ -175,13 +145,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "500 Internal Server Error"
-                    }
-                  }
+                  "type": "string",
+                  "example": "500 Internal Server Error"
                 }
               }
             }
