@@ -39,7 +39,7 @@ interface VPTheme {
 }
 
 export const theme = {
-  enhanceApp({ app, openapi }) {
+  enhanceApp({ app, openapi = null }) {
     if (openapi) {
       app.provide('openapi', openapi)
     }
