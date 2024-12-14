@@ -94,6 +94,11 @@ export default defineConfigWithTheme({
         ],
       },
     ],
+    nav: [
+      {
+        component: 'OALocaleSelect',
+      },
+    ],
   },
   vite: {
     resolve: {

@@ -13,7 +13,11 @@ export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
   description: 'Generate VitePress API Documentation from OpenAPI specs.',
   themeConfig: {
-    nav: [],
+    nav: [
+      {
+        component: 'OALocaleSelect',
+      },
+    ],
 
     sidebar: [
       {

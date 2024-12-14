@@ -2,6 +2,7 @@ import * as VueI18n from 'vue-i18n'
 import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
 import type { Awaitable } from 'vitepress'
+import { watch } from 'vue'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 import { useShiki } from './composables/useShiki'
 import * as components from './components'
@@ -52,6 +53,18 @@ export const theme = {
       messages: themeConfig.getI18nConfig().messages,
     })
     app.use(i18n)
+
+    watch(
+      () => themeConfig.getLocale(),
+      () => {
+        if (i18n.global.locale.value !== themeConfig.getLocale()) {
+          i18n.global.locale.value = themeConfig.getLocale()
+        }
+      },
+      {
+        immediate: true,
+      },
+    )
 
     for (const key in components) {
       // @ts-expect-error: no index signature
