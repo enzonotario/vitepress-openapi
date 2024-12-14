@@ -2,13 +2,6 @@
 import { useTheme } from '../../composables/useTheme'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from '../ui/select'
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: false,
-  },
-})
-
 const themeConfig = useTheme()
 
 const i18nConfig = themeConfig.getI18nConfig()
