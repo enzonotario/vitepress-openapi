@@ -52,7 +52,7 @@ export function useSidebar({
   linkPrefix = DEFAULT_CONFIG.linkPrefix,
   tagLinkPrefix = DEFAULT_CONFIG.tagLinkPrefix,
   defaultTag = DEFAULT_CONFIG.defaultTag,
-  methodAliases,
+  methodAliases = {},
 }: SidebarConfig = {}) {
   useTheme({
     spec: {
