@@ -43,7 +43,7 @@ function share() {
 
 <template>
   <div>
-    <SandboxNav class="sticky top-0 z-10">
+    <SandboxNav class="sticky top-0 z-50">
       <div class="flex flex-row items-center justify-center">
         <form @submit.prevent="fetchSpec">
           <input
