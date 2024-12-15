@@ -33,6 +33,12 @@ function updateWindowLocation() {
     window.history.replaceState({}, '', `${location.pathname}?${searchParams}`)
   }
 }
+
+function share() {
+  updateWindowLocation()
+
+  navigator.clipboard.writeText(location.href)
+}
 </script>
 
 <template>
@@ -54,7 +60,7 @@ function updateWindowLocation() {
       <template #end>
         <button
           class="p-2 bg-muted rounded"
-          @click="updateWindowLocation"
+          @click="share"
         >
           Share
         </button>
