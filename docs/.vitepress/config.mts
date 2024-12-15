@@ -95,6 +95,10 @@ export default defineConfigWithTheme({
                 text: 'Operation tags slot',
                 link: '/customizations/operation-tags-slot',
               },
+              {
+                text: 'i18n',
+                link: '/customizations/i18n',
+              },
             ],
           },
         ],
