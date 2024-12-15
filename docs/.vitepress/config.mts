@@ -15,6 +15,10 @@ export default defineConfigWithTheme({
   themeConfig: {
     nav: [
       {
+        text: 'Sandbox',
+        link: '/sandbox',
+      },
+      {
         component: 'OALocaleSelect',
       },
     ],
@@ -104,6 +108,10 @@ export default defineConfigWithTheme({
         ],
       },
       {
+        text: 'Sandbox',
+        link: '/sandbox',
+      },
+      {
         text: 'Example',
         collapsed: true,
         items: [
@@ -113,6 +121,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'By Tags',
+            collapsed: true,
             items: [
               ...sidebar.itemsByTags({
                 linkPrefix: '/example/tags/',
@@ -121,6 +130,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'By Operations',
+            collapsed: true,
             items: [
               ...sidebar.generateSidebarGroups({
                 linkPrefix: '/example/operations/',
@@ -129,6 +139,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'By Paths',
+            collapsed: true,
             items: [
               ...sidebar.itemsByPaths({
                 linkPrefix: '/example/operations/',
@@ -137,6 +148,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'By Paths Flatten',
+            collapsed: true,
             items: [
               ...sidebar.itemsByPaths({
                 depth: 2,
@@ -146,6 +158,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'Additional',
+            collapsed: true,
             items: [
               {
                 text: 'One Page',

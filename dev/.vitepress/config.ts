@@ -106,6 +106,10 @@ export default defineConfigWithTheme({
     ],
     nav: [
       {
+        text: 'Sandbox',
+        link: '/sandbox',
+      },
+      {
         component: 'OALocaleSelect',
       },
     ],

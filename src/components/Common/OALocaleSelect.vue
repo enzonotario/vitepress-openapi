@@ -20,7 +20,7 @@ function onLocaleChange(locale) {
   <div class="self-center">
     <Select
       :default-value="defaultLocale"
-      :model-value="i18nConfig.locale"
+      :value="i18nConfig.locale.value"
       @update:model-value="onLocaleChange"
     >
       <SelectTrigger>

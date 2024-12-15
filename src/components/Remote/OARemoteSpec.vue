@@ -9,10 +9,14 @@ const props = defineProps({
   },
   isDark: Boolean,
 })
+
+const emits = defineEmits([
+  'update:spec',
+])
 </script>
 
 <template>
-  <OARemoteRoot :spec-url="props.specUrl">
+  <OARemoteRoot :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
     <template #default="{ spec }">
       <OASpec :spec="spec" :is-dark="props.isDark" v-bind="$attrs" />
     </template>

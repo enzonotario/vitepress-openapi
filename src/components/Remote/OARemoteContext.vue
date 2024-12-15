@@ -10,9 +10,21 @@ const props = defineProps({
   },
 })
 
-const spec = await fetchJSON(props.specUrl)
+const emits = defineEmits([
+  'update:spec',
+])
 
-async function fetchJSON(url: string) {
+const spec = await fetchSpec(props.specUrl)
+
+async function fetchSpec(url: string) {
+  const spec = await parseSpec(url)
+
+  emits('update:spec', spec)
+
+  return spec
+}
+
+async function parseSpec(url: string) {
   const res = await fetch(url)
 
   if (!res.ok) {
