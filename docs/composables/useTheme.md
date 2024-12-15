@@ -82,6 +82,11 @@ export default {
                         'operation.badgePrefix.operationId': 'ID de operación',
                     },
                 },
+                availableLocales: [
+                    { code: 'en', label: 'English' },
+                    { code: 'es', label: 'Español' },
+                    { code: 'pt-BR', label: 'Português (Brasil)' },
+                ],
             },
             // Set spec configuration.
             spec: {

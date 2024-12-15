@@ -13,7 +13,11 @@ export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
   description: 'Generate VitePress API Documentation from OpenAPI specs.',
   themeConfig: {
-    nav: [],
+    nav: [
+      {
+        component: 'OALocaleSelect',
+      },
+    ],
 
     sidebar: [
       {
@@ -90,6 +94,10 @@ export default defineConfigWithTheme({
               {
                 text: 'Operation tags slot',
                 link: '/customizations/operation-tags-slot',
+              },
+              {
+                text: 'i18n',
+                link: '/customizations/i18n',
               },
             ],
           },
