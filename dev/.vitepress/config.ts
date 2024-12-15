@@ -34,12 +34,14 @@ export default defineConfigWithTheme({
       },
       {
         text: 'By Paths',
+        collapsed: true,
         items: [
           ...sidebar.itemsByPaths(),
         ],
       },
       {
         text: 'By Paths Flatten to depth 2',
+        collapsed: true,
         items: [
           ...sidebar.itemsByPaths({
             depth: 2,
@@ -68,18 +70,6 @@ export default defineConfigWithTheme({
         text: 'Other',
         items: [
           {
-            text: 'Plant Store',
-            link: '/plant-store',
-          },
-          {
-            text: 'ArgentinaDatos',
-            link: '/argentinadatos',
-          },
-          {
-            text: 'CriptoYA Argentina',
-            link: '/criptoya-argentina',
-          },
-          {
             text: 'Response Types',
             link: '/response-types',
           },
@@ -91,10 +81,34 @@ export default defineConfigWithTheme({
             text: 'Schemas',
             link: '/schemas',
           },
+          {
+            text: 'ArgentinaDatos',
+            link: '/examples/argentinadatos',
+          },
+          {
+            text: 'CriptoYA Argentina',
+            link: '/examples/criptoya-argentina',
+          },
+          {
+            text: 'Scalar Galaxy',
+            link: '/examples/scalar-galaxy',
+          },
+          {
+            text: 'Plant Store',
+            link: '/examples/plant-store',
+          },
+          {
+            text: 'Museum',
+            link: '/examples/museum',
+          },
         ],
       },
     ],
     nav: [
+      {
+        text: 'Sandbox',
+        link: '/sandbox',
+      },
       {
         component: 'OALocaleSelect',
       },

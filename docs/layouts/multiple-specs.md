@@ -21,8 +21,8 @@ title: vitepress-openapi
 
 <script setup lang="ts">
 import { useData } from 'vitepress'
-import spec from '../public/openapi.json'
-import specV2 from '../public/openapi-v2.json'
+import defaultSpec from '../public/openapi.json'
+import schemasSpec from '../public/openapi-schemas.json'
 
 const { isDark } = useData()
 </script>
@@ -31,21 +31,21 @@ const { isDark } = useData()
 Using [default spec](../public/openapi.json)
 :::
 
-<OAOperation operationId="getAllArtists" :spec="spec" :isDark="isDark" />
+<OAOperation operationId="getAllArtists" :spec="defaultSpec" :isDark="isDark" />
 
 ---
 
 ::: info
-Using [v2 spec](../public/openapi-v2.json)
+Using [schemas spec](../public/openapi-schemas.json)
 :::
 
-<OAOperation operationId="buyMuseumTickets" :spec="specV2" :isDark="isDark" />
+<OAOperation operationId="getCircularReference" :spec="schemasSpec" :isDark="isDark" />
 ```
 
 <script setup lang="ts">
 import { useData } from 'vitepress'
-import spec from '../public/openapi.json'
-import specV2 from '../public/openapi-v2.json'
+import defaultSpec from '../public/openapi.json'
+import schemasSpec from '../public/openapi-schemas.json'
 
 const { isDark } = useData()
 </script>
@@ -54,12 +54,12 @@ const { isDark } = useData()
 Using [default spec](../public/openapi.json)
 :::
 
-<OAOperation operationId="getAllArtists" :spec="spec" :isDark="isDark" />
+<OAOperation operationId="getAllArtists" :spec="defaultSpec" :isDark="isDark" />
 
 ---
 
 ::: info
-Using [v2 spec](../public/openapi-v2.json)
+Using [schemas spec](../public/openapi-schemas.json)
 :::
 
-<OAOperation operationId="buyMuseumTickets" :spec="specV2" :isDark="isDark" />
+<OAOperation operationId="getCircularReference" :spec="schemasSpec" :isDark="isDark" />
