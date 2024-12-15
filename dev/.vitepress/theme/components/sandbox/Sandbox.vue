@@ -6,7 +6,7 @@ import SandboxNav from './SandboxNav.vue'
 
 const loading = ref(false)
 
-const initialSpecUrl = window && new URLSearchParams(location.search).get('specUrl') || 'https://vitepress-openapi.vercel.app/openapi.json'
+const initialSpecUrl = (window && new URLSearchParams(location.search).get('specUrl')) || 'https://vitepress-openapi.vercel.app/openapi.json'
 
 const url = ref(initialSpecUrl)
 
@@ -22,7 +22,7 @@ function fetchSpec() {
   })
 }
 
-function specUpdated(spec) {
+function specUpdated() {
   loading.value = false
 }
 
@@ -46,7 +46,13 @@ function share() {
     <SandboxNav class="sticky top-0 z-10">
       <div class="flex flex-row items-center justify-center">
         <form @submit.prevent="fetchSpec">
-          <input v-model="url" placeholder="Enter a spec URL" class="p-2 bg-muted rounded">
+          <input
+            v-model="url"
+            pattern="https?:\/\/.+"
+            title="Please enter a valid HTTP/HTTPS URL"
+            placeholder="Enter a spec URL"
+            class="p-2 bg-muted rounded"
+          >
           <button
             type="submit"
             :disabled="loading"
