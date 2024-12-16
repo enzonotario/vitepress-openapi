@@ -8,6 +8,9 @@ export function cn(...inputs: ClassValue[]) {
 export function scrollIntoOperationByOperationId({
   hash,
   offset = 0,
+}: {
+  hash: string
+  offset?: number
 }) {
   if (!import.meta.env.SSR) {
     const element = document.querySelector(
