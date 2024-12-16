@@ -134,7 +134,7 @@ watch(operationId, () => {
 
     <VPSidebar v-if="specLoaded" open />
 
-    <div class="SandboxPreviewWrapper pl-[var(--vp-sidebar-width)] pt-[var(--vp-nav-height)]">
+    <div class="SandboxPreviewWrapper">
       <SandboxPreview
         v-if="specUrl"
         :spec-url="specUrl"
@@ -153,6 +153,10 @@ body {
   overflow-y: auto !important;
 }
 
+.SandboxPreviewWrapper {
+  padding-top: var(--vp-nav-height);
+  padding-left: var(--vp-sidebar-width);
+}
 @media (min-width: 1440px) {
   .SandboxPreviewWrapper {
     padding-right: calc((100vw - var(--vp-layout-max-width)) / 2);
