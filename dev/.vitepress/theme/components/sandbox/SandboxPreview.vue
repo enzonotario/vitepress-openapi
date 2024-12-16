@@ -7,6 +7,15 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  operationId: {
+    type: String,
+    required: true,
+  },
+  previewType: {
+    type: String,
+    required: false,
+    default: 'oneOperation',
+  },
 })
 
 const emits = defineEmits([
@@ -19,7 +28,20 @@ const { isDark } = useData()
 <template>
   <div style="padding: 48px 32px;">
     <VPHomeContent>
-      <OARemoteSpec :spec-url="props.specUrl" :is-dark="isDark" @update:spec="emits('update:spec', $event)" />
+      <OARemoteOperation
+        v-if="previewType === 'oneOperation'"
+        :key="props.operationId"
+        :operation-id="props.operationId"
+        :spec-url="props.specUrl"
+        :is-dark="isDark"
+        @update:spec="emits('update:spec', $event)"
+      />
+      <OARemoteSpec
+        v-else-if="previewType === 'spec'"
+        :spec-url="props.specUrl"
+        :is-dark="isDark"
+        @update:spec="emits('update:spec', $event)"
+      />
     </VPHomeContent>
   </div>
 </template>

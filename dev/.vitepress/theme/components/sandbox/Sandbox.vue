@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
+import VPSidebar from 'vitepress/dist/client/theme-default/components/VPSidebar.vue'
+import { useSidebar } from 'vitepress-openapi'
+import { scrollIntoOperationByOperationId } from '../../../../../src/lib/utils'
 import SandboxPreview from './SandboxPreview.vue'
 import SandboxNav from './SandboxNav.vue'
 
 const loading = ref(false)
+
+const specLoaded = ref(false)
 
 const initialSpecUrl = (window && new URLSearchParams(location.search).get('specUrl')) || 'https://vitepress-openapi.vercel.app/openapi.json'
 
@@ -12,18 +17,46 @@ const url = ref(initialSpecUrl)
 
 const specUrl = ref(initialSpecUrl)
 
-const { isDark } = useData()
+const { isDark, theme, hash } = useData()
+
+const operationId = computed(() => {
+  const segments = hash.value.split('#')
+  return segments.length > 1 ? segments[1] : ''
+})
+
+const previewType = ref('spec')
+
+onMounted(() => {
+  theme.value.sidebar = []
+})
 
 function fetchSpec() {
   loading.value = true
+  specLoaded.value = false
   specUrl.value = null
   nextTick(() => {
     specUrl.value = url.value
   })
 }
 
-function specUpdated() {
+function specUpdated(spec) {
   loading.value = false
+
+  updateSidebar(spec)
+
+  specLoaded.value = true
+}
+
+function updateSidebar(spec) {
+  const sidebar = useSidebar({
+    spec,
+  })
+
+  theme.value.sidebar = [
+    ...sidebar.generateSidebarGroups({
+      linkPrefix: '#',
+    }),
+  ]
 }
 
 function updateWindowLocation() {
@@ -39,12 +72,22 @@ function share() {
 
   navigator.clipboard.writeText(location.href)
 }
+
+watch(operationId, () => {
+  if (previewType.value === 'oneOperation') {
+  } else if (previewType.value === 'spec') {
+    scrollIntoOperationByOperationId({
+      hash: `#${operationId.value}`,
+      offset: 120,
+    })
+  }
+})
 </script>
 
 <template>
   <div>
-    <SandboxNav class="sticky top-0 z-10">
-      <div class="flex flex-row items-center justify-center">
+    <SandboxNav class="fixed w-full top-0 z-[var(--vp-z-index-nav)]">
+      <div class="flex flex-row items-center justify-center gap-4">
         <form @submit.prevent="fetchSpec">
           <input
             v-model="url"
@@ -61,6 +104,25 @@ function share() {
             Fetch
           </button>
         </form>
+
+        <div class="flex flex-row items-center space-x-2">
+          <label class="text-sm">Layout</label>
+
+          <button
+            :class="{ 'bg-primary text-primary-foreground': previewType === 'oneOperation' }"
+            class="p-1 text-sm bg-muted rounded"
+            @click="previewType = 'oneOperation'"
+          >
+            One Operation
+          </button>
+          <button
+            :class="{ 'bg-primary text-primary-foreground': previewType === 'spec' }"
+            class="p-1 text-sm bg-muted rounded"
+            @click="previewType = 'spec'"
+          >
+            All Operations
+          </button>
+        </div>
       </div>
 
       <template #end>
@@ -73,6 +135,35 @@ function share() {
       </template>
     </SandboxNav>
 
-    <SandboxPreview v-if="specUrl" :spec-url="specUrl" :is-dark="isDark" @update:spec="specUpdated" />
+    <VPSidebar v-if="specLoaded" open />
+
+    <div class="SandboxPreviewWrapper">
+      <SandboxPreview
+        v-if="specUrl"
+        :spec-url="specUrl"
+        :operation-id="operationId"
+        :preview-type="previewType"
+        :is-dark="isDark"
+        @update:spec="specUpdated"
+      />
+    </div>
   </div>
 </template>
+
+<style>
+body {
+  height: 100vh;
+  overflow-y: auto !important;
+}
+
+.SandboxPreviewWrapper {
+  padding-top: var(--vp-nav-height);
+  padding-left: var(--vp-sidebar-width);
+}
+@media (min-width: 1440px) {
+  .SandboxPreviewWrapper {
+    padding-right: calc((100vw - var(--vp-layout-max-width)) / 2);
+    padding-left: calc((100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width));
+  }
+}
+</style>
