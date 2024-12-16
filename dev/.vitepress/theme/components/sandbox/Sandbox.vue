@@ -19,7 +19,10 @@ const specUrl = ref(initialSpecUrl)
 
 const { isDark, theme, hash } = useData()
 
-const operationId = computed(() => hash.value.split('#')[1])
+const operationId = computed(() => {
+  const segments = hash.value.split('#')
+  return segments.length > 1 ? segments[1] : ''
+})
 
 const previewType = ref('spec')
 
