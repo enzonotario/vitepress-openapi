@@ -9,6 +9,7 @@ import OAPathsSummary from '../Path/OAPathsSummary.vue'
 import { Button } from '../ui/button'
 import { Collapsible, CollapsibleTrigger } from '../ui/collapsible'
 import type { OperationSlot } from '../../types'
+import { scrollIntoOperationByOperationId } from '../../lib/utils'
 
 const props = defineProps({
   openapi: {
@@ -74,35 +75,14 @@ const internalTags = ref([
   }),
 ])
 
-function scrollIntoViewWithOffset(hash: string, offset: number) {
-  if (!import.meta.env.SSR) {
-    const element = document.querySelector(
-      hash
-        // . escape { and } characters
-        .replace(/([{}])/g, '\\$1'),
-    )
-
-    if (!element) {
-      return
-    }
-
-    window.scrollTo({
-      behavior: 'smooth',
-      top:
-          element.getBoundingClientRect().top
-          - document.body.getBoundingClientRect().top
-          - offset,
-    })
-
-    window.location.hash = hash
-  }
-}
-
 function onPathClick(tagPaths: { tag: string, paths: Record<string, any>, isOpen: boolean }, hash: string) {
   tagPaths.isOpen = true
 
   nextTick(() => {
-    scrollIntoViewWithOffset(hash, 120)
+    scrollIntoOperationByOperationId({
+      hash,
+      offset: 120,
+    })
   })
 }
 
