@@ -82,6 +82,10 @@ export default defineConfigWithTheme({
             link: '/tests/schemas',
           },
           {
+            text: 'Parameters',
+            link: '/tests/parameters',
+          },
+          {
             text: 'Security',
             link: '/tests/security',
           },
