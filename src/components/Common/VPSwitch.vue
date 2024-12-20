@@ -1,7 +1,7 @@
 <template>
   <button class="VPSwitch" type="button" role="switch">
     <span class="check">
-      <span class="icon" v-if="$slots.default">
+      <span v-if="$slots.default" class="icon">
         <slot />
       </span>
     </span>
