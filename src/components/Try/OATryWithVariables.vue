@@ -63,11 +63,17 @@ const schemaUiContentType = computed(() => {
   return props.requestBody?.content?.[props.contentType]?.uiContentType
 })
 
-const hasParameters = computed(() => {
-  return props.parameters?.length
-    || Object.keys(schemaUiContentType.value?.variables ?? {}).length
-    || Object.keys(props.securityUi ?? {}).length
-})
+const hasSchemaVariables = computed(() =>
+  Object.keys(schemaUiContentType.value?.variables ?? {}).length > 0,
+)
+
+const hasSecuritySchemes = computed(() =>
+  Object.keys(props.securityUi ?? {}).length > 0,
+)
+
+const hasParameters = computed(() =>
+  Boolean(props.parameters?.length || hasSchemaVariables.value || hasSecuritySchemes.value),
+)
 </script>
 
 <template>

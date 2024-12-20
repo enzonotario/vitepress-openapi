@@ -44,9 +44,7 @@ const wrapExamples = useTheme().getWrapExamples()
             v-for="(example, idx) in examples"
             :key="idx"
             :value="example"
-          >
-            <OACodeValue />
-          </oacodevalue>
+          />
         </div>
       </template>
     </OAParameterAttribute>
