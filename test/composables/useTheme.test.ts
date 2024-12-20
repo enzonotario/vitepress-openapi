@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { useTheme } from '../../src/composables/useTheme'
+import { DEFAULT_BASE_URL, useTheme } from '../../src/composables/useTheme'
 
 describe('composition API', () => {
   it('can config', () => {
@@ -33,6 +33,8 @@ describe('composition API', () => {
       },
       operation: {
         badges: ['operationId'],
+        defaultBaseUrl: 'https://app.local',
+        getServers: ({ method, path, operation }) => (`https://app.local/${method}${path}`),
       },
       response: {
         maxTabs: 10,
@@ -78,6 +80,8 @@ describe('composition API', () => {
       h6: 6,
     })
     expect(theme.getOperationBadges()).toEqual(['operationId'])
+    expect(theme.getOperationDefaultBaseUrl()).toBe('https://app.local')
+    expect(theme.getOperationServers()).toBeTypeOf('function')
     expect(theme.getResponseCodeMaxTabs()).toBe(10)
     expect(theme.getResponseCodeSelector()).toBe('select')
     expect(theme.getSecurityDefaultScheme()).toBe('bearer')
@@ -108,6 +112,8 @@ describe('composition API', () => {
       },
       operation: {
         badges: ['operationId'],
+        defaultBaseUrl: 'https://app.local',
+        getServers: ({ method, path, operation }) => (`https://app.local/${method}${path}`),
       },
       i18n: {
         locale: 'es',
@@ -125,6 +131,8 @@ describe('composition API', () => {
       h6: 6,
     })
     expect(theme.getOperationBadges()).toEqual(['operationId'])
+    expect(theme.getOperationDefaultBaseUrl()).toBe('https://app.local')
+    expect(theme.getOperationServers()).toBeTypeOf('function')
     expect(theme.getI18nConfig().locale.value).toBe('es')
 
     theme.reset()
@@ -140,6 +148,8 @@ describe('composition API', () => {
       h6: 6,
     })
     expect(theme.getOperationBadges()).toEqual(['deprecated'])
+    expect(theme.getOperationDefaultBaseUrl()).toBe(DEFAULT_BASE_URL)
+    expect(theme.getOperationServers()).toBe(null)
     expect(theme.getI18nConfig().locale.value).toBe('en')
   })
 })

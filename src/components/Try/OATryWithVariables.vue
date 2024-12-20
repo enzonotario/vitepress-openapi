@@ -55,6 +55,7 @@ const props = defineProps({
 
 const emits = defineEmits([
   'update:request',
+  'update:selectedServer',
 ])
 
 const loading = ref(false)
@@ -72,7 +73,8 @@ const loading = ref(false)
       :security-schemes="props.securitySchemes ?? {}"
       :schema-ui-content-type="props.requestBody?.content?.[props.contentType]?.uiContentType"
       :is-dark="props.isDark"
-      @update:request="($event) => emits('update:request', $event)"
+      @update:request="($event: any) => emits('update:request', $event)"
+      @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
     />
 
     <OATryItButton

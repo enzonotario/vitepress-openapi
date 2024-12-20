@@ -264,6 +264,8 @@ function hasSlot(name: OperationSlot): boolean {
         :base-url="path.baseUrl"
         :hide-base-url="path.hideBaseUrl"
         :deprecated="path.deprecated"
+        :servers="path.servers"
+        @update:selected-server="path.updateSelectedServer"
       />
     </template>
 
@@ -292,6 +294,7 @@ function hasSlot(name: OperationSlot): boolean {
           :security-schemes="tryIt.securitySchemes"
           :content-type="tryIt.contentType"
           :is-dark="isDark"
+          @update:selected-server="tryIt.updateSelectedServer"
           @update:request="tryIt.updateRequest"
         />
       </ClientOnly>
