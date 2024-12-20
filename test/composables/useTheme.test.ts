@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { ref } from 'vue'
 import { DEFAULT_BASE_URL, useTheme } from '../../src/composables/useTheme'
 
 describe('composition API', () => {
@@ -88,16 +87,14 @@ describe('composition API', () => {
     expect(theme.getSecurityDefaultScheme()).toBe('bearer')
     expect(theme.getSecuritySelectedScheme()).toBe('bearer')
     expect(theme.getI18nConfig().locale.value).toBe('es')
-    expect(theme.getSpecConfig()).toEqual({
-      groupByTags: ref(false),
-      collapsePaths: ref(true),
-      showPathsSummary: ref(false),
-      avoidCirculars: ref(false),
-      lazyRendering: ref(false),
-      defaultTag: 'Default',
-      defaultTagDescription: '',
-      wrapExamples: true,
-    })
+    expect(theme.getSpecConfig().groupByTags.value).toBe(false)
+    expect(theme.getSpecConfig().collapsePaths.value).toBe(true)
+    expect(theme.getSpecConfig().showPathsSummary.value).toBe(false)
+    expect(theme.getSpecConfig().avoidCirculars.value).toBe(false)
+    expect(theme.getSpecConfig().lazyRendering.value).toBe(false)
+    expect(theme.getSpecConfig().defaultTag).toBe('Default')
+    expect(theme.getSpecConfig().defaultTagDescription).toBe('')
+    expect(theme.getSpecConfig().wrapExamples).toBe(true)
     expect(theme.getWrapExamples()).toBe(true)
   })
 
@@ -329,6 +326,16 @@ describe('useTheme', () => {
       locale: expect.any(Object),
       fallbackLocale: expect.any(Object),
       messages: expect.any(Object),
+      availableLocales: expect.arrayContaining([
+        {
+          code: 'en',
+          label: 'English',
+        },
+        {
+          code: 'es',
+          label: 'Español',
+        },
+      ]),
     })
   })
 
@@ -340,16 +347,14 @@ describe('useTheme', () => {
 
   it('returns the spec config', () => {
     const result = themeConfig.getSpecConfig()
-    expect(result).toEqual({
-      groupByTags: ref(true),
-      collapsePaths: ref(false),
-      showPathsSummary: ref(true),
-      avoidCirculars: ref(false),
-      lazyRendering: ref(false),
-      defaultTag: 'Default',
-      defaultTagDescription: '',
-      wrapExamples: true,
-    })
+    expect(result.groupByTags.value).toBe(true)
+    expect(result.collapsePaths.value).toBe(false)
+    expect(result.showPathsSummary.value).toBe(true)
+    expect(result.avoidCirculars.value).toBe(false)
+    expect(result.lazyRendering.value).toBe(false)
+    expect(result.defaultTag).toBe('Default')
+    expect(result.defaultTagDescription).toBe('')
+    expect(result.wrapExamples).toBe(true)
   })
 
   it('sets spec config', () => {

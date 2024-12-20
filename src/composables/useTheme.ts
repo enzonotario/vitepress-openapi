@@ -67,7 +67,7 @@ export interface OperationConfig {
   slots?: Ref<OperationSlot[]>
   hiddenSlots?: Ref<OperationSlot[]>
   cols?: Ref<1 | 2>
-  defaultBaseUrl: string
+  defaultBaseUrl?: string
   getServers?: GetServersFunction | null
 }
 
@@ -146,11 +146,11 @@ export interface UseThemeConfigUnref {
     selectedScheme: string | null
   }>
   operation?: Partial<{
-    badges: OperationBadges[]
-    slots: OperationSlot[]
-    hiddenSlots: OperationSlot[]
-    cols: 1 | 2
-    defaultBaseUrl: string
+    badges?: OperationBadges[]
+    slots?: OperationSlot[]
+    hiddenSlots?: OperationSlot[]
+    cols?: 1 | 2
+    defaultBaseUrl?: string
     getServers?: null
   }>
   i18n?: Partial<I18nConfig>
