@@ -13,7 +13,15 @@ export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
   description: 'Generate VitePress API Documentation from OpenAPI specs.',
   themeConfig: {
-    nav: [],
+    nav: [
+      {
+        text: 'Sandbox',
+        link: '/sandbox',
+      },
+      {
+        component: 'OALocaleSelect',
+      },
+    ],
 
     sidebar: [
       {
@@ -91,9 +99,17 @@ export default defineConfigWithTheme({
                 text: 'Operation tags slot',
                 link: '/customizations/operation-tags-slot',
               },
+              {
+                text: 'i18n',
+                link: '/customizations/i18n',
+              },
             ],
           },
         ],
+      },
+      {
+        text: 'Sandbox',
+        link: '/sandbox',
       },
       {
         text: 'Example',
@@ -105,6 +121,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'By Tags',
+            collapsed: true,
             items: [
               ...sidebar.itemsByTags({
                 linkPrefix: '/example/tags/',
@@ -113,6 +130,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'By Operations',
+            collapsed: true,
             items: [
               ...sidebar.generateSidebarGroups({
                 linkPrefix: '/example/operations/',
@@ -121,6 +139,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'By Paths',
+            collapsed: true,
             items: [
               ...sidebar.itemsByPaths({
                 linkPrefix: '/example/operations/',
@@ -129,6 +148,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'By Paths Flatten',
+            collapsed: true,
             items: [
               ...sidebar.itemsByPaths({
                 depth: 2,
@@ -138,6 +158,7 @@ export default defineConfigWithTheme({
           },
           {
             text: 'Additional',
+            collapsed: true,
             items: [
               {
                 text: 'One Page',

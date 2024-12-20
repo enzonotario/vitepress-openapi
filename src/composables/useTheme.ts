@@ -75,10 +75,16 @@ export type Languages = 'es' | 'en' | 'pt-BR' | string
 
 export type Messages = Record<Languages, Record<string, string>>
 
+export interface AvailableLocale {
+  code: string
+  label: string
+}
+
 export interface I18nConfig {
   locale: Ref<Languages>
   fallbackLocale: Ref<Languages>
   messages: Messages
+  availableLocales?: AvailableLocale[]
 }
 
 export interface SpecConfig {
@@ -269,6 +275,20 @@ const themeConfig: UseThemeConfig = {
     locale: ref<Languages>('en'),
     fallbackLocale: ref<Languages>('en'),
     messages: locales,
+    availableLocales: [
+      {
+        code: 'en',
+        label: 'English',
+      },
+      {
+        code: 'es',
+        label: 'Español',
+      },
+      {
+        code: 'pt-BR',
+        label: 'Português (Brasil)',
+      },
+    ],
   },
   spec: {
     groupByTags: ref(true),
@@ -629,6 +649,11 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
     if (config.messages) {
       // @ts-expect-error: This is a valid expression.
       themeConfig.i18n.messages = config.messages
+    }
+
+    if (config.availableLocales) {
+      // @ts-expect-error: This is a valid expression.
+      themeConfig.i18n.availableLocales = config.availableLocales
     }
   }
 

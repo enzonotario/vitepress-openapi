@@ -5,9 +5,8 @@ title: vitepress-openapi
 ---
 
 <script setup lang="ts">
-import { useRoute, useData } from 'vitepress'
-import { useOpenapi } from 'vitepress-openapi'
-import specV2 from '../docs/public/openapi-v2.json'
+import { useData } from 'vitepress'
+import schemasSpec from '../docs/public/openapi-schemas.json'
 
 const { isDark } = useData()
 </script>
@@ -16,4 +15,4 @@ const { isDark } = useData()
 
 ---
 
-<OAOperation operationId="buyMuseumTickets" :spec="specV2" :isDark="isDark" />
+<OAOperation operationId="getCircularReference" :spec="schemasSpec" :isDark="isDark" />
