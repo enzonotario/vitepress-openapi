@@ -5,7 +5,7 @@ import { generateMissingTags } from './generateMissingTags'
 
 export function prepareOpenAPI(spec: OpenAPI.Document): OpenAPI.Document {
   if (import.meta.env.VITE_DEBUG) {
-    console.debug('Transforming OpenAPI spec:', spec)
+    console.warn('Transforming OpenAPI spec:', spec)
   }
 
   if (!spec) {

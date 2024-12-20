@@ -36,7 +36,7 @@ function safelyGenerateSchemaUi(spec: ParsedOpenAPI): ParsedOpenAPI {
 
 export function processOpenAPI(spec: OpenAPI.Document): ParsedOpenAPI {
   if (import.meta.env.VITE_DEBUG) {
-    console.debug('Processing OpenAPI spec:', spec)
+    console.warn('Processing OpenAPI spec:', spec)
   }
 
   let parsedSpec = safelyMergeSpec(spec)

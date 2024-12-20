@@ -40,7 +40,7 @@ function getHeaders(variables: Record<string, string>, headerParameters: OpenAPI
     return headers
   }
 
-  Object.entries(authorizations).forEach(([key, authorization]) => {
+  Object.entries(authorizations).forEach(([_, authorization]) => {
     if (!authorization?.type) {
       return
     }
@@ -116,7 +116,7 @@ export function buildRequest({
   const headerParameters = parameters.filter(parameter => parameter.in === 'header')
 
   if (import.meta.env.VITE_DEBUG) {
-    console.debug('Building request with parameters:', {
+    console.warn('Building request with parameters:', {
       path,
       method,
       baseUrl,
