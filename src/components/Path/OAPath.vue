@@ -1,8 +1,9 @@
 <script setup>
-import { computed, defineProps, ref } from 'vue'
+import { computed, defineProps, provide, ref } from 'vue'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { useTheme } from '../../composables/useTheme'
+import { initOperationData } from '../../lib/operationData.ts'
 
 const props = defineProps({
   id: {
@@ -27,9 +28,9 @@ const operationMethod = openapi.getOperationMethod(props.id)?.toUpperCase()
 
 const baseUrl = openapi.getBaseUrl(props.id)
 
-const securitySchemes = openapi.getSecuritySchemes(props.id)
-
 const operationParsed = openapi.getParsedOperation(props.id)
+
+const securityUi = operation.securityUi
 
 const operationParameters = operationParsed?.parameters
 
@@ -54,7 +55,7 @@ const request = ref(
       method: operationMethod,
       baseUrl,
       parameters: operationParameters ?? [],
-      authScheme: securitySchemes.length ? securitySchemes[0] : undefined,
+      authorizations: securityUi.length ? Object.entries(securityUi)[0]?.schemes : {},
       body: operationRequestBody?.content?.[bodyRequestContentType]?.uiContentType,
       variables: {},
     })
@@ -64,6 +65,8 @@ const request = ref(
 function updateRequest(newRequest) {
   request.value = newRequest
 }
+
+provide('operationData', initOperationData(operation))
 </script>
 
 <template>
@@ -134,13 +137,13 @@ function updateRequest(newRequest) {
 
           <template v-if="operationSlots.includes('security')">
             <slot
-              v-if="Object.keys(securitySchemes).length"
+              v-if="Object.keys(securityUi).length"
               name="security"
               :operation="operation"
               :method="operationMethod"
               :base-url="baseUrl"
               :path="operationPath"
-              :security-schemes="securitySchemes"
+              :security-ui="securityUi"
             />
           </template>
 
@@ -207,7 +210,7 @@ function updateRequest(newRequest) {
                 :base-url="baseUrl"
                 :parameters="operationParameters"
                 :request-body="operationRequestBody"
-                :security-schemes="securitySchemes"
+                :security-ui="securityUi"
                 :content-type="bodyRequestContentType"
                 :request="request"
                 :update-request="updateRequest"

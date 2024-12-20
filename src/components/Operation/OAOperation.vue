@@ -163,8 +163,8 @@ function hasSlot(name: OperationSlot): boolean {
       #security="security"
     >
       <OASecurity
-        v-if="Object.keys(security.securitySchemes).length"
-        :security-schemes="security.securitySchemes"
+        v-if="Object.keys(security.securityUi).length"
+        :security-ui="security.securityUi"
         :heading-prefix="headingPrefix"
       />
     </template>
@@ -289,7 +289,7 @@ function hasSlot(name: OperationSlot): boolean {
           :base-url="tryIt.baseUrl"
           :parameters="tryIt.parameters"
           :request-body="tryIt.requestBody"
-          :security-schemes="tryIt.securitySchemes"
+          :security-ui="tryIt.securityUi"
           :content-type="tryIt.contentType"
           :is-dark="isDark"
           @update:request="tryIt.updateRequest"

@@ -12,7 +12,7 @@ describe('buildRequest', () => {
         { name: 'search', in: 'query' },
         { name: 'Authorization', in: 'header' },
       ],
-      authScheme: null,
+      authorizations: null,
       body: null,
       variables: {
         userId: '123',
@@ -31,7 +31,7 @@ describe('buildRequest', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [],
-      authScheme: { type: 'http', scheme: 'bearer', playgroundValue: 'token' },
+      authorizations: { type: 'http', scheme: 'bearer', playgroundValue: 'token' },
       body: null,
       variables: {},
     })
@@ -44,7 +44,7 @@ describe('buildRequest', () => {
       method: 'POST',
       baseUrl: 'https://api.example.com',
       parameters: [],
-      authScheme: null,
+      authorizations: null,
       body: { name: 'John Doe' },
       variables: {},
     })
@@ -57,7 +57,7 @@ describe('buildRequest', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [],
-      authScheme: null,
+      authorizations: null,
       body: null,
       variables: {},
     })
@@ -70,7 +70,7 @@ describe('buildRequest', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [{ name: 'userId', in: 'path' }],
-      authScheme: null,
+      authorizations: null,
       body: null,
       variables: { userId: undefined },
     })
@@ -83,7 +83,7 @@ describe('buildRequest', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [{ name: 'userId', in: 'path' }],
-      authScheme: null,
+      authorizations: null,
       body: null,
       variables: {},
     })
@@ -100,7 +100,7 @@ describe('buildRequest', () => {
         { name: 'search', in: 'query', example: 'test' },
         { name: 'Authorization', in: 'header', example: 'Bearer YOUR_TOKEN' },
       ],
-      authScheme: null,
+      authorizations: null,
       body: null,
       variables: {},
     })
@@ -115,7 +115,7 @@ describe('buildRequest', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [],
-      authScheme: { type: 'http', scheme: 'basic', playgroundValue: 'username:password' },
+      authorizations: { type: 'http', scheme: 'basic', playgroundValue: 'username:password' },
       body: null,
       variables: {},
     })
@@ -128,10 +128,27 @@ describe('buildRequest', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [],
-      authScheme: { type: 'apiKey', name: 'x-api-key', in: 'header', playgroundValue: 'key123' },
+      authorizations: { type: 'apiKey', name: 'x-api-key', in: 'header', playgroundValue: 'key123' },
       body: null,
       variables: {},
     })
+    expect(request.headers['x-api-key']).toBe('key123')
+  })
+
+  it('builds request with basic and apiKey auth schemes', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [],
+      authorizations: [
+        { type: 'http', scheme: 'basic', playgroundValue: 'username:password' },
+        { type: 'apiKey', name: 'x-api-key', in: 'header', playgroundValue: 'key123' },
+      ],
+      body: null,
+      variables: {},
+    })
+    expect(request.headers.authorization).toBe('Basic username:password')
     expect(request.headers['x-api-key']).toBe('key123')
   })
 
@@ -144,7 +161,7 @@ describe('buildRequest', () => {
         { name: 'userId', in: 'path', example: '123' },
         { name: 'search', in: 'query', example: 'test' },
       ],
-      authScheme: null,
+      authorizations: null,
       body: null,
       variables: {
         userId: '456',
@@ -164,7 +181,7 @@ describe('buildRequest', () => {
         { name: 'userId', in: 'path' },
         { name: 'q', in: 'query' },
       ],
-      authScheme: null,
+      authorizations: null,
       body: null,
       variables: {
         userId: 'user/123',
@@ -183,7 +200,7 @@ describe('buildRequest', () => {
       parameters: [
         { name: 'tag', in: 'query' },
       ],
-      authScheme: null,
+      authorizations: null,
       body: null,
       variables: {
         tag: ['urgent', 'important'],

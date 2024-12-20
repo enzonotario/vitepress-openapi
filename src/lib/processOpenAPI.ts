@@ -5,6 +5,7 @@ import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
 import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../types.js'
 import { getSchemaUi } from './getSchemaUi'
 import { getSchemaUiContentType } from './getSchemaUiContentType'
+import { getSecurityUi } from './getSecurityUi'
 
 function safelyMergeSpec(spec: OpenAPI.Document): ParsedOpenAPI {
   try {
@@ -35,14 +36,35 @@ function safelyGenerateSchemaUi(spec: ParsedOpenAPI): ParsedOpenAPI {
 
 export function processOpenAPI(spec: OpenAPI.Document): ParsedOpenAPI {
   if (import.meta.env.VITE_DEBUG) {
-    console.warn('Processing OpenAPI spec:', spec)
+    console.debug('Processing OpenAPI spec:', spec)
   }
 
   let parsedSpec = safelyMergeSpec(spec)
   parsedSpec = safelyDereferenceSpec(parsedSpec)
+  parsedSpec = safelyGenerateSecurityUi(parsedSpec)
   parsedSpec = safelyGenerateSchemaUi(parsedSpec)
 
   return { ...parsedSpec }
+}
+
+function safelyGenerateSecurityUi(spec: ParsedOpenAPI): ParsedOpenAPI {
+  if (!spec?.paths) {
+    return spec
+  }
+
+  for (const path of Object.values(spec.paths)) {
+    for (const verb of Object.keys(path) as OpenAPIV3.HttpMethods[]) {
+      const operation = path[verb] as ParsedOperation
+
+      if (!operation) {
+        continue
+      }
+
+      operation.securityUi = getSecurityUi(operation.security ?? spec.security, spec.components?.securitySchemes || {})
+    }
+  }
+
+  return spec
 }
 
 function generateSchemaUi(spec: ParsedOpenAPI): ParsedOpenAPI {

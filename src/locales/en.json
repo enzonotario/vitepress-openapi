@@ -42,5 +42,7 @@
   "Default": "Default",
   "Example": "Example",
   "Examples": "Examples",
-  "tags.goTo": "View {tag} operations"
+  "tags.goTo": "View {tag} operations",
+  "or": "or",
+  "Enum": "Enum"
 }

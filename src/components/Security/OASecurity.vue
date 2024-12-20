@@ -1,18 +1,10 @@
 <script setup lang="ts">
-import { computed, defineProps, onMounted } from 'vue'
-import { useTheme } from '../../composables/useTheme'
+import { defineProps, inject } from 'vue'
 import OASecurityContent from '../Security/OASecurityContent.vue'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select'
+import type { OperationData } from '../../lib/operationData'
 
-const { securitySchemes, headingPrefix } = defineProps({
-  securitySchemes: {
+const { securityUi, headingPrefix } = defineProps({
+  securityUi: {
     type: Object,
     required: true,
   },
@@ -23,24 +15,7 @@ const { securitySchemes, headingPrefix } = defineProps({
   },
 })
 
-const themeConfig = useTheme()
-
-const firstSecurityScheme = Object.keys(securitySchemes).find(Boolean)
-
-const selectedSchemeName = computed({
-  get: () => themeConfig.getSecuritySelectedScheme() ?? firstSecurityScheme,
-  set: value => themeConfig.setSecuritySelectedScheme(value),
-})
-
-const selectedScheme = computed(() => {
-  return securitySchemes[selectedSchemeName.value ?? '']
-})
-
-onMounted(() => {
-  if (!selectedSchemeName.value) {
-    selectedSchemeName.value = firstSecurityScheme
-  }
-})
+const operationData = inject('operationData') as OperationData
 </script>
 
 <template>
@@ -57,35 +32,48 @@ onMounted(() => {
         </OAHeading>
 
         <span class="flex-grow min-w-2" />
-
-        <div v-if="Object.keys(securitySchemes).length > 1" class="relative flex flex-row">
-          <Select v-model="selectedSchemeName">
-            <SelectTrigger
-              aria-label="Security Scheme"
-              class="px-3 py-1.5 text-foreground"
-            >
-              <SelectValue :placeholder="selectedScheme?.name ?? $t('Select...')" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem
-                  v-for="(scheme, name) in securitySchemes"
-                  :key="name"
-                  :value="name"
-                >
-                  {{ name }}
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
       </div>
     </div>
 
-    <OASecurityContent
-      v-if="selectedSchemeName && selectedScheme"
-      :name="selectedSchemeName"
-      :scheme="selectedScheme"
-    />
+    <div class="flex flex-col gap-3">
+      <div v-for="(item, key) in securityUi" :key="key" class="flex flex-col gap-3">
+        <div class="flex flex-col gap-1">
+          <span
+            v-if="Object.keys(securityUi).length > 1 && Object.keys(item.schemes).length > 1"
+            :class="{
+              'font-bold': operationData.security.selectedSchemeId.value === item.id,
+            }"
+          >
+            {{ item.id }}
+          </span>
+
+          <div
+            :class="{
+              'pl-2 border-l': Object.keys(item.schemes).length > 1,
+              'border-gray-600 dark:border-gray-400': Object.keys(securityUi).length > 1 && operationData.security.selectedSchemeId.value === item.id,
+            }"
+          >
+            <div
+              v-for="(scheme, schemeId, index) in item.schemes"
+              :key="schemeId"
+            >
+              <OASecurityContent
+                :name="String(schemeId)"
+                :scheme="scheme"
+              />
+
+              <span v-if="index < Object.keys(item.schemes).length - 1" class="-ml-4 my-1 w-4 h-4 bg-muted rounded-full flex justify-center items-center">
+                +
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="Number(key) < Object.keys(securityUi).length - 1" class="flex flex-row items-center space-x-2">
+          <span class="text-sm font-bold">{{ $t('or') }}</span>
+          <span class="flex-grow border-t border-[var(--vp-c-divider)]" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>

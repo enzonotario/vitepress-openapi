@@ -30,6 +30,11 @@ export type ParsedOpenAPI = OpenAPI.Document & {
 }
 
 export type ParsedOperation = OpenAPIV3.OperationObject & OpenAPIV3_1.OperationObject & {
+  operationId: string
+  security?: OpenAPIV3.SecurityRequirementObject[] & OpenAPIV3_1.SecurityRequirementObject[] & {
+    [key: string]: string[]
+  }
+  securityUi?: SecurityUi
   requestBody: OpenAPIV3.RequestBodyObject & OpenAPIV3_1.RequestBodyObject & {
     content: ParsedContent
   }
@@ -52,4 +57,13 @@ export type OperationObject = OpenAPIV3.Document | OpenAPIV3_1.OperationObject
 
 export type PlaygroundSecurityScheme = OpenAPIV3.HttpSecurityScheme & OpenAPIV3.ApiKeySecurityScheme & OpenAPIV3.OAuth2SecurityScheme & OpenAPIV3.OpenIdSecurityScheme & {
   playgroundValue: RemovableRef<any>
+}
+
+export interface SecurityUi extends Array<SecurityUiItem> {}
+
+export interface SecurityUiItem {
+  id: string
+  schemes: {
+    [key: string]: OpenAPIV3.SecuritySchemeObject
+  }
 }

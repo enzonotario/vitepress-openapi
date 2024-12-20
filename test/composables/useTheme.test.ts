@@ -40,7 +40,6 @@ describe('composition API', () => {
       },
       security: {
         defaultScheme: 'bearer',
-        selectedScheme: 'bearer',
       },
       theme: {
         highlighterTheme: {
@@ -81,7 +80,6 @@ describe('composition API', () => {
     expect(theme.getResponseCodeMaxTabs()).toBe(10)
     expect(theme.getResponseCodeSelector()).toBe('select')
     expect(theme.getSecurityDefaultScheme()).toBe('bearer')
-    expect(theme.getSecuritySelectedScheme()).toBe('bearer')
     expect(theme.getI18nConfig().locale.value).toBe('es')
     expect(theme.getSpecConfig().groupByTags.value).toBe(false)
     expect(theme.getSpecConfig().collapsePaths.value).toBe(true)
