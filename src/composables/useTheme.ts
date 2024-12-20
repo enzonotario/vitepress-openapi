@@ -1,12 +1,12 @@
+import type { Ref } from 'vue'
 import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
-import type { Ref } from 'vue'
 import type { IOARequest } from '../lib/codeSamples/request'
 import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
-import type { OperationSlot } from '../types'
+import type { OperationSlot, ParsedOperation } from '../types'
 
 export interface ThemeConfig {
   highlighterTheme: {
@@ -66,6 +66,8 @@ export interface OperationConfig {
   slots?: Ref<OperationSlot[]>
   hiddenSlots?: Ref<OperationSlot[]>
   cols?: Ref<1 | 2>
+  defaultBaseUrl?: string
+  getServers?: GetServersFunction | null
 }
 
 export type Languages = 'es' | 'en' | 'pt-BR' | string
@@ -142,10 +144,12 @@ export interface UseThemeConfigUnref {
     defaultScheme: string | null
   }>
   operation?: Partial<{
-    badges: OperationBadges[]
-    slots: OperationSlot[]
-    hiddenSlots: OperationSlot[]
-    cols: 1 | 2
+    badges?: OperationBadges[]
+    slots?: OperationSlot[]
+    hiddenSlots?: OperationSlot[]
+    cols?: 1 | 2
+    defaultBaseUrl?: string
+    getServers?: null
   }>
   i18n?: Partial<I18nConfig>
   spec?: Partial<SpecConfig>
@@ -174,6 +178,8 @@ interface LanguageConfig {
 
 type GeneratorFunction = (lang: string, request: IOARequest) => string
 
+type GetServersFunction = ({ method, path, operation }: { method: string, path: string, operation: ParsedOperation }) => string[] | null
+
 export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
   'header',
   'path',
@@ -187,6 +193,8 @@ export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
   'branding',
   'footer',
 ]
+
+export const DEFAULT_BASE_URL = 'http://localhost'
 
 const availableLanguages: LanguageConfig[] = [
   {
@@ -257,6 +265,8 @@ const themeConfig: UseThemeConfig = {
     slots: ref(DEFAULT_OPERATION_SLOTS),
     hiddenSlots: ref([]),
     cols: ref(2),
+    defaultBaseUrl: DEFAULT_BASE_URL,
+    getServers: null,
   },
   i18n: {
     locale: ref<Languages>('en'),
@@ -379,6 +389,15 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
 
     if (config?.operation?.cols !== undefined) {
       setOperationCols(config.operation.cols)
+    }
+
+    if (config?.operation?.defaultBaseUrl !== undefined) {
+      setOperationDefaultBaseUrl(config.operation.defaultBaseUrl)
+    }
+
+    if (config?.operation?.getServers !== undefined) {
+      // @ts-expect-error: This is a valid expression.
+      themeConfig.operation.getServers = config.operation.getServers
     }
 
     if (config?.i18n !== undefined) {
@@ -583,6 +602,19 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
     themeConfig.operation.cols.value = value
   }
 
+  function getOperationDefaultBaseUrl(): string {
+    return themeConfig?.operation?.defaultBaseUrl || DEFAULT_BASE_URL
+  }
+
+  function setOperationDefaultBaseUrl(value: string) {
+    // @ts-expect-error: This is a valid expression.
+    themeConfig.operation.defaultBaseUrl = value
+  }
+
+  function getOperationServers(): GetServersFunction | null {
+    return themeConfig?.operation?.getServers || null
+  }
+
   function getI18nConfig(): I18nConfig {
     return themeConfig.i18n as I18nConfig
   }
@@ -767,6 +799,8 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
     setOperationHiddenSlots,
     getOperationCols,
     setOperationCols,
+    getOperationDefaultBaseUrl,
+    getOperationServers,
     getI18nConfig,
     setI18nConfig,
     getSpecConfig,

@@ -103,7 +103,7 @@ function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   })
 }
 
-watch([variables, authorizations, body], () => {
+watch([variables, authorizations, body, () => props.baseUrl], () => {
   emits('update:request', buildRequest({
     baseUrl: props.baseUrl,
     method: props.method as OpenAPIV3.HttpMethods,

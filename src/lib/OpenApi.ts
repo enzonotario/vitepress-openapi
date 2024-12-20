@@ -3,8 +3,6 @@ import { httpVerbs } from '../index'
 import type { ParsedOpenAPI } from '../types'
 import { processOpenAPI } from './processOpenAPI'
 
-const DEFAULT_SERVER_URL = 'http://localhost'
-
 export function OpenApi({
   spec,
   parsedSpec,
@@ -39,51 +37,6 @@ export function OpenApi({
     }
 
     return parsedSpec
-  }
-
-  function getBaseUrl(operationId?: string) {
-    if (operationId) {
-      const operationPath = getOperationPath(operationId)
-      if (operationPath) {
-        const pathServers = getSpec().paths[operationPath]?.servers
-        if (pathServers && pathServers.length > 0) {
-          try {
-            const firstUrl = pathServers[0].url
-
-            if (!firstUrl) {
-              throw new Error('Invalid URL')
-            }
-
-            const isValid = new URL(firstUrl)
-            if (!isValid) {
-              throw new Error('Invalid URL')
-            }
-
-            return firstUrl
-          } catch {
-            console.warn('Invalid server URL in path servers:', pathServers)
-          }
-        }
-      }
-    }
-
-    if (!getSpec().servers || getSpec().servers.length === 0) {
-      return DEFAULT_SERVER_URL
-    }
-
-    try {
-      const firstUrl = getSpec().servers[0].url
-
-      const isValid = new URL(firstUrl)
-      if (!isValid) {
-        throw new Error('Invalid URL')
-      }
-
-      return firstUrl
-    } catch {
-      console.warn('Invalid server URL:', getSpec().servers)
-      return DEFAULT_SERVER_URL
-    }
   }
 
   function getOperation(operationId: string) {
@@ -197,6 +150,24 @@ export function OpenApi({
     return getSpec().servers ?? []
   }
 
+  function getOperationServers(operationId: string) {
+    const operation = findOperation(getPaths(), operationId)
+
+    if (!operation) {
+      return []
+    }
+
+    const operationPath = getOperationPath(operationId)
+
+    const pathServers = getSpec().paths[(operationPath ?? '')]?.servers
+
+    return [
+      ...(operation?.servers ?? []),
+      ...(pathServers ?? []),
+      ...(getSpec().servers ?? []),
+    ]
+  }
+
   function getOperationsTags(): string[] {
     if (!getSpec().paths) {
       return []
@@ -276,7 +247,6 @@ export function OpenApi({
     spec: getSpec(),
     transformedSpec,
     parsedSpec,
-    getBaseUrl,
     getOperation,
     getOperationPath,
     getOperationMethod,
@@ -289,6 +259,7 @@ export function OpenApi({
     getInfo,
     getExternalDocs,
     getServers,
+    getOperationServers,
     getOperationsTags,
     getPathsByTags,
     getPathsWithoutTags,

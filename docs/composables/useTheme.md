@@ -67,6 +67,10 @@ export default {
                 hiddenSlots: [],
                 // Set the number of columns to use in the OAOperation component.
                 cols: 2,
+                // Set the default base URL.
+                defaultBaseUrl: 'http://localhost',
+                // Set a custom function to get servers for an operation.
+                getServers: ({ method, path, operation }) => string[],
             },
             // Set the i18n configuration.
             i18n: {
@@ -145,9 +149,10 @@ export default {
 
 ## Operation Configuration
 
-| Function             | Description                                        | Default Value    | Allowed Values                  |
-|----------------------|----------------------------------------------------|------------------|---------------------------------|
-| `setOperationBadges` | Sets the operation badges. The order is respected. | `['deprecated']` | `['deprecated', 'operationId']` |
+| Function                     | Description                                        | Default Value        | Allowed Values                  |
+|------------------------------|----------------------------------------------------|----------------------|---------------------------------|
+| `setOperationBadges`         | Sets the operation badges. The order is respected. | `['deprecated']`     | `['deprecated', 'operationId']` |
+| `setOperationDefaultBaseUrl` | Sets the default base URL.                         | `'http://localhost'` | `string`                        |
 
 ## I18n Configuration
 

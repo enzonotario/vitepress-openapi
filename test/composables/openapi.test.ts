@@ -22,11 +22,6 @@ describe('openapi with spec', () => {
     expect(result).toEqual(spec.paths['/users'].get.parameters)
   })
 
-  it('returns the correct base URL for getBaseUrl', () => {
-    const result = openapi.getBaseUrl()
-    expect(result).toBe('https://api.example.com')
-  })
-
   it('returns the correct tags for getTags', () => {
     const result = openapi.getOperationsTags()
     expect(result).toEqual(['users', 'pets'])
@@ -192,6 +187,14 @@ describe('openapi with spec', () => {
     const tags = api.getTags()
     expect(tags).toEqual([])
   })
+
+  it('returns the correct operation servers for getOperationServers', () => {
+    const result = openapi.getOperationServers('getUsers')
+    expect(result).toEqual([
+      ...spec.paths['/users'].get.servers,
+      ...spec.servers,
+    ])
+  })
 })
 
 describe('spec with different servers for specific path', () => {
@@ -208,34 +211,58 @@ describe('spec with different servers for specific path', () => {
           operationId: 'useGlobalServer',
         },
       },
-      '/use-local-server': {
+      '/use-path-server': {
         get: {
-          operationId: 'useLocalServer',
+          operationId: 'usePathServer',
         },
         servers: [
           {
-            url: 'https://api.local.com',
+            url: 'https://api.path.com',
           },
         ],
+      },
+      '/use-local-server': {
+        get: {
+          operationId: 'useLocalServer',
+          servers: [
+            {
+              url: 'https://api.local.com',
+            },
+          ],
+        },
       },
     },
   }
 
   const openapi = createOpenApiInstance({ spec })
 
-  it('returns global server for getBaseUrl', () => {
-    const result = openapi.getBaseUrl()
-    expect(result).toBe('https://api.example.com')
-  })
+  it('returns correct servers for getOperationServers', () => {
+    const useGlobalServer = openapi.getOperationServers('useGlobalServer')
+    expect(useGlobalServer).toEqual([
+      {
+        url: 'https://api.example.com',
+      },
+    ])
 
-  it('returns global server for useGlobalServer', () => {
-    const result = openapi.getBaseUrl('useGlobalServer')
-    expect(result).toBe('https://api.example.com')
-  })
+    const usePathServer = openapi.getOperationServers('usePathServer')
+    expect(usePathServer).toEqual([
+      {
+        url: 'https://api.path.com',
+      },
+      {
+        url: 'https://api.example.com',
+      },
+    ])
 
-  it('returns local server for useLocalServer', () => {
-    const result = openapi.getBaseUrl('useLocalServer')
-    expect(result).toBe('https://api.local.com')
+    const useLocalServer = openapi.getOperationServers('useLocalServer')
+    expect(useLocalServer).toEqual([
+      {
+        url: 'https://api.local.com',
+      },
+      {
+        url: 'https://api.example.com',
+      },
+    ])
   })
 })
 
