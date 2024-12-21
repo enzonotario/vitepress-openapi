@@ -108,10 +108,6 @@ export default defineConfigWithTheme({
         ],
       },
       {
-        text: 'Sandbox',
-        link: '/sandbox',
-      },
-      {
         text: 'Example',
         collapsed: true,
         items: [
