@@ -5,7 +5,7 @@ title: vitepress-openapi
 ---
 
 <script setup lang="ts">
-import { onUnmounted } from 'vue'
+import { onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRoute, useData } from 'vitepress'
 import { useTheme } from 'vitepress-openapi'
 
@@ -17,9 +17,11 @@ const exampleSlug = route.data.params.exampleSlug
 const specUrl = route.data.params.specUrl
 const themeConfig = route.data.params.themeConfig
 
-useTheme(themeConfig)
+onBeforeMount(() => {
+    useTheme(themeConfig)
+})
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     useTheme().reset()
 })
 </script>

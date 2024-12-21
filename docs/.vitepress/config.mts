@@ -7,7 +7,7 @@ const sidebar = useSidebar({
   spec,
 })
 
-const gaId = 'G-ELG8ZW19X4'
+const gaId = process.env.NODE_ENV === 'production' ? 'G-ELG8ZW19X4' : 'G-TEST'
 
 export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
@@ -188,6 +188,32 @@ export default defineConfigWithTheme({
           },
         ],
       },
+      {
+        text: 'Remote Examples',
+        collapsed: true,
+        items: [
+          {
+            text: 'ArgentinaDatos',
+            link: '/examples/argentinadatos',
+          },
+          {
+            text: 'CriptoYA Argentina',
+            link: '/examples/criptoya-argentina',
+          },
+          {
+            text: 'Scalar Galaxy',
+            link: '/examples/scalar-galaxy',
+          },
+          {
+            text: 'Plant Store',
+            link: '/examples/plant-store',
+          },
+          {
+            text: 'Museum',
+            link: '/examples/museum',
+          },
+        ],
+      },
     ],
 
     socialLinks: [
@@ -229,8 +255,9 @@ export default defineConfigWithTheme({
   vite: {
     resolve: {
       alias: {
-        'vitepress-openapi': resolve(__dirname, '../../'),
+        'vitepress-openapi': resolve(__dirname, '../../src'),
       },
+      dedupe: ['vue'], // avoid error when using dependencies that also use Vue
     },
   },
 })

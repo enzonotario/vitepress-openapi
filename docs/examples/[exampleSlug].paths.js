@@ -1,4 +1,4 @@
-import { examplesPages } from '../../docs/pages.js'
+import { examplesPages } from '../pages.ts'
 
 export default {
   paths() {

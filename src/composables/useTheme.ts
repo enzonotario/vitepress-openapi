@@ -323,6 +323,10 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
   setConfig(initialConfig)
 
   function setConfig(config: Partial<UseThemeConfigUnref>) {
+    if (!config || !Object.keys(config).length) {
+      return
+    }
+
     if (config?.theme?.highlighterTheme) {
       // @ts-expect-error: This is a valid expression.
       themeConfig.theme.highlighterTheme = {
