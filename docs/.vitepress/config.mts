@@ -230,7 +230,6 @@ export default defineConfigWithTheme({
     resolve: {
       alias: {
         'vitepress-openapi': resolve(__dirname, '../../'),
-        '@dev': resolve(__dirname, '../../dev'),
       },
     },
   },

@@ -24,6 +24,7 @@ import VPSwitchAppearance from '../../../../../src/components/Common/VPSwitchApp
 
           <div class="flex items-center gap-2">
             <slot name="end" />
+            <a class="VPLink link VPNavBarMenuLink" href="/"><span>Docs</span></a>
             <OALocaleSelect />
             <VPSwitchAppearance />
           </div>

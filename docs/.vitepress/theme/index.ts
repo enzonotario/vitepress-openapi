@@ -2,7 +2,7 @@ import { theme, useOpenapi } from 'vitepress-openapi'
 import DefaultTheme from 'vitepress/theme'
 import spec from '../../public/openapi.json' assert {type: 'json'}
 import 'vitepress-openapi/dist/style.css'
-import ExampleBlock from '@dev/.vitepress/theme/components/ExampleBlock.vue'
+import ExampleBlock from './components/ExampleBlock.vue'
 
 export default {
   extends: DefaultTheme,
