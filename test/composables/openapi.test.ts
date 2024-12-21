@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { createOpenApiInstance } from '../../src/lib/createOpenApiInstance'
 import { useOpenapi } from '../../src/composables/useOpenapi'
 import { spec, specWithSchemaAndContentTypes } from '../testsConstants'
+import { OpenApi } from '../../src'
 
 describe('openapi with spec', () => {
-  const openapi = createOpenApiInstance({ spec })
+  const openapi = OpenApi({ spec })
 
   it('returns the correct operation for getOperation', () => {
     const result = openapi.getOperation('getUsers')
@@ -24,32 +25,6 @@ describe('openapi with spec', () => {
   it('returns the correct tags for getTags', () => {
     const result = openapi.getOperationsTags()
     expect(result).toEqual(['users', 'pets'])
-  })
-
-  it('returns the correct security schemes for getSecuritySchemes', () => {
-    const getUsersSecuritySchemes = openapi.getSecuritySchemes('getUsers')
-    expect(getUsersSecuritySchemes).toEqual({
-      apiKey: {
-        type: 'apiKey',
-        name: 'api_key',
-        in: 'header',
-      },
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-      },
-    })
-
-    const getUserSecuritySchemes = openapi.getSecuritySchemes('getUser')
-    expect(getUserSecuritySchemes).toEqual({
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-      },
-    })
-
-    const getUserPetsSecuritySchemes = openapi.getSecuritySchemes('getUserPets')
-    expect(getUserPetsSecuritySchemes).toEqual({})
   })
 
   it('returns the correct info for getInfo', () => {
@@ -316,5 +291,148 @@ describe('schemaParser', () => {
     const schemaUi = getPetsOperation.responses['400'].content['application/json'].ui
 
     expect(schemaUi).toMatchSnapshot()
+  })
+})
+
+describe('operationParsed -> securityUi', () => {
+  const openapi = useOpenapi({
+    spec: {
+      openapi: '3.0.0',
+      paths: {
+        '/onlyApiKey': {
+          get: {
+            operationId: 'onlyApiKey',
+            security: [
+              {
+                apiKey: [],
+              },
+            ],
+          },
+        },
+        '/onlyBearerAuth': {
+          get: {
+            operationId: 'onlyBearerAuth',
+            security: [
+              {
+                bearerAuth: [],
+              },
+            ],
+          },
+        },
+        '/apiKeyAndBearerAuth': {
+          get: {
+            operationId: 'apiKeyAndBearerAuth',
+            security: [
+              {
+                apiKey: [],
+                bearerAuth: [],
+              },
+            ],
+          },
+        },
+        '/apiKeyOrBearerAuth': {
+          get: {
+            operationId: 'apiKeyOrBearerAuth',
+            security: [
+              {
+                apiKey: [],
+              },
+              {
+                bearerAuth: [],
+              },
+            ],
+          },
+        },
+        '/noSecurity': {
+          get: {
+            operationId: 'noSecurity',
+            security: [],
+          },
+        },
+      },
+      components: {
+        securitySchemes: {
+          apiKey: {
+            type: 'apiKey',
+            name: 'api_key',
+            in: 'header',
+          },
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+          },
+        },
+      },
+    },
+  })
+
+  it('returns correct securityUi for operations', () => {
+    const onlyApiKey = openapi.getOperation('onlyApiKey').securityUi
+    expect(onlyApiKey).toEqual([
+      {
+        id: 'apiKey',
+        schemes: {
+          apiKey: {
+            type: 'apiKey',
+            name: 'api_key',
+            in: 'header',
+          },
+        },
+      },
+    ])
+
+    const onlyBearerAuth = openapi.getOperation('onlyBearerAuth').securityUi
+    expect(onlyBearerAuth).toEqual([
+      {
+        id: 'bearerAuth',
+        schemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+          },
+        },
+      },
+    ])
+
+    const apiKeyAndBearerAuth = openapi.getOperation('apiKeyAndBearerAuth').securityUi
+    expect(apiKeyAndBearerAuth).toEqual([
+      {
+        id: 'apiKey|bearerAuth',
+        schemes: {
+          apiKey: {
+            type: 'apiKey',
+            name: 'api_key',
+            in: 'header',
+          },
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+          },
+        },
+      },
+    ])
+
+    const apiKeyOrBearerAuth = openapi.getOperation('apiKeyOrBearerAuth').securityUi
+    expect(apiKeyOrBearerAuth).toEqual([
+      {
+        id: 'apiKey',
+        schemes: {
+          apiKey: {
+            type: 'apiKey',
+            name: 'api_key',
+            in: 'header',
+          },
+        },
+      },
+      {
+        id: 'bearerAuth',
+        schemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+          },
+        },
+      },
+    ])
   })
 })

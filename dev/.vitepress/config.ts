@@ -71,15 +71,23 @@ export default defineConfigWithTheme({
         items: [
           {
             text: 'Response Types',
-            link: '/response-types',
+            link: '/tests/response-types',
           },
           {
             text: 'Response Statuses',
-            link: '/response-statuses',
+            link: '/tests/response-statuses',
           },
           {
             text: 'Schemas',
-            link: '/schemas',
+            link: '/tests/schemas',
+          },
+          {
+            text: 'Parameters',
+            link: '/tests/parameters',
+          },
+          {
+            text: 'Security',
+            link: '/tests/security',
           },
           {
             text: 'ArgentinaDatos',

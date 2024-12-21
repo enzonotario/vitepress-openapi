@@ -57,7 +57,6 @@ export interface PlaygroundConfig {
 
 export interface SecurityConfig {
   defaultScheme: Ref<string | null>
-  selectedScheme: Ref<string | null>
 }
 
 type OperationBadges = 'deprecated' | 'operationId'
@@ -143,7 +142,6 @@ export interface UseThemeConfigUnref {
   }>
   security?: Partial<{
     defaultScheme: string | null
-    selectedScheme: string | null
   }>
   operation?: Partial<{
     badges?: OperationBadges[]
@@ -261,7 +259,6 @@ const themeConfig: UseThemeConfig = {
   },
   security: {
     defaultScheme: ref<string | null>(null),
-    selectedScheme: ref<string | null>(null),
   },
   operation: {
     badges: ref<OperationBadges[]>(['deprecated']),
@@ -376,10 +373,6 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
 
     if (config?.security?.defaultScheme !== undefined) {
       setSecurityDefaultScheme(config.security.defaultScheme)
-    }
-
-    if (config?.security?.selectedScheme !== undefined) {
-      setSecuritySelectedScheme(config.security.selectedScheme)
     }
 
     if (config?.operation?.badges !== undefined) {
@@ -571,15 +564,6 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
   function setSecurityDefaultScheme(value: string | null) {
     // @ts-expect-error: This is a valid expression.
     themeConfig.security.defaultScheme.value = value
-  }
-
-  function getSecuritySelectedScheme(): string | null | undefined {
-    return themeConfig?.security?.selectedScheme?.value
-  }
-
-  function setSecuritySelectedScheme(value: string | null | undefined) {
-    // @ts-expect-error: This is a valid expression.
-    themeConfig.security.selectedScheme.value = value
   }
 
   function getOperationBadges(): OperationBadges[] {
@@ -807,8 +791,6 @@ export function useTheme(initialConfig: Partial<UseThemeConfigUnref> = {}) {
     setPlaygroundJsonEditorNavigationBar,
     getSecurityDefaultScheme,
     setSecurityDefaultScheme,
-    getSecuritySelectedScheme,
-    setSecuritySelectedScheme,
     getOperationBadges,
     setOperationBadges,
     getOperationSlots,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, ref } from 'vue'
+import { computed, defineEmits, defineProps, ref } from 'vue'
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { OARequest } from '../../lib/codeSamples/request'
 import OAPlaygroundResponse from '../Playground/OAPlaygroundResponse.vue'
@@ -38,7 +38,7 @@ const props = defineProps({
     type: Object,
     required: false,
   },
-  securitySchemes: {
+  securityUi: {
     type: Object,
     required: true,
   },
@@ -59,39 +59,54 @@ const emits = defineEmits([
 ])
 
 const loading = ref(false)
+
+const schemaUiContentType = computed(() => {
+  return props.requestBody?.content?.[props.contentType]?.uiContentType
+})
+
+const hasSchemaVariables = computed(() =>
+  Object.keys(schemaUiContentType.value?.variables ?? {}).length > 0,
+)
+
+const hasSecuritySchemes = computed(() =>
+  Object.keys(props.securityUi ?? {}).length > 0,
+)
+
+const hasParameters = computed(() =>
+  Boolean(props.parameters?.length || hasSchemaVariables.value || hasSecuritySchemes.value),
+)
 </script>
 
 <template>
-  <div class="flex flex-col space-y-2">
-    <OAPlaygroundParameters
-      :request="props.request"
-      :operation-id="props.operationId"
-      :path="props.path"
-      :method="props.method"
-      :base-url="props.baseUrl"
-      :parameters="props.parameters ?? []"
-      :security-schemes="props.securitySchemes ?? {}"
-      :schema-ui-content-type="props.requestBody?.content?.[props.contentType]?.uiContentType"
-      :is-dark="props.isDark"
-      @update:request="($event: any) => emits('update:request', $event)"
-      @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
-    />
+  <OAPlaygroundParameters
+    v-if="hasParameters"
+    :request="props.request"
+    :operation-id="props.operationId"
+    :path="props.path"
+    :method="props.method"
+    :base-url="props.baseUrl"
+    :parameters="props.parameters ?? []"
+    :security-ui="props.securityUi ?? {}"
+    :schema-ui-content-type="schemaUiContentType"
+    :is-dark="props.isDark"
+    @update:request="($event: any) => emits('update:request', $event)"
+    @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
+  />
 
-    <OATryItButton
-      :request="props.request"
-      :operation-id="props.operationId"
-      :path="props.path"
-      :method="props.method"
-      :base-url="props.baseUrl"
-      :is-dark="props.isDark"
-      @loading="loading = $event"
-    >
-      <template #response="response">
-        <OAPlaygroundResponse
-          :response="response.response"
-          :is-dark="response.isDark"
-        />
-      </template>
-    </OATryItButton>
-  </div>
+  <OATryItButton
+    :request="props.request"
+    :operation-id="props.operationId"
+    :path="props.path"
+    :method="props.method"
+    :base-url="props.baseUrl"
+    :is-dark="props.isDark"
+    @loading="loading = $event"
+  >
+    <template #response="response">
+      <OAPlaygroundResponse
+        :response="response.response"
+        :is-dark="response.isDark"
+      />
+    </template>
+  </OATryItButton>
 </template>

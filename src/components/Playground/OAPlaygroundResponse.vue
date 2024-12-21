@@ -98,6 +98,7 @@ function downloadBlob(blob: Blob, fileName: string) {
       :label="label"
       :is-dark="isDark"
       :disable-html-transform="response.body.length > 1000"
+      class="!my-0"
     />
     <img v-else-if="isImage" :src="response.body" alt="Response Image">
     <audio v-else-if="isAudio" controls class="w-full mt-2">

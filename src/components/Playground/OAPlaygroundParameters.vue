@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import { defineEmits, defineProps, inject, ref, watch } from 'vue'
 import { useStorage } from '@vueuse/core'
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { OARequest } from '../../lib/codeSamples/request'
 import { usePlayground } from '../../composables/usePlayground'
-import { useTheme } from '../../composables/useTheme'
-import type { PlaygroundSecurityScheme } from '../../types'
+import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
 import { getExample } from '../../lib/getExample'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import type { OperationData } from '../../lib/operationData'
 
 const props = defineProps({
   request: { // v-model
@@ -37,7 +38,7 @@ const props = defineProps({
     type: Array<OpenAPIV3.ParameterObject>,
     required: true,
   },
-  securitySchemes: {
+  securityUi: {
     type: Object,
     required: true,
   },
@@ -54,8 +55,6 @@ const props = defineProps({
 const emits = defineEmits([
   'update:request',
 ])
-
-const themeConfig = useTheme()
 
 const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
 
@@ -81,95 +80,107 @@ function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
     }, {})
 }
 
-const selectedSchemeName = computed(() => {
-  return themeConfig.getSecuritySelectedScheme() ?? ''
-})
+const operationData = inject('operationData') as OperationData
 
-const selectedScheme = computed(() => {
-  const scheme = props.securitySchemes[selectedSchemeName.value]
-
-  if (!scheme) {
-    if (!Object.keys(props.securitySchemes).length) {
-      return null
-    }
-
-    return props.securitySchemes[Object.keys(props.securitySchemes)[0]]
-  }
-
-  return scheme
-})
-
-const authScheme = ref<PlaygroundSecurityScheme | null>(null)
+const authorizations = ref<PlaygroundSecurityScheme[] | null>(null)
 
 const body = ref(props.schemaUiContentType)
 
-function setAuthScheme(scheme: PlaygroundSecurityScheme) {
-  const name = selectedSchemeName.value ?? ''
-
-  authScheme.value = {
-    type: scheme.type,
-    scheme: scheme.scheme,
-    name,
-    playgroundValue: useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage),
+function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
+  if (!schemes || !Object.keys(schemes).length) {
+    authorizations.value = null
+    return
   }
+
+  authorizations.value = Object.keys(schemes).map((name) => {
+    const scheme = schemes[name] as PlaygroundSecurityScheme
+    return {
+      type: scheme.type,
+      scheme: scheme.scheme,
+      name,
+      playgroundValue: useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage),
+    }
+  })
 }
 
-watch([variables, authScheme, body, () => props.baseUrl], () => {
+watch([variables, authorizations, body, () => props.baseUrl], () => {
   emits('update:request', buildRequest({
     baseUrl: props.baseUrl,
     method: props.method as OpenAPIV3.HttpMethods,
     path: props.path,
     variables: variables.value,
-    authScheme: authScheme.value,
+    authorizations: authorizations.value,
     body: body.value,
     parameters: props.parameters,
   }))
 }, { deep: true })
 
-watch(selectedScheme, () => {
-  if (!selectedScheme.value) {
-    return
-  }
-
-  setAuthScheme(selectedScheme.value)
+watch(operationData.security.selectedSchemeId, () => {
+  setAuthorizations(
+    props.securityUi?.find((scheme: SecurityUiItem) => scheme.id === operationData.security.selectedSchemeId.value)?.schemes
+    ?? props.securityUi?.[0]?.schemes
+    ?? {},
+  )
 }, { immediate: true })
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <details
-      v-if="authScheme"
-      open
-      class="flex flex-col"
-    >
-      <summary class="my-0! text-lg font-bold cursor-pointer">
+  <div class="OAPlaygroundParameters">
+    <details v-if="authorizations" open>
+      <summary>
         {{ $t('Authorization') }}
+        <div v-if="props.securityUi.length > 1" class="w-full max-w-[33%] md:max-w-[50%] ml-auto -mt-8">
+          <Select
+            :model-value="operationData.security.selectedSchemeId.value"
+            @update:model-value="operationData.security.selectedSchemeId.value = $event"
+          >
+            <SelectTrigger
+              aria-label="Security Scheme"
+              class="h-9 px-3 py-1.5 text-foreground font-normal"
+            >
+              <SelectValue :placeholder="operationData.security.selectedSchemeId.value ?? $t('Select...')" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem
+                  v-for="item in props.securityUi"
+                  :key="item.id"
+                  :value="item.id"
+                >
+                  {{ item.id }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
       </summary>
 
-      <div class="flex flex-col">
-        <div class="flex flex-row items-center space-x-2">
-          <span class="text-sm font-bold">{{ authScheme.name }}</span>
-        </div>
-        <div class="flex flex-row items-center space-x-2">
-          <OAPlaygroundSecurityInput
-            v-model="authScheme.playgroundValue"
-            :scheme="authScheme"
-            class="w-full"
-          />
+      <div class="flex flex-col gap-2">
+        <div
+          v-for="authorization in authorizations"
+          :key="authorization.name"
+          class="flex flex-col"
+        >
+          <div class="flex flex-row items-center space-x-2">
+            <span class="text-sm font-bold">{{ authorization.name }}</span>
+          </div>
+          <div class="flex flex-row items-center space-x-2">
+            <OAPlaygroundSecurityInput
+              v-model="authorization.playgroundValue"
+              :scheme="authorization"
+              class="w-full"
+            />
+          </div>
         </div>
       </div>
     </details>
 
-    <details
-      v-if="headerParameters.length"
-      open
-      class="flex flex-col"
-    >
-      <summary class="my-0! text-lg font-bold cursor-pointer">
+    <details v-if="headerParameters.length" open>
+      <summary>
         {{ $t('Headers') }}
       </summary>
 
-      <div class="flex flex-col">
+      <div class="flex flex-col gap-2">
         <div
           v-for="parameter in headerParameters"
           :key="parameter.name"
@@ -193,16 +204,12 @@ watch(selectedScheme, () => {
       </div>
     </details>
 
-    <details
-      v-if="Object.keys(queryParameters).length || Object.keys(pathParameters).length"
-      open
-      class="flex flex-col"
-    >
-      <summary class="my-0! text-lg font-bold cursor-pointer">
+    <details v-if="Object.keys(queryParameters).length || Object.keys(pathParameters).length" open>
+      <summary>
         {{ $t('Variables') }}
       </summary>
 
-      <div class="flex flex-col space-y-2">
+      <div class="flex flex-col gap-1">
         <div class="flex flex-row gap-2">
           <div class="w-1/2 flex justify-start">
             <span class="text-xs text-gray-700 dark:text-gray-300 uppercase">{{ $t('Key') }}</span>
@@ -235,22 +242,28 @@ watch(selectedScheme, () => {
       </div>
     </details>
 
-    <details
-      v-if="body"
-      open
-      class="flex flex-col"
-    >
-      <summary class="my-0! text-lg font-bold cursor-pointer">
+    <details v-if="body" open>
+      <summary>
         {{ $t('Body') }}
       </summary>
 
-      <div class="flex flex-col">
-        <OAJSONEditor
-          v-model="body"
-          :is-dark="props.isDark"
-          class="w-full"
-        />
-      </div>
+      <OAJSONEditor
+        v-model="body"
+        :is-dark="props.isDark"
+        class="w-full"
+      />
     </details>
   </div>
 </template>
+
+<style scoped>
+.OAPlaygroundParameters {
+  @apply flex flex-col gap-2;
+}
+.OAPlaygroundParameters > details {
+  @apply flex flex-col gap-2;
+}
+.OAPlaygroundParameters > details > summary {
+  @apply !my-0 text-lg font-bold cursor-pointer;
+}
+</style>

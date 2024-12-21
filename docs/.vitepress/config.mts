@@ -157,30 +157,34 @@ export default defineConfigWithTheme({
             ],
           },
           {
-            text: 'Additional',
-            collapsed: true,
-            items: [
-              {
-                text: 'One Page',
-                link: '/example/one-page',
-              },
-              {
-                text: 'Multiple Response Types',
-                link: '/example/response-types',
-              },
-              {
-                text: 'Response Statuses',
-                link: '/example/response-statuses',
-              },
-              {
-                text: 'Schemas',
-                link: '/example/schemas',
-              },
-              {
-                text: 'Parameters',
-                link: '/example/parameters',
-              },
-            ],
+            text: 'One Page',
+            link: '/example/one-page',
+          },
+        ],
+      },
+      {
+        text: 'Tests',
+        collapsed: true,
+        items: [
+          {
+            text: 'Response Types',
+            link: '/tests/response-types',
+          },
+          {
+            text: 'Response Statuses',
+            link: '/tests/response-statuses',
+          },
+          {
+            text: 'Schemas',
+            link: '/tests/schemas',
+          },
+          {
+            text: 'Parameters',
+            link: '/tests/parameters',
+          },
+          {
+            text: 'Security',
+            link: '/tests/security',
           },
         ],
       },

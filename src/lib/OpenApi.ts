@@ -87,30 +87,6 @@ export function OpenApi({
     return operation.parameters || []
   }
 
-  function getSecuritySchemes(operationId: string) {
-    const operation = findOperation(getParsedSpec().paths, operationId)
-
-    const securitySchemes = getParsedSpec().components?.securitySchemes ?? {}
-
-    if (operation?.security) {
-      const output: Record<string, OpenAPIV3.SecuritySchemeObject> = {}
-
-      Object.entries(securitySchemes)
-        .filter(([key]) => operation.security.some((security: OpenAPIV3.SecuritySchemeObject) => key in security))
-        .forEach(([key, value]) => {
-          output[key] = value as OpenAPIV3.SecuritySchemeObject
-        })
-
-      return output
-    }
-
-    if (getParsedSpec()?.security) {
-      return securitySchemes
-    }
-
-    return {}
-  }
-
   function getParsedOperation(operationId: string) {
     if (!getParsedSpec()?.paths) {
       return null
@@ -261,7 +237,6 @@ export function OpenApi({
     getOperationPath,
     getOperationMethod,
     getOperationParameters,
-    getSecuritySchemes,
     getParsedOperation,
     getParsedSpec,
     getPaths,

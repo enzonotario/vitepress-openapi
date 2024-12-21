@@ -741,6 +741,7 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         "security": [
           {},
         ],
+        "securityUi": [],
         "servers": [
           {
             "url": "https://localhost:3000",
@@ -1209,6 +1210,27 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
             "description": "Forbidden",
           },
         },
+        "securityUi": [
+          {
+            "id": "bearerAuth",
+            "schemes": {
+              "bearerAuth": {
+                "scheme": "bearer",
+                "type": "http",
+              },
+            },
+          },
+          {
+            "id": "apiKeyHeader",
+            "schemes": {
+              "apiKeyHeader": {
+                "in": "header",
+                "name": "X-API-Key",
+                "type": "apiKey",
+              },
+            },
+          },
+        ],
         "summary": "Add a new artist",
         "tags": [
           "Artists",
@@ -1430,6 +1452,27 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
             "description": "Forbidden",
           },
         },
+        "securityUi": [
+          {
+            "id": "bearerAuth",
+            "schemes": {
+              "bearerAuth": {
+                "scheme": "bearer",
+                "type": "http",
+              },
+            },
+          },
+          {
+            "id": "apiKeyHeader",
+            "schemes": {
+              "apiKeyHeader": {
+                "in": "header",
+                "name": "X-API-Key",
+                "type": "apiKey",
+              },
+            },
+          },
+        ],
         "summary": "Delete an artist",
         "tags": [
           "Artists",
@@ -1682,6 +1725,7 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         "security": [
           {},
         ],
+        "securityUi": [],
         "summary": "Get an artist",
         "tags": [
           "Artists",
@@ -2156,6 +2200,27 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
             "description": "Forbidden",
           },
         },
+        "securityUi": [
+          {
+            "id": "bearerAuth",
+            "schemes": {
+              "bearerAuth": {
+                "scheme": "bearer",
+                "type": "http",
+              },
+            },
+          },
+          {
+            "id": "apiKeyHeader",
+            "schemes": {
+              "apiKeyHeader": {
+                "in": "header",
+                "name": "X-API-Key",
+                "type": "apiKey",
+              },
+            },
+          },
+        ],
         "summary": "Update an artist",
         "tags": [
           "Artists",
@@ -2444,6 +2509,7 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         "security": [
           {},
         ],
+        "securityUi": [],
         "summary": "Get all albums",
         "tags": [
           "Artists",
@@ -2872,6 +2938,27 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
             "description": "Forbidden",
           },
         },
+        "securityUi": [
+          {
+            "id": "bearerAuth",
+            "schemes": {
+              "bearerAuth": {
+                "scheme": "bearer",
+                "type": "http",
+              },
+            },
+          },
+          {
+            "id": "apiKeyHeader",
+            "schemes": {
+              "apiKeyHeader": {
+                "in": "header",
+                "name": "X-API-Key",
+                "type": "apiKey",
+              },
+            },
+          },
+        ],
         "summary": "Add a new album",
         "tags": [
           "Artists",
@@ -3179,6 +3266,7 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         "security": [
           {},
         ],
+        "securityUi": [],
         "summary": "Create a user",
         "tags": [
           "Authentication",
