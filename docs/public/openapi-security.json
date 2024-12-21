@@ -1,5 +1,16 @@
 {
   "openapi": "3.0.0",
+  "info": {
+    "title": "Example of an OpenAPI document with security",
+    "version": "1.0.0",
+    "description": "This is an example of an OpenAPI document with security definitions and security requirements."
+  },
+  "servers": [
+    {
+      "url": "https://localhost:3000",
+      "description": "Local server"
+    }
+  ],
   "paths": {
     "/onlyApiKey": {
       "get": {
@@ -122,6 +133,8 @@
           }
         ],
         "requestBody": {
+          "description": "Request body description",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -137,9 +150,7 @@
                     "type": "array",
                     "items": {
                       "type": "string",
-                      "example": "value1",
                       "description": "Array of strings",
-                      "required": true,
                       "example": [
                         "value1",
                         "value2"
@@ -147,12 +158,10 @@
                     }
                   }
                 }
+              },
+              "example": {
+                "prop1": "value1"
               }
-            },
-            "required": true,
-            "description": "Request body description",
-            "example": {
-              "prop1": "value1"
             }
           }
         }
