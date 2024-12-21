@@ -37,8 +37,8 @@
     "prepublishOnly": "pnpm run build",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "docs:dev": "VITE_DEBUG=1 vitepress dev docs",
-    "docs:build": "npm run build && vitepress build docs",
+    "docs:dev": "VITE_DEBUG=1 IS_DOCS=1 vitepress dev docs",
+    "docs:build": "IS_DOCS=1 npm run build && IS_DOCS=1 vitepress build docs",
     "test": "vitest",
     "test:run": "vitest --run",
     "typecheck": "vue-tsc --noEmit"

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
-import { useData } from 'vitepress'
-import VPSidebar from 'vitepress/dist/client/theme-default/components/VPSidebar.vue'
 import { useSidebar } from 'vitepress-openapi'
 import { scrollIntoOperationByOperationId } from '../../../../../src/lib/utils'
 import SandboxPreview from './SandboxPreview.vue'
 import SandboxNav from './SandboxNav.vue'
+import VPSidebar from 'vitepress/dist/client/theme-default/components/VPSidebar.vue'
+import { useData } from 'vitepress'
 
 const loading = ref(false)
 
