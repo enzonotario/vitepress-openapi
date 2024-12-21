@@ -87,20 +87,6 @@ export function OpenApi({
     return operation.parameters || []
   }
 
-  function getSecuritySchemes(operationId: string) {
-    const operation = findOperation(getParsedSpec().paths, operationId)
-
-    if (operation?.security) {
-      return operation.security
-    }
-
-    if (getParsedSpec()?.security) {
-      return getParsedSpec().security
-    }
-
-    return {}
-  }
-
   function getParsedOperation(operationId: string) {
     if (!getParsedSpec()?.paths) {
       return null
@@ -251,7 +237,6 @@ export function OpenApi({
     getOperationPath,
     getOperationMethod,
     getOperationParameters,
-    getSecuritySchemes,
     getParsedOperation,
     getParsedSpec,
     getPaths,

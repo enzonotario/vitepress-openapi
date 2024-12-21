@@ -27,28 +27,6 @@ describe('openapi with spec', () => {
     expect(result).toEqual(['users', 'pets'])
   })
 
-  it('returns the correct security schemes for getSecuritySchemes', () => {
-    const getUsersSecuritySchemes = openapi.getSecuritySchemes('getUsers')
-    expect(getUsersSecuritySchemes).toEqual([
-      {
-        apiKey: [],
-      },
-      {
-        bearerAuth: [],
-      },
-    ])
-
-    const getUserSecuritySchemes = openapi.getSecuritySchemes('getUser')
-    expect(getUserSecuritySchemes).toEqual([
-      {
-        bearerAuth: [],
-      },
-    ])
-
-    const getUserPetsSecuritySchemes = openapi.getSecuritySchemes('getUserPets')
-    expect(getUserPetsSecuritySchemes).toEqual({})
-  })
-
   it('returns the correct info for getInfo', () => {
     const result = openapi.getInfo()
     expect(result).toEqual(spec.info)
