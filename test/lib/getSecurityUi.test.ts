@@ -62,4 +62,19 @@ describe('getSecurityUi', () => {
       },
     ])
   })
+
+  it('handles OR security requirements correctly', () => {
+    const security: OpenAPIV3.SecuritySchemeObject[] = [
+      { apiKey: [] },
+      { oauth2: ['read'] },
+    ]
+    const securitySchemes: Record<string, OpenAPIV3.SecuritySchemeObject> = {
+      apiKey: { type: 'apiKey', name: 'apiKey', in: 'header' },
+      oauth2: { type: 'oauth2', flows: {} },
+    }
+    const result = getSecurityUi(security, securitySchemes)
+    expect(result).toHaveLength(2)
+    expect(result[0].id).toBe('apiKey')
+    expect(result[1].id).toBe('oauth2')
+  })
 })
