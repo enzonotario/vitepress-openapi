@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import OASpec from '../Common/OASpec.vue'
+import OASpec from '../Spec/OASpec.vue'
 import OARemoteRoot from './OARemoteRoot.vue'
 
 const props = defineProps({

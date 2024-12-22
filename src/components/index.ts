@@ -1,4 +1,5 @@
-import OASpec from './Common/OASpec.vue'
+import OASpec from './Spec/OASpec.vue'
+import OASpecSkeleton from './Spec/OASpecSkeleton.vue'
 import OAOperation from './Operation/OAOperation.vue'
 import OAHeading from './Common/OAHeading.vue'
 import OAFooter from './Common/OAFooter.vue'
@@ -27,6 +28,7 @@ import OARemoteOperation from './Remote/OARemoteOperation.vue'
 
 export {
   OASpec,
+  OASpecSkeleton,
   OAOperation,
   OAHeading,
   OAFooter,
