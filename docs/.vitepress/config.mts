@@ -251,9 +251,8 @@ export default defineConfigWithTheme({
   vite: {
     resolve: {
       alias: {
-        'vitepress-openapi': resolve(__dirname, '../../src'),
+        'vitepress-openapi': resolve(__dirname, '../../'),
       },
-      dedupe: ['vue'], // avoid error when using dependencies that also use Vue
     },
   },
 })

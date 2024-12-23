@@ -1,50 +1,65 @@
-<script setup>
+<script setup lang="ts">
 import { useTheme } from 'vitepress-openapi'
-import { onMounted, ref, watch } from 'vue'
-import { useUrlSearchParams } from '@vueuse/core'
-import { compressToURL, decompressFromURL } from '@amoutonbrady/lz-string'
-import { DEFAULT_OPERATION_SLOTS } from '../../../../src/index'
+import { inject } from 'vue'
+import { DEFAULT_OPERATION_SLOTS } from '../../../../../src/index'
+import type { SandboxData } from '../types'
 
-const params = useUrlSearchParams('history')
-
-const sticky = ref(true)
+const sandboxData = inject('sandboxData') as SandboxData
 
 const themeConfig = useTheme()
 
-watch(() => themeConfig.getState(), (state) => {
-  params.themeConfig = compressToURL(JSON.stringify({
-    ...state,
-    theme: undefined,
-    i18n: undefined,
-  }))
-}, { deep: true })
-
-onMounted(() => {
-  useTheme(params.themeConfig ? JSON.parse(decompressFromURL(params.themeConfig)) : {})
-})
+const availableComponents = [
+  'OAOperation',
+  'OASpec',
+]
 </script>
 
 <template>
   <div
-    :class="{
-      'sticky top-[65px] max-h-[250px] z-50 ': sticky,
-    }"
-    class="flex flex-col gap-2 p-2 bg-white border-b"
+    class="flex flex-col gap-4 p-2 overflow-y-auto"
   >
-    <div class="flex justify-between items-center">
-      <h3>Theme Configuration</h3>
-      <button
-        class="text-sm hover:bg-primary hover:text-primary-foreground rounded px-2 py-1"
-        @click="sticky = !sticky"
-      >
-        {{ sticky ? 'Unstick' : 'Stick' }}
-      </button>
+    <div class="flex flex-col gap-2">
+      <h3>VitePress</h3>
+      <div class="grid grid-cols-3 items-start gap-4">
+        <label for="showSidebar" class="flex items-center gap-2">
+          <input
+            id="showSidebar"
+            type="checkbox"
+            :checked="sandboxData.showSidebar.value"
+            @change="sandboxData.showSidebar.value = $event.target.checked"
+          >
+          Show sidebar
+        </label>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <h3>i18n</h3>
+      <div class="grid grid-cols-2 gap-2">
+        <OALocaleSelect />
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <h3>Preview Component</h3>
+      <div class="grid grid-cols-2 gap-2">
+        <label
+          v-for="component in availableComponents"
+          :key="component"
+          class="flex items-center gap-2"
+        >
+          <input
+            type="radio"
+            :checked="sandboxData.previewComponent.value === component"
+            @change="sandboxData.previewComponent.value = component"
+          >
+          {{ component }}
+        </label>
+      </div>
     </div>
 
     <div
-      :class="{
-        'overflow-y-auto': sticky,
-      }"
+      v-if="sandboxData.previewComponent.value === 'OASpec'"
       class="flex flex-col gap-2"
     >
       <h3>Spec</h3>
@@ -84,12 +99,14 @@ onMounted(() => {
           Show paths summary
         </label>
       </div>
+    </div>
 
+    <div class="flex flex-col gap-2">
       <h3>Operation</h3>
       <div class="grid grid-cols-2 gap-4">
         <div>
           <h5>Hidden Slots</h5>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div class="grid grid-cols-2 gap-2">
             <label v-for="slot in DEFAULT_OPERATION_SLOTS" :key="slot" class="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -121,6 +138,6 @@ onMounted(() => {
 
 <style scoped>
 h3 {
-  margin-top: 0;
+  @apply mt-0 font-semibold;
 }
 </style>

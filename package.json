@@ -38,7 +38,7 @@
     "lint:fix": "eslint src --fix",
     "docs:dev": "VITE_DEBUG=1 IS_DOCS=1 vitepress dev docs",
     "dev": "pnpm run docs:dev",
-    "docs:build": "IS_DOCS=1 npm run build && IS_DOCS=1 vitepress build docs",
+    "docs:build": "IS_DOCS=1 pnpm run build && IS_DOCS=1 vitepress build docs",
     "test": "vitest",
     "test:run": "vitest --run",
     "typecheck": "vue-tsc --noEmit"
@@ -59,6 +59,7 @@
   "devDependencies": {
     "@amoutonbrady/lz-string": "^0.1.0",
     "@antfu/eslint-config": "^2.27.1",
+    "@iconify/vue": "^4.2.0",
     "@scalar/openapi-types": "^0.1.5",
     "@sindresorhus/slugify": "^2.2.1",
     "@trojs/openapi-dereference": "^0.2.3",
