@@ -13,7 +13,8 @@ export function prepareOpenAPI(spec: OpenAPI.Document): OpenAPI.Document {
   }
 
   if (!spec.openapi || !spec.openapi.startsWith('3.')) {
-    throw new Error('Only OpenAPI 3.x is supported')
+    console.warn('Only OpenAPI 3.x is supported')
+    return {}
   }
 
   if (spec?.paths) {

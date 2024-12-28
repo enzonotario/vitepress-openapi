@@ -8,9 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 export function scrollIntoOperationByOperationId({
   hash,
   offset = 0,
+  container,
 }: {
   hash: string
   offset?: number
+  container?: HTMLElement
 }) {
   if (!import.meta.env.SSR) {
     const element = document.querySelector(
@@ -23,7 +25,9 @@ export function scrollIntoOperationByOperationId({
       return
     }
 
-    window.scrollTo({
+    container = container || document.body
+
+    container.scrollTo({
       behavior: 'smooth',
       top:
           element.getBoundingClientRect().top
