@@ -1,0 +1,32 @@
+{
+  "rewrites": [
+    {
+      "source": "/layouts/one-operation*",
+      "destination": "/pages/by-operation"
+    },
+    {
+      "source": "/layouts/all-operations*",
+      "destination": "/pages/by-spec"
+    },
+    {
+      "source": "/layouts/pages-by-tags*",
+      "destination": "/pages/by-tag"
+    },
+    {
+      "source": "/layouts/info-servers*",
+      "destination": "/pages/info-servers"
+    },
+    {
+      "source": "/layouts/sidebar*",
+      "destination": "/sidebar/sidebar-items"
+    },
+    {
+      "source": "/layouts/custom-slots*",
+      "destination": "/customizations/custom-slots"
+    },
+    {
+      "source": "/layouts/multiple-specs*",
+      "destination": "/customizations/multiple-specs"
+    }
+  ]
+}
