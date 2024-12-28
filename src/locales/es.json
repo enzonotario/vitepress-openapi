@@ -45,5 +45,6 @@
   "Examples": "Ejemplos",
   "tags.goTo": "Ver operaciones de {tag}",
   "or": "o",
-  "Enum": "Enum"
+  "Enum": "Enum",
+  "Copy endpoint": "Copiar endpoint"
 }
