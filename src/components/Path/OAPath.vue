@@ -135,7 +135,7 @@ provide('operationData', initOperationData(operation))
           'sm:grid-cols-1': operationCols === 1,
           'sm:grid-cols-2': operationCols === 2,
         }"
-        class="relative grid grid-cols-1 gap-4"
+        class="relative grid grid-cols-1"
       >
         <div class="OAPathContentStart flex flex-col">
           <div class="flex flex-col gap-4">
