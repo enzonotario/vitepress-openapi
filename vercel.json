@@ -1,31 +1,60 @@
 {
   "rewrites": [
     {
-      "source": "/layouts/one-operation*",
+      "source": "/layouts/one-operation",
       "destination": "/pages/by-operation"
     },
     {
-      "source": "/layouts/all-operations*",
+      "source": "/layouts/one-operation.html",
+      "destination": "/pages/by-operation"
+    },
+    {
+      "source": "/layouts/all-operations",
       "destination": "/pages/by-spec"
     },
     {
-      "source": "/layouts/pages-by-tags*",
+      "source": "/layouts/all-operations.html",
+      "destination": "/pages/by-spec"
+    },
+    {
+      "source": "/layouts/pages-by-tags",
       "destination": "/pages/by-tag"
     },
     {
-      "source": "/layouts/info-servers*",
+      "source": "/layouts/pages-by-tags.html",
+      "destination": "/pages/by-tag"
+    },
+    },
+    {
+      "source": "/layouts/info-servers",
       "destination": "/pages/info-servers"
     },
     {
-      "source": "/layouts/sidebar*",
+      "source": "/layouts/info-servers.html",
+      "destination": "/pages/info-servers"
+    },
+    {
+      "source": "/layouts/sidebar",
       "destination": "/sidebar/sidebar-items"
     },
     {
-      "source": "/layouts/custom-slots*",
+      "source": "/layouts/sidebar.html",
+      "destination": "/sidebar/sidebar-items"
+    },
+    {
+      "source": "/layouts/custom-slots",
       "destination": "/customizations/custom-slots"
     },
     {
-      "source": "/layouts/multiple-specs*",
+      "source": "/layouts/custom-slots.html",
+      "destination": "/customizations/custom-slots"
+    },
+    {
+      "source": "/layouts/multiple-specs",
+      "destination": "/customizations/multiple-specs"
+    },
+    {
+      "source": "/layouts/multiple-specs.html",
       "destination": "/customizations/multiple-specs"
     }
   ]
