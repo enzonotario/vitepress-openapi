@@ -21,8 +21,8 @@ title: vitepress-openapi
 
 <script setup lang="ts">
 import { useData } from 'vitepress'
-import defaultSpec from '../public/openapi.json'
-import schemasSpec from '../public/openapi-schemas.json'
+import defaultSpec from './openapi.json'
+import schemasSpec from './openapi-schemas.json'
 
 const { isDark } = useData()
 </script>

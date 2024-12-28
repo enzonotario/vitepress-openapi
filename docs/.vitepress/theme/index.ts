@@ -2,6 +2,7 @@ import { theme, useOpenapi } from 'vitepress-openapi'
 import DefaultTheme from 'vitepress/theme'
 import spec from '../../public/openapi.json' assert {type: 'json'}
 import ExampleBlock from './components/ExampleBlock.vue'
+import SandboxIframe from './components/sandbox/SandboxIframe.vue'
 
 export default {
   extends: DefaultTheme,
@@ -16,5 +17,6 @@ export default {
 
     // Register custom components.
     app.component('ExampleBlock', ExampleBlock)
+    app.component('SandboxIframe', SandboxIframe)
   },
 }

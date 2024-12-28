@@ -1,31 +1,20 @@
 <script setup lang="ts">
 import { VPHomeContent } from 'vitepress/theme'
-import { inject, onBeforeMount, watch } from 'vue'
-import { useSidebar } from 'vitepress-openapi'
-import type { SandboxData } from '../types'
+import { inject, onMounted, watch } from 'vue'
 import { scrollIntoOperationByOperationId } from '../../../../../src/lib/utils'
+import VPDocAsideOutline from '../vitepress/VPDocAsideOutline.vue'
+import type { SandboxData } from '../../sandboxData'
+import SandboxPreviewSidebar from './SandboxPreviewSidebar.vue'
 import { useData } from 'vitepress'
-import VPSidebar from 'vitepress/dist/client/theme-default/components/VPSidebar.vue'
+import { getHeaders } from 'vitepress/dist/client/theme-default/composables/outline.js'
 
-const { isDark, theme } = useData()
+const { isDark, theme, page } = useData()
 
 const sandboxData = inject('sandboxData') as SandboxData
 
-onBeforeMount(() => {
-  updateSidebar(sandboxData.spec.value)
+onMounted(() => {
+  sandboxData.previewHeaders.value = getHeaders(theme.value.outline)
 })
-
-function updateSidebar(spec) {
-  const sidebar = useSidebar({
-    spec,
-  })
-
-  theme.value.sidebar = [
-    ...sidebar.generateSidebarGroups({
-      linkPrefix: '#',
-    }),
-  ]
-}
 
 // Scroll into the operation when the operationId changes.
 watch(sandboxData.operationId, () => {
@@ -34,7 +23,6 @@ watch(sandboxData.operationId, () => {
     scrollIntoOperationByOperationId({
       hash: `#${sandboxData.operationId.value}`,
       offset: 120,
-      container: document.querySelector('.SandboxPreviewPanel'),
     })
   }
 })
@@ -72,67 +60,60 @@ watch(sandboxData.previewComponent, () => {
 </script>
 
 <template>
-  <div class="SandboxPreview">
-    <div
-      v-if="sandboxData.showSidebar.value"
-      class="SandboxPreviewSidebar"
-    >
-      <VPSidebar open />
-    </div>
+  <div>
+    <SandboxPreviewSidebar v-if="sandboxData.showSidebar.value" />
 
     <div
       class="SandboxPreviewContentWrapper"
       :class="{
         'has-sidebar': sandboxData.showSidebar.value,
+        'has-aside': sandboxData.showAside.value,
         'preview-full': false,
+        'has-nav': !sandboxData.hideSandboxNav.value,
       }"
     >
-      <VPHomeContent>
-        <OAOperation
-          v-if="sandboxData.previewComponent.value === 'OAOperation' && sandboxData.operationId.value"
-          :key="sandboxData.operationId.value"
-          :operation-id="sandboxData.operationId.value"
-          :spec="sandboxData.spec.value"
-          :is-dark="isDark"
-        />
-        <OASpec
-          v-else-if="sandboxData.previewComponent.value === 'OASpec'"
-          :spec="sandboxData.spec.value"
-          :is-dark="isDark"
-        />
-      </VPHomeContent>
+      <div class="VPDoc">
+        <VPHomeContent>
+          <OAOperation
+            v-if="sandboxData.previewComponent.value === 'OAOperation' && sandboxData.operationId.value"
+            :key="sandboxData.operationId.value"
+            :operation-id="sandboxData.operationId.value"
+            :spec="sandboxData.spec.value"
+            :is-dark="isDark"
+          />
+          <OASpec
+            v-else-if="sandboxData.previewComponent.value === 'OASpec'"
+            :spec="sandboxData.spec.value"
+            :is-dark="isDark"
+          />
+        </VPHomeContent>
+      </div>
+
+      <div
+        v-if="sandboxData.showAside.value"
+        class="relative pl-[32px] max-w-[256px]"
+      >
+        <VPDocAsideOutline class="sticky top-0 pt-[32px] " />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.SandboxPreview {
-}
-
 .SandboxPreviewContentWrapper {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+.SandboxPreviewContentWrapper.has-nav {
   padding-top: var(--vp-nav-height);
   padding-bottom: var(--vp-nav-height);
 }
-/*@media (min-width: 1440px) {
-  .preview-full.SandboxPreviewContentWrapper {
-    padding-right: calc((100vw - var(--vp-layout-max-width)) / 2);
-  }
-}*/
 .SandboxPreviewContentWrapper.has-sidebar {
   padding-left: var(--vp-sidebar-width);
 }
-
-.SandboxPreview > .SandboxPreviewSidebar {
-  position: absolute;
-  width: var(--vp-sidebar-width);
-  height: calc(100vh - var(--vp-nav-height));
-  @apply bg-muted;
-}
-
-.SandboxPreview > .SandboxPreviewSidebar > .VPSidebar {
-  position: sticky;
-  width: var(--vp-sidebar-width);
-  height: calc(100vh - var(--vp-nav-height));
-  padding-top: calc(var(--vp-nav-height) * -1);
+.SandboxPreviewContentWrapper.has-aside {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 </style>

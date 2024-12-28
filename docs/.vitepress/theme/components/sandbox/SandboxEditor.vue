@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import JsonEditorVue from 'json-editor-vue'
 import { inject, nextTick, ref, watch, watchEffect } from 'vue'
-import type { SandboxData } from '../types'
+import type { SandboxData } from '../../sandboxData'
 import { useData } from 'vitepress'
 
 const { isDark } = useData()
@@ -35,7 +35,10 @@ watch(innerValue, () => {
 
 <template>
   <div class="SandboxEditor">
-    <div class="SandboxEditorWrapper">
+    <div
+      class="SandboxEditorWrapper"
+      :class="{ 'has-nav': !sandboxData.hideSandboxNav.value }"
+    >
       <div class="w-full h-full flex flex-col">
         <div class="flex flex-1 overflow-auto">
           <JsonEditorVue
@@ -65,6 +68,11 @@ watch(innerValue, () => {
 
 .SandboxEditorWrapper {
   position: sticky;
+  height: calc(100vh);
+  max-height: calc(100vh);
+  top: 0;
+}
+.SandboxEditorWrapper.has-nav {
   height: calc(100vh - var(--vp-nav-height));
   max-height: calc(100vh - var(--vp-nav-height));
   top: var(--vp-nav-height);
