@@ -25,14 +25,10 @@ export function scrollIntoOperationByOperationId({
       return
     }
 
-    container = container || document.body
-
-    container.scrollTo({
+    element.scrollIntoView({
       behavior: 'smooth',
-      top:
-          element.getBoundingClientRect().top
-          - document.body.getBoundingClientRect().top
-          - offset,
+      block: 'start',
+      inline: 'nearest',
     })
 
     window.location.hash = hash
