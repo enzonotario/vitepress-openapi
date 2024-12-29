@@ -49,7 +49,7 @@ const sandboxDataCompressed = compressToURL(
   }),
 )
 
-const baseUrl = import.meta.env.NODE_ENV === 'production'
+const baseUrl = process.env.NODE_ENV === 'production'
   ? 'https://vitepress-openapi.vercel.app/sandbox/'
   : 'http://localhost:5173/sandbox/'
 

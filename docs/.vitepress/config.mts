@@ -284,15 +284,6 @@ export default defineConfigWithTheme({
       gtag('config', '${gaId}');`,
     ],
   ],
-  rewrites: {
-    '/layouts/one-operation': '/pages/by-operation',
-    '/layouts/all-operations': '/pages/by-spec',
-    '/layouts/pages-by-tags': '/pages/by-tag',
-    '/layouts/info-servers': '/pages/info-servers',
-    '/layouts/sidebar': '/sidebar/sidebar-items',
-    '/layouts/custom-slots': '/customizations/custom-slots',
-    '/layouts/multiple-specs': '/customizations/multiple-specs',
-  },
   vite: {
     resolve: {
       alias: {
