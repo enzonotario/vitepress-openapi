@@ -22,7 +22,6 @@ watch(sandboxData.operationId, () => {
   } else if (sandboxData.previewComponent.value === 'OASpec') {
     scrollIntoOperationByOperationId({
       hash: `#${sandboxData.operationId.value}`,
-      offset: 120,
     })
   }
 })

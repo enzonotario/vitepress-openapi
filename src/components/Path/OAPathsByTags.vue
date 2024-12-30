@@ -81,7 +81,6 @@ function onPathClick(tagPaths: { tag: string, paths: Record<string, any>, isOpen
   nextTick(() => {
     scrollIntoOperationByOperationId({
       hash,
-      offset: 120,
     })
   })
 }

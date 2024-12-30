@@ -7,8 +7,6 @@ export function cn(...inputs: ClassValue[]) {
 
 export function scrollIntoOperationByOperationId({
   hash,
-  offset = 0,
-  container,
 }: {
   hash: string
   offset?: number
