@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import VPSwitchAppearance from '../../../../../src/components/Common/VPSwitchAppearance.vue'
+import VPSwitchAppearance from '../vitepress/VPSwitchAppearance.vue'
 </script>
 
 <template>
@@ -24,8 +24,19 @@ import VPSwitchAppearance from '../../../../../src/components/Common/VPSwitchApp
 
         <div class="flex items-center gap-2">
           <span class="flex-1" />
-          <slot name="end" />
           <VPSwitchAppearance />
+          <div class="VPSocialLinks VPNavBarSocialLinks social-links">
+            <a
+              class="VPSocialLink no-icon flex items-center justify-center w-[36px] h-[36px] text-[var(--vp-c-text-2)] hover:text-[var(--vp-c-text-1)]"
+              href="https://github.com/enzonotario/vitepress-openapi"
+              aria-label="github"
+              target="_blank"
+              rel="noopener"
+            >
+              <span class="vpi-social-github" />
+            </a>
+          </div>
+          <slot name="end" />
         </div>
       </div>
     </div>

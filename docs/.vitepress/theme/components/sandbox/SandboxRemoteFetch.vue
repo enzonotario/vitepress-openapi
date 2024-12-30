@@ -3,7 +3,7 @@ import { inject, nextTick, onMounted, ref } from 'vue'
 import { Icon } from '@iconify/vue'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Input } from '../../../../../src/components/ui/input'
-import type { SandboxData } from '../types'
+import type { SandboxData } from '../../sandboxData'
 
 const sandboxData = inject('sandboxData') as SandboxData
 

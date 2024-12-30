@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { provide, ref, watch } from 'vue'
+import { provide, watch } from 'vue'
 import { compressToURL, decompressFromURL } from '@amoutonbrady/lz-string'
 import { useTheme } from 'vitepress-openapi'
 import { useUrlSearchParams } from '@vueuse/core'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../ui/resizable'
-import type { SandboxData } from '../types'
-import ThemeConfig from '../theme/ThemeConfig.vue'
 import { deepUnref } from '../../../../../src/lib/deepUnref'
 import Toaster from '../ui/toast/Toaster.vue'
 import { useToast } from '../ui/toast/use-toast'
+import ThemeConfigPopover from '../theme/ThemeConfigPopover.vue'
+import { initSandboxData } from '../../sandboxData'
 import SandboxPreview from './SandboxPreview.vue'
 import SandboxNav from './SandboxNav.vue'
 import SandboxEditor from './SandboxEditor.vue'
@@ -33,19 +33,11 @@ if (themeConfigQuery) {
   useTheme(JSON.parse(decompressFromURL(themeConfigQuery)))
 }
 
-const sandboxData = {
-  loading: ref(false),
-  spec: ref(sandboxDataQueryDecompressed?.spec ?? {}),
-  specUrl: ref(sandboxDataQueryDecompressed?.specUrl ?? initialSpecUrl),
-  specLoaded: ref(sandboxDataQueryDecompressed?.spec && Object.keys(sandboxDataQueryDecompressed.spec).length > 0),
-  previewComponent: ref(sandboxDataQueryDecompressed?.previewComponent ?? 'OASpec'),
-  sandboxView: ref(sandboxDataQueryDecompressed?.sandboxView ?? 'edit'),
-  showSidebar: ref(sandboxDataQueryDecompressed?.showSidebar ?? true),
-  operationId: ref(sandboxDataQueryDecompressed?.operationId ?? null),
-  themeConfig: ref(
-    queryParams.themeConfig ? JSON.parse(decompressFromURL(queryParams.themeConfig)) : {},
-  ),
-} as SandboxData
+const sandboxData = initSandboxData({
+  ...sandboxDataQueryDecompressed,
+  specUrl: initialSpecUrl,
+  themeConfig: queryParams.themeConfig ? JSON.parse(decompressFromURL(String(queryParams.themeConfig))) : {},
+})
 
 provide('sandboxData', sandboxData)
 
@@ -83,10 +75,10 @@ watch(hash, () => {
 
 <template>
   <div class="overflow-hidden">
-    <SandboxNav class="fixed w-full top-0 z-[var(--vp-z-index-nav)] ">
+    <SandboxNav v-show="!sandboxData.hideSandboxNav.value" class="fixed w-full top-0 z-[var(--vp-z-index-nav)] ">
       <template #start>
         <SandboxRemoteFetch />
-        <ThemeConfig />
+        <ThemeConfigPopover />
         <a class="VPLink link VPNavBarMenuLink hover:bg-muted p-2" href="/"><span>Docs</span></a>
       </template>
 
@@ -115,7 +107,11 @@ watch(hash, () => {
       </template>
     </SandboxNav>
 
-    <ResizablePanelGroup direction="horizontal" class="SandboxSplitView">
+    <ResizablePanelGroup
+      direction="horizontal"
+      class="SandboxSplitView"
+      :class="{ 'has-nav': !sandboxData.hideSandboxNav.value }"
+    >
       <ResizablePanel v-show="sandboxData.sandboxView.value === 'edit'">
         <SandboxEditor />
       </ResizablePanel>
@@ -123,7 +119,7 @@ watch(hash, () => {
       <ResizableHandle v-if="sandboxData.sandboxView.value === 'edit'" with-handle class="z-40" />
 
       <ResizablePanel>
-        <div class="SandboxPreviewPanel w-full h-full overflow-x-hidden overflow-y-auto">
+        <div class="w-full h-full overflow-x-hidden overflow-y-auto">
           <SandboxPreview
             v-if="sandboxData.specLoaded.value"
             :spec-url="sandboxData.specUrl.value"
@@ -140,6 +136,11 @@ watch(hash, () => {
 
 <style scoped>
 .SandboxSplitView {
+  margin-top: 0;
+  height: 100vh;
+  max-height: 100vh;
+}
+.SandboxSplitView.has-nav {
   margin-top: var(--vp-nav-height);
   height: calc(100vh - var(--vp-nav-height));
   max-height: calc(100vh - var(--vp-nav-height));

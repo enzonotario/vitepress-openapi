@@ -29,37 +29,38 @@ export default defineConfigWithTheme({
         link: '/guide/getting-started',
       },
       {
-        text: 'Layouts',
+        text: 'Pages',
         items: [
           {
             items: [
               {
-                text: 'One Operation',
-                link: '/layouts/one-operation',
+                text: 'By Operation',
+                link: '/pages/by-operation',
               },
               {
-                text: 'All Operations',
-                link: '/layouts/all-operations',
+                text: 'By Spec',
+                link: '/pages/by-spec',
               },
               {
-                text: 'Sidebar Items',
-                link: '/layouts/sidebar',
-              },
-              {
-                text: 'Custom Slots',
-                link: '/layouts/custom-slots',
-              },
-              {
-                text: 'Multiple Specs',
-                link: '/layouts/multiple-specs',
+                text: 'By Tag',
+                link: '/pages/by-tag',
               },
               {
                 text: 'Info and Servers',
-                link: '/layouts/info-servers',
+                link: '/pages/info-servers',
               },
+            ],
+          },
+        ],
+      },
+      {
+        text: 'Sidebar',
+        items: [
+          {
+            items: [
               {
-                text: 'Pages by Tags',
-                link: '/layouts/pages-by-tags',
+                text: 'Sidebar Items',
+                link: '/sidebar/sidebar-items',
               },
             ],
           },
@@ -88,20 +89,55 @@ export default defineConfigWithTheme({
           {
             items: [
               {
-                text: 'Operation Badges',
-                link: '/customizations/operation-badges',
+                text: 'General',
+                items: [
+                  {
+                    items: [
+                      {
+                        text: 'i18n',
+                        link: '/customizations/i18n',
+                      },
+                    ],
+                  },
+                ],
               },
               {
-                text: 'Code Samples',
-                link: '/customizations/code-samples',
+                text: 'Operation',
+                items: [
+                  {
+                    items: [
+                      {
+                        text: 'Custom Slots',
+                        link: '/customizations/custom-slots',
+                      },
+                      {
+                        text: 'Operation Badges',
+                        link: '/customizations/operation-badges',
+                      },
+                      {
+                        text: 'Code Samples',
+                        link: '/customizations/code-samples',
+                      },
+                      {
+                        text: 'Operation tags slot',
+                        link: '/customizations/operation-tags-slot',
+                      },
+                    ],
+                  },
+                ],
               },
               {
-                text: 'Operation tags slot',
-                link: '/customizations/operation-tags-slot',
-              },
-              {
-                text: 'i18n',
-                link: '/customizations/i18n',
+                text: 'Spec',
+                items: [
+                  {
+                    items: [
+                      {
+                        text: 'Multiple Specs',
+                        link: '/customizations/multiple-specs',
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },
@@ -251,7 +287,7 @@ export default defineConfigWithTheme({
   vite: {
     resolve: {
       alias: {
-        'vitepress-openapi': resolve(__dirname, '../../'),
+        'vitepress-openapi': process.env.NODE_ENV === 'production' ? resolve(__dirname, '../../') : resolve(__dirname, '../../src/'),
       },
     },
   },
