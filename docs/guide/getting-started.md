@@ -26,18 +26,27 @@ Before you begin, make sure you have the following installed:
 
 ## Installation
 
-To install the theme in your VitePress project, run one of the following commands depending on your preferred package
-manager:
+Install the `vitepress-openapi` package using your package manager.
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install vitepress-openapi
-
-pnpm add vitepress-openapi
-
-yarn add vitepress-openapi
-
-bun install vitepress-openapi
 ```
+
+```sh [yarn]
+yarn add vitepress-openapi
+```
+
+```sh [pnpm]
+pnpm add vitepress-openapi
+```
+
+```sh [bun]
+bun add vitepress-openapi
+```
+
+:::
 
 ## Usage
 
