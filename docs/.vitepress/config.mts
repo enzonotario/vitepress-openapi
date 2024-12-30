@@ -46,8 +46,8 @@ export default defineConfigWithTheme({
                 link: '/pages/by-tag',
               },
               {
-                text: 'Info and Servers',
-                link: '/pages/info-servers',
+                text: 'Introduction',
+                link: '/pages/introduction',
               },
             ],
           },

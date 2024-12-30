@@ -11,6 +11,7 @@ const themeConfig = useTheme()
 const availableComponents = [
   'OAOperation',
   'OASpec',
+  'OAIntroduction',
 ]
 
 const availableSidebarItemsTypes = [

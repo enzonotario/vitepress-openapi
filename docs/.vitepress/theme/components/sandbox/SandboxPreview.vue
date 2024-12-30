@@ -86,6 +86,11 @@ watch(sandboxData.previewComponent, () => {
             :spec="sandboxData.spec.value"
             :is-dark="isDark"
           />
+          <OAIntroduction
+            v-else-if="sandboxData.previewComponent.value === 'OAIntroduction'"
+            :spec="sandboxData.spec.value"
+            :is-dark="isDark"
+          />
         </VPHomeContent>
       </div>
 

@@ -13,7 +13,7 @@ export interface SandboxData {
   sandboxView: Ref<'edit' | 'preview'>
   hideSandboxNav: Ref<boolean>
 
-  previewComponent: Ref<'OASpec' | 'OAOperation'>
+  previewComponent: Ref<'OASpec' | 'OAOperation' | 'OAIntroduction'>
   previewHeaders: Ref<Array<any>>
   operationId: Ref<string | null>
 
