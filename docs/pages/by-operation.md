@@ -106,6 +106,12 @@ const operationId = route.data.params.operationId
 
 </ScopeConfigurationTabs>
 
+## Searching Operations
+
+If you want to make use of search on your site, the default `local` search will not work due to https://github.com/vuejs/vitepress/issues/2939
+
+Consider using [vitepress-plugin-pagefind](https://www.npmjs.com/package/vitepress-plugin-pagefind), which works with dynamic routes.
+
 ## Example
 
 <SandboxIframe :sandbox-data="{sandboxView: 'preview', previewComponent: 'OAOperation', operationId: 'getAllArtists'}" :iframe-zoom="0.6" class="h-[70vh] max-h-[700px]" />
