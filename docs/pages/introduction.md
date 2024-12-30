@@ -8,7 +8,7 @@ import ScopeConfigurationTabs from '../.vitepress/theme/components/ScopeConfigur
 
 # Introduction
 
-You can use `OAIntroduction` component to display the OpenAPI `info` and `servers` sections.
+You can use the `OAIntroduction` component to display the OpenAPI `info` and `servers` sections.
 
 <ScopeConfigurationTabs>
 
