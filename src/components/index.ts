@@ -22,6 +22,7 @@ import OASchemaTabs from './Schema/OASchemaTabs.vue'
 import OASecurity from './Security/OASecurity.vue'
 import OAInfo from './Common/OAInfo.vue'
 import OAServers from './Common/OAServers.vue'
+import OAIntroduction from './Common/OAIntroduction.vue'
 import OALocaleSelect from './Common/OALocaleSelect.vue'
 import OARemoteSpec from './Remote/OARemoteSpec.vue'
 import OARemoteOperation from './Remote/OARemoteOperation.vue'
@@ -51,6 +52,7 @@ export {
   OASecurity,
   OAInfo,
   OAServers,
+  OAIntroduction,
   OALocaleSelect,
   OARemoteSpec,
   OARemoteOperation,
