@@ -1,6 +1,6 @@
 <script setup>
 import OACodeValue from '../Common/OACodeValue.vue'
-import { getExamples } from '../../lib/getExamples'
+import { getPropertyExamples } from '../../lib/getPropertyExamples'
 import { useTheme } from '../../composables/useTheme'
 import OAParameterAttribute from './OAParameterAttribute.vue'
 
@@ -11,7 +11,7 @@ const props = defineProps({
   },
 })
 
-const examples = getExamples(props.property)
+const examples = getPropertyExamples(props.property)
 
 const wrapExamples = useTheme().getWrapExamples()
 </script>
