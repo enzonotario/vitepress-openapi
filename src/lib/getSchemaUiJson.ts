@@ -1,5 +1,5 @@
 import { literalTypes } from '../index'
-import { getExample } from './getExample'
+import { getPropertyExample } from './getPropertyExample'
 import type { OAProperty } from './getSchemaUi'
 
 export function getSchemaUiJson(uiProperties: OAProperty[] | OAProperty, useExample = false): any {
@@ -58,7 +58,7 @@ function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
       return [uiPropertyObjectToJson(property.properties as OAProperty[], useExample)]
     }
 
-    return useExample ? [getExample(property) ?? getDefaultValueForType(property.subtype)] : [getDefaultValueForType(property.subtype)]
+    return useExample ? [getPropertyExample(property) ?? getDefaultValueForType(property.subtype)] : [getDefaultValueForType(property.subtype)]
   }
 
   return []
@@ -77,7 +77,7 @@ function uiPropertyObjectToJson(properties: OAProperty[], useExample: boolean): 
 
 function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any {
   if (useExample) {
-    const example = getExample(property)
+    const example = getPropertyExample(property)
     if (example != null) {
       return example
     }
@@ -90,7 +90,7 @@ function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any
  * Constants always have an example (the constant), so `useExample` does not apply here.
  */
 function uiPropertyConstantToJson(property: OAProperty): any {
-  const example = getExample(property)
+  const example = getPropertyExample(property)
 
   if (example != null) {
     return example
@@ -141,6 +141,6 @@ function resolveOneOfProperty(property: OAProperty, useExample: boolean): any {
   if (property.properties && property.properties.length > 0) {
     return uiPropertyToJson(property.properties[0], useExample)
   } else {
-    return useExample ? getExample(property) : getDefaultValueForType(property.types[0] ?? 'string')
+    return useExample ? getPropertyExample(property) : getDefaultValueForType(property.types[0] ?? 'string')
   }
 }

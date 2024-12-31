@@ -1,6 +1,6 @@
 import type { OpenAPI } from '@scalar/openapi-types'
 import { literalTypes } from '../index'
-import { getExamples } from './getExamples'
+import { getPropertyExamples } from './getPropertyExamples'
 import { resolveCircularRef } from './resolveCircularRef'
 import { getConstraints, hasConstraints } from './constraintsParser'
 
@@ -56,7 +56,7 @@ class UiPropertyFactory {
       ...(property.description && { description: property.description }),
       ...(property.default !== undefined && { defaultValue: property.default }),
       ...(property.externalDocs && { docs: property.externalDocs }),
-      ...(getExamples(property) && { examples: getExamples(property) }),
+      ...(getPropertyExamples(property) && { examples: getPropertyExamples(property) }),
       ...(property.nullable && { nullable: property.nullable }),
     }
 
@@ -125,7 +125,7 @@ class UiPropertyFactory {
     }
 
     if (schema.const !== undefined) {
-      const example = getExamples(schema) || schema.const
+      const example = getPropertyExamples(schema) || schema.const
       return {
         name,
         types: [schema.type as JSONSchemaType || 'string'],
@@ -163,8 +163,8 @@ class UiPropertyFactory {
             property.subtype = schemaType as JSONSchemaType
           }
 
-          if (getExamples(schema.items)) {
-            property.subexamples = getExamples(schema.items)
+          if (getPropertyExamples(schema.items)) {
+            property.subexamples = getPropertyExamples(schema.items)
           }
 
           if (schema.items.const !== undefined) {

@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { unref } from 'vue'
-import { getExample } from '../getExample'
+import { getPropertyExample } from '../getPropertyExample'
 import type { PlaygroundSecurityScheme } from '../../types'
 import { OARequest } from './request'
 
@@ -83,7 +83,7 @@ function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variabl
       return
     }
 
-    const example = getExample(parameter)
+    const example = getPropertyExample(parameter)
     if (example != null) {
       variables[parameter.name] = example
     }
