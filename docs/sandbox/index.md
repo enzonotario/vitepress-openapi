@@ -1,5 +1,5 @@
 ---
-title: VitePress OpenAPI Sandbox
+title: Sandbox
 layout: false
 ---
 
