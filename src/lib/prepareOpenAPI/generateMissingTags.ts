@@ -1,5 +1,5 @@
 import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
-import { useTheme } from '../composables/useTheme'
+import { useTheme } from '../../composables/useTheme'
 
 export function generateMissingTags(spec: OpenAPI.Document): OpenAPI.Document {
   const defaultTag = useTheme().getSpecConfig()?.defaultTag || 'Default'

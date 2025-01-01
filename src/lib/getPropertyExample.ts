@@ -1,4 +1,4 @@
-export function getExample(property: any): any {
+export function getPropertyExample(property: any): any {
   if (property?.example !== undefined) {
     return property.example
   }

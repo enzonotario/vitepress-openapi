@@ -2,7 +2,7 @@
 import { defineEmits, defineProps, onMounted } from 'vue'
 import { Input } from '../ui/input'
 import { Checkbox } from '../ui/checkbox'
-import { getExample } from '../../lib/getExample'
+import { getPropertyExample } from '../../lib/getPropertyExample'
 import {
   Select,
   SelectContent,
@@ -39,11 +39,11 @@ function inputType(parameter: any) {
 
 onMounted(() => {
   if (props.parameter.schema?.enum) {
-    emits('update:modelValue', getExample(props.parameter) ?? props.parameter.schema.enum[0])
+    emits('update:modelValue', getPropertyExample(props.parameter) ?? props.parameter.schema.enum[0])
   }
 })
 
-const parameterExample = getExample(props.parameter)
+const parameterExample = getPropertyExample(props.parameter)
 </script>
 
 <template>

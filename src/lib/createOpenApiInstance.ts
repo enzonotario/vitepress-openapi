@@ -1,6 +1,6 @@
 import type { OpenAPI } from '@scalar/openapi-types'
 import { processOpenAPI } from './processOpenAPI'
-import { prepareOpenAPI } from './prepareOpenAPI'
+import { prepareOpenAPI } from './prepareOpenAPI/prepareOpenAPI'
 import { OpenApi } from './OpenApi'
 
 export function createOpenApiInstance({

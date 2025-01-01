@@ -117,6 +117,18 @@ describe('generateCodeSampleCurl', () => {
   "key": "value"
 }'`)
   })
+
+  it('handles query parameters and headers correctly', () => {
+    const url = 'https://api.example.com/path/testOperation'
+    const method = 'GET'
+    const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer token' }
+    const queryParams: Record<string, string> = { search: 'query', page: '2' }
+    const result = generateCodeSampleCurl({ url, method, headers, query: queryParams })
+    expect(result).toBe(`curl -X GET \\
+'https://api.example.com/path/testOperation?search=query&page=2' \\
+ -H "Content-Type: application/json" \\
+ -H "Authorization: Bearer token"`)
+  })
 })
 
 describe('generateCodeSamplePhp', () => {

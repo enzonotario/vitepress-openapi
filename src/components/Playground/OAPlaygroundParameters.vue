@@ -8,7 +8,7 @@ import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
-import { getExample } from '../../lib/getExample'
+import { getPropertyExample } from '../../lib/getPropertyExample'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import type { OperationData } from '../../lib/operationData'
@@ -75,7 +75,7 @@ function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
         return acc
       }
 
-      acc[parameter.name] = getExample(parameter) ?? ''
+      acc[parameter.name] = getPropertyExample(parameter) ?? ''
       return acc
     }, {})
 }

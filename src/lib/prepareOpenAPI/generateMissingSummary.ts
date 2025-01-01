@@ -1,5 +1,5 @@
 import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
-import type { OperationObject } from '../types.js'
+import type { OperationObject } from '../../types'
 
 export function generateMissingSummary(spec: OpenAPI.Document): OpenAPI.Document {
   spec.paths = spec.paths || {}

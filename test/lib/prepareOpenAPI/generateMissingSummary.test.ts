@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { generateMissingSummary } from '../../src/lib/generateMissingSummary'
+import { generateMissingSummary } from '../../../src/lib/prepareOpenAPI/generateMissingSummary'
 
 describe('generateMissingSummary', () => {
   it('returns the original value if paths are not present', () => {

@@ -10,8 +10,16 @@ export class OARequest {
   constructor(
     public url: string = '',
     public method: string = 'GET',
-    public headers: Record<string, string> = {},
-    public body: any = null,
-    public query: Record<string, string> = {},
-  ) {}
+    public headers?: Record<string, string>,
+    public body?: any,
+    public query?: Record<string, string>,
+  ) {
+    if (!headers) {
+      this.headers = {}
+    }
+
+    if (!query) {
+      this.query = {}
+    }
+  }
 }

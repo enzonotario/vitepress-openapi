@@ -1,6 +1,6 @@
 import type { OpenAPI } from '@scalar/openapi-types'
 import { OpenApi } from '../lib/OpenApi'
-import { prepareOpenAPI } from '../lib/prepareOpenAPI'
+import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
 
 export function usePaths({
   spec,
