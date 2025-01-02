@@ -1,5 +1,5 @@
 import { literalTypes } from '../index'
-import { getPropertyExample } from './getPropertyExample'
+import { getPropertyExample } from './examples/getPropertyExample'
 import type { OAProperty } from './getSchemaUi'
 
 export function getSchemaUiJson(uiProperties: OAProperty[] | OAProperty, useExample = false): any {
