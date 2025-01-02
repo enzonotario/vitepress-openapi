@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { unref } from 'vue'
-import { getPropertyExample } from '../getPropertyExample'
+import { getPropertyExample } from '../examples/getPropertyExample'
 import type { PlaygroundSecurityScheme } from '../../types'
 import { OARequest } from './request'
 

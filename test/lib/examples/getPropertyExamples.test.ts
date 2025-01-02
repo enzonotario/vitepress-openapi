@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getPropertyExamples } from '../../src/lib/getPropertyExamples'
+import { getPropertyExamples } from '../../../src/lib/examples/getPropertyExamples'
 
 describe('getPropertyExamples', () => {
   it('returns an array with the example property if it exists', () => {
