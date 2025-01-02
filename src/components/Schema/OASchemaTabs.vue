@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
-import { hasExample } from '../../lib/hasExample'
+import { hasExample } from '../../lib/examples/hasExample'
 import { getSchemaUiContentType } from '../../lib/getSchemaUiContentType'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { Checkbox } from '../ui/checkbox'

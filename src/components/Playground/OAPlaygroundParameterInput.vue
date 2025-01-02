@@ -2,7 +2,7 @@
 import { defineEmits, defineProps, onMounted } from 'vue'
 import { Input } from '../ui/input'
 import { Checkbox } from '../ui/checkbox'
-import { getPropertyExample } from '../../lib/getPropertyExample'
+import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import {
   Select,
   SelectContent,
