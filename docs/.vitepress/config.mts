@@ -1,6 +1,7 @@
 import { resolve } from 'node:path'
 import { useSidebar } from 'vitepress-openapi'
 import spec from '../public/openapi.json' assert { type: 'json' }
+import { examplesPages } from '../pages'
 import { defineConfigWithTheme } from 'vitepress'
 
 const sidebar = useSidebar({
@@ -224,26 +225,10 @@ export default defineConfigWithTheme({
         text: 'Remote Examples',
         collapsed: true,
         items: [
-          {
-            text: 'ArgentinaDatos',
-            link: '/examples/argentinadatos',
-          },
-          {
-            text: 'CriptoYA Argentina',
-            link: '/examples/criptoya-argentina',
-          },
-          {
-            text: 'Scalar Galaxy',
-            link: '/examples/scalar-galaxy',
-          },
-          {
-            text: 'Plant Store',
-            link: '/examples/plant-store',
-          },
-          {
-            text: 'Museum',
-            link: '/examples/museum',
-          },
+          ...examplesPages.map(page => ({
+            text: page.label,
+            link: `/examples/${page.slug}`,
+          })),
         ],
       },
     ],
