@@ -67,4 +67,10 @@ export const examplesPages = [
     specUrl: 'https://raw.githubusercontent.com/Redocly/museum-openapi-example/refs/heads/main/openapi.yaml',
     themeConfig: {},
   },
+  {
+    slug: 'petstore-3.1',
+    label: 'Petstore 3.1',
+    specUrl: 'https://raw.githubusercontent.com/Redocly/redoc/refs/heads/main/demo/openapi-3-1.yaml',
+    themeConfig: {},
+  },
 ]
