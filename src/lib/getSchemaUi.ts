@@ -48,6 +48,8 @@ class UiPropertyFactory {
       ? property.type
       : [property.type || 'string'] as JSONSchemaType[]
 
+    const examples = getPropertyExamples(property)
+
     const baseProperty: OAProperty = {
       name,
       types: nodeTypes,
@@ -56,7 +58,7 @@ class UiPropertyFactory {
       ...(property.description && { description: property.description }),
       ...(property.default !== undefined && { defaultValue: property.default }),
       ...(property.externalDocs && { docs: property.externalDocs }),
-      ...(getPropertyExamples(property) && { examples: getPropertyExamples(property) }),
+      ...(examples && { examples }),
       ...(property.nullable && { nullable: property.nullable }),
     }
 
@@ -163,8 +165,9 @@ class UiPropertyFactory {
             property.subtype = schemaType as JSONSchemaType
           }
 
-          if (getPropertyExamples(schema.items)) {
-            property.subexamples = getPropertyExamples(schema.items)
+          const itemsExamples = getPropertyExamples(schema.items)
+          if (itemsExamples) {
+            property.subexamples = itemsExamples
           }
 
           if (schema.items.const !== undefined) {
