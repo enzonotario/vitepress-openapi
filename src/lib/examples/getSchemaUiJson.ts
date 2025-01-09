@@ -1,4 +1,3 @@
-import type { OpenAPI } from '@scalar/openapi-types'
 import { literalTypes } from '../../index'
 import type { OAProperty } from '../getSchemaUi'
 import { getPropertyExample } from './getPropertyExample'
