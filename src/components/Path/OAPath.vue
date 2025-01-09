@@ -23,6 +23,10 @@ const openapi = props.openapi ?? getOpenApiInstance()
 
 const operation = openapi.getOperation(props.id)
 
+const operationData = initOperationData(operation)
+
+provide('operationData', operationData)
+
 const operationPath = openapi.getOperationPath(props.id)
 
 const operationMethod = openapi.getOperationMethod(props.id)?.toUpperCase()
@@ -85,7 +89,7 @@ const request = ref(
       baseUrl: baseUrl.value,
       parameters: operationParameters ?? [],
       authorizations: securityUi.length ? Object.entries(securityUi)[0]?.schemes : {},
-      body: operationRequestBody?.content?.[bodyRequestContentType]?.uiContentType,
+      body: (operationRequestBody?.content?.[bodyRequestContentType]?.examples ?? { value: '' })[0]?.value,
       variables: {},
     })
     : {},
@@ -98,8 +102,6 @@ function updateRequest(newRequest) {
 function updateSelectedServer(server) {
   selectedServer.value = server
 }
-
-provide('operationData', initOperationData(operation))
 </script>
 
 <template>

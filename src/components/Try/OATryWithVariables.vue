@@ -60,12 +60,12 @@ const emits = defineEmits([
 
 const loading = ref(false)
 
-const schemaUiContentType = computed(() => {
-  return props.requestBody?.content?.[props.contentType]?.uiContentType
+const schemaExamples = computed(() => {
+  return props.requestBody?.content?.[props.contentType]?.examples
 })
 
-const hasSchemaVariables = computed(() =>
-  Object.keys(schemaUiContentType.value?.variables ?? {}).length > 0,
+const hasBody = computed(() =>
+  Boolean(props.requestBody),
 )
 
 const hasSecuritySchemes = computed(() =>
@@ -73,7 +73,7 @@ const hasSecuritySchemes = computed(() =>
 )
 
 const hasParameters = computed(() =>
-  Boolean(props.parameters?.length || hasSchemaVariables.value || hasSecuritySchemes.value),
+  Boolean(props.parameters?.length || hasBody.value || hasSecuritySchemes.value),
 )
 </script>
 
@@ -87,7 +87,7 @@ const hasParameters = computed(() =>
     :base-url="props.baseUrl"
     :parameters="props.parameters ?? []"
     :security-ui="props.securityUi ?? {}"
-    :schema-ui-content-type="schemaUiContentType"
+    :examples="schemaExamples"
     :is-dark="props.isDark"
     @update:request="($event: any) => emits('update:request', $event)"
     @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
