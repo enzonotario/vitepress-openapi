@@ -1,8 +1,12 @@
-import { literalTypes } from '../index'
-import { getPropertyExample } from './examples/getPropertyExample'
-import type { OAProperty } from './getSchemaUi'
+import { literalTypes } from '../../index'
+import type { OAProperty } from '../getSchemaUi'
+import { getPropertyExample } from './getPropertyExample'
 
 export function getSchemaUiJson(uiProperties: OAProperty[] | OAProperty, useExample = false): any {
+  return schemaUiToJson(uiProperties, useExample)
+}
+
+function schemaUiToJson(uiProperties: OAProperty[] | OAProperty, useExample: boolean): any {
   if (Array.isArray(uiProperties)) {
     return uiProperties.map(property => uiPropertyToJson(property, useExample))
   }

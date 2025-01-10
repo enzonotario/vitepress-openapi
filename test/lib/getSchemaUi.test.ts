@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { getSchemaUi } from '../../src/lib/getSchemaUi'
 import { specWithCircularRef } from '../testsConstants'
-import { getSchemaUiContentType } from '../../src/lib/getSchemaUiContentType'
+import { getSchemaExample } from '../../src/lib/examples/getSchemaExample'
 
 interface FixtureTest {
   jsonSchema: any
@@ -1282,12 +1282,12 @@ describe('getSchemaUi and getSchemaUiJson from fixtures', () => {
       const parsedSchemaUi = getSchemaUi(jsonSchema)
       expect(parsedSchemaUi).toEqual(schemaUi)
 
-      const parsedSchemaUiContentType = getSchemaUiContentType(
+      const schemaExample = getSchemaExample(
         contentType ?? 'application/json',
         parsedSchemaUi,
         useExample,
       )
-      expect(parsedSchemaUiContentType).toEqual(schemaUiJson)
+      expect(schemaExample[Object.keys(schemaExample)[0]].value).toEqual(schemaUiJson)
     })
   })
 })

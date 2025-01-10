@@ -103,6 +103,24 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Artist"
+              },
+              "examples": {
+                "Charly": {
+                  "value": {
+                    "name": "Charly García",
+                    "description": "One of the most influential rock musicians in Argentine history.",
+                    "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+                    "band": "Sui Generis"
+                  }
+                },
+                "Maria": {
+                  "value": {
+                    "name": "Maria Gabriela Epumer",
+                    "description": "A very important rock musician in Argentine history.",
+                    "image": "https://cdn.rock-legends.com/photos/maria.jpg",
+                    "band": "Viudas e Hijas de Roque Enroll"
+                  }
+                }
               }
             }
           }
@@ -114,6 +132,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Artist"
+                },
+                "examples": {
+                  "Charly": {
+                    "value": {
+                      "id": 1,
+                      "name": "Charly García",
+                      "description": "One of the most influential rock musicians in Argentine history.",
+                      "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+                      "band": "Sui Generis"
+                    }
+                  },
+                  "Maria": {
+                    "value": {
+                      "id": 2,
+                      "name": "Maria Gabriela Epumer",
+                      "description": "A very important rock musician in Argentine history.",
+                      "image": "https://cdn.rock-legends.com/photos/maria.jpg",
+                      "band": "Viudas e Hijas de Roque Enroll"
+                    }
+                  }
                 }
               }
             }

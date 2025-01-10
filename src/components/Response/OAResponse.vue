@@ -35,7 +35,7 @@ const contentType = ref(contentTypes[0] ?? undefined)
 
 const schema = computed(() => props.response.content?.[contentType.value]?.ui)
 
-const schemaJson = computed(() => props.response.content?.[contentType.value]?.uiContentType)
+const examples = computed(() => props.response.content?.[contentType.value]?.examples)
 
 const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
 </script>
@@ -85,7 +85,7 @@ const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
     <OASchemaTabs
       v-if="schema"
       :schema="schema"
-      :schema-ui-content-type="schemaJson"
+      :examples="examples"
       :content-type="contentType"
       :is-dark="props.isDark"
     />

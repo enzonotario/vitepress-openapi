@@ -4,7 +4,7 @@ import { dereferenceSync } from '@trojs/openapi-dereference'
 import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
 import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../types.js'
 import { getSchemaUi } from './getSchemaUi'
-import { getSchemaUiContentType } from './getSchemaUiContentType'
+import { getSchemaExample } from './examples/getSchemaExample'
 import { getSecurityUi } from './getSecurityUi'
 
 function safelyMergeSpec(spec: OpenAPI.Document): ParsedOpenAPI {
@@ -101,7 +101,10 @@ function enhanceRequestBody(operation: ParsedOperation): void {
     }
 
     parsedContent.ui = getSchemaUi(parsedContent.schema)
-    parsedContent.uiContentType = getSchemaUiContentType(contentType, parsedContent.ui, true)
+    parsedContent.examples = {
+      ...(parsedContent.examples || {}),
+      ...getSchemaExample(contentType, parsedContent.ui, true),
+    }
   }
 }
 
@@ -119,7 +122,10 @@ function enhanceResponses(operation: ParsedOperation): void {
       }
 
       parsedContent.ui = getSchemaUi(parsedContent.schema)
-      parsedContent.uiContentType = getSchemaUiContentType(contentType, parsedContent.ui, true)
+      parsedContent.examples = {
+        ...(parsedContent.examples || {}),
+        ...getSchemaExample(contentType, parsedContent.ui, true),
+      }
     }
   }
 }

@@ -22,7 +22,7 @@ const props = defineProps({
 <template>
   <OASchemaTabs
     :schema="props.requestBody?.content?.[props.contentType]?.ui"
-    :schema-ui-content-type="props.requestBody?.content?.[props.contentType]?.uiContentType"
+    :examples="props.requestBody?.content?.[props.contentType]?.examples"
     :content-type="props.contentType"
     :is-dark="props.isDark"
   />

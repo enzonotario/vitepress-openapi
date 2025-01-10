@@ -42,7 +42,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  schemaUiContentType: {
+  examples: {
     type: Object,
     required: false,
   },
@@ -84,7 +84,7 @@ const operationData = inject('operationData') as OperationData
 
 const authorizations = ref<PlaygroundSecurityScheme[] | null>(null)
 
-const body = ref(props.schemaUiContentType)
+const body = ref(Object.keys(props.examples ?? {}).length ? Object.values(props.examples ?? {})[0].value : null)
 
 function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   if (!schemes || !Object.keys(schemes).length) {
