@@ -276,7 +276,7 @@ const themeConfig: UseThemeConfig = {
   },
 }
 
-const defaultThemeConfig: UnwrapNestedRefs<UseThemeConfig> = { ...deepUnref(themeConfig) } as UnwrapNestedRefs<UseThemeConfig>
+const defaultThemeConfig: UnwrapNestedRefs<UseThemeConfig> = { ...deepUnref(themeConfig) } as PartialUseThemeConfig
 
 export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   setConfig(initialConfig)

@@ -7,7 +7,7 @@ export interface OpenAPIData {
   id: string
   spec: OpenAPI.Document
   openapi: ReturnType<typeof createOpenApiInstance>
-  config: PartialUseThemeConfig
+  config?: PartialUseThemeConfig
 }
 
 export type Schemas = Map<string, OpenAPIData>
@@ -53,7 +53,7 @@ export function useOpenapi({
     schemas.set(id, {
       ...openapi,
       id,
-      ...(config ? { config } : {}),
+      config,
     })
   }
 
