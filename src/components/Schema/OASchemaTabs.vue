@@ -52,13 +52,13 @@ const defaultValue = computed(() => {
         {{ $t('Schema') }}
       </TabsTrigger>
       <TabsTrigger
-        v-for="example in Object.keys(props.examples ?? {})"
-        :key="example"
-        :value="`examples.${example}`"
+        v-for="(_, exampleKey) in props.examples ?? {}"
+        :key="exampleKey"
+        :value="`examples.${exampleKey}`"
         variant="schemaTabs"
         class="h-full"
       >
-        {{ example }}
+        {{ exampleKey }}
       </TabsTrigger>
     </TabsList>
     <TabsContent value="schema">
@@ -71,21 +71,21 @@ const defaultValue = computed(() => {
       </div>
     </TabsContent>
     <TabsContent
-      v-for="example in Object.keys(props.examples ?? {})"
-      :key="example"
-      :value="`examples.${example}`"
+      v-for="(example, exampleKey) in props.examples ?? {}"
+      :key="exampleKey"
+      :value="`examples.${exampleKey}`"
     >
       <div class="flex flex-col gap-2">
         <OAMarkdown
-          v-if="props.examples[example]?.description"
-          :content="props.examples[example]?.description"
+          v-if="example?.description"
+          :content="example?.description"
         />
 
         <OACodeBlock
-          v-if="props.examples[example]?.value"
-          :code="props.examples[example]?.value"
-          :lang="props.examples[example]?.lang ?? 'json'"
-          :label="(props.examples[example]?.lang ?? 'json').toUpperCase()"
+          v-if="example?.value"
+          :code="example?.value"
+          :lang="example?.lang ?? 'json'"
+          :label="(example?.lang ?? 'json').toUpperCase()"
           :is-dark="props.isDark"
           class="!my-0"
         />
