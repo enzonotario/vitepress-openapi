@@ -152,43 +152,9 @@ export default defineConfigWithTheme({
             text: 'Introduction',
             link: '/example/introduction',
           },
-          {
-            text: 'By Tags',
-            collapsed: true,
-            items: [
-              ...sidebar.itemsByTags({
-                linkPrefix: '/example/tags/',
-              }),
-            ],
-          },
-          {
-            text: 'By Operations',
-            collapsed: true,
-            items: [
-              ...sidebar.generateSidebarGroups({
-                linkPrefix: '/example/operations/',
-              }),
-            ],
-          },
-          {
-            text: 'By Paths',
-            collapsed: true,
-            items: [
-              ...sidebar.itemsByPaths({
-                linkPrefix: '/example/operations/',
-              }),
-            ],
-          },
-          {
-            text: 'By Paths Flatten',
-            collapsed: true,
-            items: [
-              ...sidebar.itemsByPaths({
-                depth: 2,
-                linkPrefix: '/example/operations/',
-              }),
-            ],
-          },
+          ...sidebar.generateSidebarGroups({
+            linkPrefix: '/example/operations/',
+          }),
           {
             text: 'One Page',
             link: '/example/one-page',
