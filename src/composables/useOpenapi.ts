@@ -1,13 +1,13 @@
 import type { OpenAPI } from '@scalar/openapi-types'
 import { createOpenApiInstance } from '../lib/createOpenApiInstance'
-import type { UseThemeConfigUnref } from './useTheme'
+import type { PartialUseThemeConfig } from './useTheme'
 import { useTheme } from './useTheme'
 
 export interface OpenAPIData {
   id: string
   spec: OpenAPI.Document
   openapi: ReturnType<typeof createOpenApiInstance>
-  config: UseThemeConfigUnref | null
+  config?: PartialUseThemeConfig
 }
 
 export type Schemas = Map<string, OpenAPIData>
@@ -23,7 +23,7 @@ export function useOpenapi({
   config,
 }: {
   spec?: OpenAPI.Document
-  config?: UseThemeConfigUnref
+  config?: PartialUseThemeConfig
 } = {}) {
   if (config) {
     useTheme(config)
@@ -41,12 +41,12 @@ export function useOpenapi({
     setupOpenApi({ spec: value })
   }
 
-  function setupOpenApi({ spec, config }: { spec: OpenAPI.Document, config?: UseThemeConfigUnref }) {
-    addSchema({ id: DEFAULT_SCHEMA, spec, config: config ?? null })
+  function setupOpenApi({ spec, config }: { spec: OpenAPI.Document, config?: PartialUseThemeConfig }) {
+    addSchema({ id: DEFAULT_SCHEMA, spec, config })
     mainSchema = (schemas.get(DEFAULT_SCHEMA) ?? {}) as OpenAPI.Document
   }
 
-  function addSchema({ id, spec, config }: { id: string, spec: OpenAPI.Document, config: UseThemeConfigUnref | null }) {
+  function addSchema({ id, spec, config }: { id: string, spec: OpenAPI.Document, config?: PartialUseThemeConfig }) {
     const openapi = createOpenApiInstance({ spec })
 
     // @ts-expect-error: This adds all the properties of the OpenAPI instance to the schema.
