@@ -3,14 +3,7 @@ import { computed, defineProps, ref } from 'vue'
 import { TabsIndicator } from 'radix-vue'
 import { useTheme } from '../../composables/useTheme'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 const props = defineProps({
   operationId: {

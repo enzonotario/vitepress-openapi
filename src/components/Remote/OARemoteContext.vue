@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import {
-  parseYAML,
-} from 'confbox'
+import { parseYAML } from 'confbox'
 
 const props = defineProps({
   specUrl: {
