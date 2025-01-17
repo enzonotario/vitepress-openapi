@@ -5,7 +5,7 @@ The `usePlayground` composable provides functions to manage the Playground.
 You can use the `usePlayground` composable to configure the Playground in your `.vitepress/theme/index.js` file, or in any `.md` page/file.
 
 ```ts
-import { usePlayground } from 'vitepress-openapi'
+import { usePlayground } from 'vitepress-openapi/client'
 
 export default {
     async enhanceApp({ app, router, siteData }) {

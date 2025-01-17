@@ -237,9 +237,19 @@ export default defineConfigWithTheme({
   ],
   vite: {
     resolve: {
-      alias: {
-        'vitepress-openapi': process.env.NODE_ENV === 'production' ? resolve(__dirname, '../../') : resolve(__dirname, '../../src/'),
-      },
+      ...(process.env.NODE_ENV === 'production'
+        ? {
+            alias: {
+              'vitepress-openapi/client': resolve(__dirname, '../../dist/client'),
+              'vitepress-openapi': resolve(__dirname, '../../dist/index'),
+            },
+          }
+        : {
+            alias: {
+              'vitepress-openapi/client': resolve(__dirname, '../../src/client'),
+              'vitepress-openapi': resolve(__dirname, '../../src/index'),
+            },
+          }),
     },
   },
 })

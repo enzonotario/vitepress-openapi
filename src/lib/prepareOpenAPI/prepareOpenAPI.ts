@@ -3,7 +3,15 @@ import { generateMissingOperationIds } from './generateMissingOperationIds'
 import { generateMissingSummary } from './generateMissingSummary'
 import { generateMissingTags } from './generateMissingTags'
 
-export function prepareOpenAPI(spec: OpenAPI.Document): OpenAPI.Document {
+export function prepareOpenAPI({
+  spec,
+  defaultTag = undefined,
+  defaultTagDescription = undefined,
+}: {
+  spec: OpenAPI.Document
+  defaultTag?: string
+  defaultTagDescription?: string
+}): OpenAPI.Document {
   if (import.meta.env.VITE_DEBUG) {
     console.warn('Transforming OpenAPI spec:', spec)
   }
@@ -20,7 +28,7 @@ export function prepareOpenAPI(spec: OpenAPI.Document): OpenAPI.Document {
   if (spec?.paths) {
     spec = generateMissingOperationIds(spec)
     spec = generateMissingSummary(spec)
-    spec = generateMissingTags(spec)
+    spec = generateMissingTags({ spec, defaultTag, defaultTagDescription })
   }
 
   return Object.assign({}, spec)

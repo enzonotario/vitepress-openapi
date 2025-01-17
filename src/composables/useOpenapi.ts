@@ -47,7 +47,11 @@ export function useOpenapi({
   }
 
   function addSchema({ id, spec, config }: { id: string, spec: OpenAPI.Document, config?: PartialUseThemeConfig }) {
-    const openapi = createOpenApiInstance({ spec })
+    const openapi = createOpenApiInstance({
+      spec,
+      defaultTag: config?.spec?.defaultTag,
+      defaultTagDescription: config?.spec?.defaultTagDescription,
+    })
 
     // @ts-expect-error: This adds all the properties of the OpenAPI instance to the schema.
     schemas.set(id, {

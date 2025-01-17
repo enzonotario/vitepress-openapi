@@ -5,8 +5,6 @@ import { httpVerbs } from '../index'
 import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
 import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItemsByPaths'
 import { cleanSidebarItems } from '../lib/sidebar/cleanSidebarItems'
-import { useOpenapi } from './useOpenapi'
-import { useTheme } from './useTheme'
 
 type MethodAliases = Record<string, string>
 
@@ -54,18 +52,24 @@ export function useSidebar({
   defaultTag = DEFAULT_CONFIG.defaultTag,
   methodAliases = {},
 }: SidebarConfig = {}) {
-  useTheme({
-    spec: {
-      defaultTag,
-    },
-  })
+  let openApiInstance: ReturnType<typeof OpenApi> | null = null
 
-  const apiSpec = spec || useOpenapi().json
+  function getOpenApi() {
+    if (!spec) {
+      throw new Error('OpenAPI spec is not provided.')
+    }
 
-  const openapi = OpenApi({
-    spec: apiSpec,
-    transformedSpec: prepareOpenAPI(apiSpec),
-  })
+    if (!openApiInstance) {
+      openApiInstance = OpenApi({
+        spec,
+        transformedSpec: prepareOpenAPI({
+          spec,
+        }),
+      })
+    }
+
+    return openApiInstance
+  }
 
   function sidebarItemTemplate(method: OpenAPIV3.HttpMethods, title: string): string {
     const resolvedMethod = methodAliases?.[method] || method.toUpperCase()
@@ -77,7 +81,7 @@ export function useSidebar({
   }
 
   function sidebarItemTemplateForMethodPath(method: OpenAPIV3.HttpMethods, path: string): string {
-    const operation = openapi.getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
+    const operation = getOpenApi().getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
 
     if (!operation) {
       return `[${method.toUpperCase()}] ${path}`
@@ -95,7 +99,7 @@ export function useSidebar({
     path: string,
     itemLinkPrefix: string = linkPrefix,
   ): OASidebarItem | null {
-    const operation = openapi.getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
+    const operation = getOpenApi().getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
 
     if (!operation) {
       return null
@@ -116,7 +120,7 @@ export function useSidebar({
     linkPrefix: groupLinkPrefix = linkPrefix,
     addedOperations = new Set<string>(),
   }: SidebarGroupConfig): OASidebarItem {
-    const paths = openapi.getPaths()
+    const paths = getOpenApi().getPaths()
 
     if (!paths) {
       return {
@@ -157,10 +161,14 @@ export function useSidebar({
   }
 
   function generateSidebarGroups({
-    tags = openapi.getOperationsTags(),
+    tags = undefined,
     linkPrefix: groupsLinkPrefix = linkPrefix,
   }: SidebarGroupsConfig = {}): OASidebarItem[] {
-    if (!openapi.getPaths()) {
+    if (tags === undefined) {
+      tags = getOpenApi().getOperationsTags()
+    }
+
+    if (!getOpenApi().getPaths()) {
       return []
     }
 
@@ -188,10 +196,14 @@ export function useSidebar({
   }
 
   function itemsByTags({
-    tags = openapi.getFilteredTags().map((tag: OpenAPIV3.TagObject) => tag.name || ''),
+    tags = undefined,
     linkPrefix: tagsLinkPrefix = tagLinkPrefix,
   }: SidebarGroupsConfig = {}): OASidebarItem[] {
-    if (!openapi.getPaths() || !tags) {
+    if (tags === undefined) {
+      tags = getOpenApi().getFilteredTags().map((tag: OpenAPIV3.TagObject) => tag.name || '')
+    }
+
+    if (!getOpenApi().getPaths() || !tags) {
       return []
     }
 
@@ -214,7 +226,7 @@ export function useSidebar({
     sidebarItemTemplate?: (method: OpenAPIV3.HttpMethods, path: string) => string
     linkPrefix?: string
   } = {}): DefaultTheme.SidebarItem[] {
-    const paths = openapi.getPaths()
+    const paths = getOpenApi().getPaths()
 
     const sidebarItems = generateSidebarItemsByPaths({
       paths,

@@ -58,7 +58,7 @@ In your `.vitepress/theme/index.[js,ts]`, import the theme and the CSS file.
 ```js [JavaScript]
 // .vitepress/theme/index.js
 import DefaultTheme from 'vitepress/theme'
-import { theme } from 'vitepress-openapi' // [!code ++]
+import { theme } from 'vitepress-openapi/client' // [!code ++]
 import 'vitepress-openapi/dist/style.css' // [!code ++]
 
 export default {
@@ -73,7 +73,7 @@ export default {
 // .vitepress/theme/index.ts
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
-import { theme } from 'vitepress-openapi' // [!code ++]
+import { theme } from 'vitepress-openapi/client' // [!code ++]
 import 'vitepress-openapi/dist/style.css' // [!code ++]
 
 export default {
@@ -101,8 +101,8 @@ In your `.vitepress/theme/index.[js,ts]` file, import the OpenAPI specification 
 ```js [JavaScript]
 // .vitepress/theme/index.js
 import DefaultTheme from 'vitepress/theme'
-import { theme } from 'vitepress-openapi' // [!code --]
-import { theme, useOpenapi } from 'vitepress-openapi' // [!code ++]
+import { theme } from 'vitepress-openapi/client' // [!code --]
+import { theme, useOpenapi } from 'vitepress-openapi/client' // [!code ++]
 import 'vitepress-openapi/dist/style.css'
     
 import spec from '../../public/openapi.json' // [!code ++]
@@ -126,8 +126,8 @@ export default {
 // .vitepress/theme/index.ts
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
-import { theme } from 'vitepress-openapi' // [!code --]
-import { theme, useOpenapi } from 'vitepress-openapi'// [!code ++]
+import { theme } from 'vitepress-openapi/client' // [!code --]
+import { theme, useOpenapi } from 'vitepress-openapi/client'// [!code ++]
 import 'vitepress-openapi/dist/style.css'
 
 import spec from '../../public/openapi.json' assert { type: 'json' } // [!code ++]
@@ -216,7 +216,7 @@ If you are using `useOpenapi` in your `.vitepress/theme/index.[js,ts]` file, you
 ```js [JavaScript]
 // .vitepress/theme/index.js
 import DefaultTheme from 'vitepress/theme'
-import { theme, useOpenapi } from 'vitepress-openapi'
+import { theme, useOpenapi } from 'vitepress-openapi/client'
 import 'vitepress-openapi/dist/style.css'
     
 import spec from '../../public/openapi.json'
@@ -283,7 +283,7 @@ title: vitepress-openapi
 
 <script setup>
 import { useData } from 'vitepress'
-import { useTheme } from 'vitepress-openapi' // [!code ++]
+import { useTheme } from 'vitepress-openapi/client' // [!code ++]
 import spec from '../public/openapi.json'
 
 const { isDark } = useData()
@@ -305,7 +305,7 @@ title: vitepress-openapi
 
 <script setup>
 import { useRoute, useData } from 'vitepress'
-import { useTheme } from 'vitepress-openapi' // [!code ++]
+import { useTheme } from 'vitepress-openapi/client' // [!code ++]
 import spec from '../public/openapi.json'
 
 const route = useRoute()

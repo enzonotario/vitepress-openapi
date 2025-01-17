@@ -4,10 +4,21 @@ import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
 
 export function usePaths({
   spec,
+  defaultTag = undefined,
+  defaultTagDescription = undefined,
 }: {
   spec: OpenAPI.Document
+  defaultTag?: string
+  defaultTagDescription?: string
 }) {
-  const openapi = OpenApi({ spec, transformedSpec: prepareOpenAPI(spec) })
+  const openapi = OpenApi({
+    spec,
+    transformedSpec: prepareOpenAPI({
+      spec,
+      defaultTag,
+      defaultTagDescription,
+    }),
+  })
 
   function getTags() {
     return openapi.getFilteredTags()
