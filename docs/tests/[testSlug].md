@@ -7,7 +7,7 @@ title: vitepress-openapi
 <script setup lang="ts">
 import { onUnmounted } from 'vue'
 import { useRoute, useData } from 'vitepress'
-import { useTheme } from 'vitepress-openapi'
+import { useTheme } from 'vitepress-openapi/client'
 
 const route = useRoute()
 

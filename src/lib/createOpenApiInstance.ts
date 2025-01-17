@@ -5,10 +5,14 @@ import { OpenApi } from './OpenApi'
 
 export function createOpenApiInstance({
   spec,
+  defaultTag = undefined,
+  defaultTagDescription = undefined,
 }: {
   spec: OpenAPI.Document
+  defaultTag?: string
+  defaultTagDescription?: string
 }) {
-  const transformedSpec = prepareOpenAPI(spec)
+  const transformedSpec = prepareOpenAPI({ spec, defaultTag, defaultTagDescription })
   const parsedSpec = processOpenAPI(transformedSpec)
   return OpenApi({ spec, transformedSpec, parsedSpec })
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useData } from 'vitepress'
-import { useTheme, generateCodeSample } from 'vitepress-openapi'
+import { useTheme, generateCodeSample } from 'vitepress-openapi/client'
 
 const { isDark } = useData()
 

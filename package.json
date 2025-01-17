@@ -17,13 +17,17 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/vitepress-openapi.es.js",
-      "require": "./dist/vitepress-openapi.umd.js"
+      "import": "./dist/vitepress-openapi.node.es.js",
+      "require": "./dist/vitepress-openapi.node.umd.js"
+    },
+    "./client": {
+      "import": "./dist/vitepress-openapi.client.es.js",
+      "require": "./dist/vitepress-openapi.client.umd.js"
     },
     "./dist/style.css": "./dist/style.css"
   },
-  "main": "./dist/vitepress-openapi.es.js",
-  "module": "./dist/vitepress-openapi.es.js",
+  "main": "./dist/vitepress-openapi.node.es.js",
+  "module": "./dist/vitepress-openapi.node.es.js",
   "types": "./dist/types/index.d.ts",
   "files": [
     "dist",

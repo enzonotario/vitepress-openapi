@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { inject } from 'vue'
 import { Icon } from '@iconify/vue'
 import { useToggle } from '@vueuse/core'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import type { SandboxData } from '../../sandboxData'
 import ThemeConfig from './ThemeConfig.vue'
-
-const sandboxData = inject('sandboxData') as SandboxData
 
 const [isOpen, toggleOpen] = useToggle(false)
 </script>

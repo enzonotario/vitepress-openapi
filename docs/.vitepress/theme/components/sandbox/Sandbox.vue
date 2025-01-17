@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { provide, watch } from 'vue'
 import { compressToURL, decompressFromURL } from '@amoutonbrady/lz-string'
-import { useTheme } from 'vitepress-openapi'
+import { useTheme } from 'vitepress-openapi/client'
 import { useUrlSearchParams } from '@vueuse/core'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../ui/resizable'
 import { deepUnref } from '../../../../../src/lib/deepUnref'

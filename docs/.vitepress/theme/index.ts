@@ -1,4 +1,4 @@
-import { theme, useOpenapi } from 'vitepress-openapi'
+import { theme, useOpenapi } from 'vitepress-openapi/client'
 import DefaultTheme from 'vitepress/theme'
 import spec from '../../public/openapi.json' assert {type: 'json'}
 import ExampleBlock from './components/ExampleBlock.vue'

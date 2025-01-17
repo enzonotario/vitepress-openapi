@@ -10,7 +10,7 @@ describe('generateMissingTags', () => {
         },
       },
     }
-    const result = generateMissingTags(spec)
+    const result = generateMissingTags({ spec })
     expect(result.paths['/example'].get.tags).toEqual(['Default'])
   })
 
@@ -24,7 +24,7 @@ describe('generateMissingTags', () => {
         },
       },
     }
-    const result = generateMissingTags(spec)
+    const result = generateMissingTags({ spec })
     expect(result.paths['/example'].get.tags).toEqual(['existingTag'])
   })
 
@@ -37,7 +37,7 @@ describe('generateMissingTags', () => {
       },
       tags: [],
     }
-    const result = generateMissingTags(spec)
+    const result = generateMissingTags({ spec })
     expect(result.tags).toEqual([
       {
         name: 'Default',
@@ -57,7 +57,7 @@ describe('generateMissingTags', () => {
       },
       tags: [],
     }
-    const result = generateMissingTags(spec)
+    const result = generateMissingTags({ spec })
     expect(result.tags).not.toContainEqual({
       name: 'Default',
       description: undefined,
@@ -69,7 +69,27 @@ describe('generateMissingTags', () => {
     const spec = {
       paths: {},
     }
-    const result = generateMissingTags(spec)
+    const result = generateMissingTags({ spec })
     expect(result.paths).toEqual({})
+  })
+
+  it('uses custom default tag when provided', () => {
+    const spec = {
+      paths: {
+        '/example': {
+          get: {},
+        },
+      },
+    }
+    const result = generateMissingTags({
+      spec,
+      defaultTag: 'Custom',
+      defaultTagDescription: 'Custom Description',
+    })
+    expect(result.paths['/example'].get.tags).toEqual(['Custom'])
+    expect(result.tags).toEqual([{
+      name: 'Custom',
+      description: 'Custom Description',
+    }])
   })
 })

@@ -41,7 +41,7 @@ title: vitepress-openapi
 You can also customize the prefix of the badges by setting the `operation.badgePrefix.{badgeName}` key in the i18n messages. For example, in your `.vitepress/theme/index.ts`, before calling `theme.enhanceApp({ app })`, you can set the following:
 
 ```typescript
-import { locales, theme, useTheme } from 'vitepress-openapi'
+import { locales, theme, useTheme } from 'vitepress-openapi/client'
 import DefaultTheme from 'vitepress/theme'
 import 'vitepress-openapi/dist/style.css'
 

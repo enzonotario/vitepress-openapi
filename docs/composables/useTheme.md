@@ -5,7 +5,7 @@ The `useTheme` composable provides functions to configure the theme.
 You can use the `useTheme` composable to configure the theme in your `.vitepress/theme/index.js` file, or in any `.md` page/file.
 
 ```ts
-import { useTheme, locales } from 'vitepress-openapi'
+import { useTheme, locales } from 'vitepress-openapi/client'
 
 export default {
     async enhanceApp({app, router, siteData}) {

@@ -1,9 +1,14 @@
 import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
-import { useTheme } from '../../composables/useTheme'
 
-export function generateMissingTags(spec: OpenAPI.Document): OpenAPI.Document {
-  const defaultTag = useTheme().getSpecConfig()?.defaultTag || 'Default'
-
+export function generateMissingTags({
+  spec,
+  defaultTag = 'Default',
+  defaultTagDescription = '',
+}: {
+  spec: OpenAPI.Document
+  defaultTag?: string
+  defaultTagDescription?: string
+}): OpenAPI.Document {
   const operationTags = new Set<string>()
 
   spec.paths = spec.paths || {}
@@ -23,7 +28,7 @@ export function generateMissingTags(spec: OpenAPI.Document): OpenAPI.Document {
     && !spec.tags.find((tag: any) => tag.name === defaultTag)) {
     spec.tags.push({
       name: defaultTag,
-      description: useTheme().getSpecConfig()?.defaultTagDescription,
+      description: defaultTagDescription,
     })
   }
 
