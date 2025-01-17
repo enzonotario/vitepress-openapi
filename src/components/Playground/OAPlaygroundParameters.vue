@@ -98,7 +98,9 @@ function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
       type: scheme.type,
       scheme: scheme.scheme,
       name,
-      playgroundValue: useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage),
+      playgroundValue: typeof localStorage !== 'undefined'
+        ? useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage)
+        : usePlayground().getSecuritySchemeDefaultValue(scheme),
     }
   })
 }

@@ -23,7 +23,7 @@ const themeConfig = useTheme()
 
 const { toast } = useToast()
 
-const initialSpecUrl = (window && new URLSearchParams(location.search).get('specUrl')) || 'https://vitepress-openapi.vercel.app/openapi.json'
+const initialSpecUrl = new URLSearchParams(location.search).get('specUrl') || 'https://vitepress-openapi.vercel.app/openapi.json'
 
 const sandboxDataQuery = new URLSearchParams(location.search).get('sandboxData')
 const sandboxDataQueryDecompressed = sandboxDataQuery ? JSON.parse(decompressFromURL(sandboxDataQuery)) : null

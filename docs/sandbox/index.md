@@ -7,5 +7,9 @@ layout: false
 import Sandbox from '../.vitepress/theme/components/sandbox/Sandbox.vue'
 </script>
 
+<ClientOnly>
+
 <Sandbox />
+
+</ClientOnly>
 
