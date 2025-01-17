@@ -12,23 +12,25 @@ export function scrollIntoOperationByOperationId({
   offset?: number
   container?: HTMLElement
 }) {
-  if (!import.meta.env.SSR) {
-    const element = document.querySelector(
-      hash
-        // . escape { and } characters
-        .replace(/([{}])/g, '\\$1'),
-    )
-
-    if (!element) {
-      return
-    }
-
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest',
-    })
-
-    window.location.hash = hash
+  if (typeof window === 'undefined') {
+    return
   }
+
+  const element = document.querySelector(
+    hash
+      // . escape { and } characters
+      .replace(/([{}])/g, '\\$1'),
+  )
+
+  if (!element) {
+    return
+  }
+
+  element.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start',
+    inline: 'nearest',
+  })
+
+  window.location.hash = hash
 }

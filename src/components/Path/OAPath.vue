@@ -61,7 +61,7 @@ const servers = customGetServers
 
 const defaultServer = servers.length ? servers[0]?.url : themeConfig.getOperationDefaultBaseUrl()
 
-const selectedServer = servers?.length > 1
+const selectedServer = servers?.length > 1 && typeof localStorage !== 'undefined'
   ? useStorage(`--oa-operation-${props.id}-selectedServer`, defaultServer, localStorage, {
     mergeDefaults: true,
   })
