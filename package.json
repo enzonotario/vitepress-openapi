@@ -17,10 +17,12 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/vitepress-openapi.node.es.js",
       "require": "./dist/vitepress-openapi.node.umd.js"
     },
     "./client": {
+      "types": "./dist/types/client.d.ts",
       "import": "./dist/vitepress-openapi.client.es.js",
       "require": "./dist/vitepress-openapi.client.umd.js"
     },
@@ -40,9 +42,8 @@
     "prepublishOnly": "pnpm run build",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "docs:dev": "VITE_DEBUG=1 IS_DOCS=1 vitepress dev docs",
-    "dev": "pnpm run docs:dev",
-    "docs:build": "IS_DOCS=1 pnpm run build && IS_DOCS=1 vitepress build docs",
+    "dev": "cd docs && pnpm run dev",
+    "docs:build": "pnpm run build && cd docs && pnpm run build",
     "test": "vitest",
     "test:run": "vitest --run",
     "typecheck": "vue-tsc --noEmit"
@@ -61,9 +62,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@amoutonbrady/lz-string": "^0.1.0",
     "@antfu/eslint-config": "^2.27.1",
-    "@iconify/vue": "^4.2.0",
     "@scalar/openapi-types": "^0.1.5",
     "@sindresorhus/slugify": "^2.2.1",
     "@trojs/openapi-dereference": "^0.2.3",

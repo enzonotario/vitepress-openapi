@@ -1,8 +1,7 @@
-import { resolve } from 'node:path'
 import { useSidebar } from 'vitepress-openapi'
+import { defineConfigWithTheme } from 'vitepress'
 import spec from '../public/openapi.json' assert { type: 'json' }
 import { examplesPages } from '../pages'
-import { defineConfigWithTheme } from 'vitepress'
 
 const sidebar = useSidebar({
   spec,
@@ -235,21 +234,4 @@ export default defineConfigWithTheme({
       gtag('config', '${gaId}');`,
     ],
   ],
-  vite: {
-    resolve: {
-      ...(process.env.NODE_ENV === 'production'
-        ? {
-            alias: {
-              'vitepress-openapi/client': resolve(__dirname, '../../dist/client'),
-              'vitepress-openapi': resolve(__dirname, '../../dist/index'),
-            },
-          }
-        : {
-            alias: {
-              'vitepress-openapi/client': resolve(__dirname, '../../src/client'),
-              'vitepress-openapi': resolve(__dirname, '../../src/index'),
-            },
-          }),
-    },
-  },
 })
