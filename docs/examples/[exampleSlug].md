@@ -6,12 +6,10 @@ title: vitepress-openapi
 
 <script setup lang="ts">
 import { onBeforeMount, onBeforeUnmount } from 'vue'
-import { useRoute, useData } from 'vitepress'
+import { useRoute } from 'vitepress'
 import { useTheme } from 'vitepress-openapi/client'
 
 const route = useRoute()
-
-const { isDark } = useData()
 
 const exampleSlug = route.data.params.exampleSlug
 const specUrl = route.data.params.specUrl
@@ -26,4 +24,4 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<OARemoteSpec :spec-url="specUrl" :isDark="isDark" />
+<OARemoteSpec :spec-url="specUrl" />

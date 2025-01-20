@@ -23,13 +23,7 @@ outline: false
 title: vitepress-openapi
 ---
 
-<script setup lang="ts">
-import { useData } from 'vitepress'
-
-const { isDark } = useData()
-</script>
-
-<OASpec :isDark="isDark" />
+<OASpec />
 ```
 
 </template>
@@ -46,13 +40,10 @@ title: vitepress-openapi
 ---
 
 <script setup lang="ts">
-import { useData } from 'vitepress'
 import spec from '../public/openapi.json'
-
-const { isDark } = useData()
 </script>
 
-<OASpec :spec="spec" :isDark="isDark" />
+<OASpec :spec="spec" />
 ```
 
 </template>

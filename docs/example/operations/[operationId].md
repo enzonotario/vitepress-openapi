@@ -5,13 +5,11 @@ title: vitepress-openapi
 ---
 
 <script setup lang="ts">
-import { useRoute, useData } from 'vitepress'
+import { useRoute } from 'vitepress'
 
 const route = useRoute()
-
-const { isDark } = useData()
 
 const operationId = route.data.params.operationId
 </script>
 
-<OAOperation :operationId="operationId" :isDark="isDark" />
+<OAOperation :operationId="operationId" />

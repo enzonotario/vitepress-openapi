@@ -12,10 +12,6 @@ const props = defineProps({
     required: false,
     default: null,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
   hideInfo: {
     type: Boolean,
     default: false,

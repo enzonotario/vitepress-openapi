@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
 
-const { response, isDark } = defineProps({
+const { response } = defineProps({
   response: {
     type: Object,
     required: true,
-  },
-  isDark: {
-    type: Boolean,
-    default: false,
   },
 })
 
@@ -96,7 +92,6 @@ function downloadBlob(blob: Blob, fileName: string) {
       :code="response.body"
       :lang="lang"
       :label="label"
-      :is-dark="isDark"
       :disable-html-transform="response.body.length > 1000"
       class="!my-0"
     />

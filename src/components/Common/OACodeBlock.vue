@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import VueJsonPretty from 'vue-json-pretty'
 import { destr } from 'destr'
+import { useDark } from '@vueuse/core'
 import { useShiki } from '../../composables/useShiki'
 import { useTheme } from '../../composables/useTheme'
 import 'vue-json-pretty/lib/styles.css'
@@ -19,14 +20,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
   disableHtmlTransform: {
     type: Boolean,
     default: false,
   },
+})
+
+const isDark = useDark({
+  storageKey: 'vitepress-theme-appearance',
 })
 
 const html = ref(null)
@@ -40,7 +41,7 @@ const jsonData = computed(() => {
 })
 
 watch(
-  [() => props.code, () => props.lang, () => props.isDark],
+  [() => props.code, () => props.lang, isDark],
   async () => {
     if (props.lang === 'json') {
       return
@@ -53,7 +54,7 @@ watch(
 
     html.value = shiki.renderShiki(props.code, {
       lang: props.lang,
-      theme: props.isDark ? 'vitesse-dark' : 'vitesse-light',
+      theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
     })
   },
   {
@@ -76,7 +77,7 @@ watch(
     <VueJsonPretty
       v-if="props.lang === 'json' && !props.disableHtmlTransform"
       :data="jsonData"
-      :theme="props.isDark ? 'dark' : 'light'"
+      :theme="isDark ? 'dark' : 'light'"
       :deep="themeConfig.getJsonViewerDeep()"
       show-icon
       class="p-2"

@@ -16,7 +16,7 @@ export default defineConfig({
       fileName: (format: string, entryName: string) => `vitepress-openapi.${entryName}.${format}.js`,
     },
     rollupOptions: {
-      external: ['vue', 'vitepress'],
+      external: ['vue', 'vitepress', 'vitepress/client'],
       output: {
         globals: {
           vue: 'Vue',

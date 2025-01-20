@@ -14,10 +14,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
   headingPrefix: {
     type: String,
     default: null,
@@ -116,7 +112,6 @@ const tabsSelector = computed(() => {
           :operation-id="props.operationId"
           :response="props.responses[responseCode]"
           :response-code="responseCode"
-          :is-dark="props.isDark"
         />
       </TabsContent>
     </Tabs>

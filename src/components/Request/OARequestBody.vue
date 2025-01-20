@@ -12,10 +12,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
 })
 </script>
 
@@ -24,6 +20,5 @@ const props = defineProps({
     :schema="props.requestBody?.content?.[props.contentType]?.ui"
     :examples="props.requestBody?.content?.[props.contentType]?.examples"
     :content-type="props.contentType"
-    :is-dark="props.isDark"
   />
 </template>

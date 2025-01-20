@@ -20,18 +20,15 @@ title: vitepress-openapi
 ---
 
 <script setup lang="ts">
-import { useData } from 'vitepress'
 import defaultSpec from './openapi.json'
 import schemasSpec from './openapi-schemas.json'
-
-const { isDark } = useData()
 </script>
 
 ::: info
 Using [default spec](../public/openapi.json)
 :::
 
-<OAOperation operationId="getAllArtists" :spec="defaultSpec" :isDark="isDark" />
+<OAOperation operationId="getAllArtists" :spec="defaultSpec" />
 
 ---
 
@@ -39,22 +36,19 @@ Using [default spec](../public/openapi.json)
 Using [schemas spec](../public/openapi-schemas.json)
 :::
 
-<OAOperation operationId="getCircularReference" :spec="schemasSpec" :isDark="isDark" />
+<OAOperation operationId="getCircularReference" :spec="schemasSpec" />
 ```
 
 <script setup lang="ts">
-import { useData } from 'vitepress'
 import defaultSpec from '../public/openapi.json'
 import schemasSpec from '../public/openapi-schemas.json'
-
-const { isDark } = useData()
 </script>
 
 ::: info
 Using [default spec](../public/openapi.json)
 :::
 
-<OAOperation operationId="getAllArtists" :spec="defaultSpec" :isDark="isDark" />
+<OAOperation operationId="getAllArtists" :spec="defaultSpec" />
 
 ---
 
@@ -62,4 +56,4 @@ Using [default spec](../public/openapi.json)
 Using [schemas spec](../public/openapi-schemas.json)
 :::
 
-<OAOperation operationId="getCircularReference" :spec="schemasSpec" :isDark="isDark" />
+<OAOperation operationId="getCircularReference" :spec="schemasSpec" />

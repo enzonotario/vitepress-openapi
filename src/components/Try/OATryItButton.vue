@@ -32,10 +32,6 @@ const props = defineProps({
     type: Object,
     default: () => (new OARequest()),
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const emits = defineEmits([
@@ -173,7 +169,6 @@ function setLoading(value: boolean) {
             v-if="response"
             name="response"
             :response="response"
-            :is-dark="props.isDark"
           />
         </div>
       </div>

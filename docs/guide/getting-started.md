@@ -165,13 +165,10 @@ title: vitepress-openapi
 ---
 
 <script setup>
-import { useData } from 'vitepress'
 import spec from '../public/openapi.json'
-
-const { isDark } = useData()
 </script>
 
-<OASpec :spec="spec" :isDark="isDark" />
+<OASpec :spec="spec" />
 ```
 
 ```md [Using OAOperation]
@@ -182,17 +179,15 @@ title: vitepress-openapi
 ---
 
 <script setup>
-import { useRoute, useData } from 'vitepress'
+import { useRoute } from 'vitepress'
 import spec from '../public/openapi.json'
 
 const route = useRoute()
 
-const { isDark } = useData()
-
 const operationId = route.data.params.operationId
 </script>
 
-<OAOperation :spec="spec" :operationId="operationId" :isDark="isDark" />
+<OAOperation :spec="spec" :operationId="operationId" />
 ```
 
 :::
@@ -282,18 +277,15 @@ title: vitepress-openapi
 ---
 
 <script setup>
-import { useData } from 'vitepress'
 import { useTheme } from 'vitepress-openapi/client' // [!code ++]
 import spec from '../public/openapi.json'
-
-const { isDark } = useData()
 
 useTheme({ // [!code ++]
     // Custom theme configuration... // [!code ++]
 }) // [!code ++]
 </script>
 
-<OASpec :spec="spec" :isDark="isDark" />
+<OASpec :spec="spec" />
 ```
 
 ```md [Using OAOperation]
@@ -304,13 +296,11 @@ title: vitepress-openapi
 ---
 
 <script setup>
-import { useRoute, useData } from 'vitepress'
+import { useRoute } from 'vitepress'
 import { useTheme } from 'vitepress-openapi/client' // [!code ++]
 import spec from '../public/openapi.json'
 
 const route = useRoute()
-
-const { isDark } = useData()
 
 const operationId = route.data.params.operationId
 
@@ -319,7 +309,7 @@ useTheme({ // [!code ++]
 }) // [!code ++]
 </script>
 
-<OAOperation :spec="spec" :operationId="operationId" :isDark="isDark" />
+<OAOperation :spec="spec" :operationId="operationId" />
 ```
 
 :::

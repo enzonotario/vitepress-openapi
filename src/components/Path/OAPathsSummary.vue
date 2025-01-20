@@ -6,10 +6,6 @@ const { paths } = defineProps({
     type: Object,
     required: true,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const emit = defineEmits([

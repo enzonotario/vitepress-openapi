@@ -1,14 +1,10 @@
 <script setup lang="ts">
-import { useData } from 'vitepress'
-
-const { isDark } = useData()
-
 async function confetti() {
   (await import('https://esm.sh/canvas-confetti')).default()
 }
 </script>
 
-<OAOperation operationId="getAllArtists" :isDark="isDark">
+<OAOperation operationId="getAllArtists">
 
 <template #description="description">
 

@@ -4,7 +4,7 @@ import { useStorage } from '@vueuse/core'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { useTheme } from '../../composables/useTheme'
-import { initOperationData } from '../../lib/operationData.ts'
+import { initOperationData } from '../../lib/operationData'
 
 const props = defineProps({
   id: {
@@ -23,7 +23,9 @@ const openapi = props.openapi ?? getOpenApiInstance()
 
 const operation = openapi.getOperation(props.id)
 
-const operationData = initOperationData(operation)
+const operationData = initOperationData({
+  operation,
+})
 
 provide('operationData', operationData)
 

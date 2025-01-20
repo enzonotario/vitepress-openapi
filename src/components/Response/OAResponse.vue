@@ -16,10 +16,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const contentTypes = Object.keys(props.response.content ?? {})
@@ -80,7 +76,6 @@ const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
       :schema="schema"
       :examples="examples"
       :content-type="contentType"
-      :is-dark="props.isDark"
     />
   </div>
 </template>

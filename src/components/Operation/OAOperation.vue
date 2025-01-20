@@ -18,10 +18,6 @@ const props = defineProps({
     type: Object,
     required: false,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
   prefixHeadings: {
     // Whether to add prefixes to component headings (for the One Page view)
     type: Boolean,
@@ -219,7 +215,6 @@ function hasSlot(name: OperationSlot): boolean {
         :operation-id="requestBody.operationId"
         :request-body="requestBody.requestBody"
         :content-type="requestBody.contentType"
-        :is-dark="isDark"
       />
     </template>
 
@@ -240,7 +235,6 @@ function hasSlot(name: OperationSlot): boolean {
         :operation-id="responses.operationId"
         :responses="responses.responses"
         :response-type="responses.responseType"
-        :is-dark="isDark"
         :heading-prefix="headingPrefix"
       />
     </template>
@@ -293,7 +287,6 @@ function hasSlot(name: OperationSlot): boolean {
           :request-body="tryIt.requestBody"
           :security-ui="tryIt.securityUi"
           :content-type="tryIt.contentType"
-          :is-dark="isDark"
           @update:selected-server="tryIt.updateSelectedServer"
           @update:request="tryIt.updateRequest"
         />
@@ -326,7 +319,6 @@ function hasSlot(name: OperationSlot): boolean {
         :method="codeSamples.method"
         :base-url="codeSamples.baseUrl"
         :request="codeSamples.request"
-        :is-dark="isDark"
       />
     </template>
 
