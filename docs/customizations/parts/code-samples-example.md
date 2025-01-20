@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useData } from 'vitepress'
 import { useTheme, generateCodeSample } from 'vitepress-openapi/client'
-
-const { isDark } = useData()
 
 useTheme({
     codeSamples: {
@@ -65,4 +62,4 @@ ${bodySection}
 }
 </script>
 
-<OASpec :isDark="isDark" />
+<OASpec />

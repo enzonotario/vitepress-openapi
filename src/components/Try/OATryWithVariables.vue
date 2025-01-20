@@ -22,10 +22,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  isDark: {
-    type: Boolean,
-    required: true,
-  },
   hideEndpoint: {
     type: Boolean,
     default: false,
@@ -88,7 +84,6 @@ const hasParameters = computed(() =>
     :parameters="props.parameters ?? []"
     :security-ui="props.securityUi ?? {}"
     :examples="schemaExamples"
-    :is-dark="props.isDark"
     @update:request="($event: any) => emits('update:request', $event)"
     @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
   />
@@ -99,13 +94,11 @@ const hasParameters = computed(() =>
     :path="props.path"
     :method="props.method"
     :base-url="props.baseUrl"
-    :is-dark="props.isDark"
     @loading="loading = $event"
   >
     <template #response="response">
       <OAPlaygroundResponse
         :response="response.response"
-        :is-dark="response.isDark"
       />
     </template>
   </OATryItButton>

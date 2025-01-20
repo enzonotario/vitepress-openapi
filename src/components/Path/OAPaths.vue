@@ -4,7 +4,7 @@ import { useTheme } from '../../composables/useTheme'
 import OALazy from '../Common/Lazy/OALazy.vue'
 import type { OperationSlot } from '../../types'
 
-const { openapi, paths, isDark } = defineProps({
+const { openapi, paths } = defineProps({
   openapi: {
     type: Object,
     required: true,
@@ -12,10 +12,6 @@ const { openapi, paths, isDark } = defineProps({
   paths: {
     type: Object,
     required: true,
-  },
-  isDark: {
-    type: Boolean,
-    default: false,
   },
 })
 
@@ -46,7 +42,6 @@ const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
     <OAOperation
       :operation-id="operation.operationId"
       :openapi="openapi"
-      :is-dark="isDark"
       prefix-headings
       hide-branding
     >

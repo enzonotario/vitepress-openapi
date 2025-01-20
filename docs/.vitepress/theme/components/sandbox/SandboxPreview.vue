@@ -8,7 +8,7 @@ import VPDocAsideOutline from '../vitepress/VPDocAsideOutline.vue'
 import type { SandboxData } from '../../sandboxData'
 import SandboxPreviewSidebar from './SandboxPreviewSidebar.vue'
 
-const { isDark, theme, page } = useData()
+const { theme } = useData()
 
 const sandboxData = inject('sandboxData') as SandboxData
 
@@ -78,17 +78,14 @@ watch(sandboxData.previewComponent, () => {
             :key="sandboxData.operationId.value"
             :operation-id="sandboxData.operationId.value"
             :spec="sandboxData.spec.value"
-            :is-dark="isDark"
           />
           <OASpec
             v-else-if="sandboxData.previewComponent.value === 'OASpec'"
             :spec="sandboxData.spec.value"
-            :is-dark="isDark"
           />
           <OAIntroduction
             v-else-if="sandboxData.previewComponent.value === 'OAIntroduction'"
             :spec="sandboxData.spec.value"
-            :is-dark="isDark"
           />
         </VPHomeContent>
       </div>

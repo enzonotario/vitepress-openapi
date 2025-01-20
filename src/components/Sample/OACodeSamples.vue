@@ -8,10 +8,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
   request: {
     type: Object,
     default: () => (new OARequest()),
@@ -67,7 +63,6 @@ const defaultLang = themeConfig.getCodeSamplesDefaultLang()
         :code="sample.source"
         :lang="sample.highlighter"
         :label="sample.label"
-        :is-dark="props.isDark"
         :class="{ active: sample.lang === defaultLang }"
         class="!mb-0"
       />

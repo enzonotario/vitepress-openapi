@@ -10,7 +10,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  isDark: Boolean,
 })
 
 const emits = defineEmits([
@@ -24,7 +23,6 @@ const emits = defineEmits([
       <OAOperation
         :spec="spec"
         :operation-id="props.operationId"
-        :is-dark="props.isDark"
         v-bind="$attrs"
       />
     </template>

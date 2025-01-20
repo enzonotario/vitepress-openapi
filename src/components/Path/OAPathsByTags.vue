@@ -24,10 +24,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
   hidePathsSummary: {
     type: Boolean,
     default: undefined,
@@ -124,7 +120,6 @@ const showPathsSummary = computed(() => props.hidePathsSummary === undefined
           <OAPathsSummary
             :openapi="openapi"
             :paths="tagPaths.paths"
-            :is-dark="isDark"
             @path-click="onPathClick(tagPaths, $event)"
           />
         </div>

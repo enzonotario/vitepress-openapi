@@ -1,6 +1,7 @@
 <script setup>
 import JsonEditorVue from 'json-editor-vue'
 import { computed } from 'vue'
+import { useDark } from '@vueuse/core'
 import { useTheme } from '../../composables/useTheme'
 
 const props = defineProps({
@@ -12,10 +13,6 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -26,6 +23,10 @@ const value = computed({
 })
 
 const themeConfig = useTheme()
+
+const isDark = useDark({
+  storageKey: 'vitepress-theme-appearance',
+})
 </script>
 
 <template>
@@ -36,8 +37,8 @@ const themeConfig = useTheme()
     :mode="themeConfig.getPlaygroundJsonEditorMode()"
     class="oa-jse"
     :class="{
-      'oa-jse-theme-dark': props.isDark,
-      'oa-jse-theme-light': !props.isDark,
+      'oa-jse-theme-dark': isDark,
+      'oa-jse-theme-light': !isDark,
     }"
   />
 </template>

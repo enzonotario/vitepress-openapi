@@ -15,7 +15,7 @@ import SandboxNav from './SandboxNav.vue'
 import SandboxEditor from './SandboxEditor.vue'
 import SandboxRemoteFetch from './SandboxRemoteFetch.vue'
 
-const { isDark, hash } = useData()
+const { hash } = useData()
 
 const queryParams = useUrlSearchParams('history')
 
@@ -123,7 +123,6 @@ watch(hash, () => {
           <SandboxPreview
             v-if="sandboxData.specLoaded.value"
             :spec-url="sandboxData.specUrl.value"
-            :is-dark="isDark"
           />
           <OASpecSkeleton v-else />
         </div>

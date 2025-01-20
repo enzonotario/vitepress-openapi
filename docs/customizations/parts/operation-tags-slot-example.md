@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useData } from 'vitepress'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from 'vitepress-openapi/client'
-
-const { isDark } = useData()
 
 useTheme({
     operation: {
@@ -14,4 +11,4 @@ useTheme({
 })
 </script>
 
-<OASpec :isDark="isDark" />
+<OASpec />

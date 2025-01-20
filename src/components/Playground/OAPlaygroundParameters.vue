@@ -46,10 +46,6 @@ const props = defineProps({
     type: Object,
     required: false,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const emits = defineEmits([
@@ -249,11 +245,7 @@ watch(operationData.security.selectedSchemeId, () => {
         {{ $t('Body') }}
       </summary>
 
-      <OAJSONEditor
-        v-model="body"
-        :is-dark="props.isDark"
-        class="w-full"
-      />
+      <OAJSONEditor v-model="body" class="w-full" />
     </details>
   </div>
 </template>

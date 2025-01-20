@@ -14,10 +14,6 @@ const props = defineProps({
     type: null,
     required: false,
   },
-  isDark: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const themeConfig = useTheme()
@@ -86,7 +82,6 @@ const defaultValue = computed(() => {
           :code="example?.value"
           :lang="example?.lang ?? 'json'"
           :label="(example?.lang ?? 'json').toUpperCase()"
-          :is-dark="props.isDark"
           class="!my-0"
         />
       </div>
