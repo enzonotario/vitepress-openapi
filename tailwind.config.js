@@ -7,14 +7,7 @@ module.exports = {
   safelist: ['dark'],
   prefix: '',
   content: [
-    './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
-    ...(process.env.IS_DOCS
-      ? [
-          './docs/.vitepress/theme/**/*.{vue,js,ts,jsx,tsx}',
-          './docs/sidebar/*.md',
-        ]
-      : []),
   ],
   theme: {
     extend: {

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { VPHomeContent } from 'vitepress/theme'
 import { inject, onMounted, watch } from 'vue'
+import { useData } from 'vitepress'
+import { getHeaders } from 'vitepress/dist/client/theme-default/composables/outline.js'
 import { scrollIntoOperationByOperationId } from '../../../../../src/lib/utils'
 import VPDocAsideOutline from '../vitepress/VPDocAsideOutline.vue'
 import type { SandboxData } from '../../sandboxData'
 import SandboxPreviewSidebar from './SandboxPreviewSidebar.vue'
-import { useData } from 'vitepress'
-import { getHeaders } from 'vitepress/dist/client/theme-default/composables/outline.js'
 
 const { isDark, theme, page } = useData()
 

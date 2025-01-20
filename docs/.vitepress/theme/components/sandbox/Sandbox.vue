@@ -3,6 +3,7 @@ import { provide, watch } from 'vue'
 import { compressToURL, decompressFromURL } from '@amoutonbrady/lz-string'
 import { useTheme } from 'vitepress-openapi/client'
 import { useUrlSearchParams } from '@vueuse/core'
+import { useData } from 'vitepress'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../ui/resizable'
 import { deepUnref } from '../../../../../src/lib/deepUnref'
 import Toaster from '../ui/toast/Toaster.vue'
@@ -13,7 +14,6 @@ import SandboxPreview from './SandboxPreview.vue'
 import SandboxNav from './SandboxNav.vue'
 import SandboxEditor from './SandboxEditor.vue'
 import SandboxRemoteFetch from './SandboxRemoteFetch.vue'
-import { useData } from 'vitepress'
 
 const { isDark, hash } = useData()
 
