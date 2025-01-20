@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { inject, ref, watchPostEffect } from 'vue'
-import VPSwitch from './VPSwitch.vue'
 import { useData } from 'vitepress'
+import VPSwitch from './VPSwitch.vue'
 
 const { isDark, theme } = useData()
 
