@@ -155,10 +155,10 @@ class UiPropertyFactory {
 
           property.properties = schemaType === 'object'
             ? UiPropertyFactory.extractProperties(
-              schema.items.properties,
-              schema.items.required || [],
-              schema.items.additionalProperties,
-            )
+                schema.items.properties,
+                schema.items.required || [],
+                schema.items.additionalProperties,
+              )
             : undefined
 
           if (schemaType !== undefined) {

@@ -19,7 +19,7 @@ export function mergeAdjacentGroups(items: OASidebarItem[]): OASidebarItem[] {
     // Check if the group can be merged (single child, no direct operation links).
     const canMergeGroup
         = currentGroup.items.length === 1
-        && !currentGroup.items.some(item => 'link' in item)
+          && !currentGroup.items.some(item => 'link' in item)
 
     if (canMergeGroup) {
       const childGroup = currentGroup.items[0] as OASidebarItem
