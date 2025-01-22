@@ -8,6 +8,7 @@ module.exports = {
   prefix: '',
   content: [
     './.vitepress/theme/**/*.{vue,js,ts,jsx,tsx}',
+    './node_modules/vitepress-openapi/src/**/*.{vue,js,ts,jsx,tsx}',
     './sidebar/*.md',
   ],
   theme: base.theme,

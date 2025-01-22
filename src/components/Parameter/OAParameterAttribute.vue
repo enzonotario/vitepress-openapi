@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useSlots } from 'vue'
+import type { Slots } from 'vue'
 
 const props = defineProps({
   name: {
@@ -16,7 +17,7 @@ const props = defineProps({
   },
 })
 
-const slots = useSlots()
+const slots: Slots = useSlots()
 
 function hasSlot(name: string): boolean {
   return slots[name] !== undefined

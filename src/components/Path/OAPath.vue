@@ -53,18 +53,18 @@ const customGetServers = themeConfig.getOperationServers()
 
 const servers = customGetServers
   ? customGetServers({
-    method: operationMethod,
-    path: operationPath,
-    operation,
-  })
+      method: operationMethod,
+      path: operationPath,
+      operation,
+    })
   : openapi.getOperationServers(props.id)
 
 const defaultServer = servers.length ? servers[0]?.url : themeConfig.getOperationDefaultBaseUrl()
 
 const selectedServer = servers?.length > 1 && typeof localStorage !== 'undefined'
   ? useStorage(`--oa-operation-${props.id}-selectedServer`, defaultServer, localStorage, {
-    mergeDefaults: true,
-  })
+      mergeDefaults: true,
+    })
   : ref(defaultServer)
 
 const baseUrl = computed(() => {
@@ -84,14 +84,14 @@ const shouldBuildRequest = computed(() => ['try-it', 'code-samples'].some(slot =
 const request = ref(
   shouldBuildRequest.value
     ? buildRequest({
-      path: operationPath,
-      method: operationMethod,
-      baseUrl: baseUrl.value,
-      parameters: operationParameters ?? [],
-      authorizations: securityUi.length ? Object.entries(securityUi)[0]?.schemes : {},
-      body: (operationRequestBody?.content?.[bodyRequestContentType]?.examples ?? { value: '' })[0]?.value,
-      variables: {},
-    })
+        path: operationPath,
+        method: operationMethod,
+        baseUrl: baseUrl.value,
+        parameters: operationParameters ?? [],
+        authorizations: securityUi.length ? Object.entries(securityUi)[0]?.schemes : {},
+        body: (operationRequestBody?.content?.[bodyRequestContentType]?.examples ?? { value: '' })[0]?.value,
+        variables: {},
+      })
     : {},
 )
 
