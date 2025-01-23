@@ -29,3 +29,24 @@ describe('itemsByTags', () => {
     ])
   })
 })
+
+describe('itemsByTags with defaultTag', () => {
+  const sidebar = useSidebar({
+    spec: {
+      openapi: '3.0.0',
+      paths: {
+        '/example': {
+          get: {},
+        },
+      },
+    },
+    defaultTag: 'Custom',
+  })
+
+  it('returns the correct items for the default tag', () => {
+    const result = sidebar.itemsByTags()
+    expect(result).toEqual([
+      { text: 'Custom', link: '/tags/Custom' },
+    ])
+  })
+})
