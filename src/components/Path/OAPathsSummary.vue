@@ -9,7 +9,7 @@ const { paths } = defineProps({
 })
 
 const emit = defineEmits([
-  'path-click',
+  'pathClick',
 ])
 </script>
 
@@ -30,7 +30,7 @@ const emit = defineEmits([
         v-for="method in Object.keys(paths[path])"
         :key="`${path}-${method}`"
         class="grid grid-cols-[4rem,1fr] items-center gap-2 !text-foreground !no-underline cursor-pointer"
-        @click="emit('path-click', `#${paths[path][method].operationId}`)"
+        @click="emit('pathClick', `#${paths[path][method].operationId}`)"
       >
         <span :class="[`text-method-${method}`]" class="text-sm text-right">
           {{ method.toUpperCase() }}
