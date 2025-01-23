@@ -36,29 +36,31 @@ const emits = defineEmits([
 
 <template>
   <div class="flex flex-col gap-2 text-sm bg-muted rounded p-2">
-    <div class="language-bash flex flex-row items-center gap-4 !overflow-hidden h-10 !my-0">
+    <div class="language-bash !overflow-hidden !my-0">
       <button
         :title="$t('Copy endpoint')"
-        class="copy absolute !top-0 z-50"
+        class="copy absolute !top-1 z-50 OAPathEndpoint__copy"
       />
 
-      <OAMethodBadge :method="props.method" />
+      <div class="h-8 flex flex-row items-center gap-4">
+        <OAMethodBadge :method="props.method" />
 
-      <div class="overflow-x-auto whitespace-nowrap">
-        <span class="flex flex-row flex-shrink-0 text-gray-600 dark:text-gray-400">
-          <span
-            v-if="!props.hideBaseUrl"
-            class="hidden md:inline-block"
-          >
-            {{ props.baseUrl }}
+        <div class="overflow-x-auto whitespace-nowrap">
+          <span class="flex flex-row flex-shrink-0 text-gray-600 dark:text-gray-400">
+            <span
+              v-if="!props.hideBaseUrl"
+              class="hidden md:inline-block"
+            >
+              {{ props.baseUrl }}
+            </span>
+            <span
+              :class="{
+                'line-through': props.deprecated,
+              }"
+              class="text-gray-800 dark:text-gray-200 font-bold select-all"
+            >{{ props.path }}</span>
           </span>
-          <span
-            :class="{
-              'line-through': props.deprecated,
-            }"
-            class="text-gray-800 dark:text-gray-200 font-bold select-all"
-          >{{ props.path }}</span>
-        </span>
+        </div>
       </div>
     </div>
 
@@ -86,3 +88,14 @@ const emits = defineEmits([
     </div>
   </div>
 </template>
+
+<style scoped>
+.OAPathEndpoint__copy {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+.OAPathEndpoint__copy.copied::before {
+  height: 1.5rem !important;
+}
+</style>
