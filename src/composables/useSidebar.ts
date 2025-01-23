@@ -64,6 +64,7 @@ export function useSidebar({
         spec,
         transformedSpec: prepareOpenAPI({
           spec,
+          defaultTag,
         }),
       })
     }
