@@ -238,9 +238,13 @@ export default defineConfigWithTheme({
   vite: {
     resolve: {
       alias: {
-        'vitepress-openapi/client': fileURLToPath(new URL('../../src/client', import.meta.url)),
-        'vitepress-openapi/dist/style.css': fileURLToPath(new URL('../../src/style.css', import.meta.url)),
-        'vitepress-openapi': fileURLToPath(new URL('../../src/index', import.meta.url)),
+        ...(process.env.NODE_ENV === 'production'
+          ? {}
+          : {
+              'vitepress-openapi/client': fileURLToPath(new URL('../../src/client', import.meta.url)),
+              'vitepress-openapi/dist/style.css': fileURLToPath(new URL('../../src/style.css', import.meta.url)),
+              'vitepress-openapi': fileURLToPath(new URL('../../src/index', import.meta.url)),
+            }),
       },
     },
   },
