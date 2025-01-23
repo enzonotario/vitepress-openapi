@@ -20,7 +20,7 @@ The `useSidebar` composable provides functions to generate sidebar items based o
 To generate sidebar items grouped by tags, you can use the `generateSidebarGroups` function. Configure your `.vitepress/config.js` as follows:
 
 ```ts
-import { useSidebar, useOpenapi } from 'vitepress-openapi/client'
+import { useSidebar } from 'vitepress-openapi'
 import spec from '../public/openapi.json' assert { type: 'json' }
 
 const sidebar = useSidebar({
@@ -60,7 +60,7 @@ module.exports = {
 To generate sidebar items by tags, you can use the `itemsByTags` function. Configure your `.vitepress/config.js` as follows:
 
 ```ts
-import { useSidebar, useOpenapi } from 'vitepress-openapi/client'
+import { useSidebar } from 'vitepress-openapi'
 import spec from '../public/openapi.json' assert { type: 'json' }
 
 const sidebar = useSidebar({
@@ -100,7 +100,7 @@ module.exports = {
 To generate sidebar items by paths, you can use the `itemsByPaths` function. Configure your `.vitepress/config.js` as follows:
 
 ```ts
-import { useSidebar, useOpenapi } from 'vitepress-openapi/client'
+import { useSidebar } from 'vitepress-openapi'
 import spec from '../public/openapi.json' assert { type: 'json' }
 
 const sidebar = useSidebar({ spec })

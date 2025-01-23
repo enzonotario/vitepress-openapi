@@ -208,7 +208,7 @@ If you are using `useOpenapi` in your `.vitepress/theme/index.[js,ts]` file, you
 
 ::: code-group
 
-```js [JavaScript]
+```js-vue [JavaScript]
 // .vitepress/theme/index.js
 import DefaultTheme from 'vitepress/theme'
 import { theme, useOpenapi } from 'vitepress-openapi/client'
@@ -223,7 +223,7 @@ export default {
         const openapi = useOpenapi({
             spec,
             config: { // [!code ++]
-                // Custom theme configuration... // [!code ++]
+            {{''}}    // Custom theme configuration... [!code ++]
             }, // [!code ++]
         })
 
@@ -233,7 +233,7 @@ export default {
 }
 ```
 
-```ts [TypeScript]
+```ts-vue [TypeScript]
 // .vitepress/theme/index.ts
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
@@ -249,7 +249,7 @@ export default {
         const openapi = useOpenapi({
             spec,
             config: { // [!code ++]
-                // Custom theme configuration... // [!code ++]
+            {{''}}    // Custom theme configuration... [!code ++]
             }, // [!code ++]
         })
 
@@ -269,7 +269,7 @@ In your `.md` files, you can set the theme configuration using the `useTheme` co
 
 ::: code-group
 
-```md [Using OASpec]
+```md-vue [Using OASpec]
 ---
 aside: false
 outline: false
@@ -281,14 +281,14 @@ import { useTheme } from 'vitepress-openapi/client' // [!code ++]
 import spec from '../public/openapi.json'
 
 useTheme({ // [!code ++]
-    // Custom theme configuration... // [!code ++]
+{{''}}    // Custom theme configuration... [!code ++]
 }) // [!code ++]
 </script>
 
 <OASpec :spec="spec" />
 ```
 
-```md [Using OAOperation]
+```md-vue [Using OAOperation]
 ---
 aside: false
 outline: false
@@ -305,7 +305,7 @@ const route = useRoute()
 const operationId = route.data.params.operationId
 
 useTheme({ // [!code ++]
-    // Custom theme configuration... // [!code ++]
+{{''}}    // Custom theme configuration... [!code ++]
 }) // [!code ++]
 </script>
 
