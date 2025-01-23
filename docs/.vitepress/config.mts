@@ -1,7 +1,8 @@
+import { fileURLToPath } from 'node:url'
 import { useSidebar } from 'vitepress-openapi'
 import { defineConfigWithTheme } from 'vitepress'
-import spec from '../public/openapi.json' assert { type: 'json' }
 import { examplesPages } from '../pages'
+import spec from '../public/openapi.json' assert {type: 'json'}
 
 const sidebar = useSidebar({
   spec,
@@ -234,4 +235,13 @@ export default defineConfigWithTheme({
       gtag('config', '${gaId}');`,
     ],
   ],
+  vite: {
+    resolve: {
+      alias: {
+        'vitepress-openapi/client': fileURLToPath(new URL('../../src/client', import.meta.url)),
+        'vitepress-openapi/dist/style.css': fileURLToPath(new URL('../../src/style.css', import.meta.url)),
+        'vitepress-openapi': fileURLToPath(new URL('../../src/index', import.meta.url)),
+      },
+    },
+  },
 })
