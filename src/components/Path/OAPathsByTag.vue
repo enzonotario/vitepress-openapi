@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineProps, nextTick } from 'vue'
+import { computed, defineProps, nextTick, ref } from 'vue'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import { useTheme } from '../../composables/useTheme'
 import OAPathsSummary from '../Path/OAPathsSummary.vue'
@@ -45,8 +45,10 @@ const showPathsSummary = computed(() => props.hidePathsSummary === undefined
 
 const hasDescription = computed(() => props.tag?.description && props.tag?.description.trim() !== '')
 
-function onPathClick(tagPaths: { tag: string, paths: Record<string, any>, isOpen: boolean }, hash: string) {
-  tagPaths.isOpen = true
+const isOpen = ref(!themeConfig.getSpecConfig()?.collapsePaths?.value)
+
+function onPathClick(tagPaths: { tag: string, paths: Record<string, any> }, hash: string) {
+  isOpen.value = true
 
   nextTick(() => {
     scrollIntoOperationByOperationId({
@@ -58,7 +60,7 @@ function onPathClick(tagPaths: { tag: string, paths: Record<string, any>, isOpen
 
 <template>
   <Collapsible
-    v-model:open="props.tag.isOpen"
+    v-model:open="isOpen"
   >
     <OAHeading level="h1">
       {{ props.tag.tag }}
@@ -91,7 +93,7 @@ function onPathClick(tagPaths: { tag: string, paths: Record<string, any>, isOpen
     >
       <CollapsibleTrigger>
         <Button>
-          {{ props.tag.isOpen ? $t('Hide operations') : $t('Show operations') }}
+          {{ isOpen ? $t('Hide operations') : $t('Show operations') }}
         </Button>
       </CollapsibleTrigger>
     </div>
@@ -99,9 +101,9 @@ function onPathClick(tagPaths: { tag: string, paths: Record<string, any>, isOpen
     <hr>
 
     <div
-      v-if="!lazyRendering || props.tag.isOpen"
+      v-if="!lazyRendering || isOpen"
       class="flex flex-col space-y-10"
-      :class="[{ hidden: !props.tag.isOpen }]"
+      :class="[{ hidden: !isOpen }]"
     >
       <OAPaths
         :openapi="openapi"

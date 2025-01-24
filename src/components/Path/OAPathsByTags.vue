@@ -35,7 +35,7 @@ const themeConfig = useTheme()
 
 const openapi = props.openapi ?? getOpenApiInstance()
 
-const tagsInfo: OpenAPIV3.TagObject[] = openapi.getTags()
+const specTags: OpenAPIV3.TagObject[] = openapi.getTags()
 
 const operationsTags = props.tags ?? openapi.getOperationsTags()
 
@@ -54,8 +54,7 @@ const internalTags = ref([
         {
           tag: t(useTheme().getSpecConfig()?.defaultTag ?? 'Default'),
           paths: pathsWithoutTags,
-          isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
-          description: '',
+          // isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
         },
       ]
     : []),
@@ -64,8 +63,8 @@ const internalTags = ref([
     return {
       tag: tag.tag,
       paths: tag.paths,
-      isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
-      description: tagsInfo.find(tagInfo => tagInfo.name === tag.tag)?.description,
+      // isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
+      description: specTags.find(tagInfo => tagInfo.name === tag.tag)?.description,
     }
   }),
 ])
@@ -75,14 +74,14 @@ const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
 
 <template>
   <OALazy
-    v-for="(tagPaths, tagIdx) in internalTags"
-    :key="tagPaths.tag"
+    v-for="(tagObject, tagIdx) in internalTags"
+    :key="tagObject.tag"
     :is-lazy="lazyRendering && tagIdx > 0"
   >
     <OAPathsByTag
-      v-if="Object.keys(tagPaths.paths).length"
+      v-if="Object.keys(tagObject.paths).length"
       :openapi="openapi"
-      :tag="tagPaths"
+      :tag="tagObject"
       :hide-paths-summary="props.hidePathsSummary"
     >
       <!-- Expose all slots upwards -->
