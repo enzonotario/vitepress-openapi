@@ -11,6 +11,7 @@ module.exports = {
     './node_modules/vitepress-openapi/src/**/*.{vue,js,ts,jsx,tsx}',
     './sidebar/*.md',
     './showcase/*.md',
+    './customizations/*.md',
   ],
   theme: base.theme,
   plugins: [animate],
