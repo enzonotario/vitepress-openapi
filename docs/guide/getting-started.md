@@ -4,17 +4,16 @@ outline: 2
 
 <script setup>
 import ScopeConfigurationTabs from '../.vitepress/theme/components/ScopeConfigurationTabs.vue'
+import ShowcaseList from '../.vitepress/theme/components/showcase/ShowcaseList.vue'
 </script>
 
 # Getting Started
 
 This guide will walk you through the steps to set up and use the `vitepress-openapi` in your VitePress project.
 
-## Demo
+## Showcase
 
-- [DolarApi.com](https://dolarapi.com/)
-- [ArgentinaDatos](https://argentinadatos.com/)
-- [CriptoYa API](https://docs.criptoya.com/)
+<ShowcaseList />
 
 ## Prerequisites
 

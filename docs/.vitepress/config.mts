@@ -16,6 +16,10 @@ export default defineConfigWithTheme({
   themeConfig: {
     nav: [
       {
+        text: 'Showcase',
+        link: '/showcase',
+      },
+      {
         text: 'Sandbox',
         link: '/sandbox',
       },
@@ -239,8 +243,13 @@ export default defineConfigWithTheme({
     resolve: {
       alias: {
         ...(process.env.NODE_ENV === 'production'
-          ? {}
+          ? {
+              '@docs': fileURLToPath(new URL('../', import.meta.url)),
+              '@public': fileURLToPath(new URL('../public', import.meta.url)),
+            }
           : {
+              '@docs': fileURLToPath(new URL('../', import.meta.url)),
+              '@public': fileURLToPath(new URL('../public', import.meta.url)),
               'vitepress-openapi/client': fileURLToPath(new URL('../../src/client', import.meta.url)),
               'vitepress-openapi/dist/style.css': fileURLToPath(new URL('../../src/style.css', import.meta.url)),
               'vitepress-openapi': fileURLToPath(new URL('../../src/index', import.meta.url)),
