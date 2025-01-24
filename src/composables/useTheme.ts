@@ -2,6 +2,7 @@ import type { Ref, UnwrapNestedRefs } from 'vue'
 import { ref } from 'vue'
 import vitesseLight from 'shiki/themes/vitesse-light.mjs'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
+import { useDark } from '@vueuse/core'
 import type { IOARequest } from '../lib/codeSamples/request'
 import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
@@ -277,6 +278,10 @@ const themeConfig: UseThemeConfig = {
 }
 
 const defaultThemeConfig: UnwrapNestedRefs<UseThemeConfig> = { ...deepUnref(themeConfig) } as PartialUseThemeConfig
+
+const isDark = useDark({
+  storageKey: 'vitepress-theme-appearance',
+})
 
 export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   setConfig(initialConfig)
@@ -787,5 +792,6 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setLinksPrefixesConfig,
     getTagsLinkPrefix,
     getOperationsLinkPrefix,
+    isDark,
   }
 }

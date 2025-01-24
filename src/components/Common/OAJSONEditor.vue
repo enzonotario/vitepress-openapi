@@ -1,7 +1,6 @@
 <script setup>
 import JsonEditorVue from 'json-editor-vue'
 import { computed } from 'vue'
-import { useDark } from '@vueuse/core'
 import { useTheme } from '../../composables/useTheme'
 
 const props = defineProps({
@@ -24,9 +23,7 @@ const value = computed({
 
 const themeConfig = useTheme()
 
-const isDark = useDark({
-  storageKey: 'vitepress-theme-appearance',
-})
+const isDark = themeConfig.isDark
 </script>
 
 <template>
