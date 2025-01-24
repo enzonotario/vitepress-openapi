@@ -29,26 +29,26 @@ function updateSidebar(spec) {
     ...(
       sandboxData.sidebarItemsType.value === 'itemsByPaths'
         ? sidebar.itemsByPaths({
-          linkPrefix: '#',
-          depth: sandboxData.sidebarItemsDepth.value,
-          collapsible: sandboxData.sidebarItemsCollapsible.value,
-        })
+            linkPrefix: '#',
+            depth: sandboxData.sidebarItemsDepth.value,
+            collapsible: sandboxData.sidebarItemsCollapsible.value,
+          })
         : []
     ),
 
     ...(
       sandboxData.sidebarItemsType.value === 'itemsByTags'
         ? sidebar.itemsByTags({
-          linkPrefix: '#',
-        })
+            linkPrefix: '#',
+          })
         : []
     ),
 
     ...(
       sandboxData.sidebarItemsType.value === 'default'
         ? sidebar.generateSidebarGroups({
-          linkPrefix: '#',
-        })
+            linkPrefix: '#',
+          })
         : []
     ),
   ]

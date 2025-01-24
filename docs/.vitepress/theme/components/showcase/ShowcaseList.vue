@@ -52,7 +52,3 @@ const showcasesList = showcases.map(showcase => ({
     </a>
   </div>
 </template>
-
-<style scoped>
-
-</style>
