@@ -2,7 +2,6 @@
 import { computed, ref, watch } from 'vue'
 import VueJsonPretty from 'vue-json-pretty'
 import { destr } from 'destr'
-import { useDark } from '@vueuse/core'
 import { useShiki } from '../../composables/useShiki'
 import { useTheme } from '../../composables/useTheme'
 import 'vue-json-pretty/lib/styles.css'
@@ -26,15 +25,13 @@ const props = defineProps({
   },
 })
 
-const isDark = useDark({
-  storageKey: 'vitepress-theme-appearance',
-})
+const themeConfig = useTheme()
+
+const isDark = themeConfig.isDark
 
 const html = ref(null)
 
 const shiki = useShiki()
-
-const themeConfig = useTheme()
 
 const jsonData = computed(() => {
   return typeof props.code === 'string' ? destr(props.code) : props.code
