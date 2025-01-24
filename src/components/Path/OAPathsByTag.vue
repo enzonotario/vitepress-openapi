@@ -43,7 +43,7 @@ const showPathsSummary = computed(() => props.hidePathsSummary === undefined
   : !props.hidePathsSummary,
 )
 
-const hasDescription = computed(() => props.tag?.description?.trim() !== '')
+const hasDescription = computed(() => props.tag?.description && props.tag?.description.trim() !== '')
 
 function onPathClick(tagPaths: { tag: string, paths: Record<string, any>, isOpen: boolean }, hash: string) {
   tagPaths.isOpen = true
