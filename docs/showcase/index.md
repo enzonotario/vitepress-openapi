@@ -11,6 +11,6 @@ import ShowcaseList from '../.vitepress/theme/components/showcase/ShowcaseList.v
 
 # Showcase
 
-List of websites people are building with VitePress OpenAPI.
+List of APIs Docs built with VitePress OpenAPI:
 
 <ShowcaseList />
