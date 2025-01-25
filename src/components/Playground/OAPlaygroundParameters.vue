@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, inject, ref, watch } from 'vue'
-import { useStorage } from '@vueuse/core'
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { OARequest } from '../../lib/codeSamples/request'
-import { usePlayground } from '../../composables/usePlayground'
+import type { OperationData } from '../../lib/operationData'
 import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
+import { useStorage } from '@vueuse/core'
+import { defineEmits, defineProps, inject, ref, watch } from 'vue'
+import { usePlayground } from '../../composables/usePlayground'
+import { buildRequest } from '../../lib/codeSamples/buildRequest'
+import { OARequest } from '../../lib/codeSamples/request'
+import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
-import { getPropertyExample } from '../../lib/examples/getPropertyExample'
-import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import type { OperationData } from '../../lib/operationData'
 
 const props = defineProps({
   request: { // v-model

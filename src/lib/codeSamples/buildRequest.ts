@@ -1,7 +1,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { PlaygroundSecurityScheme } from '../../types'
 import { unref } from 'vue'
 import { getPropertyExample } from '../examples/getPropertyExample'
-import type { PlaygroundSecurityScheme } from '../../types'
 import { OARequest } from './request'
 
 function processParameters(variables: Record<string, string>, parameters: OpenAPIV3.ParameterObject[], callback: (key: string, value: string) => void) {

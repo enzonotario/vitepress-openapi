@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { SandboxData } from '../../sandboxData'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from 'vitepress-openapi/client'
 import { inject } from 'vue'
-import type { SandboxData } from '../../sandboxData'
 
 const sandboxData = inject('sandboxData') as SandboxData
 

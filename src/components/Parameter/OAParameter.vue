@@ -1,8 +1,8 @@
 <script setup>
-import OACodeValue from '../Common/OACodeValue.vue'
 import { getConstraints } from '../../lib/constraintsParser'
-import OAParameterExamples from './OAParameterExamples.vue'
+import OACodeValue from '../Common/OACodeValue.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
+import OAParameterExamples from './OAParameterExamples.vue'
 
 const props = defineProps({
   parameter: {

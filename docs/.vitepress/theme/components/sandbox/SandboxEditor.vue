@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import JsonEditorVue from 'json-editor-vue'
-import { inject, nextTick, ref, watch, watchEffect } from 'vue'
-import { useData } from 'vitepress'
 import type { SandboxData } from '../../sandboxData'
+import JsonEditorVue from 'json-editor-vue'
+import { useData } from 'vitepress'
+import { inject, nextTick, ref, watch, watchEffect } from 'vue'
 
 const { isDark } = useData()
 

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'
 import { Badge } from '../ui/badge'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'
 
 const props = defineProps({
   property: {

@@ -1,10 +1,10 @@
 import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
 import type { DefaultTheme } from 'vitepress'
-import { OpenApi } from '../lib/OpenApi'
 import { httpVerbs } from '../index'
+import { OpenApi } from '../lib/OpenApi'
 import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
-import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItemsByPaths'
 import { cleanSidebarItems } from '../lib/sidebar/cleanSidebarItems'
+import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItemsByPaths'
 
 type MethodAliases = Record<string, string>
 

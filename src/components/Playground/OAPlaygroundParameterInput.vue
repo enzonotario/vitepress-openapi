@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, onMounted } from 'vue'
-import { Input } from '../ui/input'
-import { Checkbox } from '../ui/checkbox'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
+import { Checkbox } from '../ui/checkbox'
+import { Input } from '../ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 const props = defineProps({

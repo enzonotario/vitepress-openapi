@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url'
-import { useSidebar } from 'vitepress-openapi'
 import { defineConfigWithTheme } from 'vitepress'
+import { useSidebar } from 'vitepress-openapi'
 import { examplesPages } from '../pages'
 import spec from '../public/openapi.json' assert {type: 'json'}
 

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { inject, onBeforeMount, onMounted, ref, watch } from 'vue'
-import { useSidebar } from 'vitepress-openapi'
+import type { SandboxData } from '../../sandboxData'
 import { useData } from 'vitepress'
+import { useSidebar } from 'vitepress-openapi'
 import VPSidebar from 'vitepress/dist/client/theme-default/components/VPSidebar.vue'
 import { getHeaders } from 'vitepress/dist/client/theme-default/composables/outline.js'
-import type { SandboxData } from '../../sandboxData'
+import { inject, onBeforeMount, onMounted, ref, watch } from 'vue'
 
 const { theme } = useData()
 

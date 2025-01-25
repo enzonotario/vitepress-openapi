@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ToastRoot, type ToastRootEmits, useForwardPropsEmits } from 'radix-vue'
+import type { ToastRootEmits } from 'radix-vue'
+import type { ToastProps } from './index'
+import { ToastRoot, useForwardPropsEmits } from 'radix-vue'
 import { computed } from 'vue'
 import { cn } from '../../../../../../src/lib/utils'
-import { type ToastProps, toastVariants } from './index'
+import { toastVariants } from './index'
 
 const props = defineProps<ToastProps>()
 

@@ -1,6 +1,6 @@
 import type { Ref, UnwrapRef } from 'vue'
-import { ref } from 'vue'
 import type { UseThemeConfig } from '../../../src/composables/useTheme'
+import { ref } from 'vue'
 
 export interface SandboxData {
   loading: Ref<boolean>
