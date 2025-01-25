@@ -1,7 +1,7 @@
 <script setup>
+import { destr } from 'destr'
 import { computed, ref, watch } from 'vue'
 import VueJsonPretty from 'vue-json-pretty'
-import { destr } from 'destr'
 import { useShiki } from '../../composables/useShiki'
 import { useTheme } from '../../composables/useTheme'
 import 'vue-json-pretty/lib/styles.css'

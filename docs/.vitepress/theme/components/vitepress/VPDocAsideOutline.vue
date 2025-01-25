@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { inject, ref, watch } from 'vue'
+import type { SandboxData } from '../../sandboxData'
 import { useData } from 'vitepress'
+import VPDocOutlineItem from 'vitepress/dist/client/theme-default/components/VPDocOutlineItem.vue'
 import {
   getHeaders,
   resolveTitle,
   useActiveAnchor,
 } from 'vitepress/dist/client/theme-default/composables/outline.js'
-import VPDocOutlineItem from 'vitepress/dist/client/theme-default/components/VPDocOutlineItem.vue'
-import type { SandboxData } from '../../sandboxData'
+import { inject, ref, watch } from 'vue'
 
 const { theme } = useData()
 

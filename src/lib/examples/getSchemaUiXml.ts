@@ -1,5 +1,5 @@
-import { jsXml } from 'json-xml-parse'
 import type { OAProperty } from '../getSchemaUi'
+import { jsXml } from 'json-xml-parse'
 import { getSchemaUiJson } from './getSchemaUiJson'
 
 export function getSchemaUiXml(uiProperties: OAProperty[] | OAProperty, useExample = false): any {

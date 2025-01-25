@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { OARequest } from '../../lib/codeSamples/request'
 import { useTheme } from '../../composables/useTheme'
+import { OARequest } from '../../lib/codeSamples/request'
 
 const props = defineProps({
   operationId: {

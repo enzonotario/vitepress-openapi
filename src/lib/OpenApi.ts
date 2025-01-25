@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { httpVerbs } from '../index'
 import type { ParsedOpenAPI } from '../types'
+import { httpVerbs } from '../index'
 import { processOpenAPI } from './processOpenAPI'
 
 export function OpenApi({

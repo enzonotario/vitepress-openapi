@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { compressToURL } from '@amoutonbrady/lz-string'
-import { initSandboxData } from '../../sandboxData'
 import { deepUnref } from '../../../../../src/lib/deepUnref'
 import { cn } from '../../../../../src/lib/utils'
+import { initSandboxData } from '../../sandboxData'
 
 const props = defineProps({
   themeConfig: {

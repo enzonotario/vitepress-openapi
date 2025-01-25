@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref } from 'vue'
 import type { OpenAPIV3 } from '@scalar/openapi-types'
+import { computed, defineEmits, defineProps, ref } from 'vue'
 import { OARequest } from '../../lib/codeSamples/request'
-import OAPlaygroundResponse from '../Playground/OAPlaygroundResponse.vue'
 import OAPlaygroundParameters from '../Playground/OAPlaygroundParameters.vue'
+import OAPlaygroundResponse from '../Playground/OAPlaygroundResponse.vue'
 
 const props = defineProps({
   operationId: {

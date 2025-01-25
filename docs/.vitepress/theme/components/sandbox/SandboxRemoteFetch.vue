@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { inject, nextTick, onMounted, ref } from 'vue'
-import { Icon } from '@iconify/vue'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { Input } from '../../../../../src/components/ui/input'
 import type { SandboxData } from '../../sandboxData'
+import { Icon } from '@iconify/vue'
+import { inject, nextTick, onMounted, ref } from 'vue'
+import { Input } from '../../../../../src/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 
 const sandboxData = inject('sandboxData') as SandboxData
 

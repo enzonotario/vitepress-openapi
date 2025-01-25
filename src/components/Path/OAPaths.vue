@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { OperationSlot } from '../../types'
 import { defineProps } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OALazy from '../Common/Lazy/OALazy.vue'
-import type { OperationSlot } from '../../types'
 
 const { openapi, paths } = defineProps({
   openapi: {

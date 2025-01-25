@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
-import OAParameterExamples from '../Parameter/OAParameterExamples.vue'
 import OAParameterAttribute from '../Parameter/OAParameterAttribute.vue'
+import OAParameterExamples from '../Parameter/OAParameterExamples.vue'
 
 const { scheme, name } = defineProps({
   name: {

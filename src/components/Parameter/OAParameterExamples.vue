@@ -1,7 +1,7 @@
 <script setup>
-import OACodeValue from '../Common/OACodeValue.vue'
-import { getPropertyExamples } from '../../lib/examples/getPropertyExamples'
 import { useTheme } from '../../composables/useTheme'
+import { getPropertyExamples } from '../../lib/examples/getPropertyExamples'
+import OACodeValue from '../Common/OACodeValue.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
 
 const props = defineProps({

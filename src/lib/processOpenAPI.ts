@@ -1,10 +1,10 @@
-import { merge } from 'allof-merge'
-import type { JSONSchema } from '@trojs/openapi-dereference'
-import { dereferenceSync } from '@trojs/openapi-dereference'
 import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
+import type { JSONSchema } from '@trojs/openapi-dereference'
 import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../types.js'
-import { getSchemaUi } from './getSchemaUi'
+import { dereferenceSync } from '@trojs/openapi-dereference'
+import { merge } from 'allof-merge'
 import { getSchemaExample } from './examples/getSchemaExample'
+import { getSchemaUi } from './getSchemaUi'
 import { getSecurityUi } from './getSecurityUi'
 
 function safelyMergeSpec(spec: OpenAPI.Document): ParsedOpenAPI {

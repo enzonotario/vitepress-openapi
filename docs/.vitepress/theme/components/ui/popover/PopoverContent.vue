@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import type { PopoverContentEmits, PopoverContentProps } from 'radix-vue'
+import type { HTMLAttributes } from 'vue'
 import {
   PopoverContent,
-  type PopoverContentEmits,
-  type PopoverContentProps,
+
   PopoverPortal,
   useForwardPropsEmits,
 } from 'radix-vue'
-import { type HTMLAttributes, computed } from 'vue'
+import { computed } from 'vue'
 import { cn } from '../../../../../../src/lib/utils'
 
 defineOptions({

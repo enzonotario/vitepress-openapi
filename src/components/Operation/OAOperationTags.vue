@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Badge } from '../ui/badge'
 import { useTheme } from '../../composables/useTheme'
+import { Badge } from '../ui/badge'
 
 const props = defineProps({
   tags: {

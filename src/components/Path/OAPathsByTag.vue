@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import type { OperationSlot } from '../../types'
 import { computed, defineProps, nextTick, ref } from 'vue'
-import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import { useTheme } from '../../composables/useTheme'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
+import { scrollIntoOperationByOperationId } from '../../lib/utils'
 import OAPathsSummary from '../Path/OAPathsSummary.vue'
 import { Button } from '../ui/button'
 import { Collapsible, CollapsibleTrigger } from '../ui/collapsible'
-import type { OperationSlot } from '../../types'
-import { scrollIntoOperationByOperationId } from '../../lib/utils'
 
 export interface Tag {
   tag: string

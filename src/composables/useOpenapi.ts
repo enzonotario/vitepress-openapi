@@ -1,6 +1,6 @@
 import type { OpenAPI } from '@scalar/openapi-types'
-import { createOpenApiInstance } from '../lib/createOpenApiInstance'
 import type { PartialUseThemeConfig } from './useTheme'
+import { createOpenApiInstance } from '../lib/createOpenApiInstance'
 import { useTheme } from './useTheme'
 
 export interface OpenAPIData {

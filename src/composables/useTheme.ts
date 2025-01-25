@@ -1,13 +1,13 @@
 import type { Ref, UnwrapNestedRefs } from 'vue'
-import { ref } from 'vue'
-import vitesseLight from 'shiki/themes/vitesse-light.mjs'
-import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
-import { useDark } from '@vueuse/core'
 import type { IOARequest } from '../lib/codeSamples/request'
+import type { OperationSlot, ParsedOperation } from '../types'
+import { useDark } from '@vueuse/core'
+import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
+import vitesseLight from 'shiki/themes/vitesse-light.mjs'
+import { ref } from 'vue'
 import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
-import type { OperationSlot, ParsedOperation } from '../types'
 
 export interface ThemeConfig {
   highlighterTheme: {

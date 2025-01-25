@@ -1,9 +1,9 @@
 <script setup>
 import { computed } from 'vue'
 import { useTheme } from '../../composables/useTheme'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
-import OASchemaUI from '../Schema/OASchemaUI.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
+import OASchemaUI from '../Schema/OASchemaUI.vue'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 
 const props = defineProps({
   schema: {
