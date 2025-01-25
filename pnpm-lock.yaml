@@ -43,8 +43,8 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1
       '@trojs/openapi-dereference':
-        specifier: ^0.2.5
-        version: 0.2.5
+        specifier: ^1.0.1
+        version: 1.0.1
       '@types/node':
         specifier: ^22.10.10
         version: 22.10.10
@@ -953,9 +953,9 @@ packages:
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
 
-  '@trojs/openapi-dereference@0.2.5':
-    resolution: {integrity: sha512-b8yOKXgJlbscbAKePsqrp66emAu8ECLR2KE42BxuaLrvnngXZhI7LCEyyuxg3/utJQDpgQ/O8/cBfkOYnJ4F5w==}
-    engines: {node: '>= 18.13'}
+  '@trojs/openapi-dereference@1.0.1':
+    resolution: {integrity: sha512-pNr6+pTlg4a1CKbddzwEjYIq5LLhMrD6wijrMX8iwwDV76qXw2ykP7ZMsAWPCXMU3ChxK21SH0P+A1sTeKX1Vg==}
+    engines: {node: '>= 20'}
 
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
@@ -3847,7 +3847,7 @@ snapshots:
       '@tanstack/virtual-core': 3.11.2
       vue: 3.5.13(typescript@5.7.3)
 
-  '@trojs/openapi-dereference@0.2.5': {}
+  '@trojs/openapi-dereference@1.0.1': {}
 
   '@types/debug@4.1.12':
     dependencies:

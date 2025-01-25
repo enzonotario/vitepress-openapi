@@ -63,7 +63,7 @@
     "@antfu/eslint-config": "^4.0.1",
     "@scalar/openapi-types": "^0.1.6",
     "@sindresorhus/slugify": "^2.2.1",
-    "@trojs/openapi-dereference": "^0.2.5",
+    "@trojs/openapi-dereference": "^1.0.1",
     "@types/node": "^22.10.10",
     "@vitejs/plugin-vue": "^5.2.1",
     "allof-merge": "^0.6.6",
