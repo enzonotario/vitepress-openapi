@@ -24,7 +24,7 @@
       "types": "./dist/types/src/client.d.ts",
       "import": "./dist/vitepress-openapi.client.es.js"
     },
-    "./dist/style.css": "./dist/style.css"
+    "./dist/style.css": "./dist/vitepress-openapi.css"
   },
   "main": "./dist/vitepress-openapi.node.es.js",
   "module": "./dist/vitepress-openapi.node.es.js",
@@ -60,7 +60,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.0.1",
+    "@antfu/eslint-config": "^4.1.0",
     "@scalar/openapi-types": "^0.1.6",
     "@sindresorhus/slugify": "^2.2.1",
     "@trojs/openapi-dereference": "^1.0.1",
@@ -83,7 +83,7 @@
     "shiki": "^2.1.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
-    "vite": "^5.4.14",
+    "vite": "^6.0.11",
     "vitepress": "^1.6.3",
     "vitest": "^3.0.4",
     "vue": "^3.5.13",

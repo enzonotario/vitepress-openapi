@@ -1,5 +1,6 @@
 import type { HighlighterCore } from 'shiki'
-import { createHighlighterCoreSync, createJavaScriptRegexEngine } from 'shiki/core'
+import { createHighlighterCoreSync } from 'shiki/core'
+import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
 import bash from 'shiki/langs/bash.mjs'
 import js from 'shiki/langs/javascript.mjs'
 import json from 'shiki/langs/json.mjs'
