@@ -1,10 +1,10 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { httpVerbs } from '../../index'
 import type { OASidebarItem } from '../../composables/useSidebar'
-import { mergeAdjacentGroups } from './mergeAdjacentGroups'
+import { httpVerbs } from '../../index'
 import { ensureGroupTextSlashPrefix } from './ensureGroupTextSlashPrefix'
-import { setItemCollapsedState } from './setItemCollapsedState'
 import { flatSidebarItems } from './flatSidebarItems'
+import { mergeAdjacentGroups } from './mergeAdjacentGroups'
+import { setItemCollapsedState } from './setItemCollapsedState'
 
 export function generateSidebarItemsByPaths({
   paths,

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { inject } from 'vue'
-import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
-import { useTheme } from '../../composables/useTheme'
-import OAServers from '../Common/OAServers.vue'
-import OAInfo from '../Common/OAInfo.vue'
 import type { OperationSlot } from '../../types'
+import { inject } from 'vue'
+import { useTheme } from '../../composables/useTheme'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
+import OAInfo from '../Common/OAInfo.vue'
+import OAServers from '../Common/OAServers.vue'
 
 const props = defineProps({
   spec: {

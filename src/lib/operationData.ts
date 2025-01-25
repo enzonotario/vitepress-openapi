@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
-import { ref } from 'vue'
 import type { ParsedOperation } from '../types'
+import { ref } from 'vue'
 import { useTheme } from '../composables/useTheme'
 
 export interface OperationData {

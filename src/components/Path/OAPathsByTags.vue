@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { OperationSlot } from '../../types'
 import { defineProps, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import { useTheme } from '../../composables/useTheme'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import OALazy from '../Common/Lazy/OALazy.vue'
-import type { OperationSlot } from '../../types'
 import OAPathsByTag from './OAPathsByTag.vue'
 
 const props = defineProps({

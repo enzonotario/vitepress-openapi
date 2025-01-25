@@ -1,9 +1,9 @@
 <script setup>
-import { computed, defineProps, provide, ref } from 'vue'
 import { useStorage } from '@vueuse/core'
-import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
-import { buildRequest } from '../../lib/codeSamples/buildRequest'
+import { computed, defineProps, provide, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
+import { buildRequest } from '../../lib/codeSamples/buildRequest'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import { initOperationData } from '../../lib/operationData'
 
 const props = defineProps({

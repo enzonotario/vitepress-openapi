@@ -1,6 +1,6 @@
 import type { OARequest } from './request'
-import { generateCodeSampleJavaScript } from './generateCodeSampleJavaScript'
 import { generateCodeSampleCurl } from './generateCodeSampleCurl'
+import { generateCodeSampleJavaScript } from './generateCodeSampleJavaScript'
 import { generateCodeSamplePhp } from './generateCodeSamplePhp'
 import { generateCodeSamplePython } from './generateCodeSamplePython'
 

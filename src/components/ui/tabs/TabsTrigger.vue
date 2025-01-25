@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { type HTMLAttributes, computed } from 'vue'
-import { TabsTrigger, type TabsTriggerProps, useForwardProps } from 'radix-vue'
+import type { TabsTriggerProps } from 'radix-vue'
+import type { HTMLAttributes } from 'vue'
+import type { TabsTriggerVariants } from './index'
+import { TabsTrigger, useForwardProps } from 'radix-vue'
+import { computed } from 'vue'
 import { cn } from '../../../lib/utils'
-import { type TabsTriggerVariants, tabsTriggerVariants } from './index'
+import { tabsTriggerVariants } from './index'
 
 interface Props extends TabsTriggerProps {
   variant?: TabsTriggerVariants['variant']

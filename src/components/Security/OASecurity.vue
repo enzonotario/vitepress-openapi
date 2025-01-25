@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { OperationData } from '../../lib/operationData'
 import { defineProps, inject } from 'vue'
 import OASecurityContent from '../Security/OASecurityContent.vue'
-import type { OperationData } from '../../lib/operationData'
 
 const { securityUi, headingPrefix } = defineProps({
   securityUi: {

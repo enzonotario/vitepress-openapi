@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { OperationSlot } from '../../types'
 import { computed, inject, useSlots } from 'vue'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
-import type { OperationSlot } from '../../types'
 import OAOperationTags from './OAOperationTags.vue'
 
 const props = defineProps({

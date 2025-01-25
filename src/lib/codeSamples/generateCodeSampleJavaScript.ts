@@ -11,8 +11,7 @@ export function generateCodeSampleJavaScript(request: OARequest) {
       headers: Object.keys(request.headers ?? {}).length ? 'REPLACE_HEADERS' : undefined,
       body: request.body ? 'REPLACE_BODY' : undefined,
     })
-      .filter(([_, v]) => v !== undefined) // Filter undefined values.
-    ,
+      .filter(([_, v]) => v !== undefined), // Filter undefined values.
   )
 
   const optionsString = JSON.stringify(jsFetchOptions)

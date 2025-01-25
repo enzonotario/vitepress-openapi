@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { OARequest } from '../../lib/codeSamples/request'
-import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
+import { Button } from '../ui/button'
 
 interface PlaygroundResponse {
   body: any
