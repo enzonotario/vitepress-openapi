@@ -220,12 +220,14 @@ export function useSidebar({
     depth = 6,
     sidebarItemTemplate = sidebarItemTemplateForMethodPath,
     linkPrefix: itemLinkPrefix = linkPrefix,
+    sidebarGroupTemplate,
   }: {
     startsWith?: string
     collapsible?: boolean
     depth?: number
     sidebarItemTemplate?: (method: OpenAPIV3.HttpMethods, path: string) => string
     linkPrefix?: string
+    sidebarGroupTemplate?: (path: string, depth: number) => string
   } = {}): DefaultTheme.SidebarItem[] {
     const paths = getOpenApi().getPaths()
 
@@ -236,6 +238,7 @@ export function useSidebar({
       depth,
       itemLinkPrefix,
       sidebarItemTemplate,
+      sidebarGroupTemplate,
     })
 
     return cleanSidebarItems(sidebarItems) as DefaultTheme.SidebarItem[]
