@@ -7,3 +7,9 @@ docs/.vitepress/cache
 docs/.vitepress/.temp
 types
 .idea
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
