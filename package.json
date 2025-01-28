@@ -44,7 +44,8 @@
     "docs:build": "pnpm run build && cd docs && pnpm run build",
     "test": "vitest",
     "test:run": "vitest --run",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "e2e:dev": "cd e2e/dev && vitepress dev docs --port 4173"
   },
   "peerDependencies": {
     "vitepress": ">=1.0.0",
@@ -61,6 +62,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.1.0",
+    "@playwright/test": "^1.50.0",
     "@scalar/openapi-types": "^0.1.6",
     "@sindresorhus/slugify": "^2.2.1",
     "@trojs/openapi-dereference": "^1.0.1",
