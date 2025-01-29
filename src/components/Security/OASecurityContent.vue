@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
+import OACodeValue from '../Common/OACodeValue.vue'
 import OAParameterAttribute from '../Parameter/OAParameterAttribute.vue'
 import OAParameterExamples from '../Parameter/OAParameterExamples.vue'
 
@@ -60,22 +61,36 @@ const typeValue = computed(() => {
           v-for="(url, flow) in scheme.flows"
           :key="flow"
         >
-          <span>{{ flow }} Flow:</span>
-          <div class="pl-2">
-            <span>Authorization URL: {{ url.authorizationUrl }}</span>
-            <span>Token URL: {{ url.tokenUrl }}</span>
-            <div v-if="url.scopes">
-              <span>Scopes:</span>
-              <ul class="pl-2">
-                <li
-                  v-for="(description, scope) in url.scopes"
-                  :key="scope"
-                >
-                  {{ scope }}: {{ description }}
-                </li>
-              </ul>
+          <details>
+            <summary class="!my-1 cursor-pointer hover:text-[var(--vp-c-brand-1)]">
+              {{ flow }} Flow
+            </summary>
+
+            <div class="pl-2 flex flex-col gap-1">
+              <div v-if="url.authorizationUrl" class="flex flex-wrap gap-2">
+                <span class="text-sm">{{ $t('Authorization URL') }}</span>
+                <OACodeValue :value="url.authorizationUrl" />
+              </div>
+
+              <div v-if="url.tokenUrl" class="flex flex-wrap gap-2">
+                <span class="text-sm">{{ $t('Token URL') }}</span>
+                <OACodeValue :value="url.tokenUrl" />
+              </div>
+
+              <div v-if="url.scopes">
+                <span class="text-sm">Scopes:</span>
+                <ul class="pl-2 !my-0">
+                  <li
+                    v-for="(description, scope) in url.scopes"
+                    :key="scope"
+                  >
+                    <OACodeValue :value="scope" />
+                    <span class="ml-2 text-sm">{{ description }}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
+          </details>
         </div>
       </div>
     </div>
