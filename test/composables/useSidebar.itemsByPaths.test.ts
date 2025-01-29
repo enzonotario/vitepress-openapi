@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest'
 import type { DefaultTheme } from 'vitepress'
-import { useSidebar } from '../../src/composables/useSidebar'
+import { describe, expect, it } from 'vitest'
 import realSpec from '../../docs/public/openapi.json'
+import { useSidebar } from '../../src/composables/useSidebar'
 
 function cleanResult(result: (DefaultTheme.SidebarItem | DefaultTheme.SidebarItem[])): any {
   if (Array.isArray(result)) {
@@ -695,6 +695,76 @@ describe('useSidebar itemsByPaths', () => {
           },
           {
             link: '/operations/delete121',
+          },
+        ],
+      },
+    ])
+  })
+
+  it('generate items witn sidebarGroupTemplate', () => {
+    const result = sidebar.itemsByPaths({
+      sidebarGroupTemplate: (path: string, depth: number) => `${depth} - ${path}`,
+      collapsible: false,
+    })
+
+    expect(
+      cleanResult(result),
+    ).toEqual([
+      {
+        text: '1 - /api/v1',
+        items: [
+          {
+            text: '2 - /api/v1/1',
+            items: [
+              {
+                link: '/operations/get1',
+              },
+              {
+                link: '/operations/create1',
+              },
+              {
+                text: '3 - /api/v1/1/2',
+                items: [
+                  {
+                    link: '/operations/get12',
+                  },
+                  {
+                    link: '/operations/update12',
+                  },
+                  {
+                    link: '/operations/delete12',
+                  },
+                  {
+                    text: '4 - /api/v1/1/2/{x}',
+                    items: [
+                      {
+                        link: '/operations/get12x',
+                      },
+                      {
+                        link: '/operations/update12x',
+                      },
+                      {
+                        link: '/operations/delete12x',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            text: '2 - /api/v1/987',
+            items: [
+              {
+                link: '/operations/get121',
+              },
+              {
+                link: '/operations/update987',
+              },
+              {
+                link: '/operations/delete121',
+              },
+            ],
           },
         ],
       },

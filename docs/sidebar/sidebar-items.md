@@ -135,6 +135,11 @@ module.exports = {
                  * in `sidebarItemTemplate` function in the `useSidebar` composable.
                  */
                 //sidebarItemTemplate: (method: string, path: string): string => `[${method}] ${path}`,
+
+                /**
+                 * Optionally, you can specify a template for the sidebar groups.
+                 */
+                //sidebarGroupTemplate: (path: string, depth: number): string => path,
             }),
         ],
     },
