@@ -12,5 +12,9 @@
   {
     "name": "CriptoYa API",
     "url": "https://docs.criptoya.com"
+  },
+  {
+    "name": "pyDolarVenezuela API",
+    "url": "https://docs.pydolarve.org"
   }
 ]
