@@ -13,6 +13,7 @@ export function generateSidebarItemsByPaths({
   itemLinkPrefix = '',
   depth = 6,
   sidebarItemTemplate,
+  sidebarGroupTemplate,
 }: {
   paths: OpenAPIV3.PathsObject
   startsWith?: string
@@ -20,6 +21,7 @@ export function generateSidebarItemsByPaths({
   itemLinkPrefix?: string
   depth?: number
   sidebarItemTemplate?: (method: OpenAPIV3.HttpMethods, path: string) => string
+  sidebarGroupTemplate?: (path: string, depth: number) => string
 } = {
   paths: {},
 }): OASidebarItem[] {
@@ -80,6 +82,10 @@ export function generateSidebarItemsByPaths({
 
   sidebarItems = flatSidebarItems(sidebarItems, flattenedSidebarItems, depth)
 
+  if (sidebarGroupTemplate) {
+    sidebarItems = applySidebarGroupTemplate(sidebarItems, sidebarGroupTemplate)
+  }
+
   return sidebarItems
 }
 
@@ -105,4 +111,22 @@ function findOrCreateGroup(
   }
 
   return group
+}
+
+function applySidebarGroupTemplate(
+  sidebarItems: OASidebarItem[],
+  sidebarGroupTemplate: (path: string, depth: number) => string,
+  currentDepth: number = 1,
+): OASidebarItem[] {
+  return sidebarItems.map((item) => {
+    if (item.text && item.path && item.items && item.items.length) {
+      item.text = sidebarGroupTemplate(item.path, currentDepth)
+    }
+
+    if (item.items) {
+      item.items = applySidebarGroupTemplate(item.items as OASidebarItem[], sidebarGroupTemplate, currentDepth + 1)
+    }
+
+    return item
+  })
 }
