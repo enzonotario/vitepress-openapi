@@ -78,7 +78,7 @@ describe('getSecurityUi', () => {
     expect(result[1].id).toBe('oauth2')
   })
 
-  it('works', () => {
+  it('correctly handles ApiKey authentication with custom header name', () => {
     const security: OpenAPIV3.SecurityRequirementObject[] = [{ ApiKeyAuth: [] }]
     const securitySchemes: Record<string, OpenAPIV3.SecuritySchemeObject> = {
       ApiKeyAuth: { type: 'apiKey', in: 'header', name: 'X-Api-Key' },
