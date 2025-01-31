@@ -1,3 +1,9 @@
+---
+prev:
+  text: 'Sidebar Items'
+  link: /sidebar/sidebar-items
+---
+
 # `useTheme` composable
 
 The `useTheme` composable provides functions to configure the theme.
