@@ -1,5 +1,5 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { OASidebarItem } from '../../composables/useSidebar'
+import type { OASidebarItem, SidebarGroupTemplateFn, SidebarItemTemplateFn } from '../../composables/useSidebar'
 import { httpVerbs } from '../../index'
 import { ensureGroupTextSlashPrefix } from './ensureGroupTextSlashPrefix'
 import { flatSidebarItems } from './flatSidebarItems'
@@ -20,8 +20,8 @@ export function generateSidebarItemsByPaths({
   collapsible?: boolean
   itemLinkPrefix?: string
   depth?: number
-  sidebarItemTemplate?: (method: OpenAPIV3.HttpMethods, path: string) => string
-  sidebarGroupTemplate?: (path: string, depth: number) => string
+  sidebarItemTemplate?: SidebarItemTemplateFn
+  sidebarGroupTemplate?: SidebarGroupTemplateFn
 } = {
   paths: {},
 }): OASidebarItem[] {
@@ -115,7 +115,7 @@ function findOrCreateGroup(
 
 function applySidebarGroupTemplate(
   sidebarItems: OASidebarItem[],
-  sidebarGroupTemplate: (path: string, depth: number) => string,
+  sidebarGroupTemplate: SidebarGroupTemplateFn,
   currentDepth: number = 1,
 ): OASidebarItem[] {
   return sidebarItems.map((item) => {
