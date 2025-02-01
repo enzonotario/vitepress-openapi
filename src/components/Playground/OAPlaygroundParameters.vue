@@ -93,10 +93,11 @@ function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
     return {
       type: scheme.type,
       scheme: scheme.scheme,
-      name,
+      name: scheme.name ?? name,
       playgroundValue: typeof localStorage !== 'undefined'
         ? useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage)
         : usePlayground().getSecuritySchemeDefaultValue(scheme),
+      label: name,
     }
   })
 }
@@ -160,7 +161,7 @@ watch(operationData.security.selectedSchemeId, () => {
           class="flex flex-col"
         >
           <div class="flex flex-row items-center space-x-2">
-            <span class="text-sm font-bold">{{ authorization.name }}</span>
+            <span class="text-sm font-bold">{{ authorization.label }}</span>
           </div>
           <div class="flex flex-row items-center space-x-2">
             <OAPlaygroundSecurityInput

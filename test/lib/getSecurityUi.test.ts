@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
 import type { OpenAPIV3 } from '@scalar/openapi-types'
+import { describe, expect, it } from 'vitest'
 import { getSecurityUi } from '../../src/lib/getSecurityUi'
 
 describe('getSecurityUi', () => {
@@ -76,5 +76,21 @@ describe('getSecurityUi', () => {
     expect(result).toHaveLength(2)
     expect(result[0].id).toBe('apiKey')
     expect(result[1].id).toBe('oauth2')
+  })
+
+  it('correctly handles ApiKey authentication with custom header name', () => {
+    const security: OpenAPIV3.SecurityRequirementObject[] = [{ ApiKeyAuth: [] }]
+    const securitySchemes: Record<string, OpenAPIV3.SecuritySchemeObject> = {
+      ApiKeyAuth: { type: 'apiKey', in: 'header', name: 'X-Api-Key' },
+    }
+    const result = getSecurityUi(security, securitySchemes)
+    expect(result).toEqual([
+      {
+        id: 'ApiKeyAuth',
+        schemes: {
+          ApiKeyAuth: { type: 'apiKey', in: 'header', name: 'X-Api-Key' },
+        },
+      },
+    ])
   })
 })
