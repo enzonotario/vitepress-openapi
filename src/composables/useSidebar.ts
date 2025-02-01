@@ -8,24 +8,40 @@ import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItems
 
 type MethodAliases = Record<string, string>
 
-interface SidebarConfig {
+export type SidebarItemTemplateFn = (
+  method: OpenAPIV3.HttpMethods,
+  path: string
+) => string
+
+export type SidebarGroupTemplateFn = (
+  path: string,
+  depth: number
+) => string
+
+export interface SidebarConfig {
   spec?: OpenAPI.Document | null
   linkPrefix?: string
   tagLinkPrefix?: string
   defaultTag?: string
   methodAliases?: MethodAliases
+  sidebarItemTemplate?: SidebarItemTemplateFn
+  sidebarGroupTemplate?: SidebarGroupTemplateFn
 }
 
-interface SidebarGroupConfig {
+export interface SidebarGroupConfig {
   tag: string | string[]
   text?: string
   linkPrefix?: string
   addedOperations?: Set<string>
+  sidebarItemTemplate?: SidebarItemTemplateFn
+  sidebarGroupTemplate?: SidebarGroupTemplateFn
 }
 
-interface SidebarGroupsConfig {
+export interface SidebarGroupsConfig {
   tags?: string[] | null
   linkPrefix?: string | null
+  sidebarItemTemplate?: SidebarItemTemplateFn
+  sidebarGroupTemplate?: SidebarGroupTemplateFn
 }
 
 export interface OASidebarItem extends DefaultTheme.SidebarItem {
@@ -39,11 +55,15 @@ interface OpenAPIOperation extends OpenAPIV3.OperationObject {
   'operationId': string
 }
 
-const DEFAULT_CONFIG: Required<Omit<SidebarConfig, 'methodAliases' | 'spec'>> = {
+const DEFAULT_CONFIG: Required<Omit<SidebarConfig, 'methodAliases' | 'spec' | 'sidebarItemTemplate' | 'sidebarGroupTemplate'>> = {
   linkPrefix: '/operations/',
   tagLinkPrefix: '/tags/',
   defaultTag: 'Default',
 } as const
+
+function defaultGroupTemplate(path: string, _: number = 1): string {
+  return path
+}
 
 export function useSidebar({
   spec,
@@ -51,6 +71,8 @@ export function useSidebar({
   tagLinkPrefix = DEFAULT_CONFIG.tagLinkPrefix,
   defaultTag = DEFAULT_CONFIG.defaultTag,
   methodAliases = {},
+  sidebarItemTemplate,
+  sidebarGroupTemplate,
 }: SidebarConfig = {}) {
   let openApiInstance: ReturnType<typeof OpenApi> | null = null
 
@@ -72,18 +94,22 @@ export function useSidebar({
     return openApiInstance
   }
 
-  function sidebarItemTemplate(method: OpenAPIV3.HttpMethods, title: string): string {
-    const resolvedMethod = methodAliases?.[method] || method.toUpperCase()
-
+  const _globalItemTemplate: SidebarItemTemplateFn = sidebarItemTemplate || ((method, title) => {
+    const resolvedMethod = methodAliases[method] || method.toUpperCase()
     return `<span class="OASidebarItem group/oaSidebarItem">
         <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${resolvedMethod}</span>
         <span class="OASidebarItem-text text">${title}</span>
       </span>`
-  }
+  })
 
-  function sidebarItemTemplateForMethodPath(method: OpenAPIV3.HttpMethods, path: string): string {
+  const _globalGroupTemplate: SidebarGroupTemplateFn = sidebarGroupTemplate || defaultGroupTemplate
+
+  function sidebarItemTemplateForMethodPath(
+    method: OpenAPIV3.HttpMethods,
+    path: string,
+    localItemTemplate?: SidebarItemTemplateFn,
+  ): string {
     const operation = getOpenApi().getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
-
     if (!operation) {
       return `[${method.toUpperCase()}] ${path}`
     }
@@ -92,13 +118,16 @@ export function useSidebar({
 
     const sidebarTitle = operation['x-sidebar-title'] || summary || `${method.toUpperCase()} ${path}`
 
-    return sidebarItemTemplate(method, sidebarTitle)
+    const finalTemplate = localItemTemplate || _globalItemTemplate
+
+    return finalTemplate(method, sidebarTitle)
   }
 
   function generateSidebarItem(
     method: OpenAPIV3.HttpMethods,
     path: string,
     itemLinkPrefix: string = linkPrefix,
+    localItemTemplate?: SidebarItemTemplateFn,
   ): OASidebarItem | null {
     const operation = getOpenApi().getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
 
@@ -106,11 +135,10 @@ export function useSidebar({
       return null
     }
 
-    const { operationId, summary } = operation
-    const sidebarTitle = operation['x-sidebar-title'] || summary || `${method.toUpperCase()} ${path}`
+    const operationId = operation.operationId
 
     return {
-      text: sidebarItemTemplate(method, sidebarTitle),
+      text: sidebarItemTemplateForMethodPath(method, path, localItemTemplate),
       link: `${itemLinkPrefix}${operationId}`,
     }
   }
@@ -120,6 +148,8 @@ export function useSidebar({
     text = '',
     linkPrefix: groupLinkPrefix = linkPrefix,
     addedOperations = new Set<string>(),
+    sidebarItemTemplate: localItemTemplate,
+    sidebarGroupTemplate: localGroupTemplate,
   }: SidebarGroupConfig): OASidebarItem {
     const paths = getOpenApi().getPaths()
 
@@ -142,12 +172,13 @@ export function useSidebar({
               return null
             }
 
-            const shouldInclude = includeTags.length === 0
-              || includeTags.every(tag => operation.tags?.includes(tag))
+            const shouldInclude
+                  = includeTags.length === 0
+                    || includeTags.every(tagName => operation.tags?.includes(tagName))
 
             if (shouldInclude) {
               addedOperations.add(operation.operationId)
-              return generateSidebarItem(method as OpenAPIV3.HttpMethods, path, groupLinkPrefix)
+              return generateSidebarItem(method as OpenAPIV3.HttpMethods, path, groupLinkPrefix, localItemTemplate)
             }
 
             return null
@@ -155,8 +186,10 @@ export function useSidebar({
           .filter((item): item is OASidebarItem => item !== null),
       )
 
+    const finalGroupTemplate = localGroupTemplate || _globalGroupTemplate
+
     return {
-      text: text || includeTags.join(', '),
+      text: finalGroupTemplate(text, 0),
       items,
     }
   }
@@ -164,6 +197,8 @@ export function useSidebar({
   function generateSidebarGroups({
     tags = undefined,
     linkPrefix: groupsLinkPrefix = linkPrefix,
+    sidebarItemTemplate: localItemTemplate,
+    sidebarGroupTemplate: localGroupTemplate,
   }: SidebarGroupsConfig = {}): OASidebarItem[] {
     if (tags === undefined) {
       tags = getOpenApi().getOperationsTags()
@@ -181,6 +216,8 @@ export function useSidebar({
         text: tag,
         linkPrefix: groupsLinkPrefix || tagLinkPrefix,
         addedOperations,
+        sidebarItemTemplate: localItemTemplate,
+        sidebarGroupTemplate: localGroupTemplate,
       }),
     )
 
@@ -189,6 +226,8 @@ export function useSidebar({
       text: '',
       linkPrefix: groupsLinkPrefix || tagLinkPrefix,
       addedOperations,
+      sidebarItemTemplate: localItemTemplate,
+      sidebarGroupTemplate: localGroupTemplate,
     })
 
     return untaggedGroup.items?.length
@@ -218,18 +257,23 @@ export function useSidebar({
     startsWith = '',
     collapsible = true,
     depth = 6,
-    sidebarItemTemplate = sidebarItemTemplateForMethodPath,
     linkPrefix: itemLinkPrefix = linkPrefix,
+    sidebarItemTemplate,
     sidebarGroupTemplate,
   }: {
     startsWith?: string
     collapsible?: boolean
     depth?: number
-    sidebarItemTemplate?: (method: OpenAPIV3.HttpMethods, path: string) => string
     linkPrefix?: string
-    sidebarGroupTemplate?: (path: string, depth: number) => string
+    sidebarItemTemplate?: SidebarItemTemplateFn
+    sidebarGroupTemplate?: SidebarGroupTemplateFn
   } = {}): DefaultTheme.SidebarItem[] {
     const paths = getOpenApi().getPaths()
+
+    const itemTemplateForMethodPath = (
+      method: OpenAPIV3.HttpMethods,
+      path: string,
+    ) => sidebarItemTemplateForMethodPath(method, path, sidebarItemTemplate)
 
     const sidebarItems = generateSidebarItemsByPaths({
       paths,
@@ -237,7 +281,7 @@ export function useSidebar({
       collapsible,
       depth,
       itemLinkPrefix,
-      sidebarItemTemplate,
+      sidebarItemTemplate: itemTemplateForMethodPath,
       sidebarGroupTemplate,
     })
 
@@ -245,7 +289,8 @@ export function useSidebar({
   }
 
   return {
-    sidebarItemTemplate,
+    sidebarItemTemplate: _globalItemTemplate,
+    sidebarGroupTemplate: _globalGroupTemplate,
     generateSidebarItem,
     generateSidebarGroup,
     generateSidebarGroups,

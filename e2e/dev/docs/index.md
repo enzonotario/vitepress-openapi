@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: "VitePress OpenAPI"
-  tagline: "Generate documentation from OpenAPI specifications."
+  tagline: "Generate VitePress API Docs from OpenAPI specifications"
   actions:
     - theme: brand
       text: API Reference

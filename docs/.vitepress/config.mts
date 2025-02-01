@@ -3,6 +3,7 @@ import { defineConfigWithTheme } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import { examplesPages } from '../pages'
 import spec from '../public/openapi.json' assert {type: 'json'}
+import { sidebars } from '../sidebars'
 
 const sidebar = useSidebar({
   spec,
@@ -28,180 +29,188 @@ export default defineConfigWithTheme({
       },
     ],
 
-    sidebar: [
-      {
-        text: 'Getting Started',
-        link: '/guide/getting-started',
-      },
-      {
-        text: 'Pages',
-        items: [
-          {
-            items: [
-              {
-                text: 'By Operation',
-                link: '/pages/by-operation',
-              },
-              {
-                text: 'By Spec',
-                link: '/pages/by-spec',
-              },
-              {
-                text: 'By Tag',
-                link: '/pages/by-tag',
-              },
-              {
-                text: 'Introduction',
-                link: '/pages/introduction',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        text: 'Sidebar',
-        items: [
-          {
-            items: [
-              {
-                text: 'Sidebar Items',
-                link: '/sidebar/sidebar-items',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        text: 'Composables',
-        items: [
-          {
-            items: [
-              {
-                text: 'useTheme',
-                link: '/composables/useTheme',
-              },
-              {
-                text: 'usePlayground',
-                link: '/composables/usePlayground',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        text: 'Customizations',
-        items: [
-          {
-            items: [
-              {
-                text: 'General',
-                items: [
-                  {
-                    items: [
-                      {
-                        text: 'i18n',
-                        link: '/customizations/i18n',
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                text: 'Operation',
-                items: [
-                  {
-                    items: [
-                      {
-                        text: 'Custom Slots',
-                        link: '/customizations/custom-slots',
-                      },
-                      {
-                        text: 'Operation Badges',
-                        link: '/customizations/operation-badges',
-                      },
-                      {
-                        text: 'Code Samples',
-                        link: '/customizations/code-samples',
-                      },
-                      {
-                        text: 'Operation tags slot',
-                        link: '/customizations/operation-tags-slot',
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                text: 'Spec',
-                items: [
-                  {
-                    items: [
-                      {
-                        text: 'Multiple Specs',
-                        link: '/customizations/multiple-specs',
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        text: 'Example',
-        collapsed: true,
-        items: [
-          {
-            text: 'Introduction',
-            link: '/example/introduction',
-          },
-          ...sidebar.generateSidebarGroups({
-            linkPrefix: '/example/operations/',
-          }),
-          {
-            text: 'One Page',
-            link: '/example/one-page',
-          },
-        ],
-      },
-      {
-        text: 'Tests',
-        collapsed: true,
-        items: [
-          {
-            text: 'Response Types',
-            link: '/tests/response-types',
-          },
-          {
-            text: 'Response Statuses',
-            link: '/tests/response-statuses',
-          },
-          {
-            text: 'Schemas',
-            link: '/tests/schemas',
-          },
-          {
-            text: 'Parameters',
-            link: '/tests/parameters',
-          },
-          {
-            text: 'Security',
-            link: '/tests/security',
-          },
-        ],
-      },
-      {
-        text: 'Remote Examples',
-        collapsed: true,
-        items: [
-          ...examplesPages.map(page => ({
-            text: page.label,
-            link: `/examples/${page.slug}`,
-          })),
-        ],
-      },
-    ],
+    sidebar: {
+      ...sidebars,
+      '/': [
+        {
+          text: 'Getting Started',
+          link: '/guide/getting-started',
+        },
+        {
+          text: 'Pages',
+          items: [
+            {
+              items: [
+                {
+                  text: 'By Operation',
+                  link: '/pages/by-operation',
+                },
+                {
+                  text: 'By Spec',
+                  link: '/pages/by-spec',
+                },
+                {
+                  text: 'By Tag',
+                  link: '/pages/by-tag',
+                },
+                {
+                  text: 'Introduction',
+                  link: '/pages/introduction',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          text: 'Sidebar',
+          items: [
+            {
+              items: [
+                {
+                  text: 'Sidebar Items',
+                  link: '/sidebar/sidebar-items',
+                },
+                {
+                  text: 'Sidebar Examples',
+                  link: '/sidebar-examples/',
+                  target: '_blank',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          text: 'Composables',
+          items: [
+            {
+              items: [
+                {
+                  text: 'useTheme',
+                  link: '/composables/useTheme',
+                },
+                {
+                  text: 'usePlayground',
+                  link: '/composables/usePlayground',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          text: 'Customizations',
+          items: [
+            {
+              items: [
+                {
+                  text: 'General',
+                  items: [
+                    {
+                      items: [
+                        {
+                          text: 'i18n',
+                          link: '/customizations/i18n',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  text: 'Operation',
+                  items: [
+                    {
+                      items: [
+                        {
+                          text: 'Custom Slots',
+                          link: '/customizations/custom-slots',
+                        },
+                        {
+                          text: 'Operation Badges',
+                          link: '/customizations/operation-badges',
+                        },
+                        {
+                          text: 'Code Samples',
+                          link: '/customizations/code-samples',
+                        },
+                        {
+                          text: 'Operation tags slot',
+                          link: '/customizations/operation-tags-slot',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  text: 'Spec',
+                  items: [
+                    {
+                      items: [
+                        {
+                          text: 'Multiple Specs',
+                          link: '/customizations/multiple-specs',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          text: 'Example',
+          collapsed: true,
+          items: [
+            {
+              text: 'Introduction',
+              link: '/example/introduction',
+            },
+            ...sidebar.generateSidebarGroups({
+              linkPrefix: '/example/operations/',
+            }),
+            {
+              text: 'One Page',
+              link: '/example/one-page',
+            },
+          ],
+        },
+        {
+          text: 'Tests',
+          collapsed: true,
+          items: [
+            {
+              text: 'Response Types',
+              link: '/tests/response-types',
+            },
+            {
+              text: 'Response Statuses',
+              link: '/tests/response-statuses',
+            },
+            {
+              text: 'Schemas',
+              link: '/tests/schemas',
+            },
+            {
+              text: 'Parameters',
+              link: '/tests/parameters',
+            },
+            {
+              text: 'Security',
+              link: '/tests/security',
+            },
+          ],
+        },
+        {
+          text: 'Remote Examples',
+          collapsed: true,
+          items: [
+            ...examplesPages.map(page => ({
+              text: page.label,
+              link: `/examples/${page.slug}`,
+            })),
+          ],
+        },
+      ],
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/enzonotario/vitepress-openapi' },

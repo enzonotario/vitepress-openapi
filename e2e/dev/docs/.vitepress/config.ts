@@ -13,7 +13,7 @@ const sidebar = useSidebar({
 export default defineConfig({
   lang: 'en-US',
   title: 'VitePress OpenAPI',
-  description: 'Generate documentation from OpenAPI specifications.',
+  description: 'Generate VitePress API Docs from OpenAPI specifications',
 
   themeConfig: {
     nav: [{ text: 'API Reference', link: '/introduction' }],

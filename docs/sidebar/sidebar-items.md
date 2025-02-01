@@ -1,6 +1,9 @@
 ---
 aside: false
 outline: false
+next:
+  text: 'useTheme'
+  link: /composables/useTheme
 ---
 
 <script setup>
@@ -36,7 +39,7 @@ module.exports = {
             ...sidebar.generateSidebarGroups({
                 // Optionally, you can generate sidebar items with another link prefix. Default is `/operations/`.
                 linkPrefix: '/operations/',
-                
+
                 // Optionally, you can specify a list of tags to generate sidebar items. Default is all tags.
                 //tags: [],
             }),
@@ -76,7 +79,7 @@ module.exports = {
             ...sidebar.itemsByTags({
                 // Optionally, you can generate sidebar items with another link prefix. Default is `/tags/`.
                 linkPrefix: '/tags/',
-                
+
                 // Optionally, you can specify a list of tags to generate sidebar items. Default is all tags.
                 //tags: [],
             }),
@@ -119,7 +122,7 @@ module.exports = {
                  * Optionally, you can specify if the sidebar items are collapsible. Default is true.
                  */
                 collapsible: true,
-                
+
                 /**
                  * Optionally, you can specify a depth for the sidebar items. Default is 6, which is the maximum VitePress sidebar depth.
                  */
@@ -151,3 +154,7 @@ module.exports = {
 <SandboxIframe :sandbox-data="{sandboxView: 'preview', sidebarItemsType: 'itemsByPaths'}" non-interactive iframe-class="w-[1200px]" class="h-[70vh] max-h-[700px] sticky top-[calc(var(--vp-nav-height)+16px)]" />
 
 </div>
+
+## Examples
+
+For more examples, check the [sidebar examples](/sidebar-examples/).
