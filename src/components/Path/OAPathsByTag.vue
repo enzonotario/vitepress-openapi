@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import type { OperationSlot } from '../../types'
-import { computed, defineProps, nextTick, ref } from 'vue'
-import { useTheme } from '../../composables/useTheme'
-import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
-import { scrollIntoOperationByOperationId } from '../../lib/utils'
+import type {OperationSlot} from '../../types'
+import {computed, defineProps, nextTick, ref} from 'vue'
+import {useTheme} from '../../composables/useTheme'
+import {scrollIntoOperationByOperationId} from '../../lib/utils'
 import OAPathsSummary from '../Path/OAPathsSummary.vue'
-import { Button } from '../ui/button'
-import { Collapsible, CollapsibleTrigger } from '../ui/collapsible'
+import {Button} from '../ui/button'
+import {Collapsible, CollapsibleTrigger} from '../ui/collapsible'
 
 export interface Tag {
   tag: string
@@ -34,7 +33,7 @@ const slots = defineSlots<Record<string, OperationSlot>>()
 
 const themeConfig = useTheme()
 
-const openapi = props.openapi ?? getOpenApiInstance()
+const openapi = props.openapi
 
 const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
 

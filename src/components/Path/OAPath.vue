@@ -3,7 +3,6 @@ import { useStorage } from '@vueuse/core'
 import { computed, defineProps, provide, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
-import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import { initOperationData } from '../../lib/operationData'
 
 const props = defineProps({
@@ -13,13 +12,13 @@ const props = defineProps({
   },
   openapi: {
     type: Object,
-    required: false,
+    required: true,
   },
 })
 
 const themeConfig = useTheme()
 
-const openapi = props.openapi ?? getOpenApiInstance()
+const openapi = props.openapi
 
 const operation = openapi.getOperation(props.id)
 

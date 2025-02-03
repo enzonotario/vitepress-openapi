@@ -1,6 +1,6 @@
 <script setup>
 import { inject } from 'vue'
-import { getOpenApiInstance } from '../../lib/getOpenApiInstance.js'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 
 const props = defineProps({
   spec: {

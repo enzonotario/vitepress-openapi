@@ -4,7 +4,6 @@ import type { OperationSlot } from '../../types'
 import { defineProps, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useTheme } from '../../composables/useTheme'
-import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import OALazy from '../Common/Lazy/OALazy.vue'
 import OAPathsByTag from './OAPathsByTag.vue'
 
@@ -33,7 +32,7 @@ const { t } = useI18n()
 
 const themeConfig = useTheme()
 
-const openapi = props.openapi ?? getOpenApiInstance()
+const openapi = props.openapi
 
 const specTags: OpenAPIV3.TagObject[] = openapi.getTags()
 
