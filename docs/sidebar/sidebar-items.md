@@ -24,7 +24,7 @@ To generate sidebar items grouped by tags, you can use the `generateSidebarGroup
 
 ```ts
 import { useSidebar } from 'vitepress-openapi'
-import spec from '../public/openapi.json' assert { type: 'json' }
+import spec from '../public/openapi.json' with { type: 'json' }
 
 const sidebar = useSidebar({
     spec,
@@ -64,7 +64,7 @@ To generate sidebar items by tags, you can use the `itemsByTags` function. Confi
 
 ```ts
 import { useSidebar } from 'vitepress-openapi'
-import spec from '../public/openapi.json' assert { type: 'json' }
+import spec from '../public/openapi.json' with { type: 'json' }
 
 const sidebar = useSidebar({
     spec,
@@ -104,7 +104,7 @@ To generate sidebar items by paths, you can use the `itemsByPaths` function. Con
 
 ```ts
 import { useSidebar } from 'vitepress-openapi'
-import spec from '../public/openapi.json' assert { type: 'json' }
+import spec from '../public/openapi.json' with { type: 'json' }
 
 const sidebar = useSidebar({ spec })
 

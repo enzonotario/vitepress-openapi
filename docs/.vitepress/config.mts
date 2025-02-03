@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url'
 import { defineConfigWithTheme } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import { examplesPages } from '../pages'
-import spec from '../public/openapi.json' assert {type: 'json'}
+import spec from '../public/openapi.json' with {type: 'json'}
 import { sidebars } from '../sidebars'
 
 const sidebar = useSidebar({
