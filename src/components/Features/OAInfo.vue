@@ -1,7 +1,7 @@
 <script setup>
 import { inject } from 'vue'
-import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
-import { Badge } from '../ui/badge'
+import { getOpenApiInstance } from '../../lib/getOpenApiInstance.js'
+import { Badge } from '../ui/badge/index.js'
 
 const props = defineProps({
   spec: {

@@ -3,8 +3,8 @@ import type { OperationSlot } from '../../types'
 import { inject } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
-import OAInfo from '../Common/OAInfo.vue'
-import OAServers from '../Common/OAServers.vue'
+import OAInfo from './OAInfo.vue'
+import OAServers from './OAServers.vue'
 
 const props = defineProps({
   spec: {

@@ -3,7 +3,7 @@ import type { OperationSlot } from '../../types'
 import { computed, inject, useSlots } from 'vue'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
-import OAOperationTags from './OAOperationTags.vue'
+import OAOperationTags from '../Operation/OAOperationTags.vue'
 
 const props = defineProps({
   operationId: {
