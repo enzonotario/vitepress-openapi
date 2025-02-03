@@ -129,7 +129,7 @@ import { theme } from 'vitepress-openapi/client' // [!code --]
 import { theme, useOpenapi } from 'vitepress-openapi/client'// [!code ++]
 import 'vitepress-openapi/dist/style.css'
 
-import spec from '../../public/openapi.json' assert { type: 'json' } // [!code ++]
+import spec from '../../public/openapi.json' with { type: 'json' } // [!code ++]
 
 export default {
     extends: DefaultTheme,
@@ -239,7 +239,7 @@ import type { Theme } from 'vitepress'
 import { theme, useOpenapi } from 'vitepress-openapi
 import 'vitepress-openapi/dist/style.css'
 
-import spec from '../../public/openapi.json' assert { type: 'json' }
+import spec from '../../public/openapi.json' with { type: 'json' }
 
 export default {
     extends: DefaultTheme,
