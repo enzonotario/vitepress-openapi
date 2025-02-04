@@ -13,7 +13,6 @@ import OAParameters from './Parameter/OAParameters.vue'
 import OAPath from './Path/OAPath.vue'
 import OAPathEndpoint from './Path/OAPathEndpoint.vue'
 import OAPaths from './Path/OAPaths.vue'
-import OAPathsByTags from './Path/OAPathsByTags.vue'
 import OARemoteOperation from './Remote/OARemoteOperation.vue'
 import OARemoteSpec from './Remote/OARemoteSpec.vue'
 import OARequestBody from './Request/OARequestBody.vue'
@@ -42,7 +41,6 @@ export {
   OAPath,
   OAPathEndpoint,
   OAPaths,
-  OAPathsByTags,
   OARemoteOperation,
   OARemoteSpec,
   OARequestBody,
