@@ -8,10 +8,6 @@ import OALazy from '../Common/Lazy/OALazy.vue'
 import OAPathsByTag from './OAPathsByTag.vue'
 
 const props = defineProps({
-  openapi: {
-    type: Object,
-    required: true,
-  },
   tags: {
     type: Array,
     required: false,
@@ -24,6 +20,22 @@ const props = defineProps({
     type: Boolean,
     default: undefined,
   },
+  operationsTags: {
+    type: Array,
+    required: true,
+  },
+  specTags: {
+    type: Array<OpenAPIV3.TagObject>,
+    required: true,
+  },
+  pathsByTags: {
+    type: Array,
+    required: true,
+  },
+  pathsWithoutTags: {
+    type: Object,
+    required: true,
+  },
 })
 
 const slots = defineSlots<Record<string, OperationSlot>>()
@@ -32,38 +44,23 @@ const { t } = useI18n()
 
 const themeConfig = useTheme()
 
-const openapi = props.openapi
-
-const specTags: OpenAPIV3.TagObject[] = openapi.getTags()
-
-const operationsTags = props.tags ?? openapi.getOperationsTags()
-
-const pathsByTags = operationsTags.map((tag: string) => {
-  return {
-    tag,
-    paths: openapi.getPathsByTags(tag),
-  }
-})
-
-const pathsWithoutTags = openapi.getPathsWithoutTags()
-
 const internalTags = ref([
-  ...(pathsWithoutTags.length
+  ...(props.pathsWithoutTags.length
     ? [
         {
           tag: t(useTheme().getSpecConfig()?.defaultTag ?? 'Default'),
-          paths: pathsWithoutTags,
-          // isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
+          paths: props.pathsWithoutTags,
+          isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
         },
       ]
     : []),
 
-  ...pathsByTags.map((tag: { tag: string, paths: Record<string, any> }) => {
+  ...props.pathsByTags.map((tag: { tag: string, paths: Record<string, any> }) => {
     return {
       tag: tag.tag,
       paths: tag.paths,
-      // isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
-      description: specTags.find(tagInfo => tagInfo.name === tag.tag)?.description,
+      isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
+      description: props.specTags.find(tagInfo => tagInfo.name === tag.tag)?.description,
     }
   }),
 ])
@@ -79,7 +76,6 @@ const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
   >
     <OAPathsByTag
       v-if="Object.keys(tagObject.paths).length"
-      :openapi="openapi"
       :tag="tagObject"
       :hide-paths-summary="props.hidePathsSummary"
     >

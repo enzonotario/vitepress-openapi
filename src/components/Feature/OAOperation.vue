@@ -50,12 +50,20 @@ defineSlots<{
   [x in OperationSlot]: (props: OperationSlot) => any
 }>()
 
+const slots = useSlots()
+
 const openapi = props.openapi ?? getOpenApiInstance({
   custom: { spec: props.spec },
   injected: inject('openapi', undefined),
 })
 
-const slots = useSlots()
+const operation = openapi.getOperation(props.operationId)
+
+const operationPath = openapi.getOperationPath(props.operationId)
+
+const operationMethod = openapi.getOperationMethod(props.operationId)
+
+const operationServers = openapi.getOperationServers(props.operationId)
 
 const headingPrefix = computed(() => {
   if (!props.prefixHeadings) {
@@ -74,7 +82,10 @@ function hasSlot(name: OperationSlot): boolean {
   <OAPath
     v-if="props.operationId"
     :id="props.operationId"
-    :openapi="openapi"
+    :path="operationPath"
+    :method="operationMethod"
+    :servers="operationServers"
+    :operation="operation"
   >
     <template
       v-if="hasSlot('header')"
