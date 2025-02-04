@@ -4,11 +4,7 @@ import { defineProps } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OALazy from '../Common/Lazy/OALazy.vue'
 
-const { openapi, paths } = defineProps({
-  openapi: {
-    type: Object,
-    required: true,
-  },
+const { paths } = defineProps({
   paths: {
     type: Object,
     required: true,
@@ -41,7 +37,6 @@ const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
   >
     <OAOperation
       :operation-id="operation.operationId"
-      :openapi="openapi"
       prefix-headings
       hide-branding
     >

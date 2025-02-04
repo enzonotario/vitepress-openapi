@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type {OperationSlot} from '../../types'
-import {computed, defineProps, nextTick, ref} from 'vue'
-import {useTheme} from '../../composables/useTheme'
-import {scrollIntoOperationByOperationId} from '../../lib/utils'
+import type { OperationSlot } from '../../types'
+import { computed, defineProps, nextTick, ref } from 'vue'
+import { useTheme } from '../../composables/useTheme'
+import { scrollIntoOperationByOperationId } from '../../lib/utils'
 import OAPathsSummary from '../Path/OAPathsSummary.vue'
-import {Button} from '../ui/button'
-import {Collapsible, CollapsibleTrigger} from '../ui/collapsible'
+import { Button } from '../ui/button'
+import { Collapsible, CollapsibleTrigger } from '../ui/collapsible'
 
 export interface Tag {
   tag: string
@@ -15,10 +15,6 @@ export interface Tag {
 }
 
 const props = defineProps({
-  openapi: {
-    type: Object,
-    required: true,
-  },
   tag: {
     type: Object as () => Tag,
     required: true,
@@ -32,8 +28,6 @@ const props = defineProps({
 const slots = defineSlots<Record<string, OperationSlot>>()
 
 const themeConfig = useTheme()
-
-const openapi = props.openapi
 
 const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
 
@@ -105,7 +99,6 @@ function onPathClick(tagPaths: { tag: string, paths: Record<string, any> }, hash
       :class="[{ hidden: !isOpen }]"
     >
       <OAPaths
-        :openapi="openapi"
         :paths="props.tag.paths"
       >
         <!-- Expose all slots upwards -->

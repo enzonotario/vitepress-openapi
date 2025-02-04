@@ -10,37 +10,44 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  openapi: {
+  path: {
+    type: String,
+    required: true,
+  },
+  method: {
+    type: String,
+    required: true,
+  },
+  operation: {
     type: Object,
     required: true,
+  },
+  servers: {
+    type: Array,
+    required: false,
+    default: () => [],
   },
 })
 
 const themeConfig = useTheme()
 
-const openapi = props.openapi
-
-const operation = openapi.getOperation(props.id)
-
 const operationData = initOperationData({
-  operation,
+  operation: props.operation,
 })
 
 provide('operationData', operationData)
 
-const operationPath = openapi.getOperationPath(props.id)
+const operationPath = props.path
 
-const operationMethod = openapi.getOperationMethod(props.id)?.toUpperCase()
+const operationMethod = props.method.toUpperCase()
 
-const operationParsed = openapi.getParsedOperation(props.id)
+const securityUi = props.operation.securityUi
 
-const securityUi = operation.securityUi
+const operationParameters = props.operation?.parameters
 
-const operationParameters = operationParsed?.parameters
+const operationRequestBody = props.operation?.requestBody
 
-const operationRequestBody = operationParsed?.requestBody
-
-const operationResponses = operationParsed?.responses
+const operationResponses = props.operation?.responses
 
 const operationSlots = computed(() => themeConfig.getOperationSlots().filter(slot => !themeConfig.getOperationHiddenSlots().includes(slot)))
 
@@ -56,9 +63,9 @@ const servers = customGetServers
   ? customGetServers({
       method: operationMethod,
       path: operationPath,
-      operation,
+      operation: props.operation,
     })
-  : openapi.getOperationServers(props.id)
+  : props.servers
 
 const defaultServer = servers.length ? servers[0]?.url : themeConfig.getOperationDefaultBaseUrl()
 

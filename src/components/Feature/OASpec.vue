@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationSlot } from '../../types'
 import { inject } from 'vue'
 import { useTheme } from '../../composables/useTheme'
@@ -76,7 +77,18 @@ const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig()?.groupByTag
 
 const operationsTags = props.tags ?? openapi.getOperationsTags()
 
+const specTags: OpenAPIV3.TagObject[] = openapi.getTags()
+
 const paths = openapi.getPaths()
+
+const pathsByTags = operationsTags.map((tag: string) => {
+  return {
+    tag,
+    paths: openapi.getPathsByTags(tag),
+  }
+})
+
+const pathsWithoutTags = openapi.getPathsWithoutTags()
 </script>
 
 <template>
@@ -91,10 +103,13 @@ const paths = openapi.getPaths()
 
     <OAPathsByTags
       v-if="groupByTags && operationsTags.length"
-      :openapi="openapi"
       :tags="operationsTags"
       :paths="paths"
       :hide-paths-summary="props.hidePathsSummary === undefined ? undefined : props.hidePathsSummary"
+      :operations-tags="operationsTags"
+      :spec-tags="specTags"
+      :paths-by-tags="pathsByTags"
+      :paths-without-tags="pathsWithoutTags"
     >
       <!-- Expose all slots upwards -->
       <template
@@ -109,7 +124,6 @@ const paths = openapi.getPaths()
     </OAPathsByTags>
     <OAPaths
       v-else
-      :openapi="openapi"
       :paths="paths"
     >
       <!-- Expose all slots upwards -->
