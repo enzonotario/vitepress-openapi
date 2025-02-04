@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { OperationSlot } from '../../types'
-import { inject } from 'vue'
+import type { OperationSlot, PathsGroupView } from '../../types'
+import { computed, inject } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useTheme } from '../../composables/useTheme'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
+import OAPathsGroups from '../Path/OAPathsGroups.vue'
 import OAInfo from './OAInfo.vue'
 import OAServers from './OAServers.vue'
 
@@ -58,6 +60,8 @@ const props = defineProps({
 
 const slots = defineSlots<Record<string, OperationSlot>>()
 
+const { t } = useI18n()
+
 const themeConfig = useTheme()
 
 const openapi = getOpenApiInstance({
@@ -73,7 +77,7 @@ const showInfo = !props.hideInfo && Object.keys(info).length
 
 const showServers = !props.hideServers && servers.length
 
-const groupByTags = props.groupByTags ?? themeConfig.getSpecConfig()?.groupByTags
+const groupByTags = computed(() => props.groupByTags ?? themeConfig.getSpecConfig()?.groupByTags?.value)
 
 const operationsTags = props.tags ?? openapi.getOperationsTags()
 
@@ -89,6 +93,41 @@ const pathsByTags = operationsTags.map((tag: string) => {
 })
 
 const pathsWithoutTags = openapi.getPathsWithoutTags()
+
+const groups = computed(() => {
+  if (groupByTags.value) {
+    return [
+      ...(pathsWithoutTags.length
+        ? [
+            {
+              name: t(useTheme().getSpecConfig()?.defaultTag ?? 'Default'),
+              paths: pathsWithoutTags,
+              isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
+              isGrouped: true,
+            },
+          ]
+        : []),
+
+      ...pathsByTags.map((tag: { tag: string, paths: Record<string, any> }) => {
+        return {
+          name: tag.tag,
+          paths: tag.paths,
+          isOpen: !themeConfig.getSpecConfig()?.collapsePaths?.value,
+          description: specTags.find(tagInfo => tagInfo.name === tag.tag)?.description,
+          isGrouped: true,
+        }
+      }),
+    ] as PathsGroupView[]
+  }
+
+  return [
+    {
+      name: t(useTheme().getSpecConfig()?.defaultTag ?? 'Default'),
+      paths,
+      isGrouped: false,
+    },
+  ] as PathsGroupView[]
+})
 </script>
 
 <template>
@@ -101,42 +140,12 @@ const pathsWithoutTags = openapi.getPathsWithoutTags()
 
     <hr v-if="showInfo || showServers">
 
-    <OAPathsByTags
-      v-if="groupByTags && operationsTags.length"
-      :tags="operationsTags"
-      :paths="paths"
-      :hide-paths-summary="props.hidePathsSummary === undefined ? undefined : props.hidePathsSummary"
-      :operations-tags="operationsTags"
-      :spec-tags="specTags"
-      :paths-by-tags="pathsByTags"
-      :paths-without-tags="pathsWithoutTags"
-    >
+    <OAPathsGroups :groups="groups" :hide-paths-summary="props.hidePathsSummary">
       <!-- Expose all slots upwards -->
-      <template
-        v-for="(_, name) in slots"
-        #[name]="slotProps"
-      >
-        <slot
-          :name="name"
-          v-bind="slotProps || {}"
-        />
+      <template v-for="(_, name) in slots" #[name]="slotProps">
+        <slot :name="name" v-bind="slotProps || {}" />
       </template>
-    </OAPathsByTags>
-    <OAPaths
-      v-else
-      :paths="paths"
-    >
-      <!-- Expose all slots upwards -->
-      <template
-        v-for="(_, name) in slots"
-        #[name]="slotProps"
-      >
-        <slot
-          :name="name"
-          v-bind="slotProps || {}"
-        />
-      </template>
-    </OAPaths>
+    </OAPathsGroups>
 
     <OAFooter v-if="!props.hideBranding" />
   </div>
