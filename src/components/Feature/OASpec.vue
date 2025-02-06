@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationSlot, PathsGroupView } from '../../types'
-import { computed, inject } from 'vue'
+import { computed, inject, provide } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { OPENAPI_GLOBAL_KEY, OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
 import { useTheme } from '../../composables/useTheme'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import OAPathsGroups from '../Path/OAPathsGroups.vue'
@@ -66,8 +67,11 @@ const themeConfig = useTheme()
 
 const openapi = getOpenApiInstance({
   custom: { spec: props.spec },
-  injected: inject('openapi', undefined),
+  injected: inject(OPENAPI_GLOBAL_KEY, undefined),
+  injectedLocal: inject(OPENAPI_LOCAL_KEY, undefined),
 })
+
+provide(OPENAPI_LOCAL_KEY, openapi)
 
 const servers = openapi.getServers()
 

@@ -8,6 +8,7 @@ import { usePlayground } from '../../composables/usePlayground'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { OARequest } from '../../lib/codeSamples/request'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
+import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
@@ -76,7 +77,7 @@ function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
     }, {})
 }
 
-const operationData = inject('operationData') as OperationData
+const operationData = inject(OPERATION_DATA_KEY) as OperationData
 
 const authorizations = ref<PlaygroundSecurityScheme[] | null>(null)
 

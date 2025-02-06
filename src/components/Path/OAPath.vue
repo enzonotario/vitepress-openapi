@@ -3,7 +3,7 @@ import { useStorage } from '@vueuse/core'
 import { computed, defineProps, provide, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
-import { initOperationData } from '../../lib/operationData'
+import { initOperationData, OPERATION_DATA_KEY } from '../../lib/operationData'
 
 const props = defineProps({
   id: {
@@ -35,7 +35,7 @@ const operationData = initOperationData({
   operation: props.operation,
 })
 
-provide('operationData', operationData)
+provide(OPERATION_DATA_KEY, operationData)
 
 const operationPath = props.path
 

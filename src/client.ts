@@ -5,6 +5,7 @@ import type { createOpenApiInstance } from './lib/createOpenApiInstance'
 import { watch } from 'vue'
 import * as VueI18n from 'vue-i18n'
 import * as components from './components'
+import { OPENAPI_GLOBAL_KEY } from './composables/useOpenapi'
 import { useShiki } from './composables/useShiki'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 
@@ -25,7 +26,7 @@ interface VPTheme {
 export const theme = {
   enhanceApp({ app, openapi = null }) {
     if (openapi) {
-      app.provide('openapi', openapi)
+      app.provide(OPENAPI_GLOBAL_KEY, openapi)
     }
 
     const themeConfig = useTheme()

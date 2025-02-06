@@ -1,6 +1,6 @@
 import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
 import type { JSONSchema } from '@trojs/openapi-dereference'
-import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../types.js'
+import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../types'
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { merge } from 'allof-merge'
 import { getSchemaExample } from './examples/getSchemaExample'

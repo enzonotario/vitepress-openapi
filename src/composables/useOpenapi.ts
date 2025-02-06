@@ -14,6 +14,10 @@ export type Schemas = Map<string, OpenAPIData>
 
 export const DEFAULT_SCHEMA = 'main'
 
+export const OPENAPI_GLOBAL_KEY = Symbol('openapi')
+
+export const OPENAPI_LOCAL_KEY = Symbol('openapiLocal')
+
 const schemas: Schemas = new Map()
 
 let mainSchema: OpenAPI.Document | null = null
