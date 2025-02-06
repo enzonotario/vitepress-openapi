@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
 import { computed, inject, useSlots } from 'vue'
+import { OPENAPI_GLOBAL_KEY, OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
 import OAOperationTags from '../Operation/OAOperationTags.vue'
@@ -54,7 +55,8 @@ const slots = useSlots()
 
 const openapi = props.openapi ?? getOpenApiInstance({
   custom: { spec: props.spec },
-  injected: inject('openapi', undefined),
+  injected: inject(OPENAPI_GLOBAL_KEY, undefined),
+  injectedLocal: inject(OPENAPI_LOCAL_KEY, undefined),
 })
 
 const operation = openapi.getOperation(props.operationId)

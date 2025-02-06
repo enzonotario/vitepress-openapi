@@ -1,5 +1,6 @@
 <script setup>
 import { inject } from 'vue'
+import { OPENAPI_GLOBAL_KEY, OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
 import { getOpenApiInstance } from '../../lib/getOpenApiInstance'
 
 const props = defineProps({
@@ -15,7 +16,8 @@ const props = defineProps({
 
 const openapi = props.openapi ?? getOpenApiInstance({
   custom: { spec: props.spec },
-  injected: inject('openapi', undefined),
+  injected: inject(OPENAPI_GLOBAL_KEY, undefined),
+  injectedLocal: inject(OPENAPI_LOCAL_KEY, undefined),
 })
 </script>
 
