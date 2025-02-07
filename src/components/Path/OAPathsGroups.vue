@@ -21,7 +21,7 @@ const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col space-y-10">
     <template v-for="(group, index) in props.groups" :key="group.name">
       <OAPathsGroup
         :group="group"
