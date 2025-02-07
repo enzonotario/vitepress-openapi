@@ -12,7 +12,7 @@ export const examples = ([
     label: 'Operations Grouped By Tags',
     config: () => {
       return sidebar.generateSidebarGroups({
-        linkPrefix: '#',
+        linkPrefix: '/sidebar-examples/operationsByTags/',
       })
     },
   },
@@ -21,7 +21,7 @@ export const examples = ([
     label: 'Items By Tags',
     config: () => {
       return sidebar.itemsByTags({
-        linkPrefix: '#',
+        linkPrefix: '/sidebar-examples/itemsByTags/',
       })
     },
   },
@@ -30,7 +30,7 @@ export const examples = ([
     label: 'Items By Paths',
     config: () => {
       return sidebar.itemsByPaths({
-        linkPrefix: '#',
+        linkPrefix: '/sidebar-examples/itemsByPaths/',
       })
     },
   },

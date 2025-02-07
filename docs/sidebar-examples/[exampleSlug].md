@@ -2,6 +2,8 @@
 aside: false
 outline: false
 title: Sidebar Example
+prev: false
+next: false
 ---
 
 <script setup lang="ts">
