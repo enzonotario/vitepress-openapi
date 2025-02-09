@@ -136,7 +136,7 @@ interface LanguageConfig {
 
 export type PartialUseThemeConfig = Partial<UnwrapNestedRefs<UseThemeConfig>>
 
-type GeneratorFunction = (lang: string, request: IOARequest) => string
+type GeneratorFunction = (lang: string, request: IOARequest) => Promise<string>
 
 type GetServersFunction = ({ method, path, operation }: { method: string, path: string, operation: ParsedOperation }) => string[] | null
 

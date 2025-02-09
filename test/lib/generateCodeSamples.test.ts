@@ -1,84 +1,103 @@
 import { describe, expect, it } from 'vitest'
+import { generateCodeSample } from '../../src/lib/codeSamples/generateCodeSample'
 import { OARequest } from '../../src/lib/codeSamples/request'
-import { generateCodeSampleJavaScript } from '../../src/lib/codeSamples/generateCodeSampleJavaScript'
-import { generateCodeSampleCurl } from '../../src/lib/codeSamples/generateCodeSampleCurl'
-import { generateCodeSamplePhp } from '../../src/lib/codeSamples/generateCodeSamplePhp'
-import { generateCodeSamplePython } from '../../src/lib/codeSamples/generateCodeSamplePython'
 
-describe('generateCodeSampleJavaScript', () => {
-  it('generates code sample for GET request without query, headers, or body', () => {
+describe('generateCodeSampleJavaScript', async () => {
+  it('generates code sample for GET request without query, headers, or body', async () => {
     const request = new OARequest('https://api.example.com/resource')
-    const result = generateCodeSampleJavaScript(request)
-    expect(result).toBe(`fetch('https://api.example.com/resource')
-  .then(response => response.json())
-  .then(data => console.log(data));`)
+    const result = await generateCodeSample('javascript', request)
+    expect(result).toBe(`fetch('https://api.example.com/resource')`)
   })
 
-  it('generates code sample for POST request with body', () => {
+  it('generates code sample for POST request with body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: 'value' })
-    const result = generateCodeSampleJavaScript(request)
-    expect(result).toBe(`fetch('https://api.example.com/resource', {method:'POST',body:'{"key":"value"}'})
-  .then(response => response.json())
-  .then(data => console.log(data));`)
+    const result = await generateCodeSample('javascript', request)
+    expect(result).toBe(`fetch('https://api.example.com/resource', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+})`)
   })
 
-  it('generates code sample for POST request with deep body', () => {
+  it('generates code sample for POST request with deep body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } })
-    const result = generateCodeSampleJavaScript(request)
-    expect(result).toBe(`fetch('https://api.example.com/resource', {method:'POST',body:'{"key":{"nested":"value","nestedArray":[1,2,{"deep":"value"}]}}'})
-  .then(response => response.json())
-  .then(data => console.log(data));`)
+    const result = await generateCodeSample('javascript', request)
+    expect(result).toBe(`fetch('https://api.example.com/resource', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: {
+      nested: 'value',
+      nestedArray: [1,     2,     {
+        deep: 'value'
+      }]
+    }
+  })
+})`)
   })
 
-  it('generates code sample with headers', () => {
+  it('generates code sample with headers', async () => {
     const request = new OARequest('https://api.example.com/resource', 'GET', { Authorization: 'Bearer token' })
-    const result = generateCodeSampleJavaScript(request)
-    expect(result).toBe(`fetch('https://api.example.com/resource', {headers:{'Authorization':'Bearer token'}})
-  .then(response => response.json())
-  .then(data => console.log(data));`)
+    const result = await generateCodeSample('javascript', request)
+    expect(result).toBe(`fetch('https://api.example.com/resource', {
+  headers: {
+    Authorization: 'Bearer token'
+  }
+})`)
   })
 
-  it('generates code sample with query parameters', () => {
+  it('generates code sample with query parameters', async () => {
     const request = new OARequest('https://api.example.com/resource', 'GET', {}, null, { search: 'query' })
-    const result = generateCodeSampleJavaScript(request)
-    expect(result).toBe(`fetch('https://api.example.com/resource?search=query')
-  .then(response => response.json())
-  .then(data => console.log(data));`)
+    const result = await generateCodeSample('javascript', request)
+    expect(result).toBe(`fetch('https://api.example.com/resource?search=query')`)
   })
 
-  it('generates code sample with all parameters', () => {
+  it('generates code sample with all parameters', async () => {
     const request = new OARequest('https://api.example.com/resource', 'PUT', { 'Content-Type': 'application/json' }, { key: 'value' }, { search: 'query' })
-    const result = generateCodeSampleJavaScript(request)
-    expect(result).toBe(`fetch('https://api.example.com/resource?search=query', {method:'PUT',headers:{'Content-Type':'application/json'},body:'{"key":"value"}'})
-  .then(response => response.json())
-  .then(data => console.log(data));`)
+    const result = await generateCodeSample('javascript', request)
+    expect(result).toBe(`fetch('https://api.example.com/resource?search=query', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    key: 'value'
+  })
+})`)
   })
 })
 
-describe('generateCodeSampleCurl', () => {
-  it('generates curl command for GET request', () => {
+describe('generateCodeSampleCurl', async () => {
+  it('generates curl command for GET request', async () => {
     const request = new OARequest('https://api.example.com/resource')
-    const result = generateCodeSampleCurl(request)
-    expect(result).toBe(`curl -X GET \\
-'https://api.example.com/resource'`)
+    const result = await generateCodeSample('curl', request)
+    expect(result).toBe(`curl https://api.example.com/resource`)
   })
 
-  it('generates curl command for POST request with body', () => {
+  it('generates curl command for POST request with body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: 'value' })
-    const result = generateCodeSampleCurl(request)
-    expect(result).toBe(`curl -X POST \\
-'https://api.example.com/resource' \\
- --data '{
+    const result = await generateCodeSample('curl', request)
+    expect(result).toBe(`curl https://api.example.com/resource \\
+  --request POST \\
+  --header 'Content-Type: application/json' \\
+  --data '{
   "key": "value"
 }'`)
   })
 
-  it('generates curl command for POST request with deep body', () => {
+  it('generates curl command for POST request with deep body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } })
-    const result = generateCodeSampleCurl(request)
-    expect(result).toBe(`curl -X POST \\
-'https://api.example.com/resource' \\
- --data '{
+    const result = await generateCodeSample('curl', request)
+    expect(result).toBe(`curl https://api.example.com/resource \\
+  --request POST \\
+  --header 'Content-Type: application/json' \\
+  --data '{
   "key": {
     "nested": "value",
     "nestedArray": [
@@ -92,244 +111,311 @@ describe('generateCodeSampleCurl', () => {
 }'`)
   })
 
-  it('generates curl command with headers', () => {
+  it('generates curl command with headers', async () => {
     const request = new OARequest('https://api.example.com/resource', 'GET', { Authorization: 'Bearer token' })
-    const result = generateCodeSampleCurl(request)
-    expect(result).toBe(`curl -X GET \\
-'https://api.example.com/resource' \\
- -H "Authorization: Bearer token"`)
+    const result = await generateCodeSample('curl', request)
+    expect(result).toBe(`curl https://api.example.com/resource \\
+  --header 'Authorization: Bearer token'`)
   })
 
-  it('generates curl command with query parameters', () => {
+  it('generates curl command with query parameters', async () => {
     const request = new OARequest('https://api.example.com/resource', 'GET', {}, null, { search: 'query' })
-    const result = generateCodeSampleCurl(request)
-    expect(result).toBe(`curl -X GET \\
-'https://api.example.com/resource?search=query'`)
+    const result = await generateCodeSample('curl', request)
+    expect(result).toBe(`curl 'https://api.example.com/resource?search=query'`)
   })
 
-  it('generates curl command with all parameters', () => {
+  it('generates curl command with all parameters', async () => {
     const request = new OARequest('https://api.example.com/resource', 'PUT', { 'Content-Type': 'application/json' }, { key: 'value' }, { search: 'query' })
-    const result = generateCodeSampleCurl(request)
-    expect(result).toBe(`curl -X PUT \\
-'https://api.example.com/resource?search=query' \\
- -H "Content-Type: application/json" \\
- --data '{
+    const result = await generateCodeSample('curl', request)
+    expect(result).toBe(`curl 'https://api.example.com/resource?search=query' \\
+  --request PUT \\
+  --header 'Content-Type: application/json' \\
+  --data '{
   "key": "value"
 }'`)
   })
 
-  it('handles query parameters and headers correctly', () => {
+  it('handles query parameters and headers correctly', async () => {
     const url = 'https://api.example.com/path/testOperation'
     const method = 'GET'
     const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer token' }
     const queryParams: Record<string, string> = { search: 'query', page: '2' }
-    const result = generateCodeSampleCurl({ url, method, headers, query: queryParams })
-    expect(result).toBe(`curl -X GET \\
-'https://api.example.com/path/testOperation?search=query&page=2' \\
- -H "Content-Type: application/json" \\
- -H "Authorization: Bearer token"`)
+    const result = await generateCodeSample('curl', { url, method, headers, query: queryParams })
+    expect(result).toBe(`curl 'https://api.example.com/path/testOperation?search=query&page=2' \\
+  --header 'Authorization: Bearer token' \\
+  --header 'Content-Type: application/json'`)
   })
 })
 
-describe('generateCodeSamplePhp', () => {
-  it('generates PHP code for GET request', () => {
+describe('generateCodeSamplePhp', async () => {
+  it('generates PHP code for GET request', async () => {
     const request = new OARequest('https://api.example.com/resource')
-    const result = generateCodeSamplePhp(request)
+    const result = await generateCodeSample('php', request)
     expect(result).toBe(`<?php
-$url = 'https://api.example.com/resource';
-$method = 'GET';
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+$curl = curl_init();
 
-$response = curl_exec($ch);
-curl_close($ch);
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://api.example.com/resource",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "GET",
+]);
 
-echo $response;
-?>`)
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}`)
   })
 
-  it('generates PHP code for POST request with body', () => {
+  it('generates PHP code for POST request with body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: 'value' })
-    const result = generateCodeSamplePhp(request)
+    const result = await generateCodeSample('php', request)
     expect(result).toBe(`<?php
-$url = 'https://api.example.com/resource';
-$method = 'POST';
-$body = json_encode({"key":"value"});
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+$curl = curl_init();
 
-$response = curl_exec($ch);
-curl_close($ch);
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://api.example.com/resource",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "{\\"key\\":\\"value\\"}",
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json"
+  ],
+]);
 
-echo $response;
-?>`)
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}`)
   })
 
-  it('generates PHP code for POST request with deep body', () => {
+  it('generates PHP code for POST request with deep body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } })
-    const result = generateCodeSamplePhp(request)
+    const result = await generateCodeSample('php', request)
     expect(result).toBe(`<?php
-$url = 'https://api.example.com/resource';
-$method = 'POST';
-$body = json_encode({"key":{"nested":"value","nestedArray":[1,2,{"deep":"value"}]}});
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+$curl = curl_init();
 
-$response = curl_exec($ch);
-curl_close($ch);
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://api.example.com/resource",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "{\\"key\\":{\\"nested\\":\\"value\\",\\"nestedArray\\":[1,2,{\\"deep\\":\\"value\\"}]}}",
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json"
+  ],
+]);
 
-echo $response;
-?>`)
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}`)
   })
 
-  it('generates PHP code with headers', () => {
+  it('generates PHP code with headers', async () => {
     const request = new OARequest('https://api.example.com/resource', 'GET', { Authorization: 'Bearer token' })
-    const result = generateCodeSamplePhp(request)
+    const result = await generateCodeSample('php', request)
     expect(result).toBe(`<?php
-$url = 'https://api.example.com/resource';
-$method = 'GET';
-$headers = [
-    'Authorization' => 'Bearer token',
-];
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+$curl = curl_init();
 
-$response = curl_exec($ch);
-curl_close($ch);
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://api.example.com/resource",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "GET",
+  CURLOPT_HTTPHEADER => [
+    "Authorization: Bearer token"
+  ],
+]);
 
-echo $response;
-?>`)
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}`)
   })
 
-  it('generates PHP code with query parameters', () => {
+  it('generates PHP code with query parameters', async () => {
     const request = new OARequest('https://api.example.com/resource', 'GET', {}, null, { search: 'query' })
-    const result = generateCodeSamplePhp(request)
+    const result = await generateCodeSample('php', request)
     expect(result).toBe(`<?php
-$url = 'https://api.example.com/resource';
-$method = 'GET';
-$query = http_build_query([
-    'search' => 'query',
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://api.example.com/resource",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "GET",
 ]);
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+$response = curl_exec($curl);
+$err = curl_error($curl);
 
-$response = curl_exec($ch);
-curl_close($ch);
+curl_close($curl);
 
-echo $response;
-?>`)
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}`)
   })
 
-  it('generates PHP code with all parameters', () => {
+  it('generates PHP code with all parameters', async () => {
     const request = new OARequest('https://api.example.com/resource', 'PUT', { 'Content-Type': 'application/json' }, { key: 'value' }, { search: 'query' })
-    const result = generateCodeSamplePhp(request)
+    const result = await generateCodeSample('php', request)
     expect(result).toBe(`<?php
-$url = 'https://api.example.com/resource';
-$method = 'PUT';
-$headers = [
-    'Content-Type' => 'application/json',
-];
-$query = http_build_query([
-    'search' => 'query',
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://api.example.com/resource",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "PUT",
+  CURLOPT_POSTFIELDS => "{\\"key\\":\\"value\\"}",
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json"
+  ],
 ]);
-$body = json_encode({"key":"value"});
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+$response = curl_exec($curl);
+$err = curl_error($curl);
 
-$response = curl_exec($ch);
-curl_close($ch);
+curl_close($curl);
 
-echo $response;
-?>`)
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}`)
   })
 })
 
-describe('generateCodeSamplePython', () => {
-  it('generates Python code for GET request', () => {
+describe('generateCodeSamplePython', async () => {
+  it('generates Python code for GET request', async () => {
     const request = new OARequest('https://api.example.com/resource')
-    const result = generateCodeSamplePython(request)
+    const result = await generateCodeSample('python', request)
     expect(result).toBe(`import requests
 
-url = 'https://api.example.com/resource'
+url = "https://api.example.com/resource"
 
 response = requests.get(url)
-print(response.json())
-`)
+
+print(response.json())`)
   })
 
-  it('generates Python code for POST request with body', () => {
+  it('generates Python code for POST request with body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: 'value' })
-    const result = generateCodeSamplePython(request)
+    const result = await generateCodeSample('python', request)
     expect(result).toBe(`import requests
 
-url = 'https://api.example.com/resource'
+url = "https://api.example.com/resource"
 
-data = {
-    'key': 'value'
-}
+headers = {"Content-Type": "application/json"}
 
-response = requests.post(url, json=data)
-print(response.json())
-`)
+response = requests.post(url, headers=headers)
+
+print(response.json())`)
   })
 
-  it('generates Python code for POST request with deep body', () => {
+  it('generates Python code for POST request with deep body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } })
-    const result = generateCodeSamplePython(request)
+    const result = await generateCodeSample('python', request)
     expect(result).toBe(`import requests
 
-url = 'https://api.example.com/resource'
+url = "https://api.example.com/resource"
 
-data = {
-    'key': {
-        'nested': 'value',
-        'nestedArray': [
-            1,
-            2,
-            {
-                'deep': 'value'
-            }
-        ]
-    }
-}
+headers = {"Content-Type": "application/json"}
 
-response = requests.post(url, json=data)
-print(response.json())
-`)
+response = requests.post(url, headers=headers)
+
+print(response.json())`)
   })
 
-  it('generates Python code with headers', () => {
-    // TODO
+  it('generates Python code with headers', async () => {
+    const request = new OARequest('https://api.example.com/resource', 'GET', { Authorization: 'Bearer token' })
+    const result = await generateCodeSample('python', request)
+    expect(result).toBe(`import requests
+
+url = "https://api.example.com/resource"
+
+headers = {"Authorization": "Bearer token"}
+
+response = requests.get(url, headers=headers)
+
+print(response.json())`)
   })
 
-  it('generates Python code with query parameters', () => {
-    // TODO
+  it('generates Python code with query parameters', async () => {
+    const request = new OARequest('https://api.example.com/resource', 'GET', {}, null, { search: 'query' })
+    const result = await generateCodeSample('python', request)
+    expect(result).toBe(`import requests
+
+url = "https://api.example.com/resource"
+
+response = requests.get(url)
+
+print(response.json())`)
   })
 
-  it('generates Python code with all parameters', () => {
-    // TODO
+  it('generates Python code with all parameters', async () => {
+    const request = new OARequest('https://api.example.com/resource', 'PUT', { 'Content-Type': 'application/json' }, { key: 'value' }, { search: 'query' })
+    const result = await generateCodeSample('python', request)
+    expect(result).toBe(`import requests
+
+url = "https://api.example.com/resource"
+
+headers = {"Content-Type": "application/json"}
+
+response = requests.put(url, headers=headers)
+
+print(response.json())`)
   })
 })
