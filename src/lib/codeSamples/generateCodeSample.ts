@@ -1,20 +1,27 @@
 import type { OARequest } from './request'
-import { generateCodeSampleCurl } from './generateCodeSampleCurl'
-import { generateCodeSampleJavaScript } from './generateCodeSampleJavaScript'
-import { generateCodeSamplePhp } from './generateCodeSamplePhp'
-import { generateCodeSamplePython } from './generateCodeSamplePython'
+import { snippetz } from '@scalar/snippetz'
+import { OARequestToRequest } from './convertOARequestToRequest'
+import { convertRequestToHarRequest } from './convertRequestToHarRequest'
 
-export function generateCodeSample(lang: string, request: OARequest): string {
-  switch (lang) {
-    case 'curl':
-      return generateCodeSampleCurl(request)
-    case 'javascript':
-      return generateCodeSampleJavaScript(request)
-    case 'php':
-      return generateCodeSamplePhp(request)
-    case 'python':
-      return generateCodeSamplePython(request)
-    default:
-      return ''
+export async function generateCodeSample(lang: string, oaRequest: OARequest): Promise<string> {
+  try {
+    const req = OARequestToRequest(oaRequest)
+    const harRequest = await convertRequestToHarRequest(req)
+
+    switch (lang) {
+      case 'curl':
+        return snippetz().print('shell', 'curl', harRequest) ?? ''
+      case 'javascript':
+        return snippetz().print('js', 'fetch', harRequest) ?? ''
+      case 'php':
+        return snippetz().print('php', 'curl', harRequest) ?? ''
+      case 'python':
+        return snippetz().print('python', 'requests', harRequest) ?? ''
+      default:
+        return ''
+    }
+  } catch (e) {
+    console.error(e)
+    return ''
   }
 }

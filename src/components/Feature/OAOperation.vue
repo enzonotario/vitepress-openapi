@@ -328,9 +328,6 @@ function hasSlot(name: OperationSlot): boolean {
 
       <OACodeSamples
         :operation-id="codeSamples.operationId"
-        :path="codeSamples.path"
-        :method="codeSamples.method"
-        :base-url="codeSamples.baseUrl"
         :request="codeSamples.request"
       />
     </template>
