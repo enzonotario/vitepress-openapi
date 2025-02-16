@@ -28,7 +28,7 @@ import schemasSpec from './openapi-schemas.json'
 Using [default spec](../public/openapi.json)
 :::
 
-<OAOperation operationId="getAllArtists" :spec="defaultSpec" />
+<OAOperation operationId="getAllArtists" />
 
 ---
 
@@ -48,7 +48,7 @@ import schemasSpec from '../public/openapi-schemas.json'
 Using [default spec](../public/openapi.json)
 :::
 
-<OAOperation operationId="getAllArtists" :spec="defaultSpec" />
+<OAOperation operationId="getAllArtists" />
 
 ---
 
