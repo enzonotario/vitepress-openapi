@@ -10,6 +10,7 @@ export default defineConfig({
     lib: {
       entry: {
         client: resolve(__dirname, 'src/client.ts'),
+        theme: resolve(__dirname, 'src/theme.ts'),
         node: resolve(__dirname, 'src/index.ts'),
       },
       name: 'vitepress-openapi',

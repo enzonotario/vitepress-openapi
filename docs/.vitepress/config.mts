@@ -260,7 +260,7 @@ export default defineConfigWithTheme({
               '@docs': fileURLToPath(new URL('../', import.meta.url)),
               '@public': fileURLToPath(new URL('../public', import.meta.url)),
               'vitepress-openapi/client': fileURLToPath(new URL('../../src/client', import.meta.url)),
-              'vitepress-openapi/dist/style.css': fileURLToPath(new URL('../../src/style.css', import.meta.url)),
+              'vitepress-openapi/dist/style.css': fileURLToPath(new URL('../../src/theme', import.meta.url)),
               'vitepress-openapi': fileURLToPath(new URL('../../src/index', import.meta.url)),
             }),
       },
