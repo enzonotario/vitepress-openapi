@@ -156,7 +156,7 @@ export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
 
 export const DEFAULT_BASE_URL = 'http://localhost'
 
-const availableLanguages: LanguageConfig[] = [
+export const availableLanguages: LanguageConfig[] = [
   {
     lang: 'curl',
     label: 'cURL',
@@ -669,11 +669,19 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   }
 
   function getCodeSamplesLangs() {
-    return themeConfig?.codeSamples?.langs
+    return themeConfig?.codeSamples?.langs?.filter((lang, index, self) => self.indexOf(lang) === index)
   }
 
   function getCodeSamplesDefaultLang() {
-    return themeConfig?.codeSamples?.defaultLang
+    const availableLangs = getCodeSamplesLangs() || []
+
+    const defaultLang = themeConfig?.codeSamples?.defaultLang
+
+    if (defaultLang && availableLangs.includes(defaultLang)) {
+      return defaultLang
+    }
+
+    return availableLangs[0]
   }
 
   function getCodeSamplesAvailableLanguages() {
@@ -691,7 +699,7 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   function setCodeSamplesConfig(config: Partial<UnwrapNestedRefs<CodeSamplesConfig>>) {
     if (config.langs) {
       // @ts-expect-error: This is a valid expression.
-      themeConfig.codeSamples.langs = config.langs
+      themeConfig.codeSamples.langs = config.langs.filter((lang, index, self) => self.indexOf(lang) === index)
     }
 
     if (config.defaultLang) {
@@ -700,8 +708,7 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     }
 
     if (config.availableLanguages) {
-      // @ts-expect-error: This is a valid expression.
-      themeConfig.codeSamples.availableLanguages = config.availableLanguages
+      setCodeSamplesAvailableLanguages(config.availableLanguages)
     }
 
     if (config.generator) {
@@ -713,6 +720,19 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
       // @ts-expect-error: This is a valid expression.
       themeConfig.codeSamples.defaultHeaders = config.defaultHeaders
     }
+  }
+
+  function setCodeSamplesAvailableLanguages(languages: LanguageConfig[]) {
+    if (!themeConfig.codeSamples) {
+      return
+    }
+
+    const uniqueLanguages = [...new Set(languages.map(({ lang }) => lang))]
+
+    themeConfig.codeSamples.availableLanguages = uniqueLanguages.map((lang) => {
+      const language = availableLanguages.find(l => l.lang === lang)
+      return language || { lang, label: lang, highlighter: 'plaintext' }
+    })
   }
 
   function getLinksPrefixesConfig() {

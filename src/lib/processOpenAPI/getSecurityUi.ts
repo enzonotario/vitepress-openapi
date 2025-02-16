@@ -1,5 +1,5 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { SecurityUi, SecurityUiItem } from '../types'
+import type { SecurityUi, SecurityUiItem } from '../../types'
 
 const NO_SECURITY = 'None'
 

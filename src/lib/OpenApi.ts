@@ -1,7 +1,7 @@
-import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
 import type { ParsedOpenAPI } from '../types'
 import { httpVerbs } from '../index'
-import { processOpenAPI } from './processOpenAPI'
+import { processOpenAPI } from './processOpenAPI/processOpenAPI'
 
 export function OpenApi({
   spec,
@@ -16,6 +16,24 @@ export function OpenApi({
   transformedSpec: null,
   parsedSpec: null,
 }) {
+  let innerSpec: OpenAPI.Document | null = null
+
+  function setSpec(spec: any) {
+    innerSpec = spec
+  }
+
+  function getSpec(): OpenAPI.Document {
+    if (!innerSpec) {
+      setSpec(parsedSpec ?? transformedSpec ?? spec ?? {})
+    }
+
+    if (!innerSpec) {
+      throw new Error('OpenAPI spec is not defined')
+    }
+
+    return innerSpec
+  }
+
   function findOperation(paths: OpenAPIV3.PathsObject, operationId: string) {
     for (const path of Object.values(paths)) {
       for (const verb of httpVerbs) {
@@ -27,11 +45,7 @@ export function OpenApi({
     return null
   }
 
-  function getSpec(): ParsedOpenAPI {
-    return parsedSpec ?? transformedSpec ?? spec ?? {}
-  }
-
-  function getParsedSpec() {
+  function getParsedSpec(): ParsedOpenAPI {
     if (!parsedSpec) {
       parsedSpec = processOpenAPI(transformedSpec ?? spec)
     }
@@ -40,21 +54,25 @@ export function OpenApi({
   }
 
   function getOperation(operationId: string) {
-    if (!getSpec().paths) {
+    const paths = getSpec().paths as OpenAPIV3.PathsObject
+
+    if (!paths) {
       return null
     }
 
-    return findOperation(getSpec().paths, operationId)
+    return findOperation(paths, operationId)
   }
 
   function getOperationPath(operationId: string) {
-    if (!getSpec().paths) {
+    const paths = getSpec().paths as OpenAPIV3.PathsObject
+
+    if (!paths) {
       return null
     }
 
-    for (const [path, methods] of Object.entries(getSpec().paths)) {
+    for (const [path, methods] of Object.entries(paths)) {
       for (const verb of httpVerbs) {
-        if (methods[verb]?.operationId === operationId) {
+        if (methods && methods[verb]?.operationId === operationId) {
           return path
         }
       }
@@ -64,13 +82,15 @@ export function OpenApi({
   }
 
   function getOperationMethod(operationId: string) {
-    if (!getSpec().paths) {
+    const paths = getSpec().paths as OpenAPIV3.PathsObject
+
+    if (!paths) {
       return null
     }
 
-    for (const path of Object.values(getSpec().paths)) {
+    for (const path of Object.values(paths)) {
       for (const verb of httpVerbs) {
-        if (path[verb]?.operationId === operationId) {
+        if (path && path[verb]?.operationId === operationId) {
           return verb
         }
       }
@@ -96,7 +116,9 @@ export function OpenApi({
   }
 
   function getPaths(): OpenAPIV3.PathsObject {
-    return getSpec().paths ?? {}
+    const paths = getSpec().paths as OpenAPIV3.PathsObject
+
+    return paths ?? {}
   }
 
   function getPathsByVerbs() {
@@ -145,7 +167,9 @@ export function OpenApi({
 
     const operationPath = getOperationPath(operationId)
 
-    const pathServers = getSpec().paths[(operationPath ?? '')]?.servers
+    const paths = getSpec().paths as OpenAPIV3.PathsObject
+
+    const pathServers = paths[(operationPath ?? '')]?.servers
 
     return [
       ...(operation?.servers ?? []),
@@ -159,9 +183,11 @@ export function OpenApi({
       return []
     }
 
-    return Object.values(getSpec().paths).reduce((tags: string[], path) => {
+    const paths = getSpec().paths as OpenAPIV3.PathsObject
+
+    return Object.values(paths).reduce((tags: string[], path) => {
       for (const verb of httpVerbs) {
-        if (path[verb]?.tags) {
+        if (path && path[verb]?.tags) {
           path[verb].tags.forEach((tag: string) => {
             if (!tags.includes(tag)) {
               tags.push(tag)
@@ -233,6 +259,8 @@ export function OpenApi({
     spec: getSpec(),
     transformedSpec,
     parsedSpec,
+    setSpec,
+    getSpec,
     getOperation,
     getOperationPath,
     getOperationMethod,

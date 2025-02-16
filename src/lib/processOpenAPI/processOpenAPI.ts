@@ -1,11 +1,12 @@
 import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
 import type { JSONSchema } from '@trojs/openapi-dereference'
-import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../types'
+import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../../types'
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { merge } from 'allof-merge'
-import { getSchemaExample } from './examples/getSchemaExample'
+import { getSchemaExample } from '../examples/getSchemaExample'
 import { getSchemaUi } from './getSchemaUi'
 import { getSecurityUi } from './getSecurityUi'
+import { getCodeSamples } from './getCodeSamples'
 
 function safelyMergeSpec(spec: OpenAPI.Document): ParsedOpenAPI {
   try {
@@ -43,6 +44,11 @@ export function processOpenAPI(spec: OpenAPI.Document): ParsedOpenAPI {
   parsedSpec = safelyDereferenceSpec(parsedSpec)
   parsedSpec = safelyGenerateSecurityUi(parsedSpec)
   parsedSpec = safelyGenerateSchemaUi(parsedSpec)
+
+  parsedSpec.externalDocs = spec.externalDocs || parsedSpec.externalDocs || {}
+  parsedSpec.info = spec.info || parsedSpec.info || {}
+  parsedSpec.servers = spec.servers || parsedSpec.servers || []
+  parsedSpec.tags = spec.tags || parsedSpec.tags || []
 
   return { ...parsedSpec }
 }

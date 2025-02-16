@@ -1,33 +1,20 @@
-import type { Schemas } from '../composables/useOpenapi'
-import { DEFAULT_SCHEMA, useOpenapi } from '../composables/useOpenapi'
+import { useOpenapi } from '../composables/useOpenapi'
 import { createOpenApiInstance } from './createOpenApiInstance'
 
 export function getOpenApiInstance({
-  id,
   custom,
   injected,
-  injectedLocal,
 }: {
-  id?: string
   custom?: { spec: any, parsedSpec?: any }
-  injected?: Schemas | any
-  injectedLocal?: ReturnType<typeof createOpenApiInstance>
+  injected?: any
 } = {}) {
-  if (id === undefined) {
-    id = DEFAULT_SCHEMA
-  }
-
   if (custom?.spec) {
     return createOpenApiInstance({ spec: custom.spec })
   }
 
-  if (injectedLocal) {
-    return injectedLocal
-  }
-
-  if (injected && injected.schemas) {
+  if (injected) {
     try {
-      return injected.schemas.get(id)
+      return injected
     } catch {
       console.warn('Deprecated usage of injected.')
       return injected
@@ -35,7 +22,7 @@ export function getOpenApiInstance({
   }
 
   const globalSpec = useOpenapi()
-  if (globalSpec) {
+  if (globalSpec?.json) {
     return globalSpec
   }
 

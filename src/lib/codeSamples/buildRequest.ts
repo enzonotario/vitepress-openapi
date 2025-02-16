@@ -25,11 +25,16 @@ function getPath(variables: Record<string, string>, pathParameters: OpenAPIV3.Pa
   return resolvedPath
 }
 
-function getHeaders(variables: Record<string, string>, headerParameters: OpenAPIV3.ParameterObject[], authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[] | null) {
-  const headers = new Headers({})
+function getHeaders(
+  headers: Headers,
+  variables: Record<string, string>,
+  headerParameters: OpenAPIV3.ParameterObject[],
+  authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[] | null,
+) {
+  const resolvedHeaders = new Headers(headers)
 
   processParameters(variables, headerParameters, (key: string, value: string) => {
-    headers.set(key, value)
+    resolvedHeaders.set(key, value)
   })
 
   if (authorizations && !Array.isArray(authorizations)) {
@@ -37,7 +42,7 @@ function getHeaders(variables: Record<string, string>, headerParameters: OpenAPI
   }
 
   if (!authorizations?.length) {
-    return headers
+    return resolvedHeaders
   }
 
   Object.entries(authorizations).forEach(([_, authorization]) => {
@@ -48,19 +53,19 @@ function getHeaders(variables: Record<string, string>, headerParameters: OpenAPI
     const value = unref(authorization.playgroundValue)
 
     if (authorization.type === 'http') {
-      headers.set('Authorization', `${authorization.scheme === 'basic' ? 'Basic' : 'Bearer'} ${value}`)
+      resolvedHeaders.set('Authorization', `${authorization.scheme === 'basic' ? 'Basic' : 'Bearer'} ${value}`)
     } else if (authorization.type === 'apiKey') {
-      headers.set(authorization.name ?? '', value)
+      resolvedHeaders.set(authorization.name ?? '', value)
     } else if (authorization.type === 'openIdConnect') {
-      headers.set('Authorization', `Bearer ${value}`)
+      resolvedHeaders.set('Authorization', `Bearer ${value}`)
     } else if (authorization.type === 'oauth2') {
-      headers.set('Authorization', `Bearer ${value}`)
+      resolvedHeaders.set('Authorization', `Bearer ${value}`)
     } else {
       console.warn('Unknown auth scheme:', authorization)
     }
   })
 
-  return headers
+  return resolvedHeaders
 }
 
 function getQuery(variables: Record<string, string>, queryParameters: OpenAPIV3.ParameterObject[]) {
@@ -99,6 +104,7 @@ export function buildRequest({
   parameters,
   authorizations,
   body,
+  headers = {},
   variables = {},
 }: {
   path: string
@@ -108,6 +114,7 @@ export function buildRequest({
   authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[] | null
   body: any
   variables: any
+  headers?: Record<string, string>
 }) {
   const resolvedVariables = setExamplesAsVariables(parameters, variables)
 
@@ -133,12 +140,17 @@ export function buildRequest({
 
   const query = getQuery(resolvedVariables, queryParameters)
 
-  const headers = getHeaders(resolvedVariables, headerParameters, authorizations)
+  const resolvedHeaders = getHeaders(
+    new Headers(headers),
+    resolvedVariables,
+    headerParameters,
+    authorizations,
+  )
 
   return new OARequest(
     `${baseUrl}${resolvedPath}`,
     method,
-    Object.fromEntries(headers),
+    Object.fromEntries(resolvedHeaders),
     body,
     query,
   )

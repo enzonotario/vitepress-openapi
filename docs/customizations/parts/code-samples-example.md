@@ -18,7 +18,7 @@ useTheme({
             ...useTheme().getCodeSamplesAvailableLanguages(),
         ],
         defaultLang: 'bruno',
-        generator: (lang, request) => {
+        generator: async (lang, request) => {
             if (lang === 'bruno') {
                 return generateBruRequest(request)
             }
