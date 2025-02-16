@@ -56,7 +56,6 @@ export type OperationObject = OpenAPIV3.Document | OpenAPIV3_1.OperationObject
 
 export type PlaygroundSecurityScheme = OpenAPIV3.HttpSecurityScheme & OpenAPIV3.ApiKeySecurityScheme & OpenAPIV3.OAuth2SecurityScheme & OpenAPIV3.OpenIdSecurityScheme & {
   playgroundValue: RemovableRef<any>
-      // | any
   label: string
 }
 

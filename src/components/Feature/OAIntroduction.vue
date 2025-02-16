@@ -1,4 +1,5 @@
 <script setup>
+import OAContextProvider from './OAContextProvider.vue'
 import OAInfoContent from './OAInfoContent.vue'
 import OAServersContent from './OAServersContent.vue'
 

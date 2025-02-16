@@ -27,7 +27,7 @@ export async function getCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOpenAPI
         method: verb,
         baseUrl,
         parameters: operation.parameters || [],
-        authorizations: Object.entries(authorizations).map(([name, value]) => {
+        authorizations: Object.entries(authorizations).map(([name, _]) => {
           return {
             ...spec.components?.securitySchemes?.[name],
             playgroundValue: name,
