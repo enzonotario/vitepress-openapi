@@ -13,12 +13,7 @@ export function getOpenApiInstance({
   }
 
   if (injected) {
-    try {
-      return injected
-    } catch {
-      console.warn('Deprecated usage of injected.')
-      return injected
-    }
+    return injected
   }
 
   const globalSpec = useOpenapi()
