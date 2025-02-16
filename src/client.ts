@@ -9,10 +9,6 @@ import { OPENAPI_GLOBAL_KEY } from './composables/useOpenapi'
 import { useShiki } from './composables/useShiki'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 
-import 'tailwindcss/tailwind.css'
-import './style.css'
-import './json.css'
-
 interface OAEnhanceAppContext extends EnhanceAppContext {
   openapi?: ReturnType<typeof createOpenApiInstance> | null
 }
