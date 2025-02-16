@@ -6,5 +6,5 @@ export async function processAsyncOpenAPI(spec: ParsedOpenAPI): Promise<ParsedOp
 
   parsedSpec = await getCodeSamples(parsedSpec)
 
-  return { ...parsedSpec }
+  return parsedSpec
 }
