@@ -12,6 +12,10 @@ const props = defineProps({
     type: Object,
     default: () => (new OARequest()),
   },
+  codeSamples: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
 const themeConfig = useTheme()
@@ -24,7 +28,7 @@ const generator = themeConfig.getCodeSamplesGenerator()
 
 const defaultLang = themeConfig.getCodeSamplesDefaultLang()
 
-const samples = ref([])
+const samples = ref(props.codeSamples)
 
 const loadSamples = async () => {
   samples.value = await Promise.all(
@@ -44,9 +48,7 @@ const loadSamples = async () => {
   )
 }
 
-loadSamples()
-
-watch(() => props.request, loadSamples, { deep: true })
+watch(() => props.request, loadSamples, { deep: true, immediate: true })
 </script>
 
 <template>

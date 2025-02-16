@@ -4,6 +4,7 @@ import { computed, defineProps, provide, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { initOperationData, OPERATION_DATA_KEY } from '../../lib/operationData'
+import { resolveBaseUrl } from '../../lib/resolveBaseUrl'
 
 const props = defineProps({
   id: {
@@ -76,15 +77,15 @@ const selectedServer = servers?.length > 1 && typeof localStorage !== 'undefined
   : ref(defaultServer)
 
 const baseUrl = computed(() => {
-  const value = selectedServer.value
+  let value = selectedServer.value
 
   if (servers.length > 1 && !servers.some(server => server.url === value)) {
     updateSelectedServer(servers[0]?.url)
 
-    return servers[0]?.url
+    value = servers[0]?.url
   }
 
-  return value
+  return resolveBaseUrl(value)
 })
 
 const shouldBuildRequest = computed(() => ['try-it', 'code-samples'].some(slot => operationSlots.value.includes(slot)))
@@ -102,6 +103,8 @@ const request = ref(
       })
     : {},
 )
+
+const codeSamples = props.operation.codeSamples
 
 function updateRequest(newRequest) {
   request.value = newRequest
@@ -276,6 +279,7 @@ function updateSelectedServer(server) {
                 :path="operationPath"
                 :request="request"
                 :update-request="updateRequest"
+                :code-samples="codeSamples"
               />
             </template>
           </div>

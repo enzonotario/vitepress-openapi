@@ -1,8 +1,8 @@
 import type { OpenAPI } from '@scalar/openapi-types'
-import { literalTypes } from '../index'
-import { getConstraints, hasConstraints } from './constraintsParser'
-import { getPropertyExamples } from './examples/getPropertyExamples'
-import { resolveCircularRef } from './resolveCircularRef'
+import { literalTypes } from '../../index'
+import { getConstraints, hasConstraints } from '../constraintsParser'
+import { getPropertyExamples } from '../examples/getPropertyExamples'
+import { resolveCircularRef } from '../resolveCircularRef'
 
 type JSONSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object' | 'null'
 

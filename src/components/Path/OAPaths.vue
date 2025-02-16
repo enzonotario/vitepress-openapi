@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
-import { defineProps } from 'vue'
+import { defineProps, inject } from 'vue'
+import { OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
 import { useTheme } from '../../composables/useTheme'
 import OALazy from '../Common/Lazy/OALazy.vue'
+import OAOperationContent from '../Feature/OAOperationContent.vue'
 
 const { paths } = defineProps({
   paths: {
@@ -27,6 +29,8 @@ const operations = Object.entries(paths).reduce((acc: { operationId: string }[],
 }, [])
 
 const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
+
+const openapi: any = inject(OPENAPI_LOCAL_KEY)
 </script>
 
 <template>
@@ -35,7 +39,8 @@ const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
     :key="operation.operationId"
     :is-lazy="lazyRendering && operationIdx > 0"
   >
-    <OAOperation
+    <OAOperationContent
+      :openapi="openapi"
       :operation-id="operation.operationId"
       prefix-headings
       hide-branding
@@ -50,7 +55,7 @@ const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
           v-bind="slotProps || {}"
         />
       </template>
-    </OAOperation>
+    </OAOperationContent>
 
     <hr>
   </OALazy>

@@ -394,6 +394,7 @@ exports[`processOpenAPI > processes the OpenAPI spec 1`] = `
       },
     },
   },
+  "externalDocs": {},
   "info": {
     "contact": {
       "email": "hi@enzonotario.me",

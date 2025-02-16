@@ -40,7 +40,7 @@
     "prepublishOnly": "pnpm run build",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "dev": "cd docs && pnpm run dev",
+    "dev": "cd docs && VITE_DEBUG=1 pnpm run dev",
     "docs:build": "pnpm run build && cd docs && pnpm run build",
     "test": "vitest",
     "test:run": "vitest --run",

@@ -1,4 +1,4 @@
-import type { OAProperty } from '../getSchemaUi'
+import type { OAProperty } from '../processOpenAPI/getSchemaUi'
 import { jsXml } from 'json-xml-parse'
 import { getSchemaUiJson } from './getSchemaUiJson'
 
