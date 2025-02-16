@@ -451,6 +451,71 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
   "paths": {
     "/api/v1/artists": {
       "get": {
+        "codeSamples": [
+          {
+            "highlighter": "bash",
+            "label": "cURL",
+            "lang": "curl",
+            "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1' \\
+  --header 'Content-Type: application/json'",
+          },
+          {
+            "highlighter": "javascript",
+            "label": "JavaScript",
+            "lang": "javascript",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1', {
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})",
+          },
+          {
+            "highlighter": "php",
+            "label": "PHP",
+            "lang": "php",
+            "source": "<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "GET",
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}",
+          },
+          {
+            "highlighter": "python",
+            "label": "Python",
+            "lang": "python",
+            "source": "import requests
+
+url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists"
+
+headers = {"Content-Type": "application/json"}
+
+response = requests.get(url, headers=headers)
+
+print(response.json())",
+          },
+        ],
         "description": "Get a list of all legendary Argentine Rock artists and explore their contributions to the music scene.",
         "operationId": "getAllArtists",
         "parameters": [
@@ -764,6 +829,79 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         ],
       },
       "post": {
+        "codeSamples": [
+          {
+            "highlighter": "bash",
+            "label": "cURL",
+            "lang": "curl",
+            "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists \\
+  --request POST \\
+  --header 'Authorization: Bearer bearerAuth' \\
+  --header 'Content-Type: application/json'",
+          },
+          {
+            "highlighter": "javascript",
+            "label": "JavaScript",
+            "lang": "javascript",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists', {
+  method: 'POST',
+  headers: {
+    Authorization: 'Bearer bearerAuth',
+    'Content-Type': 'application/json'
+  }
+})",
+          },
+          {
+            "highlighter": "php",
+            "label": "PHP",
+            "lang": "php",
+            "source": "<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_HTTPHEADER => [
+    "Authorization: Bearer bearerAuth",
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}",
+          },
+          {
+            "highlighter": "python",
+            "label": "Python",
+            "lang": "python",
+            "source": "import requests
+
+url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists"
+
+headers = {
+    "Authorization": "Bearer bearerAuth",
+    "Content-Type": "application/json"
+}
+
+response = requests.post(url, headers=headers)
+
+print(response.json())",
+          },
+        ],
         "description": "Add a new legendary Argentine Rock artist. Make sure they truly deserve the title!",
         "operationId": "createArtist",
         "requestBody": {
@@ -1309,6 +1447,79 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
     },
     "/api/v1/artists/{artistId}": {
       "delete": {
+        "codeSamples": [
+          {
+            "highlighter": "bash",
+            "label": "cURL",
+            "lang": "curl",
+            "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
+  --request DELETE \\
+  --header 'Authorization: Bearer bearerAuth' \\
+  --header 'Content-Type: application/json'",
+          },
+          {
+            "highlighter": "javascript",
+            "label": "JavaScript",
+            "lang": "javascript",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1', {
+  method: 'DELETE',
+  headers: {
+    Authorization: 'Bearer bearerAuth',
+    'Content-Type': 'application/json'
+  }
+})",
+          },
+          {
+            "highlighter": "php",
+            "label": "PHP",
+            "lang": "php",
+            "source": "<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "DELETE",
+  CURLOPT_HTTPHEADER => [
+    "Authorization: Bearer bearerAuth",
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}",
+          },
+          {
+            "highlighter": "python",
+            "label": "Python",
+            "lang": "python",
+            "source": "import requests
+
+url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1"
+
+headers = {
+    "Authorization": "Bearer bearerAuth",
+    "Content-Type": "application/json"
+}
+
+response = requests.delete(url, headers=headers)
+
+print(response.json())",
+          },
+        ],
         "deprecated": true,
         "description": "This endpoint was used to delete artists. Unfortunately, that caused a lot of controversy. So, this endpoint is now deprecated and should not be used anymore.",
         "operationId": "deleteArtist",
@@ -1563,6 +1774,71 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         ],
       },
       "get": {
+        "codeSamples": [
+          {
+            "highlighter": "bash",
+            "label": "cURL",
+            "lang": "curl",
+            "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
+  --header 'Content-Type: application/json'",
+          },
+          {
+            "highlighter": "javascript",
+            "label": "JavaScript",
+            "lang": "javascript",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1', {
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})",
+          },
+          {
+            "highlighter": "php",
+            "label": "PHP",
+            "lang": "php",
+            "source": "<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "GET",
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}",
+          },
+          {
+            "highlighter": "python",
+            "label": "Python",
+            "lang": "python",
+            "source": "import requests
+
+url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1"
+
+headers = {"Content-Type": "application/json"}
+
+response = requests.get(url, headers=headers)
+
+print(response.json())",
+          },
+        ],
         "description": "Learn more about a specific Argentine Rock artist and their legacy.",
         "operationId": "getArtist",
         "parameters": [
@@ -1830,6 +2106,79 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         ],
       },
       "put": {
+        "codeSamples": [
+          {
+            "highlighter": "bash",
+            "label": "cURL",
+            "lang": "curl",
+            "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
+  --request PUT \\
+  --header 'Authorization: Bearer bearerAuth' \\
+  --header 'Content-Type: application/json'",
+          },
+          {
+            "highlighter": "javascript",
+            "label": "JavaScript",
+            "lang": "javascript",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1', {
+  method: 'PUT',
+  headers: {
+    Authorization: 'Bearer bearerAuth',
+    'Content-Type': 'application/json'
+  }
+})",
+          },
+          {
+            "highlighter": "php",
+            "label": "PHP",
+            "lang": "php",
+            "source": "<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "PUT",
+  CURLOPT_HTTPHEADER => [
+    "Authorization: Bearer bearerAuth",
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}",
+          },
+          {
+            "highlighter": "python",
+            "label": "Python",
+            "lang": "python",
+            "source": "import requests
+
+url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1"
+
+headers = {
+    "Authorization": "Bearer bearerAuth",
+    "Content-Type": "application/json"
+}
+
+response = requests.put(url, headers=headers)
+
+print(response.json())",
+          },
+        ],
         "description": "Update the information of a legendary Argentine Rock artist. Make sure to provide accurate data.",
         "operationId": "updateArtist",
         "parameters": [
@@ -2355,6 +2704,71 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
     },
     "/api/v1/artists/{artistId}/albums": {
       "get": {
+        "codeSamples": [
+          {
+            "highlighter": "bash",
+            "label": "cURL",
+            "lang": "curl",
+            "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1' \\
+  --header 'Content-Type: application/json'",
+          },
+          {
+            "highlighter": "javascript",
+            "label": "JavaScript",
+            "lang": "javascript",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1', {
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})",
+          },
+          {
+            "highlighter": "php",
+            "label": "PHP",
+            "lang": "php",
+            "source": "<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "GET",
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}",
+          },
+          {
+            "highlighter": "python",
+            "label": "Python",
+            "lang": "python",
+            "source": "import requests
+
+url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums"
+
+headers = {"Content-Type": "application/json"}
+
+response = requests.get(url, headers=headers)
+
+print(response.json())",
+          },
+        ],
         "description": "Get a list of all albums from a legendary Argentine Rock artist.",
         "operationId": "getAllAlbums",
         "parameters": [
@@ -2649,6 +3063,79 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         ],
       },
       "post": {
+        "codeSamples": [
+          {
+            "highlighter": "bash",
+            "label": "cURL",
+            "lang": "curl",
+            "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums \\
+  --request POST \\
+  --header 'Authorization: Bearer bearerAuth' \\
+  --header 'Content-Type: application/json'",
+          },
+          {
+            "highlighter": "javascript",
+            "label": "JavaScript",
+            "lang": "javascript",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums', {
+  method: 'POST',
+  headers: {
+    Authorization: 'Bearer bearerAuth',
+    'Content-Type': 'application/json'
+  }
+})",
+          },
+          {
+            "highlighter": "php",
+            "label": "PHP",
+            "lang": "php",
+            "source": "<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_HTTPHEADER => [
+    "Authorization: Bearer bearerAuth",
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}",
+          },
+          {
+            "highlighter": "python",
+            "label": "Python",
+            "lang": "python",
+            "source": "import requests
+
+url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums"
+
+headers = {
+    "Authorization": "Bearer bearerAuth",
+    "Content-Type": "application/json"
+}
+
+response = requests.post(url, headers=headers)
+
+print(response.json())",
+          },
+        ],
         "description": "Add a new album to a legendary Argentine Rock artist. Make sure it’s a masterpiece!",
         "operationId": "createAlbum",
         "parameters": [
@@ -3128,6 +3615,73 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
     },
     "/api/v1/user/signup": {
       "post": {
+        "codeSamples": [
+          {
+            "highlighter": "bash",
+            "label": "cURL",
+            "lang": "curl",
+            "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup \\
+  --request POST \\
+  --header 'Content-Type: application/json'",
+          },
+          {
+            "highlighter": "javascript",
+            "label": "JavaScript",
+            "lang": "javascript",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})",
+          },
+          {
+            "highlighter": "php",
+            "label": "PHP",
+            "lang": "php",
+            "source": "<?php
+
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json"
+  ],
+]);
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  echo $response;
+}",
+          },
+          {
+            "highlighter": "python",
+            "label": "Python",
+            "lang": "python",
+            "source": "import requests
+
+url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup"
+
+headers = {"Content-Type": "application/json"}
+
+response = requests.post(url, headers=headers)
+
+print(response.json())",
+          },
+        ],
         "description": "Create a user account to access exclusive content about Argentine Rock legends.",
         "operationId": "createUser",
         "requestBody": {
