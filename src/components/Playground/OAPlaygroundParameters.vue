@@ -3,7 +3,7 @@ import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationData } from '../../lib/operationData'
 import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
 import { useStorage } from '@vueuse/core'
-import { defineEmits, defineProps, inject, ref, watch } from 'vue'
+import { computed, defineEmits, defineProps, inject, ref, watch } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { OARequest } from '../../lib/codeSamples/request'
@@ -82,6 +82,8 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
 const authorizations = ref<PlaygroundSecurityScheme[] | null>(null)
 
 const body = ref(Object.keys(props.examples ?? {}).length ? Object.values(props.examples ?? {})[0].value : null)
+
+const bodyType = computed(() => typeof body.value === 'object' ? 'json' : 'text')
 
 function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   if (!schemes || !Object.keys(schemes).length) {
@@ -247,7 +249,17 @@ watch(operationData.security.selectedSchemeId, () => {
         {{ $t('Body') }}
       </summary>
 
-      <OAJSONEditor v-model="body" class="w-full" />
+      <OAJSONEditor
+        v-if="bodyType === 'json'"
+        v-model="body" class="w-full"
+      />
+
+      <OAPlaygroundParameterInput
+        v-else
+        v-model="body"
+        :parameter="{ name: 'body', schema: { type: 'string' } }"
+        class="w-full"
+      />
     </details>
   </div>
 </template>
