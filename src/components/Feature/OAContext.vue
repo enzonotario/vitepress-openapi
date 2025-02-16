@@ -23,7 +23,5 @@ provide(OPENAPI_LOCAL_KEY, openapi)
 </script>
 
 <template>
-  <div>
-    <slot :openapi="openapi" />
-  </div>
+  <slot :openapi="openapi" />
 </template>
