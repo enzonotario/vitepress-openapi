@@ -1,21 +1,26 @@
-import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { OpenAPIDocument } from '../../types'
 
 export function generateMissingTags({
   spec,
   defaultTag = 'Default',
   defaultTagDescription = '',
 }: {
-  spec: OpenAPI.Document
+  spec: OpenAPIDocument
   defaultTag?: string
   defaultTagDescription?: string
-}): OpenAPI.Document {
+}): OpenAPIDocument {
   const operationTags = new Set<string>()
 
   spec.paths = spec.paths || {}
 
-  for (const path of Object.values(spec.paths)) {
-    for (const verb of Object.keys(path) as OpenAPIV3.HttpMethods[]) {
-      const operation = path[verb]
+  for (const [_, pathObject] of Object.entries(spec.paths)) {
+    for (const verb of Object.keys(pathObject as any) as OpenAPIV3.HttpMethods[]) {
+      if (!pathObject || !pathObject[verb]) {
+        continue
+      }
+
+      const operation = pathObject[verb]
       const tags = operation.tags || [defaultTag]
       operation.tags = tags
       tags.forEach((tag: string) => operationTags.add(tag))

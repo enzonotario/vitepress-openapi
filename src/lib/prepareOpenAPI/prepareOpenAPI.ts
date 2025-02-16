@@ -1,4 +1,4 @@
-import type { OpenAPI } from '@scalar/openapi-types'
+import type { OpenAPIDocument } from '../../types'
 import { generateMissingOperationIds } from './generateMissingOperationIds'
 import { generateMissingSummary } from './generateMissingSummary'
 import { generateMissingTags } from './generateMissingTags'
@@ -8,10 +8,10 @@ export function prepareOpenAPI({
   defaultTag = undefined,
   defaultTagDescription = undefined,
 }: {
-  spec: OpenAPI.Document
+  spec: OpenAPIDocument
   defaultTag?: string
   defaultTagDescription?: string
-}): OpenAPI.Document {
+}): OpenAPIDocument {
   if (import.meta.env.VITE_DEBUG) {
     console.warn('Transforming OpenAPI spec:', spec)
   }
@@ -20,7 +20,7 @@ export function prepareOpenAPI({
     return {}
   }
 
-  if (!spec.openapi || !spec.openapi.startsWith('3.')) {
+  if (!spec.openapi || !String(spec.openapi).startsWith('3.')) {
     console.warn('Only OpenAPI 3.x is supported')
     return {}
   }

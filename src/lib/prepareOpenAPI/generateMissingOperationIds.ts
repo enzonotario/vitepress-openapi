@@ -1,6 +1,7 @@
-import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { OpenAPIDocument } from '../../types'
 
-export function generateMissingOperationIds(spec: OpenAPI.Document): OpenAPI.Document {
+export function generateMissingOperationIds(spec: OpenAPIDocument): OpenAPIDocument {
   spec.paths = spec.paths || {}
 
   for (const path of Object.keys(spec.paths)) {

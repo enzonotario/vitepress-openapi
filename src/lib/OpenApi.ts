@@ -1,5 +1,5 @@
-import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
-import type { ParsedOpenAPI } from '../types'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
 import { httpVerbs } from '../index'
 import { processOpenAPI } from './processOpenAPI/processOpenAPI'
 
@@ -16,13 +16,13 @@ export function OpenApi({
   transformedSpec: null,
   parsedSpec: null,
 }) {
-  let innerSpec: OpenAPI.Document | null = null
+  let innerSpec: OpenAPIDocument | null = null
 
   function setSpec(spec: any) {
     innerSpec = spec
   }
 
-  function getSpec(): OpenAPI.Document {
+  function getSpec(): OpenAPIDocument {
     if (!innerSpec) {
       setSpec(parsedSpec ?? transformedSpec ?? spec ?? {})
     }
@@ -232,22 +232,22 @@ export function OpenApi({
 
   function getTags() {
     return (getSpec().tags ?? [])
-      .map((tag: OpenAPIV3.TagObject) => ({
+      .map(tag => ({
         name: tag.name ?? null,
         description: tag.description ?? null,
       }))
   }
 
-  function getFilteredTags(): OpenAPIV3.TagObject[] {
+  function getFilteredTags() {
     const operationsTags = getOperationsTags()
 
     const tags = getTags()
-      .filter((tag: OpenAPIV3.TagObject) => operationsTags.includes(tag.name ?? ''))
+      .filter(tag => operationsTags.includes(tag.name ?? ''))
 
     return tags
       .concat([
         ...operationsTags
-          .filter(tag => !tags.map((tag: OpenAPIV3.TagObject) => tag.name).includes(tag))
+          .filter(tag => !tags.map(tag => tag.name).includes(tag))
           .map(tag => ({
             name: tag,
             description: null,

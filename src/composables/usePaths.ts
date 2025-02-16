@@ -1,4 +1,4 @@
-import type { OpenAPI } from '@scalar/openapi-types'
+import type { OpenAPIDocument } from '../types'
 import { OpenApi } from '../lib/OpenApi'
 import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
 
@@ -7,7 +7,7 @@ export function usePaths({
   defaultTag = undefined,
   defaultTagDescription = undefined,
 }: {
-  spec: OpenAPI.Document
+  spec: OpenAPIDocument
   defaultTag?: string
   defaultTagDescription?: string
 }) {

@@ -1,7 +1,7 @@
-import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
-import type { OperationObject } from '../../types'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { OpenAPIDocument, OperationObject } from '../../types'
 
-export function generateMissingSummary(spec: OpenAPI.Document): OpenAPI.Document {
+export function generateMissingSummary(spec: OpenAPIDocument): OpenAPIDocument {
   spec.paths = spec.paths || {}
 
   for (const path of Object.keys(spec.paths)) {

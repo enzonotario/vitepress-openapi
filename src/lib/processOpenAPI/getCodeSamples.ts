@@ -10,7 +10,7 @@ export async function getCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOpenAPI
     return spec
   }
 
-  const baseUrl = resolveBaseUrl(spec.servers?.[0]?.url)
+  const baseUrl = resolveBaseUrl(spec.servers?.[0]?.url || '')
 
   for (const [path, pathObject] of Object.entries(spec.paths)) {
     for (const verb of Object.keys(pathObject) as OpenAPIV3.HttpMethods[]) {

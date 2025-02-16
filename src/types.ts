@@ -21,7 +21,9 @@ export type OperationSlot =
   // | 'summary'
   // | 'servers'
 
-export type ParsedOpenAPI = OpenAPI.Document & {
+export type OpenAPIDocument = OpenAPIV3.Document & OpenAPIV3_1.Document
+
+export type ParsedOpenAPI = OpenAPIDocument & {
   paths: OpenAPIV3.PathsObject & OpenAPIV3_1.PathsObject & {
     [key: string]: OpenAPIV3.PathItemObject & OpenAPIV3_1.PathItemObject & {
       [key: string]: ParsedOperation
