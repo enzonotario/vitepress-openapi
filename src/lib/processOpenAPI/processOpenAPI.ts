@@ -6,7 +6,6 @@ import { merge } from 'allof-merge'
 import { getSchemaExample } from '../examples/getSchemaExample'
 import { getSchemaUi } from './getSchemaUi'
 import { getSecurityUi } from './getSecurityUi'
-import { getCodeSamples } from './getCodeSamples'
 
 function safelyMergeSpec(spec: OpenAPI.Document): ParsedOpenAPI {
   try {
