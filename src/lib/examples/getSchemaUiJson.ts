@@ -62,7 +62,7 @@ function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
       return [uiPropertyObjectToJson(property.properties as OAProperty[], useExample)]
     }
 
-    return useExample ? [getPropertyExample(property) ?? getDefaultValueForType(property.subtype)] : [getDefaultValueForType(property.subtype)]
+    return useExample ? [getPropertyExample(property) ?? getDefaultValueForType(property.subtype, property.defaultValue)] : [getDefaultValueForType(property.subtype, property.defaultValue)]
   }
 
   return []
@@ -87,7 +87,7 @@ function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any
     }
   }
 
-  return getDefaultValueForType(property.types[0] ?? 'string')
+  return getDefaultValueForType(property.types[0] ?? 'string', property.defaultValue)
 }
 
 /**
@@ -100,26 +100,26 @@ function uiPropertyConstantToJson(property: OAProperty): any {
     return example
   }
 
-  return getDefaultValueForType(property.types[0] ?? 'string')
+  return getDefaultValueForType(property.types[0] ?? 'string', property.defaultValue)
 }
 
-function getDefaultValueForType(type: string): any {
+function getDefaultValueForType(type: string, defaultValue: unknown): any {
   switch (type) {
     case 'string':
-      return 'string'
+      return defaultValue ?? 'string'
     case 'number':
     case 'integer':
-      return 0
+      return defaultValue ?? 0
     case 'float':
-      return 0.0
+      return defaultValue ?? 0.0
     case 'boolean':
-      return true
+      return defaultValue ?? true
     case 'null':
-      return null
+      return defaultValue ?? null
     case 'array':
-      return []
+      return defaultValue ?? []
     case 'object':
-      return {}
+      return defaultValue ?? {}
     default:
       return undefined
   }
@@ -145,6 +145,6 @@ function resolveOneOfProperty(property: OAProperty, useExample: boolean): any {
   if (property.properties && property.properties.length > 0) {
     return uiPropertyToJson(property.properties[0], useExample)
   } else {
-    return useExample ? getPropertyExample(property) : getDefaultValueForType(property.types[0] ?? 'string')
+    return useExample ? getPropertyExample(property) : getDefaultValueForType(property.types[0] ?? 'string', property.defaultValue)
   }
 }
