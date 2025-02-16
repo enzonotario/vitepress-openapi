@@ -1,4 +1,4 @@
-import type { OpenAPI } from '@scalar/openapi-types'
+import type { OpenAPIDocument } from '../types'
 import { OpenApi } from './OpenApi'
 import { prepareOpenAPI } from './prepareOpenAPI/prepareOpenAPI'
 import { processOpenAPI } from './processOpenAPI/processOpenAPI'
@@ -8,7 +8,7 @@ export function createOpenApiInstance({
   defaultTag = undefined,
   defaultTagDescription = undefined,
 }: {
-  spec: OpenAPI.Document
+  spec: OpenAPIDocument
   defaultTag?: string
   defaultTagDescription?: string
 }) {

@@ -1,5 +1,6 @@
-import type { OpenAPI, OpenAPIV3 } from '@scalar/openapi-types'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { DefaultTheme } from 'vitepress'
+import type { OpenAPIDocument } from '../types'
 import { httpVerbs } from '../index'
 import { OpenApi } from '../lib/OpenApi'
 import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
@@ -19,7 +20,7 @@ export type SidebarGroupTemplateFn = (
 ) => string
 
 export interface SidebarConfig {
-  spec?: OpenAPI.Document | null
+  spec?: OpenAPIDocument | null
   linkPrefix?: string
   tagLinkPrefix?: string
   defaultTag?: string
@@ -240,7 +241,7 @@ export function useSidebar({
     linkPrefix: tagsLinkPrefix = tagLinkPrefix,
   }: SidebarGroupsConfig = {}): OASidebarItem[] {
     if (tags === undefined) {
-      tags = getOpenApi().getFilteredTags().map((tag: OpenAPIV3.TagObject) => tag.name || '')
+      tags = getOpenApi().getFilteredTags().map(tag => tag.name || '')
     }
 
     if (!getOpenApi().getPaths() || !tags) {
