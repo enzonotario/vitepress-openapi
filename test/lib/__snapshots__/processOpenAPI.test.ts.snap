@@ -505,15 +505,18 @@ if ($err) {
             "highlighter": "python",
             "label": "Python",
             "lang": "python",
-            "source": "import requests
+            "source": "import http.client
 
-url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists"
+conn = http.client.HTTPSConnection("stoplight.io")
 
-headers = {"Content-Type": "application/json"}
+headers = { 'Content-Type': "application/json" }
 
-response = requests.get(url, headers=headers)
+conn.request("GET", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists", headers=headers)
 
-print(response.json())",
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))",
           },
         ],
         "description": "Get a list of all legendary Argentine Rock artists and explore their contributions to the music scene.",
@@ -888,18 +891,21 @@ if ($err) {
             "highlighter": "python",
             "label": "Python",
             "lang": "python",
-            "source": "import requests
+            "source": "import http.client
 
-url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists"
+conn = http.client.HTTPSConnection("stoplight.io")
 
 headers = {
-    "Authorization": "Bearer bearerAuth",
-    "Content-Type": "application/json"
+    'Authorization': "Bearer bearerAuth",
+    'Content-Type': "application/json"
 }
 
-response = requests.post(url, headers=headers)
+conn.request("POST", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists", headers=headers)
 
-print(response.json())",
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))",
           },
         ],
         "description": "Add a new legendary Argentine Rock artist. Make sure they truly deserve the title!",
@@ -1506,18 +1512,21 @@ if ($err) {
             "highlighter": "python",
             "label": "Python",
             "lang": "python",
-            "source": "import requests
+            "source": "import http.client
 
-url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1"
+conn = http.client.HTTPSConnection("stoplight.io")
 
 headers = {
-    "Authorization": "Bearer bearerAuth",
-    "Content-Type": "application/json"
+    'Authorization': "Bearer bearerAuth",
+    'Content-Type': "application/json"
 }
 
-response = requests.delete(url, headers=headers)
+conn.request("DELETE", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1", headers=headers)
 
-print(response.json())",
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))",
           },
         ],
         "deprecated": true,
@@ -1828,15 +1837,18 @@ if ($err) {
             "highlighter": "python",
             "label": "Python",
             "lang": "python",
-            "source": "import requests
+            "source": "import http.client
 
-url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1"
+conn = http.client.HTTPSConnection("stoplight.io")
 
-headers = {"Content-Type": "application/json"}
+headers = { 'Content-Type': "application/json" }
 
-response = requests.get(url, headers=headers)
+conn.request("GET", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1", headers=headers)
 
-print(response.json())",
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))",
           },
         ],
         "description": "Learn more about a specific Argentine Rock artist and their legacy.",
@@ -2165,18 +2177,21 @@ if ($err) {
             "highlighter": "python",
             "label": "Python",
             "lang": "python",
-            "source": "import requests
+            "source": "import http.client
 
-url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1"
+conn = http.client.HTTPSConnection("stoplight.io")
 
 headers = {
-    "Authorization": "Bearer bearerAuth",
-    "Content-Type": "application/json"
+    'Authorization': "Bearer bearerAuth",
+    'Content-Type': "application/json"
 }
 
-response = requests.put(url, headers=headers)
+conn.request("PUT", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1", headers=headers)
 
-print(response.json())",
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))",
           },
         ],
         "description": "Update the information of a legendary Argentine Rock artist. Make sure to provide accurate data.",
@@ -2758,15 +2773,18 @@ if ($err) {
             "highlighter": "python",
             "label": "Python",
             "lang": "python",
-            "source": "import requests
+            "source": "import http.client
 
-url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums"
+conn = http.client.HTTPSConnection("stoplight.io")
 
-headers = {"Content-Type": "application/json"}
+headers = { 'Content-Type': "application/json" }
 
-response = requests.get(url, headers=headers)
+conn.request("GET", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums", headers=headers)
 
-print(response.json())",
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))",
           },
         ],
         "description": "Get a list of all albums from a legendary Argentine Rock artist.",
@@ -3122,18 +3140,21 @@ if ($err) {
             "highlighter": "python",
             "label": "Python",
             "lang": "python",
-            "source": "import requests
+            "source": "import http.client
 
-url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums"
+conn = http.client.HTTPSConnection("stoplight.io")
 
 headers = {
-    "Authorization": "Bearer bearerAuth",
-    "Content-Type": "application/json"
+    'Authorization': "Bearer bearerAuth",
+    'Content-Type': "application/json"
 }
 
-response = requests.post(url, headers=headers)
+conn.request("POST", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums", headers=headers)
 
-print(response.json())",
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))",
           },
         ],
         "description": "Add a new album to a legendary Argentine Rock artist. Make sure it’s a masterpiece!",
@@ -3671,15 +3692,18 @@ if ($err) {
             "highlighter": "python",
             "label": "Python",
             "lang": "python",
-            "source": "import requests
+            "source": "import http.client
 
-url = "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup"
+conn = http.client.HTTPSConnection("stoplight.io")
 
-headers = {"Content-Type": "application/json"}
+headers = { 'Content-Type': "application/json" }
 
-response = requests.post(url, headers=headers)
+conn.request("POST", "/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup", headers=headers)
 
-print(response.json())",
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))",
           },
         ],
         "description": "Create a user account to access exclusive content about Argentine Rock legends.",
