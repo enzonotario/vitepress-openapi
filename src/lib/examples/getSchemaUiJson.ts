@@ -104,22 +104,26 @@ function uiPropertyConstantToJson(property: OAProperty): any {
 }
 
 function getDefaultValueForType(type: string, defaultValue: unknown): any {
+  if (defaultValue !== undefined) {
+    return defaultValue
+  }
+
   switch (type) {
     case 'string':
-      return defaultValue ?? 'string'
+      return 'string'
     case 'number':
     case 'integer':
-      return defaultValue ?? 0
+      return 0
     case 'float':
-      return defaultValue ?? 0.0
+      return 0.0
     case 'boolean':
-      return defaultValue ?? true
+      return true
     case 'null':
-      return defaultValue ?? null
+      return null
     case 'array':
-      return defaultValue ?? []
+      return []
     case 'object':
-      return defaultValue ?? {}
+      return {}
     default:
       return undefined
   }
