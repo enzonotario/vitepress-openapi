@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest'
 import { dereferenceSync } from '@trojs/openapi-dereference'
+import { describe, expect, it } from 'vitest'
+import { getSchemaExample } from '../../src/lib/examples/getSchemaExample'
 import { getSchemaUi } from '../../src/lib/getSchemaUi'
 import { specWithCircularRef } from '../testsConstants'
-import { getSchemaExample } from '../../src/lib/examples/getSchemaExample'
 
 interface FixtureTest {
   jsonSchema: any
@@ -1272,6 +1272,41 @@ const fixtures: Record<string, FixtureTest> = {
       constNumbers: [0],
       constBooleans: [true],
       constNulls: [null],
+    },
+  },
+
+  'object with default value': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', default: 'John' },
+        age: { type: 'integer', default: 42 },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        {
+          constraints: { default: 'John' },
+          name: 'name',
+          required: false,
+          types: ['string'],
+          defaultValue: 'John',
+        },
+        {
+          constraints: { default: 42 },
+          name: 'age',
+          required: false,
+          types: ['integer'],
+          defaultValue: 42,
+        },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      name: 'John',
+      age: 42,
     },
   },
 }
