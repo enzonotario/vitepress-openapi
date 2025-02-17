@@ -53,7 +53,7 @@ export const convertRequestToHarRequest = async (
 
     // Prevent duplication of query params
     url.search = ''
-  } catch (_) {
+  } catch {
     // Invalid URL, leave queryString empty
   }
 
@@ -103,7 +103,7 @@ export const convertRequestToHarRequest = async (
           text: await request.text(),
         }
       }
-    } catch (_) {
+    } catch {
       // Invalid request body, leave postData empty
     }
   }
