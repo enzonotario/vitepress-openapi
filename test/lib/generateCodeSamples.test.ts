@@ -342,80 +342,104 @@ describe('generateCodeSamplePython', async () => {
   it('generates Python code for GET request', async () => {
     const request = new OARequest('https://api.example.com/resource')
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
+    expect(result).toBe(`import http.client
 
-url = "https://api.example.com/resource"
+conn = http.client.HTTPSConnection("api.example.com")
 
-response = requests.get(url)
+conn.request("GET", "/resource")
 
-print(response.json())`)
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))`)
   })
 
   it('generates Python code for POST request with body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: 'value' })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
+    expect(result).toBe(`import http.client
 
-url = "https://api.example.com/resource"
+conn = http.client.HTTPSConnection("api.example.com")
 
-headers = {"Content-Type": "application/json"}
+payload = "{\\"key\\":\\"value\\"}"
 
-response = requests.post(url, headers=headers)
+headers = { 'Content-Type': "application/json" }
 
-print(response.json())`)
+conn.request("POST", "/resource", payload, headers)
+
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))`)
   })
 
   it('generates Python code for POST request with deep body', async () => {
     const request = new OARequest('https://api.example.com/resource', 'POST', {}, { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
+    expect(result).toBe(`import http.client
 
-url = "https://api.example.com/resource"
+conn = http.client.HTTPSConnection("api.example.com")
 
-headers = {"Content-Type": "application/json"}
+payload = "{\\"key\\":{\\"nested\\":\\"value\\",\\"nestedArray\\":[1,2,{\\"deep\\":\\"value\\"}]}}"
 
-response = requests.post(url, headers=headers)
+headers = { 'Content-Type': "application/json" }
 
-print(response.json())`)
+conn.request("POST", "/resource", payload, headers)
+
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))`)
   })
 
   it('generates Python code with headers', async () => {
     const request = new OARequest('https://api.example.com/resource', 'GET', { Authorization: 'Bearer token' })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
+    expect(result).toBe(`import http.client
 
-url = "https://api.example.com/resource"
+conn = http.client.HTTPSConnection("api.example.com")
 
-headers = {"Authorization": "Bearer token"}
+headers = { 'Authorization': "Bearer token" }
 
-response = requests.get(url, headers=headers)
+conn.request("GET", "/resource", headers=headers)
 
-print(response.json())`)
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))`)
   })
 
   it('generates Python code with query parameters', async () => {
     const request = new OARequest('https://api.example.com/resource', 'GET', {}, null, { search: 'query' })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
+    expect(result).toBe(`import http.client
 
-url = "https://api.example.com/resource"
+conn = http.client.HTTPSConnection("api.example.com")
 
-response = requests.get(url)
+conn.request("GET", "/resource")
 
-print(response.json())`)
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))`)
   })
 
   it('generates Python code with all parameters', async () => {
     const request = new OARequest('https://api.example.com/resource', 'PUT', { 'Content-Type': 'application/json' }, { key: 'value' }, { search: 'query' })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
+    expect(result).toBe(`import http.client
 
-url = "https://api.example.com/resource"
+conn = http.client.HTTPSConnection("api.example.com")
 
-headers = {"Content-Type": "application/json"}
+payload = "{\\"key\\":\\"value\\"}"
 
-response = requests.put(url, headers=headers)
+headers = { 'Content-Type': "application/json" }
 
-print(response.json())`)
+conn.request("PUT", "/resource", payload, headers)
+
+res = conn.getresponse()
+data = res.read()
+
+print(data.decode("utf-8"))`)
   })
 })

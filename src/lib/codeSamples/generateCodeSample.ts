@@ -16,7 +16,7 @@ export async function generateCodeSample(lang: string, oaRequest: OARequest): Pr
       case 'php':
         return snippetz().print('php', 'curl', harRequest) ?? ''
       case 'python':
-        return snippetz().print('python', 'requests', harRequest) ?? ''
+        return snippetz().print('python', 'python3', harRequest) ?? ''
       default:
         return ''
     }
