@@ -24,7 +24,6 @@ import OASchemaTabs from './Schema/OASchemaTabs.vue'
 import OASecurity from './Security/OASecurity.vue'
 import OASpecSkeleton from './Spec/OASpecSkeleton.vue'
 import OATryItButton from './Try/OATryItButton.vue'
-import OATryWithVariables from './Try/OATryWithVariables.vue'
 
 export {
   OACodeBlock,
@@ -53,5 +52,4 @@ export {
   OASpec,
   OASpecSkeleton,
   OATryItButton,
-  OATryWithVariables,
 }

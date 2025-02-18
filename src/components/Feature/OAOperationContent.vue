@@ -3,6 +3,7 @@ import type { OperationSlot } from '../../types'
 import { computed } from 'vue'
 import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
 import OAOperationTags from '../Operation/OAOperationTags.vue'
+import OAPlayground from '../Playground/OAPlayground.vue'
 
 const props = defineProps({
   operationId: {
@@ -278,7 +279,7 @@ function hasSlot(name: OperationSlot): boolean {
       #try-it="tryIt"
     >
       <ClientOnly>
-        <OATryWithVariables
+        <OAPlayground
           :request="tryIt.request"
           :operation-id="tryIt.operationId"
           :path="tryIt.path"
