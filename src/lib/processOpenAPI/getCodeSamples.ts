@@ -30,7 +30,7 @@ export async function getCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOpenAPI
         authorizations: Object.entries(authorizations).map(([name, value]: [string, any]) => {
           return {
             ...value,
-            playgroundValue: name,
+            name: String(name),
             label: String(name),
           } as PlaygroundSecurityScheme
         }),
