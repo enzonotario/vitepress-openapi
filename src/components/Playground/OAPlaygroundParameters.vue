@@ -79,7 +79,7 @@ function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
 
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
 
-const authorizations = ref<PlaygroundSecurityScheme[] | null>(null)
+const authorizations = ref<PlaygroundSecurityScheme[]>([])
 
 const body = ref(Object.keys(props.examples ?? {}).length ? Object.values(props.examples ?? {})[0].value : null)
 
@@ -87,7 +87,7 @@ const bodyType = computed(() => typeof body.value === 'object' ? 'json' : 'text'
 
 function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   if (!schemes || !Object.keys(schemes).length) {
-    authorizations.value = null
+    authorizations.value = []
     return
   }
 
@@ -97,7 +97,7 @@ function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
       type: scheme.type,
       scheme: scheme.scheme,
       name: scheme.name ?? name,
-      playgroundValue: typeof localStorage !== 'undefined'
+      value: typeof localStorage !== 'undefined'
         ? useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage)
         : usePlayground().getSecuritySchemeDefaultValue(scheme),
       label: name,
@@ -128,7 +128,7 @@ watch(operationData.security.selectedSchemeId, () => {
 
 <template>
   <div class="OAPlaygroundParameters">
-    <details v-if="authorizations" open>
+    <details v-if="authorizations?.length" open>
       <summary>
         {{ $t('Authorization') }}
         <div v-if="props.securityUi.length > 1" class="w-full max-w-[33%] md:max-w-[50%] ml-auto -mt-8">
@@ -168,7 +168,7 @@ watch(operationData.security.selectedSchemeId, () => {
           </div>
           <div class="flex flex-row items-center space-x-2">
             <OAPlaygroundSecurityInput
-              v-model="authorization.playgroundValue"
+              v-model="authorization.value"
               :scheme="authorization"
               class="w-full"
             />
