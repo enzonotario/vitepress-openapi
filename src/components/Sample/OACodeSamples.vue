@@ -55,7 +55,7 @@ watch(() => props.request, loadSamples, { deep: true, immediate: true })
   <div>
     <div
       v-if="samples.length"
-      class="vp-code-group vp-adaptive-theme"
+      class="vp-code-group vp-adaptive-theme mt-0"
     >
       <div class="tabs">
         <template v-for="sample in samples" :key="sample.lang">
