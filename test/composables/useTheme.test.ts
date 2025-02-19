@@ -64,6 +64,7 @@ describe('composition API', () => {
       dark: {},
     })
     expect(theme.getSchemaDefaultView()).toBe('schema')
+    expect(theme.getRequestBodyDefaultView()).toBe('schema')
     expect(theme.getShowBaseURL()).toBe(true)
     expect(theme.getJsonViewerDeep()).toBe(5)
     expect(theme.getSchemaViewerDeep()).toBe(3)
@@ -181,12 +182,16 @@ describe('useTheme', () => {
   it('returns the default schema view', () => {
     const result = themeConfig.getSchemaDefaultView()
     expect(result).toBe('contentType')
+
+    expect(themeConfig.getRequestBodyDefaultView()).toBe('contentType')
   })
 
   it('sets and gets the schema default view', () => {
-    themeConfig.setSchemaDefaultView('schema')
+    themeConfig.setRequestBodyDefaultView('schema')
     const result = themeConfig.getSchemaDefaultView()
     expect(result).toBe('schema')
+
+    expect(themeConfig.getRequestBodyDefaultView()).toBe('schema')
   })
 
   it('returns the default showBaseURL value', () => {

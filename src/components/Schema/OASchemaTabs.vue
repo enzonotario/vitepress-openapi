@@ -20,7 +20,7 @@ const props = defineProps({
   },
 })
 
-const themeConfig = useTheme()
+const schemaViewerDeep = useTheme().getSchemaViewerDeep()
 
 const defaultValue = computed(() => {
   const examplesKeys = Object.keys(props.examples ?? {})
@@ -65,7 +65,7 @@ const defaultValue = computed(() => {
         <OASchemaUI
           :property="props.schema"
           :schema="props.schema"
-          :deep="themeConfig.getSchemaViewerDeep()"
+          :deep="schemaViewerDeep"
         />
       </div>
     </TabsContent>

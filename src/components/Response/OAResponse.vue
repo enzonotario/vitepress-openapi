@@ -1,6 +1,6 @@
 <script setup>
 import { computed, defineProps, ref } from 'vue'
-import { useTheme } from '../../client'
+import { useTheme } from '../../composables/useTheme'
 import { Label } from '../ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 

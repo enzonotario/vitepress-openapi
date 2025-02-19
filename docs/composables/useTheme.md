@@ -121,8 +121,13 @@ export default {
 
 | Function               | Description                         | Default Value | Allowed Values              |
 |------------------------|-------------------------------------|---------------|-----------------------------|
-| `setSchemaDefaultView` | Sets the default schema view.       | `'schema'`    | `'schema'`, `'contentType'` |
 | `setShowBaseURL`       | Sets whether the base URL is shown. | `true`        | `true`, `false`             |
+
+## Request Body Configuration
+
+| Function                    | Description                   | Default Value | Allowed Values              |
+|-----------------------------|-------------------------------|---------------|-----------------------------|
+| `setRequestBodyDefaultView` | Sets the default schema view. | `'schema'`    | `'schema'`, `'contentType'` |
 
 ## JSON Viewer Configuration
 
