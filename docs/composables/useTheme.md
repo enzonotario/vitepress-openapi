@@ -42,6 +42,10 @@ export default {
                 codeSelector: 'tabs', // tabs or select
                 // Set the maximum number of tabs, after which a Select will be shown.
                 codeMaxTabs: 5,
+                body: {
+                    // Set the default view.
+                    defaultView: 'schema', // schema or contentType
+                },
             },
             playground: {
                 jsonEditor: {
@@ -140,10 +144,11 @@ export default {
 
 ## Response Configuration
 
-| Function                  | Description                                                          | Default Value | Allowed Values       |
-|---------------------------|----------------------------------------------------------------------|---------------|----------------------|
-| `setResponseCodeSelector` | Sets the response code selector.                                     | `'tabs'`      | `'tabs'`, `'select'` |
-| `setResponseCodeMaxTabs`  | Sets the maximum number of tabs, after which a Select will be shown. | `5`           | `number`             |
+| Function                     | Description                                                          | Default Value | Allowed Values              |
+|------------------------------|----------------------------------------------------------------------|---------------|-----------------------------|
+| `setResponseCodeSelector`    | Sets the response code selector.                                     | `'tabs'`      | `'tabs'`, `'select'`        |
+| `setResponseCodeMaxTabs`     | Sets the maximum number of tabs, after which a Select will be shown. | `5`           | `number`                    |
+| `setResponseBodyDefaultView` | Sets the default view of the response body.                          | `'schema'`    | `'schema'`, `'contentType'` |
 
 ## Playground JSON Editor Configuration
 

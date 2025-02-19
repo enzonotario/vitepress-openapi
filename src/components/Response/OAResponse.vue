@@ -1,5 +1,6 @@
 <script setup>
 import { computed, defineProps, ref } from 'vue'
+import { useTheme } from '../../client'
 import { Label } from '../ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
@@ -27,6 +28,8 @@ const schema = computed(() => props.response.content?.[contentType.value]?.ui)
 const examples = computed(() => props.response.content?.[contentType.value]?.examples)
 
 const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
+
+const defaultView = useTheme().getResponseBodyDefaultView()
 </script>
 
 <template>
@@ -76,6 +79,7 @@ const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
       :schema="schema"
       :examples="examples"
       :content-type="contentType"
+      :default-view="defaultView"
     />
   </div>
 </template>
