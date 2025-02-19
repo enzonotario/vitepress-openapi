@@ -16,7 +16,7 @@ const props = defineProps({
   },
 })
 
-const defaultView = useTheme().getSchemaDefaultView()
+const defaultView = useTheme().getRequestBodyDefaultView()
 </script>
 
 <template>
