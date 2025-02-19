@@ -14,12 +14,15 @@ const props = defineProps({
     type: null,
     required: false,
   },
+  defaultView: {
+    type: String,
+    required: false,
+  },
 })
 
 const themeConfig = useTheme()
 
 const defaultValue = computed(() => {
-  const defaultView = themeConfig.schemaConfig.defaultView.value
   const examplesKeys = Object.keys(props.examples ?? {})
 
   const viewMap = {
@@ -31,7 +34,7 @@ const defaultValue = computed(() => {
     })(),
   }
 
-  return viewMap[defaultView] ?? defaultView
+  return viewMap[props.defaultView] ?? props.defaultView
 })
 </script>
 

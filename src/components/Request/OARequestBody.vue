@@ -1,4 +1,6 @@
 <script setup>
+import { useTheme } from '../../composables/useTheme'
+
 const props = defineProps({
   operationId: {
     type: String,
@@ -13,6 +15,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const defaultView = useTheme().getSchemaDefaultView()
 </script>
 
 <template>
@@ -20,5 +24,6 @@ const props = defineProps({
     :schema="props.requestBody?.content?.[props.contentType]?.ui"
     :examples="props.requestBody?.content?.[props.contentType]?.examples"
     :content-type="props.contentType"
+    :default-view="defaultView"
   />
 </template>
