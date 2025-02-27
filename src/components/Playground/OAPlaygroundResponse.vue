@@ -75,6 +75,8 @@ const url = computed(() => {
   return ''
 })
 
+const disableHtmlTransform = computed(() => response.body && JSON.stringify(response.body).length > 1000)
+
 function downloadBlob(blob: Blob, fileName: string) {
   const url = window.URL.createObjectURL(blob)
   const link = document.createElement('a')
@@ -92,7 +94,7 @@ function downloadBlob(blob: Blob, fileName: string) {
       :code="response.body"
       :lang="lang"
       :label="label"
-      :disable-html-transform="response.body.length > 1000"
+      :disable-html-transform="disableHtmlTransform"
       class="!my-0"
     />
     <img v-else-if="isImage" :src="response.body" alt="Response Image">
