@@ -10,7 +10,6 @@ const props = defineProps({
   },
   request: {
     type: Object,
-    default: () => (new OARequest()),
   },
   codeSamples: {
     type: Object,

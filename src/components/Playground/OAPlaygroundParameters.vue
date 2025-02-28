@@ -17,7 +17,6 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 const props = defineProps({
   request: { // v-model
     type: Object,
-    default: () => (new OARequest()),
   },
   operationId: {
     type: String,
