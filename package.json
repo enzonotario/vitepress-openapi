@@ -67,6 +67,7 @@
     "@scalar/snippetz": "^0.2.11",
     "@sindresorhus/slugify": "^2.2.1",
     "@trojs/openapi-dereference": "^1.0.1",
+    "@types/har-format": "^1.2.16",
     "@types/node": "^22.10.10",
     "@vitejs/plugin-vue": "^5.2.1",
     "allof-merge": "^0.6.6",

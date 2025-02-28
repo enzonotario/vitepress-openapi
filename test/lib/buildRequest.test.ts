@@ -20,7 +20,7 @@ describe('buildRequest', () => {
         Authorization: 'Bearer token',
       },
     })
-    expect(request.url).toBe('https://api.example.com/users/123')
+    expect(request.url.toString()).toBe('https://api.example.com/users/123')
     expect(request.query.search).toBe('test')
     expect(request.headers.authorization).toBe('Bearer token')
   })
@@ -61,7 +61,7 @@ describe('buildRequest', () => {
       body: null,
       variables: {},
     })
-    expect(request.url).toBe('https://api.example.com/users')
+    expect(request.url.toString()).toBe('https://api.example.com/users')
   })
 
   it('handles undefined variables', () => {
@@ -74,7 +74,7 @@ describe('buildRequest', () => {
       body: null,
       variables: { userId: undefined },
     })
-    expect(request.url).toBe('https://api.example.com/users/{userId}')
+    expect(request.url.toString()).toBe('https://api.example.com/users/%7BuserId%7D')
   })
 
   it('handles missing path parameters in variables', () => {
@@ -87,7 +87,7 @@ describe('buildRequest', () => {
       body: null,
       variables: {},
     })
-    expect(request.url).toBe('https://api.example.com/users/{userId}')
+    expect(request.url.toString()).toBe('https://api.example.com/users/%7BuserId%7D')
   })
 
   it('builds request with path, query, headers with examples', () => {
@@ -104,7 +104,7 @@ describe('buildRequest', () => {
       body: null,
       variables: {},
     })
-    expect(request.url).toBe('https://api.example.com/users/123')
+    expect(request.url.toString()).toBe('https://api.example.com/users/123')
     expect(request.query.search).toBe('test')
     expect(request.headers.authorization).toBe('Bearer YOUR_TOKEN')
   })
@@ -168,7 +168,7 @@ describe('buildRequest', () => {
         search: 'production',
       },
     })
-    expect(request.url).toBe('https://api.example.com/users/456')
+    expect(request.url.toString()).toBe('https://api.example.com/users/456')
     expect(request.query.search).toBe('production')
   })
 
@@ -188,7 +188,7 @@ describe('buildRequest', () => {
         q: 'test&special=true',
       },
     })
-    expect(request.url).toBe('https://api.example.com/users/user/123')
+    expect(request.url.toString()).toBe('https://api.example.com/users/user/123')
     expect(request.query.q).toBe('test&special=true')
   })
 
@@ -207,5 +207,18 @@ describe('buildRequest', () => {
       },
     })
     expect(request.query.tag).toEqual(['urgent', 'important'])
+  })
+
+  it('does not include body for GET requests', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [],
+      authorizations: null,
+      body: { name: 'John Doe' },
+      variables: {},
+    })
+    expect(request.body).toBeUndefined()
   })
 })

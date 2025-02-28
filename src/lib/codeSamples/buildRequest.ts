@@ -1,7 +1,9 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { PlaygroundSecurityScheme } from '../../types'
+import type { IOARequest } from './request'
 import { unref } from 'vue'
 import { getPropertyExample } from '../examples/getPropertyExample'
+import { resolveBaseUrl } from '../resolveBaseUrl'
 import { OARequest } from './request'
 
 function processParameters(variables: Record<string, string>, parameters: OpenAPIV3.ParameterObject[], callback: (key: string, value: string) => void) {
@@ -17,7 +19,7 @@ function processParameters(variables: Record<string, string>, parameters: OpenAP
   }
 }
 
-function getPath(variables: Record<string, string>, pathParameters: OpenAPIV3.ParameterObject[], path: string) {
+function getPath(variables: Record<string, string>, pathParameters: OpenAPIV3.ParameterObject[], path: string = '') {
   let resolvedPath = path
   processParameters(variables, pathParameters, (key, value) => {
     resolvedPath = resolvedPath.replace(`{${key}}`, value)
@@ -26,22 +28,34 @@ function getPath(variables: Record<string, string>, pathParameters: OpenAPIV3.Pa
 }
 
 function getHeaders(
-  headers: Headers,
+  headers: Record<string, string> | Headers | undefined,
   variables: Record<string, string>,
   headerParameters: OpenAPIV3.ParameterObject[],
   authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[],
-) {
-  const resolvedHeaders = new Headers(headers)
+): Record<string, string> {
+  const resolvedHeaders = new Headers()
+
+  if (headers) {
+    if (headers instanceof Headers) {
+      for (const [key, value] of headers.entries()) {
+        resolvedHeaders.set(key.toLowerCase(), value)
+      }
+    } else {
+      for (const [key, value] of Object.entries(headers)) {
+        resolvedHeaders.set(key.toLowerCase(), value)
+      }
+    }
+  }
 
   processParameters(variables, headerParameters, (key: string, value: string) => {
-    resolvedHeaders.set(key, value)
+    resolvedHeaders.set(key.toLowerCase(), value)
   })
 
   getAuthorizationsHeaders(authorizations).forEach((value, key) => {
-    resolvedHeaders.set(key, value)
+    resolvedHeaders.set(key.toLowerCase(), value)
   })
 
-  return resolvedHeaders
+  return Object.fromEntries(resolvedHeaders)
 }
 
 function getAuthorizationsHeaders(authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[]) {
@@ -78,7 +92,10 @@ function getAuthorizationsHeaders(authorizations: PlaygroundSecurityScheme | Pla
   return headers
 }
 
-function getQuery(variables: Record<string, string>, queryParameters: OpenAPIV3.ParameterObject[]) {
+function getQuery(
+  variables: Record<string, string>,
+  queryParameters: OpenAPIV3.ParameterObject[],
+) {
   const query: Record<string, string> = {}
 
   processParameters(variables, queryParameters, (key: string, value: string) => {
@@ -108,24 +125,16 @@ function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variabl
 }
 
 export function buildRequest({
+  url = undefined,
   path,
-  method,
+  method = 'GET' as OpenAPIV3.HttpMethods,
   baseUrl,
-  parameters,
+  parameters = [],
   authorizations = [],
-  body,
-  headers = {},
+  body = undefined,
+  headers = undefined,
   variables = {},
-}: {
-  path: string
-  method: OpenAPIV3.HttpMethods
-  baseUrl: string
-  parameters: OpenAPIV3.ParameterObject[]
-  authorizations?: PlaygroundSecurityScheme | PlaygroundSecurityScheme[]
-  body: any
-  variables: any
-  headers?: Record<string, string>
-}) {
+}: Partial<IOARequest>): OARequest {
   const resolvedVariables = setExamplesAsVariables(parameters, variables)
 
   const pathParameters = parameters.filter(parameter => parameter.in === 'path')
@@ -147,21 +156,50 @@ export function buildRequest({
   }
 
   const resolvedPath = getPath(resolvedVariables, pathParameters, path)
+  const resolveMethod = (method?.toUpperCase() || 'GET') as OpenAPIV3.HttpMethods
 
-  const query = getQuery(resolvedVariables, queryParameters)
+  const resolvedQuery = getQuery(resolvedVariables, queryParameters)
 
   const resolvedHeaders = getHeaders(
-    new Headers(headers),
+    headers,
     resolvedVariables,
     headerParameters,
     authorizations,
   )
 
-  return new OARequest(
-    `${baseUrl}${resolvedPath}`,
-    method,
-    Object.fromEntries(resolvedHeaders),
-    body,
-    query,
-  )
+  if (baseUrl) {
+    baseUrl = resolveBaseUrl(baseUrl)
+  }
+
+  let urlInstance: URL
+  if (url) {
+    urlInstance = new URL(url)
+  } else {
+    urlInstance = new URL(`${baseUrl}${resolvedPath}`)
+  }
+
+  if (body && !resolvedHeaders['content-type']) {
+    resolvedHeaders['content-type'] = 'application/json'
+  }
+
+  return new OARequest({
+    path: resolvedPath,
+    url: urlInstance,
+    method: resolveMethod,
+    parameters,
+    authorizations,
+    body: [
+      'POST',
+      'PUT',
+      'PATCH',
+      'DELETE',
+      'OPTIONS',
+      'TRACE',
+    ].includes(resolveMethod) && body
+      ? body
+      : undefined,
+    variables: resolvedVariables,
+    headers: resolvedHeaders,
+    query: resolvedQuery,
+  })
 }
