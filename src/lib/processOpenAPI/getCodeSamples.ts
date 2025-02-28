@@ -34,7 +34,7 @@ export async function getCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOpenAPI
             label: String(name),
           } as PlaygroundSecurityScheme
         }),
-        body: operation.requestBody?.content?.['application/json']?.examples?.example?.value || {},
+        body: operation.requestBody?.content?.['application/json']?.examples?.example?.value || undefined,
         headers: {
           ...(useTheme().getCodeSamplesDefaultHeaders() || {}),
         },

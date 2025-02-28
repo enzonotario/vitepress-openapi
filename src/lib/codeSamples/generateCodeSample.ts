@@ -1,27 +1,30 @@
+import type { ClientId, TargetId } from '@scalar/snippetz/types'
 import type { OARequest } from './request'
 import { snippetz } from '@scalar/snippetz'
-import { OARequestToRequest } from './convertOARequestToRequest'
-import { convertRequestToHarRequest } from './convertRequestToHarRequest'
+import { buildHarRequest } from './buildHarRequest'
+import { buildRequest } from './buildRequest'
 
-export async function generateCodeSample(lang: string, oaRequest: OARequest): Promise<string> {
+const languagesMap: Record<string, TargetId> = {
+  curl: 'shell',
+  javascript: 'js',
+  php: 'php',
+  python: 'python',
+}
+
+const clientsMap: Record<string, ClientId<TargetId>> = {
+  curl: 'curl',
+  javascript: 'fetch',
+  php: 'curl',
+  python: 'python3',
+}
+
+export async function generateCodeSample(lang: string, request: OARequest): Promise<string> {
+  const harRequest = buildHarRequest(buildRequest(request))
+
   try {
-    const req = OARequestToRequest(oaRequest)
-    const harRequest = await convertRequestToHarRequest(req)
-
-    switch (lang) {
-      case 'curl':
-        return snippetz().print('shell', 'curl', harRequest) ?? ''
-      case 'javascript':
-        return snippetz().print('js', 'fetch', harRequest) ?? ''
-      case 'php':
-        return snippetz().print('php', 'curl', harRequest) ?? ''
-      case 'python':
-        return snippetz().print('python', 'python3', harRequest) ?? ''
-      default:
-        return ''
-    }
+    return snippetz().print(languagesMap[lang], clientsMap[lang], harRequest) ?? ''
   } catch (e) {
-    console.error(e)
+    console.error(e, request)
     return ''
   }
 }
