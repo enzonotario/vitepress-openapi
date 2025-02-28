@@ -1,5 +1,5 @@
 import type { Ref, UnwrapNestedRefs } from 'vue'
-import type { IOARequest } from '../lib/codeSamples/request'
+import type { OARequest } from '../lib/codeSamples/request'
 import type { OperationSlot, ParsedOperation } from '../types'
 import { useDark } from '@vueuse/core'
 import vitesseDark from 'shiki/themes/vitesse-dark.mjs'
@@ -139,7 +139,7 @@ interface LanguageConfig {
 
 export type PartialUseThemeConfig = Partial<UnwrapNestedRefs<UseThemeConfig>>
 
-type GeneratorFunction = (lang: string, request: IOARequest) => Promise<string>
+type GeneratorFunction = (lang: string, request: OARequest) => Promise<string>
 
 type GetServersFunction = ({ method, path, operation }: { method: string, path: string, operation: ParsedOperation }) => string[] | null
 
@@ -272,7 +272,7 @@ const themeConfig: UseThemeConfig = {
     ],
     defaultLang: 'curl',
     availableLanguages,
-    generator: (lang: string, request: IOARequest) => generateCodeSample(lang, request),
+    generator: (lang: string, request: OARequest) => generateCodeSample(lang, request),
     defaultHeaders: {
       'Content-Type': 'application/json',
     },

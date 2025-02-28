@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { computed, defineEmits, defineProps, ref } from 'vue'
-import { OARequest } from '../../lib/codeSamples/request'
 import OAPlaygroundParameters from './OAPlaygroundParameters.vue'
 import OAPlaygroundResponse from './OAPlaygroundResponse.vue'
 
@@ -45,7 +44,6 @@ const props = defineProps({
   },
   request: {
     type: Object,
-    default: () => (new OARequest()),
   },
 })
 

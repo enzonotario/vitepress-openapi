@@ -1,6 +1,5 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { PlaygroundSecurityScheme } from '../../types'
-import type { IOARequest } from './request'
 import { unref } from 'vue'
 import { getPropertyExample } from '../examples/getPropertyExample'
 import { resolveBaseUrl } from '../resolveBaseUrl'
@@ -134,7 +133,7 @@ export function buildRequest({
   body = undefined,
   headers = undefined,
   variables = {},
-}: Partial<IOARequest>): OARequest {
+}: Partial<OARequest>): OARequest {
   const resolvedVariables = setExamplesAsVariables(parameters, variables)
 
   const pathParameters = parameters.filter(parameter => parameter.in === 'path')
