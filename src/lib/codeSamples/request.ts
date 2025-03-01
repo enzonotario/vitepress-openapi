@@ -1,5 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { PlaygroundSecurityScheme } from '../../types'
+import { DEFAULT_BASE_URL } from '../../composables/useTheme'
 
 export interface IOARequest {
   baseUrl?: string
@@ -44,7 +45,7 @@ export class OARequest {
     contentType,
     cookies,
   }: IOARequest) {
-    const urlInstance = url || new URL(`${baseUrl}${path}`)
+    const urlInstance = url || (baseUrl && path ? new URL(`${baseUrl}${path}`) : new URL(DEFAULT_BASE_URL))
 
     this.baseUrl = baseUrl
     this.path = path
