@@ -170,7 +170,7 @@ export function buildRequest({
     baseUrl = resolveBaseUrl(baseUrl)
   }
 
-  const urlInstance = url ? new URL(url) : new URL(`${baseUrl}${resolvedPath}`)
+  const urlInstance = url ? new URL(url) : (baseUrl ? new URL(`${baseUrl}${resolvedPath}`) : new URL(resolvedPath, 'http://localhost'))
 
   if (body && !resolvedHeaders['content-type']) {
     resolvedHeaders['content-type'] = 'application/json'
