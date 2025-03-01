@@ -9,7 +9,7 @@ export interface IOARequest {
   parameters?: OpenAPIV3.ParameterObject[]
   authorizations?: PlaygroundSecurityScheme | PlaygroundSecurityScheme[]
   body?: any
-  variables?: any
+  variables?: Record<string, string>
   headers: Record<string, string>
   query: Record<string, string>
   contentType?: string
@@ -24,7 +24,7 @@ export class OARequest {
   public readonly parameters: OpenAPIV3.ParameterObject[] | undefined
   public readonly authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[] | undefined
   public readonly body: any | undefined
-  public readonly variables: any | undefined
+  public readonly variables: Record<string, string>
   public readonly headers: Record<string, string>
   public readonly query: Record<string, string>
   public readonly contentType: string | undefined
@@ -53,7 +53,7 @@ export class OARequest {
     this.parameters = parameters
     this.authorizations = authorizations
     this.body = body
-    this.variables = variables
+    this.variables = variables || {}
     this.headers = headers || {}
     this.query = query || {}
     this.contentType = contentType
