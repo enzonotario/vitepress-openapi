@@ -840,7 +840,14 @@ print(data.decode("utf-8"))",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists \\
   --request POST \\
   --header 'Authorization: Bearer bearerAuth' \\
-  --header 'Content-Type: application/json'",
+  --header 'Content-Type: application/json' \\
+  --data '{
+  "id": 1,
+  "name": "Charly García",
+  "description": "One of the most influential rock musicians in Argentine history.",
+  "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+  "band": "Sui Generis"
+}'",
           },
           {
             "highlighter": "javascript",
@@ -851,7 +858,14 @@ print(data.decode("utf-8"))",
   headers: {
     Authorization: 'Bearer bearerAuth',
     'Content-Type': 'application/json'
-  }
+  },
+  body: JSON.stringify({
+    id: 1,
+    name: 'Charly García',
+    description: 'One of the most influential rock musicians in Argentine history.',
+    image: 'https://cdn.rock-legends.com/photos/charly.jpg',
+    band: 'Sui Generis'
+  })
 })",
           },
           {
@@ -870,6 +884,7 @@ curl_setopt_array($curl, [
   CURLOPT_TIMEOUT => 30,
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "{\\"id\\":1,\\"name\\":\\"Charly García\\",\\"description\\":\\"One of the most influential rock musicians in Argentine history.\\",\\"image\\":\\"https://cdn.rock-legends.com/photos/charly.jpg\\",\\"band\\":\\"Sui Generis\\"}",
   CURLOPT_HTTPHEADER => [
     "Authorization: Bearer bearerAuth",
     "Content-Type: application/json"
@@ -895,12 +910,14 @@ if ($err) {
 
 conn = http.client.HTTPSConnection("stoplight.io")
 
+payload = "{\\"id\\":1,\\"name\\":\\"Charly García\\",\\"description\\":\\"One of the most influential rock musicians in Argentine history.\\",\\"image\\":\\"https://cdn.rock-legends.com/photos/charly.jpg\\",\\"band\\":\\"Sui Generis\\"}"
+
 headers = {
     'Authorization': "Bearer bearerAuth",
     'Content-Type': "application/json"
 }
 
-conn.request("POST", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists", headers=headers)
+conn.request("POST", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists", payload, headers)
 
 res = conn.getresponse()
 data = res.read()
@@ -2126,7 +2143,14 @@ print(data.decode("utf-8"))",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
   --request PUT \\
   --header 'Authorization: Bearer bearerAuth' \\
-  --header 'Content-Type: application/json'",
+  --header 'Content-Type: application/json' \\
+  --data '{
+  "id": 1,
+  "name": "Charly García",
+  "description": "One of the most influential rock musicians in Argentine history.",
+  "image": "https://cdn.rock-legends.com/photos/charly.jpg",
+  "band": "Sui Generis"
+}'",
           },
           {
             "highlighter": "javascript",
@@ -2137,7 +2161,14 @@ print(data.decode("utf-8"))",
   headers: {
     Authorization: 'Bearer bearerAuth',
     'Content-Type': 'application/json'
-  }
+  },
+  body: JSON.stringify({
+    id: 1,
+    name: 'Charly García',
+    description: 'One of the most influential rock musicians in Argentine history.',
+    image: 'https://cdn.rock-legends.com/photos/charly.jpg',
+    band: 'Sui Generis'
+  })
 })",
           },
           {
@@ -2156,6 +2187,7 @@ curl_setopt_array($curl, [
   CURLOPT_TIMEOUT => 30,
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => "PUT",
+  CURLOPT_POSTFIELDS => "{\\"id\\":1,\\"name\\":\\"Charly García\\",\\"description\\":\\"One of the most influential rock musicians in Argentine history.\\",\\"image\\":\\"https://cdn.rock-legends.com/photos/charly.jpg\\",\\"band\\":\\"Sui Generis\\"}",
   CURLOPT_HTTPHEADER => [
     "Authorization: Bearer bearerAuth",
     "Content-Type: application/json"
@@ -2181,12 +2213,14 @@ if ($err) {
 
 conn = http.client.HTTPSConnection("stoplight.io")
 
+payload = "{\\"id\\":1,\\"name\\":\\"Charly García\\",\\"description\\":\\"One of the most influential rock musicians in Argentine history.\\",\\"image\\":\\"https://cdn.rock-legends.com/photos/charly.jpg\\",\\"band\\":\\"Sui Generis\\"}"
+
 headers = {
     'Authorization': "Bearer bearerAuth",
     'Content-Type': "application/json"
 }
 
-conn.request("PUT", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1", headers=headers)
+conn.request("PUT", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1", payload, headers)
 
 res = conn.getresponse()
 data = res.read()
@@ -3089,7 +3123,13 @@ print(data.decode("utf-8"))",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums \\
   --request POST \\
   --header 'Authorization: Bearer bearerAuth' \\
-  --header 'Content-Type: application/json'",
+  --header 'Content-Type: application/json' \\
+  --data '{
+  "id": 1,
+  "name": "La Máquina de Hacer Pájaros",
+  "year": 1976,
+  "image": "https://cdn.rock-legends.com/photos/la-maquina.jpg"
+}'",
           },
           {
             "highlighter": "javascript",
@@ -3100,7 +3140,13 @@ print(data.decode("utf-8"))",
   headers: {
     Authorization: 'Bearer bearerAuth',
     'Content-Type': 'application/json'
-  }
+  },
+  body: JSON.stringify({
+    id: 1,
+    name: 'La Máquina de Hacer Pájaros',
+    year: 1976,
+    image: 'https://cdn.rock-legends.com/photos/la-maquina.jpg'
+  })
 })",
           },
           {
@@ -3119,6 +3165,7 @@ curl_setopt_array($curl, [
   CURLOPT_TIMEOUT => 30,
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "{\\"id\\":1,\\"name\\":\\"La Máquina de Hacer Pájaros\\",\\"year\\":1976,\\"image\\":\\"https://cdn.rock-legends.com/photos/la-maquina.jpg\\"}",
   CURLOPT_HTTPHEADER => [
     "Authorization: Bearer bearerAuth",
     "Content-Type: application/json"
@@ -3144,12 +3191,14 @@ if ($err) {
 
 conn = http.client.HTTPSConnection("stoplight.io")
 
+payload = "{\\"id\\":1,\\"name\\":\\"La Máquina de Hacer Pájaros\\",\\"year\\":1976,\\"image\\":\\"https://cdn.rock-legends.com/photos/la-maquina.jpg\\"}"
+
 headers = {
     'Authorization': "Bearer bearerAuth",
     'Content-Type': "application/json"
 }
 
-conn.request("POST", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums", headers=headers)
+conn.request("POST", "/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums", payload, headers)
 
 res = conn.getresponse()
 data = res.read()
@@ -3643,7 +3692,12 @@ print(data.decode("utf-8"))",
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup \\
   --request POST \\
-  --header 'Content-Type: application/json'",
+  --header 'Content-Type: application/json' \\
+  --data '{
+  "name": "Carlos",
+  "email": "carlos@rock-legends.com",
+  "password": "i-love-rock"
+}'",
           },
           {
             "highlighter": "javascript",
@@ -3653,7 +3707,12 @@ print(data.decode("utf-8"))",
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  body: JSON.stringify({
+    name: 'Carlos',
+    email: 'carlos@rock-legends.com',
+    password: 'i-love-rock'
+  })
 })",
           },
           {
@@ -3672,6 +3731,7 @@ curl_setopt_array($curl, [
   CURLOPT_TIMEOUT => 30,
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "{\\"name\\":\\"Carlos\\",\\"email\\":\\"carlos@rock-legends.com\\",\\"password\\":\\"i-love-rock\\"}",
   CURLOPT_HTTPHEADER => [
     "Content-Type: application/json"
   ],
@@ -3696,9 +3756,11 @@ if ($err) {
 
 conn = http.client.HTTPSConnection("stoplight.io")
 
+payload = "{\\"name\\":\\"Carlos\\",\\"email\\":\\"carlos@rock-legends.com\\",\\"password\\":\\"i-love-rock\\"}"
+
 headers = { 'Content-Type': "application/json" }
 
-conn.request("POST", "/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup", headers=headers)
+conn.request("POST", "/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup", payload, headers)
 
 res = conn.getresponse()
 data = res.read()
