@@ -222,3 +222,127 @@ describe('buildRequest', () => {
     expect(request.body).toBeUndefined()
   })
 })
+
+describe('update request', () => {
+  it('updates request with new headers', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      headers: { Authorization: 'Bearer old-token' },
+      parameters: [],
+      variables: {},
+    })
+
+    const fixedRequest = buildRequest({
+      ...request,
+      headers: { Authorization: 'Bearer new-token' },
+    })
+
+    expect(fixedRequest.headers.authorization).toBe('Bearer new-token')
+  })
+
+  it('updates request with new body', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: { key: 'old-value' },
+      parameters: [],
+      variables: {},
+    })
+
+    const fixedRequest = buildRequest({
+      ...request,
+      body: { key: 'new-value' },
+    })
+
+    expect(fixedRequest.body).toEqual({ key: 'new-value' })
+  })
+
+  it('updates request with new path', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/old-resource',
+      method: 'GET',
+      headers: {},
+      parameters: [],
+      variables: {},
+    })
+
+    const fixedRequest = buildRequest({
+      ...request,
+      path: '/new-resource',
+    })
+
+    expect(fixedRequest.path).toBe('/new-resource')
+  })
+
+  it('updates request with new query parameters', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'search', in: 'query' },
+      ],
+      variables: {
+        search: 'old-query',
+      },
+    })
+
+    const fixedRequest = buildRequest({
+      ...request,
+      variables: {
+        search: 'new-query',
+      },
+    })
+
+    expect(fixedRequest.query.search).toBe('new-query')
+  })
+
+  it('adds new query parameters to request', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [],
+      variables: {},
+    })
+
+    const fixedRequest = buildRequest({
+      ...request,
+      parameters: [
+        { name: 'search', in: 'query' },
+      ],
+      variables: {
+        search: 'new-query',
+      },
+    })
+
+    expect(fixedRequest.query.search).toBe('new-query')
+  })
+
+  it('removes query parameters from request', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'search', in: 'query' },
+      ],
+      variables: {
+        search: 'old-query',
+      },
+    })
+
+    const fixedRequest = buildRequest({
+      ...request,
+      parameters: [],
+      variables: {},
+    })
+
+    expect(fixedRequest.query.search).toBeUndefined()
+  })
+})

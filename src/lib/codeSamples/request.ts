@@ -25,7 +25,7 @@ export class OARequest {
   public readonly parameters: OpenAPIV3.ParameterObject[] | undefined
   public readonly authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[] | undefined
   public readonly body: any | undefined
-  public readonly variables: Record<string, string>
+  public readonly variables: Record<string, any>
   public readonly headers: Record<string, string>
   public readonly query: Record<string, string>
   public readonly contentType: string | undefined
