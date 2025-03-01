@@ -1,7 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useTheme } from '../../composables/useTheme'
-import { OARequest } from '../../lib/codeSamples/request'
 
 const props = defineProps({
   operationId: {
@@ -25,9 +24,17 @@ const configuredLanguages = themeConfig.getCodeSamplesLangs()
 
 const generator = themeConfig.getCodeSamplesGenerator()
 
-const defaultLang = themeConfig.getCodeSamplesDefaultLang()
-
 const samples = ref(props.codeSamples)
+
+const defaultLang = computed(() => {
+  const defaultValue = themeConfig.getCodeSamplesDefaultLang()
+
+  if (!samples.value?.find(sample => sample.lang === defaultValue)) {
+    return samples.value?.[0]?.lang
+  }
+
+  return defaultValue
+})
 
 const loadSamples = async () => {
   samples.value = await Promise.all(
