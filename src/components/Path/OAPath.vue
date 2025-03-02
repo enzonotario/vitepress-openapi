@@ -81,11 +81,13 @@ const customServer = typeof localStorage !== 'undefined'
   : ref(selectedServer.value)
 
 const baseUrl = computed(() => {
+  if (customServer.value) {
+    return resolveBaseUrl(customServer.value)
+  }
+
   let value = selectedServer.value
 
-  if (value === customServer.value) {
-    value = customServer.value
-  } else if (servers.length > 1 && !servers.some(server => server.url === value)) {
+  if (servers.length > 1 && !servers.some(server => server.url === value)) {
     updateSelectedServer(servers[0]?.url)
 
     value = servers[0]?.url
