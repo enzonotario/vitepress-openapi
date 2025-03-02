@@ -1,6 +1,6 @@
 export interface SelectWithCustomOptionProps {
   modelValue: string
-  options: Array<SelectWithCustomOptionItem | string | number>
+  options: Array<SelectWithCustomOptionItem | string>
   placeholder?: string
   defaultCustomValue?: string
   customOptionLabel?: string

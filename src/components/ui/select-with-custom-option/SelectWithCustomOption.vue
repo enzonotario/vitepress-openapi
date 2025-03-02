@@ -19,10 +19,10 @@ const emit = defineEmits<SelectWithCustomOptionEmits>()
 
 const CUSTOM_VALUE = 'custom'
 
-const value: WritableComputedRef<string | number> = useVModel(props, 'modelValue', emit)
+const value: WritableComputedRef<string> = useVModel(props, 'modelValue', emit)
 const valueIsInOptions = computed(() => props.options.some(option => typeof option === 'object' ? option.value === value.value : option === value.value))
 const isCustom = ref(!valueIsInOptions.value)
-const customValue: Ref<string | number | undefined> = ref(isCustom.value ? value.value : props.defaultCustomValue)
+const customValue: Ref<string | undefined> = ref(isCustom.value ? value.value : props.defaultCustomValue)
 
 watch(customValue, (newValue) => {
   if (newValue === undefined) {
@@ -42,7 +42,7 @@ const displayOptions = computed(() => {
     : props.options
 })
 
-const handleSelectChange = (selectedValue: string | number) => {
+const handleSelectChange = (selectedValue: string) => {
   if (selectedValue === CUSTOM_VALUE) {
     isCustom.value = true
     const inputEl: HTMLInputElement | null = document.querySelector('.oa-custom-input input')
