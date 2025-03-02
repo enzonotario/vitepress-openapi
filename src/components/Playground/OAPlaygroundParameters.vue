@@ -6,6 +6,7 @@ import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
 import { useStorage } from '@vueuse/core'
 import { computed, defineEmits, defineProps, inject, ref, watch } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
+import { useTheme } from '../../composables/useTheme'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
@@ -76,7 +77,9 @@ const serversUrls: ComputedRef<string[]> = computed(() =>
 
 const selectedServer = ref(props.baseUrl ?? servers.value[0]?.url)
 
-const customServer = useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
+const customServer = typeof localStorage !== 'undefined'
+  ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
+  : ref(selectedServer.value)
 
 const variables = ref({
   ...initializeVariables(headerParameters),
@@ -103,6 +106,8 @@ const authorizations = ref<PlaygroundSecurityScheme[]>([])
 const body = ref(Object.keys(props.examples ?? {}).length ? Object.values(props.examples ?? {})[0].value : null)
 
 const bodyType = computed(() => typeof body.value === 'object' ? 'json' : 'text')
+
+const allowCustomServer = computed(() => useTheme().getServerAllowCustomServers())
 
 function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   if (!schemes || !Object.keys(schemes).length) {
@@ -161,6 +166,7 @@ watch(operationData.security.selectedSchemeId, () => {
           :model-value="selectedServer"
           :default-custom-value="customServer"
           :options="serversUrls"
+          :allow-custom-option="allowCustomServer"
           :custom-option-label="$t('Custom Server')"
           :custom-placeholder="$t('Enter a custom server URL')"
           :placeholder="$t('Select a server...')"
