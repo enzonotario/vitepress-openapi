@@ -36,6 +36,10 @@ describe('composition API', () => {
         defaultBaseUrl: 'https://app.local',
         getServers: ({ method, path, operation }) => (`https://app.local/${method}${path}`),
       },
+      server: {
+        allowCustomServers: true,
+        getServers: ({ method, path, operation }) => [`https://app.local/${method}${path}`],
+      },
       response: {
         maxTabs: 10,
         responseCodeSelector: 'select',
@@ -82,6 +86,8 @@ describe('composition API', () => {
     expect(theme.getOperationBadges()).toEqual(['operationId'])
     expect(theme.getOperationDefaultBaseUrl()).toBe('https://app.local')
     expect(theme.getOperationServers()).toBeTypeOf('function')
+    expect(theme.getServerAllowCustomServers()).toBe(true)
+    expect(theme.getServerConfig().getServers).toBeTypeOf('function')
     expect(theme.getResponseCodeMaxTabs()).toBe(10)
     expect(theme.getResponseCodeSelector()).toBe('select')
     expect(theme.getSecurityDefaultScheme()).toBe('bearer')
@@ -114,6 +120,10 @@ describe('composition API', () => {
         defaultBaseUrl: 'https://app.local',
         getServers: ({ method, path, operation }) => (`https://app.local/${method}${path}`),
       },
+      server: {
+        allowCustomServers: true,
+        getServers: ({ method, path, operation }) => [`https://app.local/${method}${path}`],
+      },
       i18n: {
         locale: 'es',
       },
@@ -132,6 +142,7 @@ describe('composition API', () => {
     expect(theme.getOperationBadges()).toEqual(['operationId'])
     expect(theme.getOperationDefaultBaseUrl()).toBe('https://app.local')
     expect(theme.getOperationServers()).toBeTypeOf('function')
+    expect(theme.getServerAllowCustomServers()).toBe(true)
     expect(theme.getI18nConfig().locale.value).toBe('es')
 
     theme.reset()
@@ -149,6 +160,7 @@ describe('composition API', () => {
     expect(theme.getOperationBadges()).toEqual(['deprecated'])
     expect(theme.getOperationDefaultBaseUrl()).toBe(DEFAULT_BASE_URL)
     expect(theme.getOperationServers()).toBe(null)
+    expect(theme.getServerAllowCustomServers()).toBe(false)
     expect(theme.getI18nConfig().locale.value).toBe('en')
   })
 })
@@ -419,5 +431,28 @@ describe('useTheme', () => {
     themeConfig.setLinksPrefixesConfig({ operations: '/new-operations/' })
     const result = themeConfig.getOperationsLinkPrefix()
     expect(result).toBe('/new-operations/')
+  })
+})
+
+describe('server configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns the default server config', () => {
+    const result = themeConfig.getServerConfig()
+    expect(result.allowCustomServers).toBe(false)
+    expect(result.getServers).toBe(null)
+  })
+
+  it('sets and gets the server config', () => {
+    themeConfig.setServerConfig({
+      allowCustomServers: true,
+      getServers: () => ['https://example.com'],
+    })
+    expect(themeConfig.getServerAllowCustomServers()).toBe(true)
+    expect(themeConfig.getServerConfig().getServers).toBeTypeOf('function')
   })
 })

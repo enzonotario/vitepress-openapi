@@ -79,7 +79,7 @@ export default {
                 cols: 2,
                 // Set the default base URL.
                 defaultBaseUrl: 'http://localhost',
-                // Set a custom function to get servers for an operation.
+                // Deprecated. Use `server.getServers` instead.
                 getServers: ({ method, path, operation }) => string[],
             },
             // Set the i18n configuration.
@@ -111,6 +111,12 @@ export default {
                 lazyRendering: false, // Lazy render Paths and Tags components.
                 defaultTag: 'Default', // Default tag to use when a path has no tags.
                 wrapExamples: true, // Wrap examples in a row or show them in a column.
+            },
+            server: {
+                // Set a custom function to get servers.
+                getServers: ({ method, path, operation }) => string[],
+                // Allow custom servers.
+                allowCustomServers: true,
             },
         })
     }
@@ -181,3 +187,11 @@ export default {
 | Function        | Description                  | Default Value                                                                                                                             | Allowed Values                                                                                                                                     |
 |-----------------|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
 | `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true, avoidCirculars: false, lazyRendering: false, defaultTag: 'Default', wrapExamples: true }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean, avoidCirculars: boolean, lazyRendering: boolean, defaultTag: string, wrapExamples: boolean }` |
+
+## Server Configuration
+
+| Function                      | Description                              | Default Value                                                                         | Allowed Values                                                                           |
+|-------------------------------|------------------------------------------|---------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| `setServerConfig`             | Sets the server configuration.           | `{ getServers: ({ method, path, operation }) => string[], allowCustomServers: true }` | `{ getServers: ({ method, path, operation }) => string[], allowCustomServers: boolean }` |
+| `getServers`                  | Gets the servers for an operation.       | `({ method, path, operation }) => string[]`                                           | `({ method, path, operation }) => string[]`                                              |
+| `getServerAllowCustomServers` | Gets whether custom servers are allowed. | `true`                                                                                | `true`, `false`                                                                          |

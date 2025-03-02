@@ -68,10 +68,11 @@ type OperationBadges = 'deprecated' | 'operationId'
 export interface OperationConfig {
   badges?: Ref<OperationBadges[]>
   slots?: Ref<OperationSlot[]>
+  /** @deprecated Use server.getServers instead */
+  getServers?: GetServersFunction | null
   hiddenSlots?: Ref<OperationSlot[]>
   cols?: Ref<1 | 2>
   defaultBaseUrl?: string
-  getServers?: GetServersFunction | null
 }
 
 export type Languages = 'es' | 'en' | 'pt-BR' | string
@@ -101,6 +102,11 @@ export interface SpecConfig {
   wrapExamples?: boolean
 }
 
+export interface ServerConfig {
+  allowCustomServers: boolean
+  getServers: GetServersFunction | null
+}
+
 export interface UseThemeConfig {
   theme?: Partial<ThemeConfig>
   path?: Partial<PathConfig>
@@ -116,6 +122,7 @@ export interface UseThemeConfig {
   spec?: Partial<SpecConfig>
   codeSamples?: Partial<CodeSamplesConfig>
   linksPrefixes?: Partial<LinksPrefixesConfig>
+  server?: Partial<ServerConfig>
 }
 
 export interface CodeSamplesConfig {
@@ -281,6 +288,10 @@ const themeConfig: UseThemeConfig = {
     tags: '/tags/',
     operations: '/operations/',
   },
+  server: {
+    allowCustomServers: false,
+    getServers: null,
+  },
 }
 
 const defaultThemeConfig: UnwrapNestedRefs<UseThemeConfig> = { ...deepUnref(themeConfig) } as PartialUseThemeConfig
@@ -387,6 +398,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
     if (config?.linksPrefixes !== undefined) {
       setLinksPrefixesConfig(config.linksPrefixes)
+    }
+
+    if (config?.server !== undefined) {
+      setServerConfig(config.server)
     }
   }
 
@@ -602,7 +617,12 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   }
 
   function getOperationServers(): GetServersFunction | null {
-    return themeConfig?.operation?.getServers || null
+    if (themeConfig?.operation?.getServers) {
+      console.warn('operation.getServers is deprecated. Use server.getServers instead.')
+      return themeConfig.operation.getServers
+    }
+
+    return themeConfig?.server?.getServers || null
   }
 
   function setOperationServers(value: GetServersFunction | null) {
@@ -776,7 +796,27 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     return themeConfig?.linksPrefixes?.operations
   }
 
+  function getServerConfig(): ServerConfig {
+    return themeConfig.server as ServerConfig
+  }
+
+  function setServerConfig(config: Partial<UnwrapNestedRefs<ServerConfig>>) {
+    if (config.allowCustomServers !== undefined) {
+      // @ts-expect-error: This is a valid expression.
+      themeConfig.server.allowCustomServers = config.allowCustomServers
+    }
+    if (config.getServers !== undefined) {
+      // @ts-expect-error: This is a valid expression.
+      themeConfig.server.getServers = config.getServers
+    }
+  }
+
+  function getServerAllowCustomServers(): boolean {
+    return themeConfig.server?.allowCustomServers || false
+  }
+
   return {
+    isDark,
     schemaConfig: themeConfig.requestBody,
     reset,
     getState,
@@ -837,6 +877,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setLinksPrefixesConfig,
     getTagsLinkPrefix,
     getOperationsLinkPrefix,
-    isDark,
+    getServerConfig,
+    setServerConfig,
+    getServerAllowCustomServers,
   }
 }
