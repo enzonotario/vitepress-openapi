@@ -1,6 +1,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { PlaygroundSecurityScheme } from '../../types'
 import { unref } from 'vue'
+import { DEFAULT_BASE_URL } from '../../composables/useTheme'
 import { getPropertyExample } from '../examples/getPropertyExample'
 import { resolveBaseUrl } from '../resolveBaseUrl'
 import { OARequest } from './request'
@@ -166,9 +167,7 @@ export function buildRequest({
     authorizations,
   )
 
-  if (baseUrl) {
-    baseUrl = resolveBaseUrl(baseUrl)
-  }
+  baseUrl = baseUrl ? resolveBaseUrl(baseUrl) : DEFAULT_BASE_URL
 
   const urlInstance = url ? new URL(url) : (baseUrl ? new URL(`${baseUrl}${resolvedPath}`) : new URL(resolvedPath, 'http://localhost'))
 

@@ -46,5 +46,8 @@
   "tags.goTo": "View {tag} operations",
   "or": "or",
   "Enum": "Enum",
-  "Copy endpoint": "Copy endpoint"
+  "Copy endpoint": "Copy endpoint",
+  "Custom Server": "Custom Server",
+  "Enter a custom server URL": "Enter a custom server URL",
+  "Select a server...": "Select a server..."
 }

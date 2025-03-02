@@ -70,16 +70,22 @@ const servers = customGetServers
 
 const defaultServer = servers.length ? servers[0]?.url : themeConfig.getOperationDefaultBaseUrl()
 
-const selectedServer = servers?.length > 1 && typeof localStorage !== 'undefined'
+const selectedServer = typeof localStorage !== 'undefined'
   ? useStorage(`--oa-operation-${props.id}-selectedServer`, defaultServer, localStorage, {
       mergeDefaults: true,
     })
   : ref(defaultServer)
 
+const customServer = typeof localStorage !== 'undefined'
+  ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
+  : ref(selectedServer.value)
+
 const baseUrl = computed(() => {
   let value = selectedServer.value
 
-  if (servers.length > 1 && !servers.some(server => server.url === value)) {
+  if (value === customServer.value) {
+    value = customServer.value
+  } else if (servers.length > 1 && !servers.some(server => server.url === value)) {
     updateSelectedServer(servers[0]?.url)
 
     value = servers[0]?.url

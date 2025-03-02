@@ -35,8 +35,8 @@ const emits = defineEmits([
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 text-sm bg-muted rounded p-2">
-    <div class="language-bash !overflow-hidden !my-0 h-8 flex flex-row items-center gap-4">
+  <div class="flex flex-col gap-2 text-sm bg-muted rounded p-1.5">
+    <div class="language-bash !overflow-hidden !my-0 h-8 flex flex-row items-center gap-1.5">
       <button
         :title="$t('Copy endpoint')"
         class="copy absolute !top-1 z-50 OAPathEndpoint__copy"
@@ -60,29 +60,6 @@ const emits = defineEmits([
           >{{ props.path }}</span>
         </span>
       </div>
-    </div>
-
-    <div
-      v-if="props.servers && props.servers.length > 1"
-      class="flex flex-row items-center gap-2"
-    >
-      <span class="text-gray-600 dark:text-gray-400">
-        {{ $t('Server') }}
-      </span>
-      <select
-        :value="props.baseUrl"
-        class="w-full rounded p-1 text-sm bg-white dark:bg-gray-800 dark:text-gray-200"
-        @change="($event) => emits('update:selectedServer', $event.target.value)"
-      >
-        <option
-          v-for="(server, idx) in props.servers"
-          :key="`${server.url}-${idx}`"
-          :value="server.url"
-          :selected="server.url === props.baseUrl"
-        >
-          {{ server.url }}
-        </option>
-      </select>
     </div>
   </div>
 </template>
