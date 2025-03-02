@@ -12,6 +12,11 @@ export default {
     // Set the OpenAPI specification.
     const openapi = useOpenapi({
       spec,
+      config: {
+        server: {
+          allowCustomServers: true,
+        },
+      },
     })
 
     // Use the theme.
