@@ -1,47 +1,28 @@
 <script setup lang="ts">
 import type { Ref, WritableComputedRef } from 'vue'
-import type { SelectOption } from './index'
+import type { SelectWithCustomOptionEmits, SelectWithCustomOptionProps } from './index'
 import { useVModel } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'
 import { Input } from '../input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../select'
 
-const props = defineProps({
-  modelValue: {
-    type: [String],
-    default: '',
-  },
-  defaultCustomValue: {
-    type: String,
-    default: '',
-  },
-  options: {
-    type: Array<SelectOption | string>,
-    required: true,
-  },
-  placeholder: {
-    type: String,
-    default: 'Select an option...',
-  },
-  customOptionLabel: {
-    type: String,
-    default: 'Custom...',
-  },
-  customPlaceholder: {
-    type: String,
-    default: 'Enter custom value...',
-  },
+const props = withDefaults(defineProps<SelectWithCustomOptionProps>(), {
+  modelValue: '',
+  defaultCustomValue: '',
+  placeholder: 'Select an option...',
+  customOptionLabel: 'Custom...',
+  customPlaceholder: 'Enter custom value...',
+  allowCustomOption: true,
 })
 
-const emit = defineEmits([
-  'update:modelValue',
-  'update:customValue',
-])
+const emit = defineEmits<SelectWithCustomOptionEmits>()
 
-const value: WritableComputedRef<string> = useVModel(props, 'modelValue', emit)
+const CUSTOM_VALUE = 'custom'
+
+const value: WritableComputedRef<string | number> = useVModel(props, 'modelValue', emit)
 const valueIsInOptions = computed(() => props.options.some(option => typeof option === 'object' ? option.value === value.value : option === value.value))
 const isCustom = ref(!valueIsInOptions.value)
-const customValue: Ref<string | undefined> = ref(isCustom.value ? value.value : props.defaultCustomValue)
+const customValue: Ref<string | number | undefined> = ref(isCustom.value ? value.value : props.defaultCustomValue)
 
 watch(customValue, (newValue) => {
   if (newValue === undefined) {
@@ -56,14 +37,13 @@ watch(customValue, (newValue) => {
 })
 
 const displayOptions = computed(() => {
-  return [
-    ...props.options,
-    { label: props.customOptionLabel, value: 'custom' },
-  ]
+  return props.allowCustomOption
+    ? [...props.options, { label: props.customOptionLabel, value: CUSTOM_VALUE }]
+    : props.options
 })
 
-const handleSelectChange = (selectedValue: string) => {
-  if (selectedValue === 'custom') {
+const handleSelectChange = (selectedValue: string | number) => {
+  if (selectedValue === CUSTOM_VALUE) {
     isCustom.value = true
     const inputEl: HTMLInputElement | null = document.querySelector('.oa-custom-input input')
     if (inputEl) {
@@ -93,7 +73,7 @@ const handleSelectChange = (selectedValue: string) => {
       @update:model-value="handleSelectChange"
     >
       <SelectTrigger>
-        <SelectValue :placeholder="placeholder" />
+        <SelectValue :placeholder="placeholder" class="text-start" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

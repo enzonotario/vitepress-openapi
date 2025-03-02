@@ -1,6 +1,19 @@
-export { default as SelectWithCustomOption } from './SelectWithCustomOption.vue'
+export interface SelectWithCustomOptionProps {
+  modelValue: string
+  options: Array<SelectWithCustomOptionItem | string | number>
+  placeholder?: string
+  defaultCustomValue?: string
+  customOptionLabel?: string
+  customPlaceholder?: string
+  allowCustomOption?: boolean
+}
 
-export interface SelectOption {
-  label: string
+export interface SelectWithCustomOptionEmits {
+  (e: 'update:modelValue', value: string): void
+  (e: 'update:customValue', value: string): void
+}
+
+export interface SelectWithCustomOptionItem {
   value: string
+  label: string
 }
