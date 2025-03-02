@@ -25,6 +25,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  servers: {
+    type: Array,
+    default: () => [],
+  },
   parameters: {
     type: Array<OpenAPIV3.ParameterObject>,
     required: false,
@@ -79,6 +83,7 @@ const hasParameters = computed(() =>
     :path="props.path"
     :method="props.method"
     :base-url="props.baseUrl"
+    :servers="props.servers"
     :parameters="props.parameters ?? []"
     :security-ui="props.securityUi ?? {}"
     :examples="schemaExamples"

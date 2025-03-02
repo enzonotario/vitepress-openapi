@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { ComputedRef } from 'vue'
 import type { OperationData } from '../../lib/operationData'
 import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
 import { useStorage } from '@vueuse/core'
 import { computed, defineEmits, defineProps, inject, ref, watch } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
-import { OARequest } from '../../lib/codeSamples/request'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import SelectWithCustomOption from '../ui/select-with-custom-option/SelectWithCustomOption.vue'
 
 const props = defineProps({
   request: { // v-model
@@ -34,6 +35,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  servers: {
+    type: Array,
+    default: () => [],
+  },
   parameters: {
     type: Array<OpenAPIV3.ParameterObject>,
     required: true,
@@ -50,6 +55,7 @@ const props = defineProps({
 
 const emits = defineEmits([
   'update:request',
+  'update:selectedServer',
 ])
 
 const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
@@ -57,6 +63,20 @@ const headerParameters = props.parameters.filter(parameter => parameter && param
 const pathParameters = props.parameters.filter(parameter => parameter && parameter.in === 'path')
 
 const queryParameters = props.parameters.filter(parameter => parameter && parameter.in === 'query')
+
+const servers = computed(() => props.servers as OpenAPIV3.ServerObject[])
+
+const serversUrls: ComputedRef<string[]> = computed(() =>
+  servers
+    .value
+    .map(server => server.url)
+    .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates.
+    .filter(value => value !== undefined),
+)
+
+const selectedServer = ref(props.baseUrl ?? servers.value[0]?.url)
+
+const customServer = useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
 
 const variables = ref({
   ...initializeVariables(headerParameters),
@@ -104,9 +124,9 @@ function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   })
 }
 
-watch([variables, authorizations, body, () => props.baseUrl], () => {
+watch([variables, authorizations, body, selectedServer], () => {
   emits('update:request', buildRequest({
-    baseUrl: props.baseUrl,
+    baseUrl: String(selectedServer.value),
     method: props.method as OpenAPIV3.HttpMethods,
     path: props.path,
     variables: variables.value,
@@ -115,6 +135,10 @@ watch([variables, authorizations, body, () => props.baseUrl], () => {
     parameters: props.parameters,
   }))
 }, { deep: true })
+
+watch(selectedServer, () => {
+  emits('update:selectedServer', selectedServer.value)
+})
 
 watch(operationData.security.selectedSchemeId, () => {
   setAuthorizations(
@@ -127,6 +151,25 @@ watch(operationData.security.selectedSchemeId, () => {
 
 <template>
   <div class="OAPlaygroundParameters">
+    <details open>
+      <summary>
+        {{ $t('Server') }}
+      </summary>
+
+      <div class="flex flex-col gap-2">
+        <SelectWithCustomOption
+          :model-value="selectedServer"
+          :default-custom-value="customServer"
+          :options="serversUrls"
+          :custom-option-label="$t('Custom Server')"
+          :custom-placeholder="$t('Enter a custom server URL')"
+          :placeholder="$t('Select a server...')"
+          @update:model-value="selectedServer = $event"
+          @update:custom-value="customServer = $event"
+        />
+      </div>
+    </details>
+
     <details v-if="authorizations?.length" open>
       <summary>
         {{ $t('Authorization') }}
