@@ -51,6 +51,8 @@ watch(customValue, (newValue) => {
   if (isCustom.value) {
     value.value = newValue
   }
+
+  emit('update:customValue', newValue)
 })
 
 const displayOptions = computed(() => {
