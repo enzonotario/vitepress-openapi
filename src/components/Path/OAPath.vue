@@ -234,7 +234,7 @@ function updateSelectedServer(server) {
 
         <div class="flex flex-col">
           <div
-            class="OAPathContentEnd sticky top-[100px] inset-x-0 flex flex-col space-y-4"
+            class="OAPathContentEnd sticky top-[100px] inset-x-0 flex flex-col"
             :class="{
               '!px-0': operationCols === 1,
             }"
@@ -242,7 +242,7 @@ function updateSelectedServer(server) {
             <div
               v-if="operationSlots.includes('path') && operationCols === 2"
               :class="{
-                'hidden sm:block': operationCols === 2,
+                'hidden sm:block sm:mb-2': operationCols === 2,
               }"
             >
               <slot
@@ -259,7 +259,7 @@ function updateSelectedServer(server) {
               />
             </div>
 
-            <template v-if="operationSlots.includes('try-it')">
+            <div v-if="operationSlots.includes('try-it')">
               <slot
                 name="try-it"
                 :operation-id="props.id"
@@ -275,9 +275,9 @@ function updateSelectedServer(server) {
                 :servers="servers"
                 :update-selected-server="updateSelectedServer"
               />
-            </template>
+            </div>
 
-            <template v-if="operationSlots.includes('code-samples')">
+            <div v-if="operationSlots.includes('code-samples')">
               <slot
                 name="code-samples"
                 :operation-id="props.id"
@@ -289,7 +289,7 @@ function updateSelectedServer(server) {
                 :update-request="updateRequest"
                 :code-samples="codeSamples"
               />
-            </template>
+            </div>
           </div>
         </div>
       </div>
