@@ -63,7 +63,7 @@ watch(() => props.request, loadSamples, { deep: true, immediate: true })
       v-if="samples.length"
       class="vp-code-group vp-adaptive-theme mt-0"
     >
-      <div class="tabs">
+      <div class="tabs !m-0">
         <template v-for="sample in samples" :key="sample.lang">
           <input
             :id="`tab-${props.operationId}-${sample.lang}`"
@@ -83,7 +83,7 @@ watch(() => props.request, loadSamples, { deep: true, immediate: true })
           :lang="sample.highlighter"
           :label="sample.label"
           :class="{ active: sample.lang === defaultLang }"
-          class="!mb-0"
+          class="!m-0"
         />
       </div>
     </div>
