@@ -85,7 +85,7 @@ const defaultValue = computed(() => {
           :code="example?.value"
           :lang="example?.lang ?? 'json'"
           :label="(example?.lang ?? 'json').toUpperCase()"
-          class="!my-0"
+          class="!m-0"
         />
       </div>
     </TabsContent>
