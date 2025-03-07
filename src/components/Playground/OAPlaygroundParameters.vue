@@ -59,6 +59,12 @@ const emits = defineEmits([
   'update:selectedServer',
 ])
 
+const allowCustomServer = computed(() => useTheme().getServerAllowCustomServers())
+
+const useCustomServer = typeof localStorage !== 'undefined'
+  ? useStorage('--oa-use-custom-server', allowCustomServer.value, localStorage)
+  : ref(false)
+
 const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
 
 const pathParameters = props.parameters.filter(parameter => parameter && parameter.in === 'path')
@@ -75,7 +81,10 @@ const serversUrls: ComputedRef<string[]> = computed(() =>
     .filter(value => value !== undefined),
 )
 
-const selectedServer = ref(props.baseUrl ?? servers.value[0]?.url)
+const selectedServer = computed({
+  get: () => props.baseUrl ?? servers.value[0]?.url,
+  set: value => emits('update:selectedServer', value),
+})
 
 const customServer = typeof localStorage !== 'undefined'
   ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
@@ -106,8 +115,6 @@ const authorizations = ref<PlaygroundSecurityScheme[]>([])
 const body = ref(Object.keys(props.examples ?? {}).length ? Object.values(props.examples ?? {})[0].value : null)
 
 const bodyType = computed(() => typeof body.value === 'object' ? 'json' : 'text')
-
-const allowCustomServer = computed(() => useTheme().getServerAllowCustomServers())
 
 function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   if (!schemes || !Object.keys(schemes).length) {
@@ -164,6 +171,8 @@ watch(operationData.security.selectedSchemeId, () => {
       <div class="flex flex-col gap-2">
         <SelectWithCustomOption
           :model-value="selectedServer"
+          :is-custom="useCustomServer"
+          :custom-value="customServer"
           :default-custom-value="customServer"
           :options="serversUrls"
           :allow-custom-option="allowCustomServer"
@@ -172,6 +181,7 @@ watch(operationData.security.selectedSchemeId, () => {
           :placeholder="$t('Select a server...')"
           @update:model-value="selectedServer = $event"
           @update:custom-value="customServer = $event"
+          @update:is-custom="useCustomServer = $event"
         />
       </div>
     </details>
