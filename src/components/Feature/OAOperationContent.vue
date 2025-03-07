@@ -58,7 +58,7 @@ const operationServers = props.openapi.getOperationServers(props.operationId)
 
 const headingPrefix = computed(() => {
   if (!props.prefixHeadings) {
-    return null
+    return ''
   }
 
   return props.operationId
