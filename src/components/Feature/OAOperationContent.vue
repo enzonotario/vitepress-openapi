@@ -290,6 +290,7 @@ function hasSlot(name: OperationSlot): boolean {
           :security-ui="tryIt.securityUi"
           :content-type="tryIt.contentType"
           :servers="tryIt.servers"
+          :heading-prefix="headingPrefix"
           @update:selected-server="tryIt.updateSelectedServer"
           @update:request="tryIt.updateRequest"
         />

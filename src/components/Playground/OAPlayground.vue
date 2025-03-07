@@ -49,6 +49,11 @@ const props = defineProps({
   request: {
     type: Object,
   },
+  headingPrefix: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
 
 const emits = defineEmits([
@@ -73,36 +78,47 @@ const hasSecuritySchemes = computed(() =>
 const hasParameters = computed(() =>
   Boolean(props.parameters?.length || hasBody.value || hasSecuritySchemes.value),
 )
+
 </script>
 
 <template>
-  <OAPlaygroundParameters
-    v-if="hasParameters"
-    :request="props.request"
-    :operation-id="props.operationId"
-    :path="props.path"
-    :method="props.method"
-    :base-url="props.baseUrl"
-    :servers="props.servers"
-    :parameters="props.parameters ?? []"
-    :security-ui="props.securityUi ?? {}"
-    :examples="schemaExamples"
-    @update:request="($event: any) => emits('update:request', $event)"
-    @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
-  />
+  <div class="flex flex-col gap-2">
+    <OAHeading
+      level="h2"
+      :prefix="headingPrefix"
+      class="block sm:hidden"
+    >
+      {{ $t('Playground') }}
+    </OAHeading>
 
-  <OATryItButton
-    :request="props.request"
-    :operation-id="props.operationId"
-    :path="props.path"
-    :method="props.method"
-    :base-url="props.baseUrl"
-    @loading="loading = $event"
-  >
-    <template #response="response">
-      <OAPlaygroundResponse
-        :response="response.response"
-      />
-    </template>
-  </OATryItButton>
+    <OAPlaygroundParameters
+      v-if="hasParameters"
+      :request="props.request"
+      :operation-id="props.operationId"
+      :path="props.path"
+      :method="props.method"
+      :base-url="props.baseUrl"
+      :servers="props.servers"
+      :parameters="props.parameters ?? []"
+      :security-ui="props.securityUi ?? {}"
+      :examples="schemaExamples"
+      @update:request="($event: any) => emits('update:request', $event)"
+      @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
+    />
+
+    <OATryItButton
+      :request="props.request"
+      :operation-id="props.operationId"
+      :path="props.path"
+      :method="props.method"
+      :base-url="props.baseUrl"
+      @loading="loading = $event"
+    >
+      <template #response="response">
+        <OAPlaygroundResponse
+          :response="response.response"
+        />
+      </template>
+    </OATryItButton>
+  </div>
 </template>
