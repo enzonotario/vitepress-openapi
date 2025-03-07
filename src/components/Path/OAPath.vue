@@ -77,7 +77,7 @@ const selectedServer = typeof localStorage !== 'undefined'
   : ref(defaultServer)
 
 const customServer = typeof localStorage !== 'undefined'
-  ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
+  ? useStorage('--oa-custom-server-url', null, localStorage)
   : ref(selectedServer.value)
 
 const baseUrl = computed(() => {

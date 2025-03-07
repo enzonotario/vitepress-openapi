@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Ref, WritableComputedRef } from 'vue'
+import type { WritableComputedRef } from 'vue'
 import type { SelectWithCustomOptionEmits, SelectWithCustomOptionProps } from './index'
 import { useVModel } from '@vueuse/core'
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { Input } from '../input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../select'
 
@@ -13,6 +13,8 @@ const props = withDefaults(defineProps<SelectWithCustomOptionProps>(), {
   customOptionLabel: 'Custom...',
   customPlaceholder: 'Enter custom value...',
   allowCustomOption: true,
+  isCustom: false,
+  customValue: undefined,
 })
 
 const emit = defineEmits<SelectWithCustomOptionEmits>()
@@ -20,9 +22,8 @@ const emit = defineEmits<SelectWithCustomOptionEmits>()
 const CUSTOM_VALUE = 'custom'
 
 const value: WritableComputedRef<string> = useVModel(props, 'modelValue', emit)
-const valueIsInOptions = computed(() => props.options.some(option => typeof option === 'object' ? option.value === value.value : option === value.value))
-const isCustom = ref(!valueIsInOptions.value)
-const customValue: Ref<string | undefined> = ref(isCustom.value ? value.value : props.defaultCustomValue)
+const isCustom: WritableComputedRef<boolean> = useVModel(props, 'isCustom', emit)
+const customValue: WritableComputedRef<string | undefined> = useVModel(props, 'customValue', emit)
 
 watch(customValue, (newValue) => {
   if (newValue === undefined) {
@@ -52,6 +53,7 @@ const handleSelectChange = (selectedValue: string) => {
     value.value = props.defaultCustomValue
   } else {
     isCustom.value = false
+    customValue.value = undefined
     value.value = selectedValue
   }
 }
