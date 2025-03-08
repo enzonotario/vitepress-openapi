@@ -163,7 +163,7 @@ watch(operationData.security.selectedSchemeId, () => {
 
 <template>
   <div class="OAPlaygroundParameters">
-    <details open>
+    <details v-if="serversUrls.length > 1 || allowCustomServer" open>
       <summary>
         {{ $t('Server') }}
       </summary>
