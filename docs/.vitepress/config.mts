@@ -135,6 +135,10 @@ export default defineConfigWithTheme({
                           text: 'Operation tags slot',
                           link: '/customizations/operation-tags-slot',
                         },
+                        {
+                          text: 'Custom Server',
+                          link: '/customizations/custom-server',
+                        },
                       ],
                     },
                   ],
