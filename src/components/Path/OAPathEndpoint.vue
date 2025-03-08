@@ -1,5 +1,4 @@
 <script setup>
-import { defineEmits } from 'vue'
 import OAMethodBadge from '../Common/OAMethodBadge.vue'
 
 const props = defineProps({
@@ -28,10 +27,6 @@ const props = defineProps({
     required: false,
   },
 })
-
-const emits = defineEmits([
-  'update:selectedServer',
-])
 </script>
 
 <template>

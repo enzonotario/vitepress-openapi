@@ -78,7 +78,6 @@ const hasSecuritySchemes = computed(() =>
 const hasParameters = computed(() =>
   Boolean(props.parameters?.length || hasBody.value || hasSecuritySchemes.value),
 )
-
 </script>
 
 <template>

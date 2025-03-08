@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { OARequest } from '../../lib/codeSamples/request'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
 
