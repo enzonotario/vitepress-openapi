@@ -2,10 +2,6 @@
 outline: 2
 ---
 
-<script setup>
-import ScopeConfigurationTabs from '../.vitepress/theme/components/ScopeConfigurationTabs.vue'
-</script>
-
 # Pages by Operation
 
 You can use the `OAOperation` component to render a specific operation.

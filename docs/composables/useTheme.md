@@ -116,7 +116,7 @@ export default {
                 // Set a custom function to get servers.
                 getServers: ({ method, path, operation }) => string[],
                 // Allow custom servers.
-                allowCustomServers: true,
+                allowCustomServer: true,
             },
         })
     }
@@ -192,6 +192,6 @@ export default {
 
 | Function                      | Description                              | Default Value                                                                         | Allowed Values                                                                           |
 |-------------------------------|------------------------------------------|---------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| `setServerConfig`             | Sets the server configuration.           | `{ getServers: ({ method, path, operation }) => string[], allowCustomServers: true }` | `{ getServers: ({ method, path, operation }) => string[], allowCustomServers: boolean }` |
+| `setServerConfig`             | Sets the server configuration.           | `{ getServers: ({ method, path, operation }) => string[], allowCustomServer: true }` | `{ getServers: ({ method, path, operation }) => string[], allowCustomServer: boolean }` |
 | `getServers`                  | Gets the servers for an operation.       | `({ method, path, operation }) => string[]`                                           | `({ method, path, operation }) => string[]`                                              |
-| `getServerAllowCustomServers` | Gets whether custom servers are allowed. | `true`                                                                                | `true`, `false`                                                                          |
+| `getServerAllowCustomServer` | Gets whether custom servers are allowed. | `true`                                                                                | `true`, `false`                                                                          |

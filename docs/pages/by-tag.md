@@ -2,10 +2,6 @@
 outline: 2
 ---
 
-<script setup>
-import ScopeConfigurationTabs from '../.vitepress/theme/components/ScopeConfigurationTabs.vue'
-</script>
-
 # Pages by Tag
 
 You can use the `OASpec` component to render all operations that have a specific tag.

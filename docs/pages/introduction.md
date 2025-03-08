@@ -2,10 +2,6 @@
 outline: 2
 ---
 
-<script setup>
-import ScopeConfigurationTabs from '../.vitepress/theme/components/ScopeConfigurationTabs.vue'
-</script>
-
 # Introduction
 
 You can use the `OAIntroduction` component to display the OpenAPI `info` and `servers` sections.

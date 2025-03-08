@@ -103,7 +103,7 @@ export interface SpecConfig {
 }
 
 export interface ServerConfig {
-  allowCustomServers: boolean
+  allowCustomServer: boolean
   getServers: GetServersFunction | null
 }
 
@@ -289,7 +289,7 @@ const themeConfig: UseThemeConfig = {
     operations: '/operations/',
   },
   server: {
-    allowCustomServers: false,
+    allowCustomServer: false,
     getServers: null,
   },
 }
@@ -801,9 +801,9 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   }
 
   function setServerConfig(config: Partial<UnwrapNestedRefs<ServerConfig>>) {
-    if (config.allowCustomServers !== undefined) {
+    if (config.allowCustomServer !== undefined) {
       // @ts-expect-error: This is a valid expression.
-      themeConfig.server.allowCustomServers = config.allowCustomServers
+      themeConfig.server.allowCustomServer = config.allowCustomServer
     }
     if (config.getServers !== undefined) {
       // @ts-expect-error: This is a valid expression.
@@ -811,8 +811,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     }
   }
 
-  function getServerAllowCustomServers(): boolean {
-    return themeConfig.server?.allowCustomServers || false
+  function getServerAllowCustomServer(): boolean {
+    return themeConfig.server?.allowCustomServer || false
   }
 
   return {
@@ -879,6 +879,6 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     getOperationsLinkPrefix,
     getServerConfig,
     setServerConfig,
-    getServerAllowCustomServers,
+    getServerAllowCustomServer,
   }
 }
