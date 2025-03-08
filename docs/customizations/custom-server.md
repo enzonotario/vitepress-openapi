@@ -17,7 +17,7 @@ If you have configured the OpenAPI Specification using the `useOpenapi` composab
 useOpenapi({
     spec,
     config: {
-        sever: {
+        server: {
             allowCustomServer: true,
         },
     },
