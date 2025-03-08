@@ -2,10 +2,6 @@
 outline: 2
 ---
 
-<script setup>
-import ScopeConfigurationTabs from '../.vitepress/theme/components/ScopeConfigurationTabs.vue'
-</script>
-
 # Page by Spec
 
 You can use the `OASpec` component to render all operations in any Markdown file.

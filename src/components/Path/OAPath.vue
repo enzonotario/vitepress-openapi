@@ -81,7 +81,7 @@ const customServer = typeof localStorage !== 'undefined'
   : ref(selectedServer.value)
 
 const baseUrl = computed(() => {
-  if (themeConfig.getServerAllowCustomServers() && customServer.value) {
+  if (themeConfig.getServerAllowCustomServer() && customServer.value) {
     return resolveBaseUrl(customServer.value)
   }
 

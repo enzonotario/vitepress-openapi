@@ -59,7 +59,7 @@ const emits = defineEmits([
   'update:selectedServer',
 ])
 
-const allowCustomServer = computed(() => useTheme().getServerAllowCustomServers())
+const allowCustomServer = computed(() => useTheme().getServerAllowCustomServer())
 
 const useCustomServer = typeof localStorage !== 'undefined'
   ? useStorage('--oa-use-custom-server', allowCustomServer.value, localStorage)

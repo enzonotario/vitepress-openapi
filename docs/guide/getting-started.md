@@ -3,7 +3,6 @@ outline: 2
 ---
 
 <script setup>
-import ScopeConfigurationTabs from '../.vitepress/theme/components/ScopeConfigurationTabs.vue'
 import ShowcaseList from '../.vitepress/theme/components/showcase/ShowcaseList.vue'
 </script>
 
