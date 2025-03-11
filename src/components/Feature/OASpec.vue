@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
-import OAContextProvider from './OAContextProvider.vue'
+import OAContextProvider from '../Context/OAContextProvider.vue'
 import OASpecContent from './OASpecContent.vue'
 
 const props = defineProps({
