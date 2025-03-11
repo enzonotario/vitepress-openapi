@@ -1,5 +1,5 @@
 <script setup>
-import OAContextProvider from './OAContextProvider.vue'
+import OAContextProvider from '../Context/OAContextProvider.vue'
 import OAInfoContent from './OAInfoContent.vue'
 
 const props = defineProps({
