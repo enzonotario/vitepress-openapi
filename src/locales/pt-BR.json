@@ -49,5 +49,6 @@
   "Copy endpoint": "Copiar endpoint",
   "Custom Server": "Servidor Personalizado",
   "Enter a custom server URL": "Digite uma URL de servidor personalizada",
-  "Select a server...": "Selecione um servidor..."
+  "Select a server...": "Selecione um servidor...",
+  "Playground": "Playground"
 }
