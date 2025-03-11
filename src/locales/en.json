@@ -49,5 +49,6 @@
   "Copy endpoint": "Copy endpoint",
   "Custom Server": "Custom Server",
   "Enter a custom server URL": "Enter a custom server URL",
-  "Select a server...": "Select a server..."
+  "Select a server...": "Select a server...",
+  "Playground": "Playground"
 }
