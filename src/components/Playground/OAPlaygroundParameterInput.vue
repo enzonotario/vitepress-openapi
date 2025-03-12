@@ -60,7 +60,7 @@ const parameterExample = getPropertyExample(props.parameter)
       v-if="parameter.schema?.enum"
       @update:model-value="emits('update:modelValue', $event)"
     >
-      <SelectTrigger>
+      <SelectTrigger :aria-label="String(parameterExample ?? 'Seleccionar...')">
         <SelectValue :placeholder="String(parameterExample ?? 'Seleccionar...')" />
       </SelectTrigger>
       <SelectContent>
