@@ -44,62 +44,63 @@ const tabsSelector = computed(() => {
     <Tabs
       :default-value="vModel"
     >
-      <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)]">
-        <TabsList class="w-full bg-transparent text-muted-foreground p-0">
-          <OAHeading
-            level="h2"
-            :prefix="headingPrefix"
-            class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0"
-            header-anchor-class="!top-0"
-          >
-            {{ $t('Responses') }}
-          </OAHeading>
+      <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)] flex flex-row items-center">
+        <OAHeading
+          level="h2"
+          :prefix="headingPrefix"
+          class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0 inline-block"
+          header-anchor-class="!top-0"
+        >
+          {{ $t('Responses') }}
+        </OAHeading>
+        <div class="relative flex-1">
+          <div class="absolute inset-x-0 top-[-20px] w-full flex justify-end">
+            <TabsList class="bg-transparent text-muted-foreground p-0">
+              <div class="relative flex flex-row">
+                <template v-if="tabsSelector === 'tabs'">
+                  <TabsIndicator class="absolute left-0 h-full bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded transition-[width,transform] duration-300 bg-muted" />
 
-          <span class="flex-grow min-w-2" />
-
-          <div class="relative flex flex-row">
-            <template v-if="tabsSelector === 'tabs'">
-              <TabsIndicator class="absolute left-0 h-full bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded transition-[width,transform] duration-300 bg-muted" />
-
-              <TabsTrigger
-                v-for="responseCode in responsesCodes"
-                :key="responseCode"
-                :value="responseCode"
-                class="h-full z-10"
-              >
-                {{ responseCode }}
-              </TabsTrigger>
-            </template>
-
-            <Select
-              v-if="tabsSelector === 'select'"
-              v-model="vModel"
-            >
-              <SelectTrigger
-                aria-label="Response Code"
-                class="px-3 py-1.5 text-foreground"
-              >
-                <SelectValue>{{ vModel }}</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
                   <TabsTrigger
-                    v-for="(code, idx) in responsesCodes"
-                    :key="idx"
-                    :value="code"
-                    variant="select"
+                    v-for="responseCode in responsesCodes"
+                    :key="responseCode"
+                    :value="responseCode"
+                    class="h-full z-10"
                   >
-                    <SelectItem
-                      :value="code"
-                    >
-                      {{ code }}
-                    </SelectItem>
+                    {{ responseCode }}
                   </TabsTrigger>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+                </template>
+
+                <Select
+                  v-if="tabsSelector === 'select'"
+                  v-model="vModel"
+                >
+                  <SelectTrigger
+                    aria-label="Response Code"
+                    class="px-3 py-1.5 text-foreground"
+                  >
+                    <SelectValue>{{ vModel }}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <TabsTrigger
+                        v-for="(code, idx) in responsesCodes"
+                        :key="idx"
+                        :value="code"
+                        variant="select"
+                      >
+                        <SelectItem
+                          :value="code"
+                        >
+                          {{ code }}
+                        </SelectItem>
+                      </TabsTrigger>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </TabsList>
           </div>
-        </TabsList>
+        </div>
       </div>
 
       <TabsContent
