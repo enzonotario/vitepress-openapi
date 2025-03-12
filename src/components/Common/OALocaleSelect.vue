@@ -23,7 +23,7 @@ function onLocaleChange(locale) {
       :value="i18nConfig.locale.value"
       @update:model-value="onLocaleChange"
     >
-      <SelectTrigger>
+      <SelectTrigger aria-label="Select language">
         <span class="vpi-languages option-icon" />
       </SelectTrigger>
       <SelectContent>
