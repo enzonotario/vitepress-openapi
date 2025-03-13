@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { OperationSlot } from '../../types'
 import OAContextProvider from '../Context/OAContextProvider.vue'
 import OASpecContent from '../Feature/OASpecContent.vue'
 
@@ -12,6 +13,8 @@ const props = defineProps({
 const emits = defineEmits([
   'update:spec',
 ])
+
+const slots = defineSlots<Record<string, OperationSlot>>()
 </script>
 
 <template>
