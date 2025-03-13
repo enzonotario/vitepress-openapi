@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import OARemoteRoot from './OARemoteRoot.vue'
+import OAContextProvider from '../Context/OAContextProvider.vue'
+import OAOperationContent from '../Feature/OAOperationContent.vue'
 
 const props = defineProps({
   specUrl: {
@@ -18,13 +19,20 @@ const emits = defineEmits([
 </script>
 
 <template>
-  <OARemoteRoot :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
-    <template #default="{ spec }">
-      <OAOperation
-        :spec="spec"
-        :operation-id="props.operationId"
-        v-bind="$attrs"
-      />
+  <OAContextProvider :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
+    <template #default="{ openapi }">
+      <OAOperationContent
+        v-bind="{
+          ...$attrs,
+          operationId: props.operationId,
+          openapi,
+        }"
+      >
+        <!-- Expose all slots upwards -->
+        <template v-for="(_, name) in slots" #[name]="slotProps">
+          <slot :name="name" v-bind="slotProps || {}" />
+        </template>
+      </OAOperationContent>
     </template>
-  </OARemoteRoot>
+  </OAContextProvider>
 </template>
