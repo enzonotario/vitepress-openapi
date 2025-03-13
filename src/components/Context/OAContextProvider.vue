@@ -1,7 +1,8 @@
 <script setup>
-import { inject, provide } from 'vue'
-import { OPENAPI_GLOBAL_KEY, OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
+import { inject } from 'vue'
+import { OPENAPI_GLOBAL_KEY } from '../../composables/useOpenapi'
 import OAContext from './OAContext.vue'
+import OAContextAsync from './OAContextAsync.vue'
 
 const props = defineProps({
   spec: {
@@ -12,24 +13,22 @@ const props = defineProps({
 })
 
 const globalOpenApi = inject(OPENAPI_GLOBAL_KEY, undefined)
-
-if (!props.spec && globalOpenApi) {
-  provide(OPENAPI_LOCAL_KEY, globalOpenApi)
-}
 </script>
 
 <template>
-  <Suspense
-    v-if="props.spec"
-  >
-    <OAContext :spec="props.spec">
+  <Suspense v-if="props.spec">
+    <OAContextAsync :spec="props.spec">
+      <template #default="{ openapi }">
+        <slot :openapi="openapi" />
+      </template>
+    </OAContextAsync>
+  </Suspense>
+  <template v-else-if="globalOpenApi">
+    <OAContext :openapi="globalOpenApi">
       <template #default="{ openapi }">
         <slot :openapi="openapi" />
       </template>
     </OAContext>
-  </Suspense>
-  <template v-else-if="globalOpenApi">
-    <slot :openapi="globalOpenApi" />
   </template>
   <div v-else>
     <p>OpenAPI instance not found</p>

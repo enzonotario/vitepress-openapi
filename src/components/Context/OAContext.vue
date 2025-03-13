@@ -1,23 +1,17 @@
 <script setup>
 import { provide } from 'vue'
 import { OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
-import { getAsyncOpenApiInstance } from '../../lib/getAsyncOpenApiInstance'
 
 const props = defineProps({
-  spec: {
+  openapi: {
     type: Object,
-    required: false,
-    default: null,
+    required: true,
   },
 })
 
-const openapi = await getAsyncOpenApiInstance({
-  custom: { spec: props.spec },
-})
-
-provide(OPENAPI_LOCAL_KEY, openapi)
+provide(OPENAPI_LOCAL_KEY, props.openapi)
 </script>
 
 <template>
-  <slot :openapi="openapi" />
+  <slot :openapi="props.openapi" />
 </template>
