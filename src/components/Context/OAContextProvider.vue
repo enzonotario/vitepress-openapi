@@ -1,6 +1,7 @@
 <script setup>
 import { inject } from 'vue'
 import { OPENAPI_GLOBAL_KEY } from '../../composables/useOpenapi'
+import OASpecSkeleton from '../Spec/OASpecSkeleton.vue'
 import OAContext from './OAContext.vue'
 import OAContextAsync from './OAContextAsync.vue'
 
@@ -30,7 +31,7 @@ const globalOpenApi = inject(OPENAPI_GLOBAL_KEY, undefined)
       </template>
     </OAContextAsync>
     <template #fallback>
-      <p>Loading OpenAPI specification...</p>
+      <OASpecSkeleton />
     </template>
   </Suspense>
   <template v-else-if="globalOpenApi">
