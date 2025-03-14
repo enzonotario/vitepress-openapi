@@ -240,7 +240,6 @@
 }
 
 .oa-jse .jse-main {
-  @apply rounded p-2;
   background-color: var(--vp-code-block-bg);
   min-height: 100px !important;
 }

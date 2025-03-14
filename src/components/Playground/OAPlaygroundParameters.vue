@@ -307,10 +307,17 @@ watch(operationData.security.selectedSchemeId, () => {
         {{ $t('Body') }}
       </summary>
 
-      <OAJSONEditor
-        v-if="bodyType === 'json'"
-        v-model="body" class="w-full"
-      />
+      <div v-if="bodyType === 'json'" class="bg-muted p-1 rounded">
+        <div class="!m-0 vp-adaptive-theme min-h-16 language-json">
+          <button
+            title="Copy Code"
+            class="copy"
+          />
+          <span class="lang">JSON</span>
+
+          <OAJSONEditor v-model="body" class="w-full" />
+        </div>
+      </div>
 
       <OAPlaygroundParameterInput
         v-else
