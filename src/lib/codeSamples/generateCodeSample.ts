@@ -1,4 +1,4 @@
-import type { ClientId, TargetId } from '@scalar/snippetz/types'
+import type { ClientId, TargetId } from '@scalar/types/snippetz'
 import type { OARequest } from './request'
 import { snippetz } from '@scalar/snippetz'
 import { buildHarRequest } from './buildHarRequest'
