@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resolveCircularRef } from '../../../src/lib/resolveCircularRef'
+import { resolveCircularRef } from '../../../src/lib/processOpenAPI/resolveCircularRef'
 
 describe('resolveCircularRef', () => {
   it('resolves circular references in a simple schema', () => {
