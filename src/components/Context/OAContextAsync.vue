@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import { parseYAML } from 'confbox'
 import { createOpenApiInstance } from '../../lib/createOpenApiInstance'
-import { fetchSpec } from '../../lib/fetchSpec'
 import OAContext from './OAContext.vue'
 
 const props = defineProps({
@@ -16,11 +16,25 @@ const props = defineProps({
 
 const emit = defineEmits(['update:spec'])
 
-const spec = props.spec || await fetchSpec(props.specUrl)
+const spec = props.spec || await fetchSpec(String(props.specUrl))
 
 emit('update:spec', spec)
 
 const openapiInstance = createOpenApiInstance({ spec })
+
+async function fetchSpec(url: string): Promise<any> {
+  const res = await fetch(url)
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`)
+  }
+
+  if (res.headers.get('content-type')?.toLowerCase().includes('yaml') || url.endsWith('.yaml') || url.endsWith('.yml')) {
+    return parseYAML(await res.text())
+  }
+
+  return res.json()
+}
 </script>
 
 <template>
