@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { describe, expect, it } from 'vitest'
-import { getSecurityUi } from '../../src/lib/processOpenAPI/getSecurityUi'
+import { getSecurityUi } from '../../../src/lib/processOpenAPI/getSecurityUi'
 
 describe('getSecurityUi', () => {
   it('returns an empty array when security is undefined', () => {

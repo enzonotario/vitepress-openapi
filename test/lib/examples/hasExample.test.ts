@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { hasExample } from '../../../src/lib/examples/hasExample'
-import { specWithCircularRef, specWithCircularRefAndExample } from '../../testsConstants'
 import { getSchemaUi } from '../../../src/lib/processOpenAPI/getSchemaUi'
+import { specWithCircularRef, specWithCircularRefAndExample } from '../../testsConstants'
 
 describe('hasExample', () => {
   it('returns true if schema has an example at the root level', () => {
