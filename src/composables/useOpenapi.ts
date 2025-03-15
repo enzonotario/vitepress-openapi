@@ -4,14 +4,6 @@ import type { PartialUseThemeConfig } from './useTheme'
 import { createOpenApiInstance } from '../lib/createOpenApiInstance'
 import { useTheme } from './useTheme'
 
-export interface OpenAPIData {
-  spec: OpenAPIDocument
-  openapi: ReturnType<typeof createOpenApiInstance>
-  config?: PartialUseThemeConfig
-}
-
-export const OPENAPI_GLOBAL_KEY = Symbol('openapi')
-
 export const OPENAPI_LOCAL_KEY = Symbol('openapiLocal')
 
 let openapi: ReturnType<typeof OpenApi> | null = null
@@ -39,8 +31,5 @@ export function useOpenapi({
     })
   }
 
-  return {
-    ...openapi,
-    json: openapi?.spec,
-  }
+  return openapi
 }
