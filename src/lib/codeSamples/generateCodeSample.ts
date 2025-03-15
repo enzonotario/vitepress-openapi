@@ -1,4 +1,4 @@
-import type { ClientId, TargetId } from '@scalar/snippetz/types'
+import type { ClientId, TargetId } from '@scalar/types/snippetz'
 import type { OARequest } from './request'
 import { snippetz } from '@scalar/snippetz'
 import { buildHarRequest } from './buildHarRequest'
@@ -15,7 +15,7 @@ const clientsMap: Record<string, ClientId<TargetId>> = {
   curl: 'curl',
   javascript: 'fetch',
   php: 'curl',
-  python: 'python3',
+  python: 'requests',
 }
 
 export async function generateCodeSample(lang: string, request: OARequest): Promise<string> {

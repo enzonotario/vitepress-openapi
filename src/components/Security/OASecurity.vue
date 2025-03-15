@@ -55,7 +55,7 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
             }"
           >
             <div
-              v-for="(scheme, schemeId, index) in item.schemes"
+              v-for="(scheme, schemeId) in item.schemes"
               :key="schemeId"
             >
               <OASecurityContent
@@ -63,7 +63,7 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
                 :scheme="scheme"
               />
 
-              <span v-if="index < Object.keys(item.schemes).length - 1" class="-ml-4 my-1 w-4 h-4 bg-muted rounded-full flex justify-center items-center">
+              <span v-if="Object.keys(item.schemes).indexOf(String(schemeId)) < Object.keys(item.schemes).length - 1" class="-ml-4 my-1 w-4 h-4 bg-muted rounded-full flex justify-center items-center">
                 +
               </span>
             </div>

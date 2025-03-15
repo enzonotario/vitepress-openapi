@@ -276,7 +276,9 @@ curl_setopt_array($curl, [
   CURLOPT_TIMEOUT => 30,
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => "POST",
-  CURLOPT_POSTFIELDS => "{\\"key\\":\\"value\\"}",
+  CURLOPT_POSTFIELDS => json_encode([
+    'key' => 'value'
+  ]),
   CURLOPT_HTTPHEADER => [
     "Content-Type: application/json"
   ],
@@ -314,7 +316,18 @@ curl_setopt_array($curl, [
   CURLOPT_TIMEOUT => 30,
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => "POST",
-  CURLOPT_POSTFIELDS => "{\\"key\\":{\\"nested\\":\\"value\\",\\"nestedArray\\":[1,2,{\\"deep\\":\\"value\\"}]}}",
+  CURLOPT_POSTFIELDS => json_encode([
+    'key' => [
+        'nested' => 'value',
+        'nestedArray' => [
+                1,
+                2,
+                [
+                                'deep' => 'value'
+                ]
+        ]
+    ]
+  ]),
   CURLOPT_HTTPHEADER => [
     "Content-Type: application/json"
   ],
@@ -427,7 +440,9 @@ curl_setopt_array($curl, [
   CURLOPT_TIMEOUT => 30,
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => "PUT",
-  CURLOPT_POSTFIELDS => "{\\"key\\":\\"value\\"}",
+  CURLOPT_POSTFIELDS => json_encode([
+    'key' => 'value'
+  ]),
   CURLOPT_HTTPHEADER => [
     "Content-Type: application/json"
   ],
@@ -454,16 +469,13 @@ describe('python', () => {
       method: 'GET',
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import http.client
+    expect(result).toBe(`import requests
 
-conn = http.client.HTTPSConnection("api.example.com")
+url = "https://api.example.com/resource"
 
-conn.request("GET", "/resource")
+response = requests.get(url)
 
-res = conn.getresponse()
-data = res.read()
-
-print(data.decode("utf-8"))`)
+print(response.json())`)
   })
 
   it('generates Python code for POST request with body', async () => {
@@ -474,20 +486,16 @@ print(data.decode("utf-8"))`)
       body: { key: 'value' },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import http.client
+    expect(result).toBe(`import requests
 
-conn = http.client.HTTPSConnection("api.example.com")
+url = "https://api.example.com/resource"
 
-payload = "{\\"key\\":\\"value\\"}"
+payload = { "key": "value" }
+headers = {"Content-Type": "application/json"}
 
-headers = { 'Content-Type': "application/json" }
+response = requests.post(url, json=payload, headers=headers)
 
-conn.request("POST", "/resource", payload, headers)
-
-res = conn.getresponse()
-data = res.read()
-
-print(data.decode("utf-8"))`)
+print(response.json())`)
   })
 
   it('generates Python code for POST request with deep body', async () => {
@@ -498,20 +506,19 @@ print(data.decode("utf-8"))`)
       body: { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import http.client
+    expect(result).toBe(`import requests
 
-conn = http.client.HTTPSConnection("api.example.com")
+url = "https://api.example.com/resource"
 
-payload = "{\\"key\\":{\\"nested\\":\\"value\\",\\"nestedArray\\":[1,2,{\\"deep\\":\\"value\\"}]}}"
+payload = { "key": {
+        "nested": "value",
+        "nestedArray": [1, 2, { "deep": "value" }]
+    } }
+headers = {"Content-Type": "application/json"}
 
-headers = { 'Content-Type': "application/json" }
+response = requests.post(url, json=payload, headers=headers)
 
-conn.request("POST", "/resource", payload, headers)
-
-res = conn.getresponse()
-data = res.read()
-
-print(data.decode("utf-8"))`)
+print(response.json())`)
   })
 
   it('generates Python code with headers', async () => {
@@ -522,18 +529,15 @@ print(data.decode("utf-8"))`)
       headers: { Authorization: 'Bearer token' },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import http.client
+    expect(result).toBe(`import requests
 
-conn = http.client.HTTPSConnection("api.example.com")
+url = "https://api.example.com/resource"
 
-headers = { 'Authorization': "Bearer token" }
+headers = {"Authorization": "Bearer token"}
 
-conn.request("GET", "/resource", headers=headers)
+response = requests.get(url, headers=headers)
 
-res = conn.getresponse()
-data = res.read()
-
-print(data.decode("utf-8"))`)
+print(response.json())`)
   })
 
   it('generates Python code with query parameters', async () => {
@@ -545,16 +549,13 @@ print(data.decode("utf-8"))`)
       variables: { search: 'query' },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import http.client
+    expect(result).toBe(`import requests
 
-conn = http.client.HTTPSConnection("api.example.com")
+url = "https://api.example.com/resource"
 
-conn.request("GET", "/resource")
+response = requests.get(url)
 
-res = conn.getresponse()
-data = res.read()
-
-print(data.decode("utf-8"))`)
+print(response.json())`)
   })
 
   it('generates Python code with all parameters', async () => {
@@ -568,20 +569,16 @@ print(data.decode("utf-8"))`)
       variables: { search: 'query' },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import http.client
+    expect(result).toBe(`import requests
 
-conn = http.client.HTTPSConnection("api.example.com")
+url = "https://api.example.com/resource"
 
-payload = "{\\"key\\":\\"value\\"}"
+payload = { "key": "value" }
+headers = {"Content-Type": "application/json"}
 
-headers = { 'Content-Type': "application/json" }
+response = requests.put(url, json=payload, headers=headers)
 
-conn.request("PUT", "/resource", payload, headers)
-
-res = conn.getresponse()
-data = res.read()
-
-print(data.decode("utf-8"))`)
+print(response.json())`)
   })
 })
 
