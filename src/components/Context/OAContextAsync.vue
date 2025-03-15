@@ -1,6 +1,6 @@
 <script setup>
+import { createOpenApiInstance } from '../../lib/createOpenApiInstance'
 import { fetchSpec } from '../../lib/fetchSpec'
-import { getAsyncOpenApiInstance } from '../../lib/getAsyncOpenApiInstance'
 import OAContext from './OAContext.vue'
 
 const props = defineProps({
@@ -20,9 +20,7 @@ const spec = props.spec || await fetchSpec(props.specUrl)
 
 emit('update:spec', spec)
 
-const openapiInstance = await getAsyncOpenApiInstance({
-  custom: { spec },
-})
+const openapiInstance = createOpenApiInstance({ spec })
 </script>
 
 <template>

@@ -5,7 +5,6 @@ import type { createOpenApiInstance } from './lib/createOpenApiInstance'
 import { watch } from 'vue'
 import * as VueI18n from 'vue-i18n'
 import * as components from './components'
-import { OPENAPI_GLOBAL_KEY } from './composables/useOpenapi'
 import { useShiki } from './composables/useShiki'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 
@@ -20,11 +19,7 @@ interface VPTheme {
 }
 
 export const theme = {
-  enhanceApp({ app, openapi = null }) {
-    if (openapi) {
-      app.provide(OPENAPI_GLOBAL_KEY, openapi)
-    }
-
+  enhanceApp({ app }) {
     const themeConfig = useTheme()
 
     const i18nConfig = themeConfig.getI18nConfig()
@@ -64,6 +59,5 @@ export { useTheme } from './composables/useTheme'
 export { generateCodeSample } from './lib/codeSamples/generateCodeSample'
 export { OARequest } from './lib/codeSamples/request'
 export { createOpenApiInstance } from './lib/createOpenApiInstance'
-export { getOpenApiInstance } from './lib/getOpenApiInstance'
 export { OpenApi } from './lib/OpenApi'
 export { locales } from './locales'
