@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { buildRequest } from '../../src/lib/codeSamples/buildRequest'
-import { generateCodeSample } from '../../src/lib/codeSamples/generateCodeSample'
+import { buildRequest } from '../../../src/lib/codeSamples/buildRequest'
+import { generateCodeSample } from '../../../src/lib/codeSamples/generateCodeSample'
 
 describe('javascript', () => {
   it('generates code sample for GET request without query, headers, or body', async () => {
