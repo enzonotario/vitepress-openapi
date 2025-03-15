@@ -1,6 +1,6 @@
 import type { OpenAPI } from '@scalar/openapi-types'
 import { literalTypes } from '../../index'
-import { getConstraints, hasConstraints } from '../constraintsParser'
+import { getConstraints, hasConstraints } from './constraintsParser'
 import { getPropertyExamples } from '../examples/getPropertyExamples'
 import { resolveCircularRef } from '../resolveCircularRef'
 
