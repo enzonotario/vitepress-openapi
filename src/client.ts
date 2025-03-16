@@ -24,30 +24,26 @@ export const theme = {
 
     const i18nConfig = themeConfig.getI18nConfig()
     const i18n: any = VueI18n.createI18n({
-      legacy: false,
       locale: i18nConfig.locale.value,
       fallbackLocale: i18nConfig.fallbackLocale.value,
       messages: i18nConfig.messages,
     })
     app.use(i18n)
 
-    // watch(
-    //   () => themeConfig.getLocale(),
-    //   () => {
-    //     if (i18n.global.locale.value !== themeConfig.getLocale()) {
-    //       i18n.global.locale.value = themeConfig.getLocale()
-    //     }
-    //   },
-    //   {
-    //     immediate: true,
-    //   },
-    // )
+    watch(
+      () => themeConfig.getLocale(),
+      () => {
+        if (i18n.global.locale.value !== themeConfig.getLocale()) {
+          i18n.global.locale.value = themeConfig.getLocale()
+        }
+      },
+    )
 
     Object.entries(components).forEach(([key, component]) => {
       app.component(key, component)
     })
 
-    // useShiki().initShiki()
+    useShiki().initShiki()
   },
 } as VPTheme
 
