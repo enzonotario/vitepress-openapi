@@ -47,7 +47,7 @@ export const theme = {
       app.component(key, component)
     })
 
-    useShiki().initShiki()
+    // useShiki().initShiki()
   },
 } as VPTheme
 
