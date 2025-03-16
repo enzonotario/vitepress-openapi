@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useTheme } from '../../composables/useTheme'
+import OACodeBlock from '../Common/OACodeBlock.vue'
 
 const props = defineProps({
   operationId: {

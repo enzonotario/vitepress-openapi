@@ -2,8 +2,6 @@ import type { OpenApi } from '../lib/OpenApi'
 import type { OpenAPIDocument } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
 import { createOpenApiInstance } from '../lib/createOpenApiInstance'
-import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
-import { processOpenAPI } from '../lib/processOpenAPI/processOpenAPI'
 import { useTheme } from './useTheme'
 
 export const OPENAPI_LOCAL_KEY = Symbol('openapiLocal')
@@ -42,4 +40,3 @@ export function useOpenapi({
 
   return openapi
 }
-
