@@ -31,17 +31,17 @@ export const theme = {
     })
     app.use(i18n)
 
-    watch(
-      () => themeConfig.getLocale(),
-      () => {
-        if (i18n.global.locale.value !== themeConfig.getLocale()) {
-          i18n.global.locale.value = themeConfig.getLocale()
-        }
-      },
-      {
-        immediate: true,
-      },
-    )
+    // watch(
+    //   () => themeConfig.getLocale(),
+    //   () => {
+    //     if (i18n.global.locale.value !== themeConfig.getLocale()) {
+    //       i18n.global.locale.value = themeConfig.getLocale()
+    //     }
+    //   },
+    //   {
+    //     immediate: true,
+    //   },
+    // )
 
     Object.entries(components).forEach(([key, component]) => {
       app.component(key, component)
