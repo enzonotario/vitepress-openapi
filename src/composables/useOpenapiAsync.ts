@@ -13,5 +13,7 @@ export async function useOpenapiAsync({ spec, config }: { spec: OpenAPIDocument,
 
   const parsedSpec = await processOpenAPI(transformedSpec)
 
+  console.log(JSON.stringify(parsedSpec, null, 2))
+
   return useOpenapi({ spec, parsedSpec, config })
 }

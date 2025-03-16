@@ -1,7 +1,7 @@
-import { theme } from 'vitepress-openapi/client'
+import { theme, useOpenapi } from 'vitepress-openapi/client'
 import DefaultTheme from 'vitepress/theme'
-import { useOpenapiAsync } from '../../../src/composables/useOpenapiAsync'
 import spec from '../../public/openapi.json' with {type: 'json'}
+import parsedSpec from '../../public/openapi.parsed.json' with {type: 'json'}
 import ExampleBlock from './components/ExampleBlock.vue'
 import SandboxIframe from './components/sandbox/SandboxIframe.vue'
 import ScopeConfigurationTabs from './components/ScopeConfigurationTabs.vue'
@@ -10,9 +10,12 @@ import './style.css'
 
 export default {
   extends: DefaultTheme,
-  async enhanceApp({ app }) {
+  enhanceApp({ app }) {
     // Set the OpenAPI specification.
-    await useOpenapiAsync({ spec })
+    useOpenapi({
+      spec,
+      parsedSpec,
+    })
 
     // Use the theme.
     theme.enhanceApp({ app })
