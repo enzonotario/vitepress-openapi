@@ -54,7 +54,7 @@ const loadSamples = async () => {
   )
 }
 
-watch(() => props.request, loadSamples, { deep: true, immediate: true })
+watch(() => props.request, loadSamples, { deep: true })
 </script>
 
 <template>

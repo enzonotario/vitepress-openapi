@@ -1,7 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
 import { httpVerbs } from '../index'
-import { processOpenAPI } from './processOpenAPI/processOpenAPI'
 
 export function OpenApi({
   spec,
@@ -47,14 +46,14 @@ export function OpenApi({
 
   function getParsedSpec(): ParsedOpenAPI {
     if (!parsedSpec) {
-      parsedSpec = processOpenAPI(transformedSpec ?? spec)
+      throw new Error('Parsed OpenAPI spec is not defined')
     }
 
     return parsedSpec
   }
 
   function getOperation(operationId: string) {
-    const paths = getSpec().paths as OpenAPIV3.PathsObject
+    const paths = getParsedSpec().paths as OpenAPIV3.PathsObject
 
     if (!paths) {
       return null

@@ -2,6 +2,8 @@ import type { OpenApi } from '../lib/OpenApi'
 import type { OpenAPIDocument } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
 import { createOpenApiInstance } from '../lib/createOpenApiInstance'
+import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
+import { processOpenAPI } from '../lib/processOpenAPI/processOpenAPI'
 import { useTheme } from './useTheme'
 
 export const OPENAPI_LOCAL_KEY = Symbol('openapiLocal')
@@ -25,14 +27,19 @@ export function useOpenapi({
     setupOpenApi({ spec, config })
   }
 
-  function setupOpenApi({ spec, config }: { spec: OpenAPIDocument, config?: PartialUseThemeConfig }) {
+  function setupOpenApi({
+    spec,
+  }: {
+    spec: OpenAPIDocument
+    parsedSpec?: any
+    config?: PartialUseThemeConfig
+  }) {
     openapi = createOpenApiInstance({
       spec,
       parsedSpec,
-      defaultTag: config?.spec?.defaultTag,
-      defaultTagDescription: config?.spec?.defaultTagDescription,
     })
   }
 
   return openapi
 }
+

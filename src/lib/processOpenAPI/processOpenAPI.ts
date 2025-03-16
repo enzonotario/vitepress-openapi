@@ -4,6 +4,7 @@ import type { OpenAPIDocument, ParsedContent, ParsedOpenAPI, ParsedOperation } f
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { merge } from 'allof-merge'
 import { getSchemaExample } from '../examples/getSchemaExample'
+import { getCodeSamples } from './getCodeSamples'
 import { getSchemaUi } from './getSchemaUi'
 import { getSecurityUi } from './getSecurityUi'
 
@@ -34,7 +35,7 @@ function safelyGenerateSchemaUi(spec: ParsedOpenAPI): ParsedOpenAPI {
   }
 }
 
-export function processOpenAPI(spec: OpenAPIDocument): ParsedOpenAPI {
+export async function processOpenAPI(spec: OpenAPIDocument): Promise<ParsedOpenAPI> {
   if (import.meta.env.VITE_DEBUG) {
     console.warn('Processing OpenAPI spec:', spec)
   }
@@ -43,6 +44,7 @@ export function processOpenAPI(spec: OpenAPIDocument): ParsedOpenAPI {
   parsedSpec = safelyDereferenceSpec(parsedSpec)
   parsedSpec = safelyGenerateSecurityUi(parsedSpec)
   parsedSpec = safelyGenerateSchemaUi(parsedSpec)
+  parsedSpec = await getCodeSamples(parsedSpec)
 
   parsedSpec.externalDocs = spec.externalDocs || parsedSpec.externalDocs || {}
   parsedSpec.info = spec.info || parsedSpec.info || {}
