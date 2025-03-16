@@ -16,13 +16,17 @@ const props = defineProps({
 
 const emit = defineEmits(['update:spec'])
 
-const spec = props.spec || await fetchSpec(String(props.specUrl))
+const spec = props.spec || await fetchSpec(props.specUrl)
 
 emit('update:spec', spec)
 
 const openapiInstance = createOpenApiInstance({ spec })
 
-async function fetchSpec(url: string): Promise<any> {
+async function fetchSpec(url?: string): Promise<any> {
+  if (!url) {
+    return null
+  }
+
   const res = await fetch(url)
 
   if (!res.ok) {
