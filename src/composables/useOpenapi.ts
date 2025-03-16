@@ -10,9 +10,11 @@ let openapi: ReturnType<typeof OpenApi> | null = null
 
 export function useOpenapi({
   spec,
+  parsedSpec,
   config,
 }: {
   spec?: OpenAPIDocument
+  parsedSpec?: any
   config?: PartialUseThemeConfig
 } = {}) {
   if (config) {
@@ -26,6 +28,7 @@ export function useOpenapi({
   function setupOpenApi({ spec, config }: { spec: OpenAPIDocument, config?: PartialUseThemeConfig }) {
     openapi = createOpenApiInstance({
       spec,
+      parsedSpec,
       defaultTag: config?.spec?.defaultTag,
       defaultTagDescription: config?.spec?.defaultTagDescription,
     })
