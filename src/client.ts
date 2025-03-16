@@ -52,6 +52,7 @@ export const theme = {
 } as VPTheme
 
 export { useOpenapi } from './composables/useOpenapi'
+export { useOpenapiAsync } from './composables/useOpenapiAsync'
 export { usePlayground } from './composables/usePlayground'
 export { DEFAULT_OPERATION_SLOTS }
 export { useShiki } from './composables/useShiki'
