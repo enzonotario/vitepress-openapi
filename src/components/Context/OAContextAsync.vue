@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { parseYAML } from 'confbox'
-import { createOpenApiInstance } from '../../lib/createOpenApiInstance'
+import { openapiInstance } from '../../lib/openapiInstance'
 import OAContext from './OAContext.vue'
 
 const props = defineProps({
@@ -20,7 +20,7 @@ const spec = props.spec || await fetchSpec(props.specUrl)
 
 emit('update:spec', spec)
 
-const openapiInstance = createOpenApiInstance({ spec })
+const openapi = await openapiInstance().async({ spec })
 
 async function fetchSpec(url?: string): Promise<any> {
   if (!url) {
@@ -42,7 +42,7 @@ async function fetchSpec(url?: string): Promise<any> {
 </script>
 
 <template>
-  <OAContext :openapi="openapiInstance">
+  <OAContext :openapi="openapi">
     <template #default="{ openapi }">
       <slot :openapi="openapi" />
     </template>

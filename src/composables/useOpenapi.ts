@@ -1,7 +1,7 @@
-import type { OpenApi } from '../lib/OpenApi'
-import type { OpenAPIDocument } from '../types'
+import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
-import { createOpenApiInstance } from '../lib/createOpenApiInstance'
+import { OpenApi } from '../lib/OpenApi'
+import { openapiInstance } from '../lib/openapiInstance'
 import { useTheme } from './useTheme'
 
 export const OPENAPI_LOCAL_KEY = Symbol('openapiLocal')
@@ -20,16 +20,61 @@ export function useOpenapi({
   }
 
   if (spec) {
-    setupOpenApi({ spec, config })
+    sync({ spec })
   }
 
-  function setupOpenApi({ spec, config }: { spec: OpenAPIDocument, config?: PartialUseThemeConfig }) {
-    openapi = createOpenApiInstance({
+  function setInstance({
+    spec,
+  }: {
+    spec: ParsedOpenAPI | OpenAPIDocument
+  }) {
+    openapi = OpenApi({
       spec,
-      defaultTag: config?.spec?.defaultTag,
-      defaultTagDescription: config?.spec?.defaultTagDescription,
     })
   }
 
-  return openapi
+  function sync({
+    spec,
+  }: {
+    spec?: OpenAPIDocument
+  } = {}) {
+    if (spec) {
+      setInstance(
+        openapiInstance().sync({
+          spec,
+          defaultTag: config?.spec?.defaultTag,
+          defaultTagDescription: config?.spec?.defaultTagDescription,
+        }),
+      )
+    } else {
+      throw new Error('No spec provided')
+    }
+
+    return openapi
+  }
+
+  async function async({
+    spec,
+  }: {
+    spec?: OpenAPIDocument
+  } = {}) {
+    if (spec) {
+      setInstance(
+        await openapiInstance().async({
+          spec,
+          defaultTag: config?.spec?.defaultTag,
+          defaultTagDescription: config?.spec?.defaultTagDescription,
+        }),
+      )
+    } else {
+      throw new Error('No spec provided')
+    }
+
+    return openapi
+  }
+
+  return {
+    ...openapi,
+    async,
+  }
 }
