@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { computed, defineEmits, defineProps, ref } from 'vue'
+import OAHeading from '../Common/OAHeading.vue'
+import OATryItButton from '../Try/OATryItButton.vue'
 import OAPlaygroundParameters from './OAPlaygroundParameters.vue'
 import OAPlaygroundResponse from './OAPlaygroundResponse.vue'
 

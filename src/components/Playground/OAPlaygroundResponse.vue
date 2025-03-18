@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
+import OACodeBlock from '../Common/OACodeBlock.vue'
 
 const { response } = defineProps({
   response: {
