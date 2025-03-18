@@ -6,7 +6,7 @@ const props = defineProps({
   },
 })
 
-const servers = props.openapi.parsedSpec.servers ?? []
+const servers = props.openapi.spec.servers ?? []
 </script>
 
 <template>

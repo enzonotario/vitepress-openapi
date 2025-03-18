@@ -1,9 +1,9 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { DefaultTheme } from 'vitepress'
+import type { OpenApi } from '../lib/OpenApi'
 import type { OpenAPIDocument } from '../types'
 import { httpVerbs } from '../index'
-import { OpenApi } from '../lib/OpenApi'
-import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
+import { openapiInstance } from '../lib/openapiInstance'
 import { cleanSidebarItems } from '../lib/sidebar/cleanSidebarItems'
 import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItemsByPaths'
 
@@ -83,12 +83,9 @@ export function useSidebar({
     }
 
     if (!openApiInstance) {
-      openApiInstance = OpenApi({
+      openApiInstance = openapiInstance().sync({
         spec,
-        transformedSpec: prepareOpenAPI({
-          spec,
-          defaultTag,
-        }),
+        defaultTag,
       })
     }
 

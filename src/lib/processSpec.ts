@@ -1,9 +1,8 @@
 import type { OpenAPIDocument } from '../types'
-import { OpenApi } from './OpenApi'
 import { prepareOpenAPI } from './prepareOpenAPI/prepareOpenAPI'
 import { processOpenAPI } from './processOpenAPI/processOpenAPI'
 
-export function createOpenApiInstance({
+export function processSpec({
   spec,
   defaultTag = undefined,
   defaultTagDescription = undefined,
@@ -12,7 +11,11 @@ export function createOpenApiInstance({
   defaultTag?: string
   defaultTagDescription?: string
 }) {
-  const transformedSpec = prepareOpenAPI({ spec, defaultTag, defaultTagDescription })
-  const parsedSpec = processOpenAPI(transformedSpec)
-  return OpenApi({ spec, transformedSpec, parsedSpec })
+  return processOpenAPI(
+    prepareOpenAPI({
+      spec,
+      defaultTag,
+      defaultTagDescription,
+    }),
+  )
 }

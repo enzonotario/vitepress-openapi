@@ -318,13 +318,11 @@ function hasSlot(name: OperationSlot): boolean {
         {{ $t('Samples') }}
       </OAHeading>
 
-      <ClientOnly>
-        <OACodeSamples
-          :operation-id="codeSamples.operationId"
-          :request="codeSamples.request"
-          :code-samples="codeSamples.codeSamples"
-        />
-      </ClientOnly>
+      <OACodeSamples
+        :operation-id="codeSamples.operationId"
+        :request="codeSamples.request"
+        :code-samples="codeSamples.codeSamples"
+      />
     </template>
 
     <template

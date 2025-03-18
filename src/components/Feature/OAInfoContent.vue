@@ -8,9 +8,9 @@ const props = defineProps({
   },
 })
 
-const info = props.openapi.parsedSpec.info ?? {}
+const info = props.openapi.spec.info ?? {}
 
-const externalDocs = props.openapi.parsedSpec.externalDocs ?? {}
+const externalDocs = props.openapi.spec.externalDocs ?? {}
 </script>
 
 <template>

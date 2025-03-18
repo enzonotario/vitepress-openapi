@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { createOpenApiInstance } from '../../src/lib/createOpenApiInstance'
+import { OpenApi } from '../../src'
 import { useOpenapi } from '../../src/composables/useOpenapi'
 import { spec, specWithSchemaAndContentTypes } from '../testsConstants'
-import { OpenApi } from '../../src'
 
 describe('openapi with spec', () => {
   const openapi = OpenApi({ spec })
@@ -43,7 +42,7 @@ describe('openapi with spec', () => {
   })
 
   it('getOperationsTags returns all unique tags', () => {
-    const api = createOpenApiInstance({
+    const api = useOpenapi({
       spec: {
         ...spec,
         paths: {
@@ -67,13 +66,13 @@ describe('openapi with spec', () => {
   })
 
   it('getOperationsTags returns empty array if no paths', () => {
-    const api = createOpenApiInstance({ spec: { openapi: '3.0.0' } })
+    const api = useOpenapi({ spec: { openapi: '3.0.0' } })
     const tags = api.getOperationsTags()
     expect(tags).toEqual([])
   })
 
   it('getPathsByTags returns paths with specified tags', () => {
-    const api = createOpenApiInstance({
+    const api = useOpenapi({
       spec: {
         ...spec,
         paths: {
@@ -105,13 +104,13 @@ describe('openapi with spec', () => {
   })
 
   it('getPathsByTags returns empty object if no matching tags', () => {
-    const api = createOpenApiInstance({ spec })
+    const api = useOpenapi({ spec })
     const paths = api.getPathsByTags('nonexistent')
     expect(paths).toMatchObject({})
   })
 
   it('sets defaultTag for operations without tags', () => {
-    const api = createOpenApiInstance({
+    const api = useOpenapi({
       spec: {
         ...spec,
         paths: {
@@ -136,13 +135,13 @@ describe('openapi with spec', () => {
   })
 
   it('getPathsWithoutTags returns empty array if no paths without tags', () => {
-    const api = createOpenApiInstance({ spec: { openapi: '3.0.0', paths: {} } })
+    const api = useOpenapi({ spec: { openapi: '3.0.0', paths: {} } })
     const paths = api.getPathsWithoutTags()
     expect(paths).toMatchObject({})
   })
 
   it('getTags returns tags object', () => {
-    const api = createOpenApiInstance({ spec })
+    const api = useOpenapi({ spec })
     const tags = api.getTags()
     expect(tags).toEqual([
       {
@@ -161,7 +160,7 @@ describe('openapi with spec', () => {
   })
 
   it('getTags returns empty array if no tags in spec', () => {
-    const api = createOpenApiInstance({ spec: { openapi: '3.0.0', paths: {} } })
+    const api = useOpenapi({ spec: { openapi: '3.0.0', paths: {} } })
     const tags = api.getTags()
     expect(tags).toEqual([])
   })
@@ -212,7 +211,7 @@ describe('spec with different servers for specific path', () => {
     },
   }
 
-  const openapi = createOpenApiInstance({ spec })
+  const openapi = useOpenapi({ spec })
 
   it('returns correct servers for getOperationServers', () => {
     const useGlobalServer = openapi.getOperationServers('useGlobalServer')
@@ -280,8 +279,8 @@ describe('custom specs', () => {
   })
 })
 
-describe('schemaParser', () => {
-  const openapi = useOpenapi({
+describe('schemaParser', async () => {
+  const openapi = await useOpenapi().async({
     spec: specWithSchemaAndContentTypes,
   })
 
@@ -294,8 +293,8 @@ describe('schemaParser', () => {
   })
 })
 
-describe('operationParsed -> securityUi', () => {
-  const openapi = useOpenapi({
+describe('operationParsed -> securityUi', async () => {
+  const openapi = await useOpenapi().async({
     spec: {
       openapi: '3.0.0',
       paths: {
