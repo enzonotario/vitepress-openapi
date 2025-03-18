@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Badge } from '../ui/badge'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'
+import OASchemaPropertyAttributes from './OASchemaPropertyAttributes.vue'
 
 const props = defineProps({
   property: {

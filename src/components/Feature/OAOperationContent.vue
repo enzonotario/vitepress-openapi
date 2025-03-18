@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
 import { computed } from 'vue'
+import OAFooter from '../Common/OAFooter.vue'
 import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
+import OAHeading from '../Common/OAHeading.vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAOperationTags from '../Operation/OAOperationTags.vue'
+import OAParameters from '../Parameter/OAParameters.vue'
+import OAPath from '../Path/OAPath.vue'
+import OAPathEndpoint from '../Path/OAPathEndpoint.vue'
 import OAPlayground from '../Playground/OAPlayground.vue'
+import OARequestBody from '../Request/OARequestBody.vue'
+import OAResponses from '../Response/OAResponses.vue'
+import OACodeSamples from '../Sample/OACodeSamples.vue'
+import OASecurity from '../Security/OASecurity.vue'
 
 const props = defineProps({
   operationId: {

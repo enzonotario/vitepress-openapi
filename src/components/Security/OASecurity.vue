@@ -2,6 +2,7 @@
 import type { OperationData } from '../../lib/operationData'
 import { defineProps, inject } from 'vue'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
+import OAHeading from '../Common/OAHeading.vue'
 import OASecurityContent from '../Security/OASecurityContent.vue'
 
 const { securityUi, headingPrefix } = defineProps({

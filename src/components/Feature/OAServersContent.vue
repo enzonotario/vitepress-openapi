@@ -1,4 +1,6 @@
 <script setup>
+import OAHeading from '../Common/OAHeading.vue'
+
 const props = defineProps({
   openapi: {
     type: Object,
