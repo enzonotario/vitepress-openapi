@@ -115,8 +115,15 @@ const fixtures: Record<string, FixtureTest> = {
     jsonSchema: {
       type: 'string',
       enum: ['foo', 'bar'],
+      description: 'enum description',
     },
-    schemaUi: { name: '', types: ['string'], required: false, enum: ['foo', 'bar'] },
+    schemaUi: {
+      name: '',
+      types: ['string'],
+      required: false,
+      enum: ['foo', 'bar'],
+      description: 'enum description',
+    },
     schemaUiJson: 'string',
   },
 
