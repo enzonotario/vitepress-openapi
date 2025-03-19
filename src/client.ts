@@ -38,9 +38,6 @@ export const theme = {
           i18n.global.locale.value = themeConfig.getLocale()
         }
       },
-      {
-        immediate: true,
-      },
     )
 
     Object.entries(components).forEach(([key, component]) => {
