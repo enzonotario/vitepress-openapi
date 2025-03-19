@@ -4,7 +4,7 @@ import { useData } from 'vitepress'
 import { getHeaders } from 'vitepress/dist/client/theme-default/composables/outline.js'
 import { VPHomeContent } from 'vitepress/theme'
 import { inject, onMounted, watch } from 'vue'
-import { scrollIntoOperationByOperationId } from '../../../../../src/lib/utils'
+import { scrollToHash } from '../../../../../src/lib/utils'
 import VPDocAsideOutline from '../vitepress/VPDocAsideOutline.vue'
 import SandboxPreviewSidebar from './SandboxPreviewSidebar.vue'
 
@@ -20,7 +20,7 @@ onMounted(() => {
 watch(sandboxData.operationId, () => {
   if (sandboxData.previewComponent.value === 'OAOperation') {
   } else if (sandboxData.previewComponent.value === 'OASpec') {
-    scrollIntoOperationByOperationId({
+    scrollToHash({
       hash: `#${sandboxData.operationId.value}`,
     })
   }
