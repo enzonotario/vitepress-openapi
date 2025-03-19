@@ -2,7 +2,7 @@
 import type { OperationSlot, PathsGroupView } from '../../types'
 import { computed, nextTick, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
-import { scrollIntoOperationByOperationId } from '../../lib/utils'
+import { scrollToHash } from '../../lib/utils'
 import OAHeading from '../Common/OAHeading.vue'
 import { Button } from '../ui/button'
 import { Collapsible, CollapsibleTrigger } from '../ui/collapsible'
@@ -36,7 +36,7 @@ const isOpen = ref(!themeConfig.getSpecConfig()?.collapsePaths?.value)
 function onPathClick(hash: string) {
   isOpen.value = true
   nextTick(() => {
-    scrollIntoOperationByOperationId({ hash })
+    scrollToHash({ hash })
   })
 }
 </script>
