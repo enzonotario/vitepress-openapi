@@ -143,6 +143,7 @@ class UiPropertyFactory {
         types: [schema.type as JSONSchemaType],
         required: false,
         enum: schema.enum,
+        description: schema.description,
       }
     }
 
