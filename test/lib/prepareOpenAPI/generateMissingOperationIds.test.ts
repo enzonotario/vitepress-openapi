@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { generateMissingOperationIds } from '../../../src/lib/prepareOpenAPI/generateMissingOperationIds'
+import { generateMissingOperationIds } from '../../../src/lib/parser/generateMissingOperationIds'
 
 describe('generateMissingOperationIds', () => {
   it('adds operationId to verbs without operationId', () => {

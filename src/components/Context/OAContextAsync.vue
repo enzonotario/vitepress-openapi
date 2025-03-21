@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { parseYAML } from 'confbox'
-import { openapiInstance } from '../../lib/openapiInstance'
+import { parseOpenapi } from '../../lib/parser/parseOpenapi'
 import OAContext from './OAContext.vue'
 
 const props = defineProps({
@@ -20,7 +20,7 @@ const spec = props.spec || await fetchSpec(props.specUrl)
 
 emit('update:spec', spec)
 
-const openapi = await openapiInstance().async({ spec })
+const openapi = await parseOpenapi().instanceAsync({ spec })
 
 async function fetchSpec(url?: string): Promise<any> {
   if (!url) {

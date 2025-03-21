@@ -5,7 +5,7 @@ import { buildRequest } from '../codeSamples/buildRequest'
 import { generateCodeSample } from '../codeSamples/generateCodeSample'
 import { resolveBaseUrl } from '../resolveBaseUrl'
 
-export async function getCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOpenAPI> {
+export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOpenAPI> {
   if (!spec?.paths) {
     return spec
   }

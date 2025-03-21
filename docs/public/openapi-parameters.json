@@ -33,7 +33,10 @@
             "description": "The age of the user to filter",
             "schema": {
               "type": "integer",
-              "example": 25
+              "example": 25,
+              "minimum": 0,
+              "maximum": 120,
+              "multipleOf": 1
             }
           },
           {
@@ -63,7 +66,10 @@
             "description": "A custom header for testing purposes",
             "schema": {
               "type": "string",
-              "example": "custom-value"
+              "example": "custom-value",
+              "minLength": 3,
+              "maxLength": 50,
+              "pattern": "^[a-zA-Z0-9-]+$"
             }
           },
           {
@@ -73,7 +79,10 @@
             "description": "User's session token",
             "schema": {
               "type": "string",
-              "example": "abc123"
+              "example": "abc123",
+              "minLength": 6,
+              "maxLength": 20,
+              "pattern": "^[a-zA-Z0-9]+$"
             }
           }
         ],

@@ -1,4 +1,4 @@
-import type { OAProperty } from '../processOpenAPI/getSchemaUi'
+import type { OAProperty } from '../parser/getSchemaUi'
 import { literalTypes } from '../../index'
 import { getPropertyExample } from './getPropertyExample'
 

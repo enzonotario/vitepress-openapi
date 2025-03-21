@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { hasExample } from '../../../src/lib/examples/hasExample'
-import { getSchemaUi } from '../../../src/lib/processOpenAPI/getSchemaUi'
+import { getSchemaUi } from '../../../src/lib/parser/getSchemaUi'
 import { specWithCircularRef, specWithCircularRefAndExample } from '../../testsConstants'
 
 describe('hasExample', () => {

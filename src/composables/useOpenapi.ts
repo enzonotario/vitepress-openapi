@@ -1,7 +1,7 @@
 import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
 import { OpenApi } from '../lib/OpenApi'
-import { openapiInstance } from '../lib/openapiInstance'
+import { parseOpenapi } from '../lib/parser/parseOpenapi'
 import { useTheme } from './useTheme'
 
 export const OPENAPI_LOCAL_KEY = Symbol('openapiLocal')
@@ -40,7 +40,7 @@ export function useOpenapi({
   } = {}) {
     if (spec) {
       setInstance(
-        openapiInstance().sync({
+        parseOpenapi().instanceSync({
           spec,
           defaultTag: config?.spec?.defaultTag,
           defaultTagDescription: config?.spec?.defaultTagDescription,
@@ -60,7 +60,7 @@ export function useOpenapi({
   } = {}) {
     if (spec) {
       setInstance(
-        await openapiInstance().async({
+        await parseOpenapi().instanceAsync({
           spec,
           defaultTag: config?.spec?.defaultTag,
           defaultTagDescription: config?.spec?.defaultTagDescription,

@@ -1,7 +1,7 @@
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { describe, expect, it } from 'vitest'
 import { getSchemaExample } from '../../../src/lib/examples/getSchemaExample'
-import { getSchemaUi } from '../../../src/lib/processOpenAPI/getSchemaUi'
+import { getSchemaUi } from '../../../src/lib/parser/getSchemaUi'
 import { specWithCircularRef } from '../../testsConstants'
 
 interface FixtureTest {
