@@ -25,4 +25,4 @@ export default {
 
 | Function                         | Description                                      | Default Value                                                                                                                                 | Allowed Values                         |
 |----------------------------------|--------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
-| `setSecuritySchemeDefaultValues` | Sets custom default values for security schemes. | `{ 'http-basic': 'Basic Auth', 'http-bearer': 'Bearer Token', 'apiKey': null, 'openIdConnect': 'OpenID Connect', 'oauth2': 'OAuth2 Token', }` | Partial\<SecuritySchemeDefaultValues\> |
+| `setSecuritySchemeDefaultValues` | Sets custom default values for security schemes. | `{ 'http-basic': 'Basic Auth', 'http-bearer': 'Token', 'apiKey': null, 'openIdConnect': 'OpenID Connect', 'oauth2': 'OAuth2 Token', }` | Partial\<SecuritySchemeDefaultValues\> |

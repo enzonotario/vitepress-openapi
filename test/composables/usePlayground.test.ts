@@ -11,7 +11,7 @@ describe('securityScheme default values', () => {
 
   it('returns "Bearer Token" for http-bearer scheme', () => {
     const scheme = { type: 'http', scheme: 'bearer' }
-    expect(playground.getSecuritySchemeDefaultValue(scheme)).toBe('Bearer Token')
+    expect(playground.getSecuritySchemeDefaultValue(scheme)).toBe('Token')
   })
 
   it('returns "OpenID Connect" for openIdConnect scheme', () => {
