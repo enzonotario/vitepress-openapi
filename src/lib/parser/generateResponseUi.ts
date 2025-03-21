@@ -15,7 +15,7 @@ export function generateResponseUi(spec: ParsedOpenAPI): ParsedOpenAPI {
         continue
       }
 
-      for (const response of Object.values(operation.responses || {})) {
+      for (const response of Object.values(operation.responses)) {
         for (const [contentType, content] of Object.entries(response.content || {})) {
           const parsedContent = content as ParsedContent
 
