@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getConstraints, hasConstraints } from '../../../src/lib/processOpenAPI/constraintsParser'
+import { getConstraints, hasConstraints } from '../../../src/lib/parser/constraintsParser'
 
 describe('hasConstraints', () => {
   it('returns true when property contains validation keywords', () => {
