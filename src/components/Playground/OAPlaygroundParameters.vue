@@ -57,6 +57,7 @@ const props = defineProps({
 const emits = defineEmits([
   'update:request',
   'update:selectedServer',
+  'submit',
 ])
 
 const allowCustomServer = computed(() => useTheme().getServerAllowCustomServer())
@@ -182,6 +183,7 @@ watch(operationData.security.selectedSchemeId, () => {
           @update:model-value="selectedServer = $event"
           @update:custom-value="customServer = $event"
           @update:is-custom="useCustomServer = $event"
+          @submit="emits('submit')"
         />
       </div>
     </details>
@@ -229,6 +231,7 @@ watch(operationData.security.selectedSchemeId, () => {
               v-model="authorization.value"
               :scheme="authorization"
               class="w-full"
+              @submit="emits('submit')"
             />
           </div>
         </div>
@@ -258,6 +261,7 @@ watch(operationData.security.selectedSchemeId, () => {
               v-model="variables[parameter.name ?? '']"
               :parameter="parameter"
               class="w-full"
+              @submit="emits('submit')"
             />
           </div>
         </div>
@@ -296,6 +300,7 @@ watch(operationData.security.selectedSchemeId, () => {
               v-model="variables[parameter.name ?? '']"
               :parameter="parameter"
               class="w-full"
+              @submit="emits('submit')"
             />
           </div>
         </div>
@@ -312,7 +317,6 @@ watch(operationData.security.selectedSchemeId, () => {
           <button
             title="Copy Code"
             class="copy"
-            @click="$event.preventDefault();"
           />
           <span class="lang">JSON</span>
 
@@ -325,6 +329,7 @@ watch(operationData.security.selectedSchemeId, () => {
         v-model="body"
         :parameter="{ name: 'body', schema: { type: 'string' } }"
         class="w-full"
+        @submit="emits('submit')"
       />
     </details>
   </div>

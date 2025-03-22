@@ -14,6 +14,7 @@ export interface SelectWithCustomOptionEmits {
   (e: 'update:modelValue', value: string): void
   (e: 'update:customValue', value: string): void
   (e: 'update:isCustom', value: boolean): void
+  (e: 'submit'): void
 }
 
 export interface SelectWithCustomOptionItem {

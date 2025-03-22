@@ -66,6 +66,7 @@ const handleSelectChange = (selectedValue: string) => {
         v-model="customValue"
         :placeholder="customPlaceholder"
         class="pr-8 bg-muted"
+        @keydown.enter="emit('submit')"
       />
     </div>
 

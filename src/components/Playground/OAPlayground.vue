@@ -88,9 +88,7 @@ const hasParameters = computed(() =>
   Boolean(props.parameters?.length || hasBody.value || hasSecuritySchemes.value),
 )
 
-async function onSubmit(event: Event) {
-  event.preventDefault()
-
+async function onSubmit() {
   if (!props.request) {
     return
   }
@@ -171,7 +169,7 @@ function trackEvent() {
 </script>
 
 <template>
-  <form class="flex flex-col gap-2" @submit="onSubmit">
+  <div class="flex flex-col gap-2">
     <OAHeading
       level="h2"
       :prefix="headingPrefix"
@@ -193,10 +191,11 @@ function trackEvent() {
       :examples="props.requestBody?.content?.[props.contentType]?.examples"
       @update:request="($event: any) => emits('update:request', $event)"
       @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
+      @submit="onSubmit"
     />
 
     <div class="flex flex-col gap-2">
-      <Button variant="primary" type="submit">
+      <Button variant="primary" @click="onSubmit">
         {{ $t('Try it out') }}
       </Button>
 
@@ -206,5 +205,5 @@ function trackEvent() {
         :loading="loading"
       />
     </div>
-  </form>
+  </div>
 </template>

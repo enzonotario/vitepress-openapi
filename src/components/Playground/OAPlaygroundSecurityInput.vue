@@ -16,6 +16,7 @@ const props = defineProps({
 
 const emits = defineEmits([
   'update:modelValue',
+  'submit',
 ])
 
 const placeholder = computed(() => {
@@ -39,6 +40,7 @@ const placeholder = computed(() => {
       :placeholder="placeholder"
       class="bg-muted"
       @update:model-value="emits('update:modelValue', $event)"
+      @keydown.enter="emits('submit')"
     />
   </div>
 </template>
