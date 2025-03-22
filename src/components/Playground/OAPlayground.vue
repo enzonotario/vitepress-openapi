@@ -2,9 +2,16 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { computed, defineEmits, defineProps, ref } from 'vue'
 import OAHeading from '../Common/OAHeading.vue'
-import OATryItButton from '../Try/OATryItButton.vue'
+import { Button } from '../ui/button'
 import OAPlaygroundParameters from './OAPlaygroundParameters.vue'
 import OAPlaygroundResponse from './OAPlaygroundResponse.vue'
+
+interface PlaygroundResponse {
+  body: any
+  type: string
+  time: string | null
+  status: number | null
+}
 
 const props = defineProps({
   operationId: {
@@ -63,11 +70,11 @@ const emits = defineEmits([
   'update:selectedServer',
 ])
 
+const defaultRequestUrl = `${props.baseUrl}${props.path}`
+
 const loading = ref(false)
 
-const schemaExamples = computed(() => {
-  return props.requestBody?.content?.[props.contentType]?.examples
-})
+const response = ref<PlaygroundResponse | null>(null)
 
 const hasBody = computed(() =>
   Boolean(props.requestBody),
@@ -80,10 +87,91 @@ const hasSecuritySchemes = computed(() =>
 const hasParameters = computed(() =>
   Boolean(props.parameters?.length || hasBody.value || hasSecuritySchemes.value),
 )
+
+async function onSubmit(event: Event) {
+  event.preventDefault()
+
+  if (!props.request) {
+    return
+  }
+
+  response.value = null
+
+  const innerResponse: PlaygroundResponse = {
+    body: null,
+    type: '',
+    time: null,
+    status: null,
+  }
+
+  trackEvent()
+
+  const start = performance.now()
+
+  try {
+    innerResponse.time = null
+    innerResponse.body = '{}'
+    loading.value = true
+
+    const headers = props.request.headers ?? {}
+    if (props.request.body && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json'
+    }
+
+    const url = new URL(props.request.url ?? defaultRequestUrl)
+    for (const [key, value] of Object.entries(props.request.query)) {
+      url.searchParams.set(key, String(value))
+    }
+
+    const data = await fetch(url.toString(), {
+      method: props.method.toUpperCase(),
+      headers,
+      body: props.request.body ? JSON.stringify(props.request.body) : null,
+    })
+
+    const contentType = data.headers.get('Content-Type') || 'text/plain'
+    innerResponse.type = contentType
+
+    if (/json/i.test(contentType)) {
+      innerResponse.body = await data.json()
+    } else if (/xml/i.test(contentType) || /html/i.test(contentType) || /text\/plain/.test(contentType)) {
+      innerResponse.body = await data.text()
+    } else if (/^image\//i.test(contentType)) {
+      const blob = await data.blob()
+      innerResponse.body = URL.createObjectURL(blob)
+    } else if (/^audio\//i.test(contentType)) {
+      innerResponse.body = await data.blob()
+    } else {
+      innerResponse.body = await data.text()
+    }
+
+    innerResponse.status = data.status
+  } catch (error: any) {
+    innerResponse.body = error?.message
+    innerResponse.type = 'text/plain'
+    innerResponse.status = 500
+  } finally {
+    loading.value = false
+    const end = performance.now()
+    innerResponse.time = (end - start).toFixed(2)
+
+    response.value = innerResponse
+  }
+}
+
+function trackEvent() {
+  try {
+    // @ts-expect-error: gtag is defined in the global scope
+    window.gtag('event', 'try_it', {
+      event_category: 'api',
+      event_label: props.operationId,
+    })
+  } catch { }
+}
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
+  <form class="flex flex-col gap-2" @submit="onSubmit">
     <OAHeading
       level="h2"
       :prefix="headingPrefix"
@@ -102,24 +190,21 @@ const hasParameters = computed(() =>
       :servers="props.servers"
       :parameters="props.parameters ?? []"
       :security-ui="props.securityUi ?? {}"
-      :examples="schemaExamples"
+      :examples="props.requestBody?.content?.[props.contentType]?.examples"
       @update:request="($event: any) => emits('update:request', $event)"
       @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
     />
 
-    <OATryItButton
-      :request="props.request"
-      :operation-id="props.operationId"
-      :path="props.path"
-      :method="props.method"
-      :base-url="props.baseUrl"
-      @loading="loading = $event"
-    >
-      <template #response="response">
-        <OAPlaygroundResponse
-          :response="response.response"
-        />
-      </template>
-    </OATryItButton>
-  </div>
+    <div class="flex flex-col gap-2">
+      <Button variant="primary" type="submit">
+        {{ $t('Try it out') }}
+      </Button>
+
+      <OAPlaygroundResponse
+        v-if="response || loading"
+        :response="response"
+        :loading="loading"
+      />
+    </div>
+  </form>
 </template>
