@@ -156,6 +156,7 @@ async function onSubmit() {
     innerResponse.type = 'text/plain'
     innerResponse.status = 500
   } finally {
+    clearTimeout(timeoutId)
     loading.value = false
     const end = performance.now()
     innerResponse.time = (end - start).toFixed(2)
