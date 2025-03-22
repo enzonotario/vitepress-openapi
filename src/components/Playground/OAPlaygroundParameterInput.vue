@@ -18,6 +18,7 @@ const props = defineProps({
 
 const emits = defineEmits([
   'update:modelValue',
+  'submit',
 ])
 
 function inputType(parameter: any) {
@@ -48,12 +49,14 @@ const parameterExample = getPropertyExample(props.parameter)
       :placeholder="String(parameterExample ?? '')"
       class="bg-muted"
       @update:model-value="emits('update:modelValue', $event)"
+      @keydown.enter="emits('submit')"
     />
 
     <Checkbox
       v-if="['boolean'].includes(parameter.schema?.type)"
       :checked="String(modelValue) === '' ? 'indeterminate' : (modelValue as boolean)"
       @update:checked="emits('update:modelValue', $event)"
+      @keydown.enter="emits('submit')"
     />
 
     <Select
