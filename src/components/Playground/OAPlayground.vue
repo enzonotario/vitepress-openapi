@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { computed, defineEmits, defineProps, ref } from 'vue'
+import { computed, defineEmits, defineProps, onBeforeUnmount, ref } from 'vue'
 import OAHeading from '../Common/OAHeading.vue'
 import { Button } from '../ui/button'
 import OAPlaygroundParameters from './OAPlaygroundParameters.vue'
@@ -76,6 +76,8 @@ const loading = ref(false)
 
 const response = ref<PlaygroundResponse | null>(null)
 
+const imageUrls = ref<string[]>([])
+
 const hasBody = computed(() =>
   Boolean(props.requestBody),
 )
@@ -105,6 +107,8 @@ async function onSubmit() {
   trackEvent()
 
   const start = performance.now()
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 30000) // 30s timeout
 
   try {
     innerResponse.time = null
@@ -125,6 +129,7 @@ async function onSubmit() {
       method: props.method.toUpperCase(),
       headers,
       body: props.request.body ? JSON.stringify(props.request.body) : null,
+      signal: controller.signal,
     })
 
     const contentType = data.headers.get('Content-Type') || 'text/plain'
@@ -137,6 +142,8 @@ async function onSubmit() {
     } else if (/^image\//i.test(contentType)) {
       const blob = await data.blob()
       innerResponse.body = URL.createObjectURL(blob)
+      // Store the blob URL to release it later.
+      imageUrls.value.push(innerResponse.body)
     } else if (/^audio\//i.test(contentType)) {
       innerResponse.body = await data.blob()
     } else {
@@ -166,6 +173,11 @@ function trackEvent() {
     })
   } catch { }
 }
+
+onBeforeUnmount(() => {
+  // Release the blob URLs to prevent memory leaks.
+  imageUrls.value.forEach(URL.revokeObjectURL)
+})
 </script>
 
 <template>
