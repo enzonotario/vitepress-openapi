@@ -312,6 +312,7 @@ watch(operationData.security.selectedSchemeId, () => {
           <button
             title="Copy Code"
             class="copy"
+            @click="$event.preventDefault();"
           />
           <span class="lang">JSON</span>
 
