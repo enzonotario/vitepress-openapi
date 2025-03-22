@@ -96,7 +96,7 @@ const baseUrl = computed(() => {
   return resolveBaseUrl(value)
 })
 
-const shouldBuildRequest = computed(() => ['try-it', 'code-samples'].some(slot => operationSlots.value.includes(slot)))
+const shouldBuildRequest = computed(() => ['playground', 'try-it', 'code-samples'].some(slot => operationSlots.value.includes(slot)))
 
 const request = ref(
   shouldBuildRequest.value
@@ -259,9 +259,9 @@ function updateSelectedServer(server) {
               />
             </div>
 
-            <div v-if="operationSlots.includes('try-it')">
+            <div v-if="operationSlots.includes('try-it') || operationSlots.includes('playground')">
               <slot
-                name="try-it"
+                name="playground"
                 :operation-id="props.id"
                 :path="operationPath"
                 :method="operationMethod"

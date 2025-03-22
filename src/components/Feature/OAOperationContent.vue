@@ -75,6 +75,12 @@ const headingPrefix = computed(() => {
 })
 
 function hasSlot(name: OperationSlot): boolean {
+  if (name === 'try-it' && slots[name] !== undefined) {
+    console.warn(
+      '`try-it` slot is deprecated. Use `playground` slot instead.',
+    )
+  }
+
   return slots[name] !== undefined
 }
 </script>
@@ -278,32 +284,41 @@ function hasSlot(name: OperationSlot): boolean {
 
     <template
       v-if="hasSlot('try-it')"
-      #try-it="tryIt"
+      #playground="playground"
     >
       <slot
         name="try-it"
-        v-bind="tryIt"
+        v-bind="playground"
+      />
+    </template>
+    <template
+      v-else-if="hasSlot('playground')"
+      #playground="playground"
+    >
+      <slot
+        name="playground"
+        v-bind="playground"
       />
     </template>
     <template
       v-else
-      #try-it="tryIt"
+      #playground="playground"
     >
       <ClientOnly>
         <OAPlayground
-          :request="tryIt.request"
-          :operation-id="tryIt.operationId"
-          :path="tryIt.path"
-          :method="tryIt.method"
-          :base-url="tryIt.baseUrl"
-          :parameters="tryIt.parameters"
-          :request-body="tryIt.requestBody"
-          :security-ui="tryIt.securityUi"
-          :content-type="tryIt.contentType"
-          :servers="tryIt.servers"
+          :request="playground.request"
+          :operation-id="playground.operationId"
+          :path="playground.path"
+          :method="playground.method"
+          :base-url="playground.baseUrl"
+          :parameters="playground.parameters"
+          :request-body="playground.requestBody"
+          :security-ui="playground.securityUi"
+          :content-type="playground.contentType"
+          :servers="playground.servers"
           :heading-prefix="headingPrefix"
-          @update:selected-server="tryIt.updateSelectedServer"
-          @update:request="tryIt.updateRequest"
+          @update:selected-server="playground.updateSelectedServer"
+          @update:request="playground.updateRequest"
         />
       </ClientOnly>
     </template>
