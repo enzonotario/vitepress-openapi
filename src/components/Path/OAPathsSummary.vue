@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps } from 'vue'
+import OAHeading from '../Common/OAHeading.vue'
 
 const { paths } = defineProps({
   paths: {

@@ -1,5 +1,6 @@
 <script setup>
 import { useTheme } from '../../composables/useTheme'
+import OASchemaTabs from '../Schema/OASchemaTabs.vue'
 
 const props = defineProps({
   operationId: {

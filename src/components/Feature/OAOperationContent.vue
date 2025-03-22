@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
 import { computed } from 'vue'
+import OAFooter from '../Common/OAFooter.vue'
 import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
+import OAHeading from '../Common/OAHeading.vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAOperationTags from '../Operation/OAOperationTags.vue'
+import OAParameters from '../Parameter/OAParameters.vue'
+import OAPath from '../Path/OAPath.vue'
+import OAPathEndpoint from '../Path/OAPathEndpoint.vue'
 import OAPlayground from '../Playground/OAPlayground.vue'
+import OARequestBody from '../Request/OARequestBody.vue'
+import OAResponses from '../Response/OAResponses.vue'
+import OACodeSamples from '../Sample/OACodeSamples.vue'
+import OASecurity from '../Security/OASecurity.vue'
 
 const props = defineProps({
   operationId: {
@@ -65,6 +75,12 @@ const headingPrefix = computed(() => {
 })
 
 function hasSlot(name: OperationSlot): boolean {
+  if (name === 'try-it' && slots[name] !== undefined) {
+    console.warn(
+      '`try-it` slot is deprecated. Use `playground` slot instead.',
+    )
+  }
+
   return slots[name] !== undefined
 }
 </script>
@@ -103,6 +119,7 @@ function hasSlot(name: OperationSlot): boolean {
           :class="{
             'line-through': header.deprecated,
           }"
+          class="scroll-m-[var(--vp-nav-height)]"
         >
           {{ header.operation.summary }}
         </OAHeading>
@@ -267,32 +284,41 @@ function hasSlot(name: OperationSlot): boolean {
 
     <template
       v-if="hasSlot('try-it')"
-      #try-it="tryIt"
+      #playground="playground"
     >
       <slot
         name="try-it"
-        v-bind="tryIt"
+        v-bind="playground"
+      />
+    </template>
+    <template
+      v-else-if="hasSlot('playground')"
+      #playground="playground"
+    >
+      <slot
+        name="playground"
+        v-bind="playground"
       />
     </template>
     <template
       v-else
-      #try-it="tryIt"
+      #playground="playground"
     >
       <ClientOnly>
         <OAPlayground
-          :request="tryIt.request"
-          :operation-id="tryIt.operationId"
-          :path="tryIt.path"
-          :method="tryIt.method"
-          :base-url="tryIt.baseUrl"
-          :parameters="tryIt.parameters"
-          :request-body="tryIt.requestBody"
-          :security-ui="tryIt.securityUi"
-          :content-type="tryIt.contentType"
-          :servers="tryIt.servers"
+          :request="playground.request"
+          :operation-id="playground.operationId"
+          :path="playground.path"
+          :method="playground.method"
+          :base-url="playground.baseUrl"
+          :parameters="playground.parameters"
+          :request-body="playground.requestBody"
+          :security-ui="playground.securityUi"
+          :content-type="playground.contentType"
+          :servers="playground.servers"
           :heading-prefix="headingPrefix"
-          @update:selected-server="tryIt.updateSelectedServer"
-          @update:request="tryIt.updateRequest"
+          @update:selected-server="playground.updateSelectedServer"
+          @update:request="playground.updateRequest"
         />
       </ClientOnly>
     </template>
@@ -317,13 +343,11 @@ function hasSlot(name: OperationSlot): boolean {
         {{ $t('Samples') }}
       </OAHeading>
 
-      <ClientOnly>
-        <OACodeSamples
-          :operation-id="codeSamples.operationId"
-          :request="codeSamples.request"
-          :code-samples="codeSamples.codeSamples"
-        />
-      </ClientOnly>
+      <OACodeSamples
+        :operation-id="codeSamples.operationId"
+        :request="codeSamples.request"
+        :code-samples="codeSamples.codeSamples"
+      />
     </template>
 
     <template

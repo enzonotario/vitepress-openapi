@@ -10,7 +10,7 @@ interface SecuritySchemeDefaultValues {
 
 let securitySchemeDefaultValues: SecuritySchemeDefaultValues = {
   'http-basic': 'Basic Auth',
-  'http-bearer': 'Bearer Token',
+  'http-bearer': 'Token',
   'apiKey': null,
   'openIdConnect': 'OpenID Connect',
   'oauth2': 'OAuth2 Token',

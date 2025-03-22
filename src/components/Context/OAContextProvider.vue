@@ -1,6 +1,5 @@
 <script setup>
-import { inject } from 'vue'
-import { OPENAPI_GLOBAL_KEY } from '../../composables/useOpenapi'
+import { useOpenapi } from '../../composables/useOpenapi'
 import OASpecSkeleton from '../Spec/OASpecSkeleton.vue'
 import OAContext from './OAContext.vue'
 import OAContextAsync from './OAContextAsync.vue'
@@ -20,7 +19,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:spec'])
 
-const globalOpenApi = inject(OPENAPI_GLOBAL_KEY, undefined)
+const globalOpenApi = useOpenapi()
 </script>
 
 <template>

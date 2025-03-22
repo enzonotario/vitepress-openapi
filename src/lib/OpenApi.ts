@@ -1,20 +1,13 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
 import { httpVerbs } from '../index'
-import { processOpenAPI } from './processOpenAPI/processOpenAPI'
 
 export function OpenApi({
   spec,
-  parsedSpec,
-  transformedSpec,
 }: {
-  spec: any
-  transformedSpec?: any
-  parsedSpec?: any
+  spec: ParsedOpenAPI | OpenAPIDocument | null
 } = {
   spec: null,
-  transformedSpec: null,
-  parsedSpec: null,
 }) {
   let innerSpec: OpenAPIDocument | null = null
 
@@ -24,7 +17,7 @@ export function OpenApi({
 
   function getSpec(): OpenAPIDocument {
     if (!innerSpec) {
-      setSpec(parsedSpec ?? transformedSpec ?? spec ?? {})
+      setSpec(spec ?? {})
     }
 
     if (!innerSpec) {
@@ -43,14 +36,6 @@ export function OpenApi({
       }
     }
     return null
-  }
-
-  function getParsedSpec(): ParsedOpenAPI {
-    if (!parsedSpec) {
-      parsedSpec = processOpenAPI(transformedSpec ?? spec)
-    }
-
-    return parsedSpec
   }
 
   function getOperation(operationId: string) {
@@ -105,14 +90,6 @@ export function OpenApi({
       return []
     }
     return operation.parameters || []
-  }
-
-  function getParsedOperation(operationId: string) {
-    if (!getParsedSpec()?.paths) {
-      return null
-    }
-
-    return findOperation(getParsedSpec().paths, operationId)
   }
 
   function getPaths(): OpenAPIV3.PathsObject {
@@ -257,16 +234,12 @@ export function OpenApi({
 
   return {
     spec: getSpec(),
-    transformedSpec,
-    parsedSpec,
     setSpec,
     getSpec,
     getOperation,
     getOperationPath,
     getOperationMethod,
     getOperationParameters,
-    getParsedOperation,
-    getParsedSpec,
     getPaths,
     getPathsByVerbs,
     getInfo,

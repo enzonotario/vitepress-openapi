@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps } from 'vue'
+import OAParameter from './OAParameter.vue'
 
 const props = defineProps({
   operationId: {

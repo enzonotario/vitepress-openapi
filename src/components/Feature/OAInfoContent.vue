@@ -1,4 +1,6 @@
 <script setup>
+import OAHeading from '../Common/OAHeading.vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Badge } from '../ui/badge/index'
 
 const props = defineProps({
@@ -8,9 +10,9 @@ const props = defineProps({
   },
 })
 
-const info = props.openapi.parsedSpec.info ?? {}
+const info = props.openapi.spec.info ?? {}
 
-const externalDocs = props.openapi.parsedSpec.externalDocs ?? {}
+const externalDocs = props.openapi.spec.externalDocs ?? {}
 </script>
 
 <template>

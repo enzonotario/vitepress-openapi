@@ -1,6 +1,7 @@
 <script setup>
-import { getConstraints } from '../../lib/constraintsParser'
+import { getConstraints } from '../../lib/parser/constraintsParser'
 import OACodeValue from '../Common/OACodeValue.vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
 import OAParameterExamples from './OAParameterExamples.vue'
 

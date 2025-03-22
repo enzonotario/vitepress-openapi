@@ -12,7 +12,7 @@ export interface OperationData {
 
 export const OPERATION_DATA_KEY = Symbol('operationData')
 
-export function initOperationData(operation: ParsedOperation): OperationData {
+export function initOperationData({ operation }: { operation: ParsedOperation }): OperationData {
   const firstSecurityScheme = operation.securityUi?.[0]?.id || ''
 
   const defaultSecurityScheme = useTheme().getSecurityDefaultScheme() || firstSecurityScheme

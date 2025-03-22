@@ -158,7 +158,7 @@ export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
   'parameters',
   'request-body',
   'responses',
-  'try-it',
+  'playground',
   'code-samples',
   'branding',
   'footer',

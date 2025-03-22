@@ -11,12 +11,12 @@ export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
     // Set the OpenAPI specification.
-    const openapi = useOpenapi({
+    useOpenapi({
       spec,
     })
 
     // Use the theme.
-    theme.enhanceApp({ app, openapi })
+    theme.enhanceApp({ app })
 
     // Register custom components.
     app.component('ExampleBlock', ExampleBlock)

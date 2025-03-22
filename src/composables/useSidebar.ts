@@ -3,7 +3,7 @@ import type { DefaultTheme } from 'vitepress'
 import type { OpenAPIDocument } from '../types'
 import { httpVerbs } from '../index'
 import { OpenApi } from '../lib/OpenApi'
-import { prepareOpenAPI } from '../lib/prepareOpenAPI/prepareOpenAPI'
+import { parseOpenapi } from '../lib/parser/parseOpenapi'
 import { cleanSidebarItems } from '../lib/sidebar/cleanSidebarItems'
 import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItemsByPaths'
 
@@ -84,8 +84,7 @@ export function useSidebar({
 
     if (!openApiInstance) {
       openApiInstance = OpenApi({
-        spec,
-        transformedSpec: prepareOpenAPI({
+        spec: parseOpenapi().transformSync({
           spec,
           defaultTag,
         }),

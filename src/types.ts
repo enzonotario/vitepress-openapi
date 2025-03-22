@@ -13,6 +13,7 @@ export type OperationSlot =
   | 'parameters'
   | 'request-body'
   | 'responses'
+  | 'playground'
   | 'try-it'
   | 'code-samples'
   | 'branding'

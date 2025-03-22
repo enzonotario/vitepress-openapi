@@ -68,7 +68,7 @@ export default {
                     'security',
                     'request-body',
                     'responses',
-                    'try-it',
+                    'playground',
                     'code-samples',
                     'branding',
                     'footer',

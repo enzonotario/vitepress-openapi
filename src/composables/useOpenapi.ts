@@ -1,16 +1,8 @@
-import type { OpenApi } from '../lib/OpenApi'
-import type { OpenAPIDocument } from '../types'
+import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
-import { createOpenApiInstance } from '../lib/createOpenApiInstance'
+import { OpenApi } from '../lib/OpenApi'
+import { parseOpenapi } from '../lib/parser/parseOpenapi'
 import { useTheme } from './useTheme'
-
-export interface OpenAPIData {
-  spec: OpenAPIDocument
-  openapi: ReturnType<typeof createOpenApiInstance>
-  config?: PartialUseThemeConfig
-}
-
-export const OPENAPI_GLOBAL_KEY = Symbol('openapi')
 
 export const OPENAPI_LOCAL_KEY = Symbol('openapiLocal')
 
@@ -28,19 +20,61 @@ export function useOpenapi({
   }
 
   if (spec) {
-    setupOpenApi({ spec, config })
+    sync({ spec })
   }
 
-  function setupOpenApi({ spec, config }: { spec: OpenAPIDocument, config?: PartialUseThemeConfig }) {
-    openapi = createOpenApiInstance({
+  function setInstance({
+    spec,
+  }: {
+    spec: ParsedOpenAPI | OpenAPIDocument
+  }) {
+    openapi = OpenApi({
       spec,
-      defaultTag: config?.spec?.defaultTag,
-      defaultTagDescription: config?.spec?.defaultTagDescription,
     })
+  }
+
+  function sync({
+    spec,
+  }: {
+    spec?: OpenAPIDocument
+  } = {}) {
+    if (spec) {
+      setInstance(
+        parseOpenapi().instanceSync({
+          spec,
+          defaultTag: config?.spec?.defaultTag,
+          defaultTagDescription: config?.spec?.defaultTagDescription,
+        }),
+      )
+    } else {
+      throw new Error('No spec provided')
+    }
+
+    return openapi
+  }
+
+  async function async({
+    spec,
+  }: {
+    spec?: OpenAPIDocument
+  } = {}) {
+    if (spec) {
+      setInstance(
+        await parseOpenapi().instanceAsync({
+          spec,
+          defaultTag: config?.spec?.defaultTag,
+          defaultTagDescription: config?.spec?.defaultTagDescription,
+        }),
+      )
+    } else {
+      throw new Error('No spec provided')
+    }
+
+    return openapi
   }
 
   return {
     ...openapi,
-    json: openapi?.spec,
+    async,
   }
 }

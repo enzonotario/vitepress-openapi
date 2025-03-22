@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function scrollIntoOperationByOperationId({
+export function scrollToHash({
   hash,
 }: {
   hash: string

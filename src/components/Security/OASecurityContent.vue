@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, defineProps } from 'vue'
 import OACodeValue from '../Common/OACodeValue.vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAParameterAttribute from '../Parameter/OAParameterAttribute.vue'
 import OAParameterExamples from '../Parameter/OAParameterExamples.vue'
 

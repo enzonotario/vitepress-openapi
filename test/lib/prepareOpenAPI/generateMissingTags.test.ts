@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { generateMissingTags } from '../../../src/lib/prepareOpenAPI/generateMissingTags'
+import { generateMissingTags } from '../../../src/lib/parser/generateMissingTags'
 
 describe('generateMissingTags', () => {
   it('adds default tag to operations without tags', () => {

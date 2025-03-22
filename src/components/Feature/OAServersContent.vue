@@ -1,4 +1,6 @@
 <script setup>
+import OAHeading from '../Common/OAHeading.vue'
+
 const props = defineProps({
   openapi: {
     type: Object,
@@ -6,7 +8,7 @@ const props = defineProps({
   },
 })
 
-const servers = props.openapi.parsedSpec.servers ?? []
+const servers = props.openapi.spec.servers ?? []
 </script>
 
 <template>

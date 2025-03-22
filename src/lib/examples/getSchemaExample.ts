@@ -1,5 +1,5 @@
 import type { OAExampleObject } from '../../types'
-import type { OAProperty } from '../processOpenAPI/getSchemaUi'
+import type { OAProperty } from '../parser/getSchemaUi'
 import { getSchemaUiJson } from './getSchemaUiJson'
 import { getSchemaUiXml } from './getSchemaUiXml'
 
