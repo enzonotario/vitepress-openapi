@@ -9,7 +9,7 @@ describe('securityScheme default values', () => {
     expect(playground.getSecuritySchemeDefaultValue(scheme)).toBe('Basic Auth')
   })
 
-  it('returns "Bearer Token" for http-bearer scheme', () => {
+  it('returns "Token" for http-bearer scheme', () => {
     const scheme = { type: 'http', scheme: 'bearer' }
     expect(playground.getSecuritySchemeDefaultValue(scheme)).toBe('Token')
   })
