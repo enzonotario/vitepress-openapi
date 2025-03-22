@@ -20,7 +20,7 @@ const spec = props.spec || await fetchSpec(props.specUrl)
 
 emit('update:spec', spec)
 
-const openapi = await parseOpenapi().instanceAsync({ spec })
+const openapiInstance = await parseOpenapi().instanceAsync({ spec })
 
 async function fetchSpec(url?: string): Promise<any> {
   if (!url) {
@@ -42,7 +42,7 @@ async function fetchSpec(url?: string): Promise<any> {
 </script>
 
 <template>
-  <OAContext :openapi="openapi">
+  <OAContext :openapi="openapiInstance">
     <template #default="{ openapi }">
       <slot :openapi="openapi" />
     </template>
