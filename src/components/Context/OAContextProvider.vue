@@ -1,6 +1,6 @@
 <script setup>
 import { useOpenapi } from '../../composables/useOpenapi'
-import OASpecSkeleton from '../Spec/OASpecSkeleton.vue'
+import OASpecSkeleton from '../Feature/OASpecSkeleton.vue'
 import OAContext from './OAContext.vue'
 import OAContextAsync from './OAContextAsync.vue'
 

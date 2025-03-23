@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
 import OAContextProvider from '../Context/OAContextProvider.vue'
-import OAOperationContent from '../Feature/OAOperationContent.vue'
+import OASpecContent from './OASpecContent.vue'
 
 const props = defineProps({
   specUrl: {
-    type: String,
-    required: true,
-  },
-  operationId: {
     type: String,
     required: true,
   },
@@ -24,10 +20,9 @@ const slots = defineSlots<Record<string, OperationSlot>>()
 <template>
   <OAContextProvider :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
     <template #default="{ openapi }">
-      <OAOperationContent
+      <OASpecContent
         v-bind="{
           ...$attrs,
-          operationId: props.operationId,
           openapi,
         }"
       >
@@ -35,7 +30,7 @@ const slots = defineSlots<Record<string, OperationSlot>>()
         <template v-for="(_, name) in slots" #[name]="slotProps">
           <slot :name="name" v-bind="slotProps || {}" />
         </template>
-      </OAOperationContent>
+      </OASpecContent>
     </template>
   </OAContextProvider>
 </template>
