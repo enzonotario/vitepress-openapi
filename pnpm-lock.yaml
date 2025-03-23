@@ -81,9 +81,6 @@ importers:
       eslint-plugin-format:
         specifier: ^1.0.1
         version: 1.0.1(eslint@9.22.0(jiti@1.21.7))
-      globals:
-        specifier: ^15.15.0
-        version: 15.15.0
       json-editor-vue:
         specifier: ^0.17.3
         version: 0.17.3(vue@3.5.13(typescript@5.8.2))
@@ -96,9 +93,6 @@ importers:
       postcss:
         specifier: ^8.5.3
         version: 8.5.3
-      prettier:
-        specifier: ^3.5.3
-        version: 3.5.3
       scule:
         specifier: ^1.3.0
         version: 1.3.0
@@ -138,9 +132,6 @@ importers:
       vue-tsc:
         specifier: ^2.2.8
         version: 2.2.8(typescript@5.8.2)
-      xml-formatter:
-        specifier: ^3.6.4
-        version: 3.6.4
 
   docs:
     devDependencies:
@@ -3330,17 +3321,9 @@ packages:
     resolution: {integrity: sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ==}
     engines: {node: '>=12'}
 
-  xml-formatter@3.6.4:
-    resolution: {integrity: sha512-vkvTNw4u9mp72lMmJHw771NE9EJLX0kfwIcP+ZEo9eJ6HmotX23vmykyROyIQ9Y3a+ckdUdhxIE2ZO66rYuPrg==}
-    engines: {node: '>= 16'}
-
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
     engines: {node: '>=12'}
-
-  xml-parser-xo@4.1.3:
-    resolution: {integrity: sha512-U6eN5Pyrlek9ottHVpT9e8YUax75oVYXbnYxU+utzDC7i+OyWj9ynsNMiZNQZvpuazbG0O7iLAs9FkcFmzlgSA==}
-    engines: {node: '>= 16'}
 
   yaml-eslint-parser@1.3.0:
     resolution: {integrity: sha512-E/+VitOorXSLiAqtTd7Yqax0/pAS3xaYMP+AUUJGOK1OZG3rhcj9fcJOM5HJ2VrP1FrStVCWr1muTfQCdj4tAA==}
@@ -6853,13 +6836,7 @@ snapshots:
       string-width: 5.1.2
       strip-ansi: 7.1.0
 
-  xml-formatter@3.6.4:
-    dependencies:
-      xml-parser-xo: 4.1.3
-
   xml-name-validator@4.0.0: {}
-
-  xml-parser-xo@4.1.3: {}
 
   yaml-eslint-parser@1.3.0:
     dependencies:
