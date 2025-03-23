@@ -142,7 +142,7 @@ const availableSidebarItemsTypes = [
             >
             Collapse paths
           </label>
-          <small class="text-gray-500 dark:text-gray-400">
+          <small class="text-muted-foreground">
             Toggle `Group by tags` to see the effect
           </small>
         </div>
