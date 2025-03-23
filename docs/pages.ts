@@ -1,26 +1,31 @@
 export const testsPages = [
   {
     slug: 'response-types',
+    label: 'Response Types',
     specPath: './public/openapi-response-types.json',
     themeConfig: {},
   },
   {
     slug: 'response-statuses',
+    label: 'Response Statuses',
     specPath: './public/openapi-response-statuses.json',
     themeConfig: {},
   },
   {
     slug: 'schemas',
+    label: 'Schemas',
     specPath: './public/openapi-schemas.json',
     themeConfig: {},
   },
   {
     slug: 'parameters',
+    label: 'Parameters',
     specPath: './public/openapi-parameters.json',
     themeConfig: {},
   },
   {
     slug: 'security',
+    label: 'Security',
     specPath: './public/openapi-security.json',
     themeConfig: {},
   },

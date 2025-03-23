@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { defineConfigWithTheme } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
-import { examplesPages } from '../pages'
+import { examplesPages, testsPages } from '../pages'
 import spec from '../public/openapi.json' with {type: 'json'}
 import { sidebars } from '../sidebars'
 
@@ -181,26 +181,10 @@ export default defineConfigWithTheme({
           text: 'Tests',
           collapsed: true,
           items: [
-            {
-              text: 'Response Types',
-              link: '/tests/response-types',
-            },
-            {
-              text: 'Response Statuses',
-              link: '/tests/response-statuses',
-            },
-            {
-              text: 'Schemas',
-              link: '/tests/schemas',
-            },
-            {
-              text: 'Parameters',
-              link: '/tests/parameters',
-            },
-            {
-              text: 'Security',
-              link: '/tests/security',
-            },
+            ...testsPages.map(page => ({
+              text: page.label,
+              link: `/tests/${page.slug}`,
+            })),
           ],
         },
         {
