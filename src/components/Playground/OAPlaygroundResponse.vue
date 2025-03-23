@@ -39,7 +39,7 @@ const { response, loading } = defineProps({
     </summary>
 
     <div class="flex flex-col gap-2">
-      <div v-if="response" class="text-sm text-gray-500">
+      <div v-if="response" class="text-sm text-muted-foreground">
         {{ $t('Response time') }}: {{ loading ? $t('Loading...') : `${response.time}ms` }}
       </div>
 

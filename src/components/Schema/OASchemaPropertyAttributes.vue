@@ -35,7 +35,7 @@ const properties = Object.keys(props.property)
     :key="propertyIdx"
     class="flex flex-row flex-wrap items-center gap-2"
   >
-    <span class="text-xs text-gray-600 dark:text-gray-300">
+    <span class="text-xs text-muted-foreground">
       {{ titleCase(key) }}
     </span>
 

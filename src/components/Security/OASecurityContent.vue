@@ -47,7 +47,7 @@ const typeValue = computed(() => {
       <OAMarkdown
         v-if="scheme.description"
         :content="scheme.description"
-        class="text-sm text-gray-800 dark:text-gray-100"
+        class="text-sm"
       />
     </div>
 

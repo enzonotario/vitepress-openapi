@@ -23,7 +23,7 @@ const servers = props.openapi.spec.servers ?? []
           {{ server.url }}
         </span>
 
-        <span v-if="server.description" class="text-gray-600 dark:text-gray-300">
+        <span v-if="server.description" class="text-muted-foreground">
           {{ server.description }}
         </span>
       </div>

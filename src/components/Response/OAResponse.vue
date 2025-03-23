@@ -35,7 +35,7 @@ const defaultView = useTheme().getResponseBodyDefaultView()
 
 <template>
   <div class="flex flex-col space-y-4">
-    <span class="text-gray-800 dark:text-gray-200 text-lg">{{ props.response.description }}</span>
+    <span class="text-lg">{{ props.response.description }}</span>
 
     <div
       v-if="props.response?.content && contentTypes.length"
@@ -43,7 +43,7 @@ const defaultView = useTheme().getResponseBodyDefaultView()
     >
       <Label
         :for="contentTypeId"
-        class="flex-shrink-0 text-gray-600 dark:text-gray-400"
+        class="flex-shrink-0 text-muted-foreground"
       >
         {{ $t('Content-Type') }}
       </Label>
