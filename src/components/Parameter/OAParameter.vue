@@ -29,7 +29,7 @@ const constraints = getConstraints(props.parameter.schema)
       <OAMarkdown
         v-if="props.parameter.description"
         :content="props.parameter.description"
-        class="text-sm text-gray-800 dark:text-gray-100"
+        class="text-sm"
       />
     </div>
 

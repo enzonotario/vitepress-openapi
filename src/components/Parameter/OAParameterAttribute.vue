@@ -37,7 +37,7 @@ function hasSlot(name: string): boolean {
     </span>
 
     <slot v-if="hasSlot('value')" name="value" />
-    <span v-else class="text-gray-600 dark:text-gray-300">
+    <span v-else class="text-muted-foreground">
       {{ props.value }}
     </span>
   </div>

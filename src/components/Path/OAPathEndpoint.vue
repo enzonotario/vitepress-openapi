@@ -40,10 +40,10 @@ const props = defineProps({
       <OAMethodBadge :method="props.method" />
 
       <div class="overflow-x-auto whitespace-nowrap">
-        <span class="flex flex-row flex-shrink-0 text-gray-600 dark:text-gray-400">
+        <span class="flex flex-row flex-shrink-0">
           <span
             v-if="!props.hideBaseUrl"
-            class="hidden md:inline-block"
+            class="text-muted-foreground hidden md:inline-block"
           >
             {{ props.baseUrl }}
           </span>
@@ -51,7 +51,7 @@ const props = defineProps({
             :class="{
               'line-through': props.deprecated,
             }"
-            class="text-gray-800 dark:text-gray-200 font-bold select-all"
+            class="font-bold select-all"
           >{{ props.path }}</span>
         </span>
       </div>

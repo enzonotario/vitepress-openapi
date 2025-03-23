@@ -276,10 +276,10 @@ watch(operationData.security.selectedSchemeId, () => {
       <div class="flex flex-col gap-1">
         <div class="flex flex-row gap-2">
           <div class="w-1/2 flex justify-start">
-            <span class="text-xs text-gray-700 dark:text-gray-300 uppercase">{{ $t('Key') }}</span>
+            <span class="text-xs text-muted-foreground uppercase">{{ $t('Key') }}</span>
           </div>
           <div class="w-1/2 flex justify-start">
-            <span class="text-xs text-gray-700 dark:text-gray-300 uppercase">{{ $t('Value') }}</span>
+            <span class="text-xs text-muted-foreground uppercase">{{ $t('Value') }}</span>
           </div>
         </div>
 

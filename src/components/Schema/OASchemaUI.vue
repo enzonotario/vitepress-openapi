@@ -77,7 +77,7 @@ const isObjectOrArray = isObject || isArray || props.property.type === 'object' 
               /></svg>
             </div>
 
-            <div class="flex flex-row items-center gap-1 text-gray-600 dark:text-gray-400">
+            <div class="flex flex-row items-center gap-1 text-muted-foreground">
               <Badge
                 v-if="props.property.meta?.isCircularReference === true"
                 variant="outline"
@@ -117,7 +117,7 @@ const isObjectOrArray = isObject || isArray || props.property.type === 'object' 
           <OAMarkdown
             v-if="props.property?.description"
             :content="props.property.description"
-            class="text-sm text-gray-800 dark:text-gray-300"
+            class="text-sm"
             :class="{
               'pl-2': isObjectOrArray,
             }"

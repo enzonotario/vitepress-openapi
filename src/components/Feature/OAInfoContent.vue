@@ -32,7 +32,7 @@ const externalDocs = props.openapi.spec.externalDocs ?? {}
       </OAHeading>
     </div>
 
-    <span v-if="info.summary" class="text-gray-600 dark:text-gray-300">
+    <span v-if="info.summary" class="text-muted-foreground">
       {{ info.summary }}
     </span>
 
@@ -53,7 +53,7 @@ const externalDocs = props.openapi.spec.externalDocs ?? {}
             {{ info.contact.name ?? $t('Contact') }}
           </a>
 
-          <span v-if="info.contact.email" class="text-gray-400 dark:text-gray-500">/</span>
+          <span v-if="info.contact.email" class="text-muted-foreground">/</span>
         </template>
 
         <a v-if="info.contact.email" :href="`mailto:${info.contact.email}`" :aria-label="info.contact.email">
