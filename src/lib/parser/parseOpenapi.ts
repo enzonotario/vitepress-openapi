@@ -1,6 +1,7 @@
 import type { JSONSchema } from '@trojs/openapi-dereference'
 import type { OpenAPIDocument, ParsedOpenAPI } from '../../types'
 import { dereferenceSync } from '@trojs/openapi-dereference'
+import { $trycatch } from '@tszen/trycatch'
 import { merge } from 'allof-merge'
 import { OpenApi } from '../OpenApi'
 import { generateCodeSamples } from './generateCodeSamples'
@@ -57,17 +58,28 @@ export function parseOpenapi() {
     defaultTag?: string
     defaultTagDescription?: string
   }): ParsedOpenAPI {
-    let parsedSpec = merge(
+    let parsedSpec = Object.assign({}, spec) as ParsedOpenAPI
+
+    const [mergedSpec, errMerge] = $trycatch(() => merge(
       transformSync({
         spec,
         defaultTag,
         defaultTagDescription,
       }),
-    ) as ParsedOpenAPI
-    parsedSpec = dereferenceSync(parsedSpec as JSONSchema) as ParsedOpenAPI
-    parsedSpec = generateSecurityUi(parsedSpec)
-    parsedSpec = generateRequestBodyUi(parsedSpec)
-    parsedSpec = generateResponseUi(parsedSpec)
+    ) as ParsedOpenAPI)
+    parsedSpec = errMerge ? parsedSpec : mergedSpec
+
+    const [dereferencedSpec, errDereference] = $trycatch(() => dereferenceSync(parsedSpec as JSONSchema) as ParsedOpenAPI)
+    parsedSpec = errDereference ? parsedSpec : dereferencedSpec
+
+    const [securitySpec, errSecurity] = $trycatch(() => generateSecurityUi(parsedSpec))
+    parsedSpec = errSecurity ? parsedSpec : securitySpec
+
+    const [requestBodySpec, errRequestBody] = $trycatch(() => generateRequestBodyUi(parsedSpec))
+    parsedSpec = errRequestBody ? parsedSpec : requestBodySpec
+
+    const [responseSpec, errResponse] = $trycatch(() => generateResponseUi(parsedSpec))
+    parsedSpec = errResponse ? parsedSpec : responseSpec
 
     parsedSpec.externalDocs = parsedSpec.externalDocs || parsedSpec.externalDocs || {}
     parsedSpec.info = parsedSpec.info || parsedSpec.info || {}
@@ -92,7 +104,8 @@ export function parseOpenapi() {
       defaultTagDescription,
     })
 
-    parsedSpec = await generateCodeSamples(parsedSpec)
+    const [result, err] = await $trycatch(() => generateCodeSamples(parsedSpec))
+    parsedSpec = err ? parsedSpec : result
 
     return parsedSpec
   }
