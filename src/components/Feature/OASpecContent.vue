@@ -96,7 +96,7 @@ const pathsWithoutTags = props.openapi.getPathsWithoutTags()
 const groups = computed(() => {
   if (groupByTags.value) {
     return [
-      ...(pathsWithoutTags.length
+      ...(Object.keys(pathsWithoutTags).length
         ? [
             {
               name: t(useTheme().getSpecConfig()?.defaultTag ?? 'Default'),
