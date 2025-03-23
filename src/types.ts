@@ -14,7 +14,7 @@ export type OperationSlot =
   | 'request-body'
   | 'responses'
   | 'playground'
-  | 'try-it'
+  | 'try-it' // @deprecated. TODO: Remove this slot.
   | 'code-samples'
   | 'branding'
   | 'footer'
