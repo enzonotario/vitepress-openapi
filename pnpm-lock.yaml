@@ -48,6 +48,9 @@ importers:
       '@trojs/openapi-dereference':
         specifier: ^1.0.1
         version: 1.0.1
+      '@tszen/trycatch':
+        specifier: ^0.1.0
+        version: 0.1.0
       '@types/har-format':
         specifier: ^1.2.16
         version: 1.2.16
@@ -1094,6 +1097,9 @@ packages:
   '@trojs/openapi-dereference@1.0.1':
     resolution: {integrity: sha512-pNr6+pTlg4a1CKbddzwEjYIq5LLhMrD6wijrMX8iwwDV76qXw2ykP7ZMsAWPCXMU3ChxK21SH0P+A1sTeKX1Vg==}
     engines: {node: '>= 20'}
+
+  '@tszen/trycatch@0.1.0':
+    resolution: {integrity: sha512-EhDcT1nmtTbdf7i8SsxwCrUnoIvQmlLiv6OMG31CwBJ8wkvOrGVuvgE/twm2xHxjmxT0J4cDXClU13ms7j6POQ==}
 
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
@@ -4201,6 +4207,8 @@ snapshots:
       vue: 3.5.13(typescript@5.8.2)
 
   '@trojs/openapi-dereference@1.0.1': {}
+
+  '@tszen/trycatch@0.1.0': {}
 
   '@types/debug@4.1.12':
     dependencies:
