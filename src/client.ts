@@ -44,8 +44,6 @@ export const theme = {
     Object.entries(components).forEach(([key, component]) => {
       app.component(key, component)
     })
-
-    useShiki().initShiki()
   },
 } as VPTheme
 
