@@ -31,16 +31,6 @@ export const theme = {
 
     app.use(i18n)
 
-    watch(
-      () => themeConfig.getLocale(),
-      () => {
-        i18n.setLocale(themeConfig.getLocale())
-      },
-      {
-        immediate: true,
-      },
-    )
-
     Object.entries(components).forEach(([key, component]) => {
       app.component(key, component)
     })
