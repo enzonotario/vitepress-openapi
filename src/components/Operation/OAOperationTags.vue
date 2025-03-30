@@ -2,12 +2,9 @@
 import { useTheme } from '../../composables/useTheme'
 import { Badge } from '../ui/badge'
 
-const props = defineProps({
-  tags: {
-    type: Array,
-    required: true,
-  },
-})
+const props = defineProps<{
+  tags: string[]
+}>()
 
 const themeConfig = useTheme()
 
