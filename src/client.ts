@@ -3,9 +3,7 @@ import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
 import type { OpenApi } from './lib/OpenApi'
 import { createI18n } from '@byjohann/vue-i18n'
-import { watch } from 'vue'
 import * as components from './components'
-import { useShiki } from './composables/useShiki'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 
 interface OAEnhanceAppContext extends EnhanceAppContext {

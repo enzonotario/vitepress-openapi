@@ -1,9 +1,9 @@
 <script setup>
 import { destr } from 'destr'
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import VueJsonPretty from 'vue-json-pretty'
-import { useShiki } from '../../composables/useShiki'
 import { useTheme } from '../../composables/useTheme'
+import OACodeBlockShiki from './OACodeBlockShiki.vue'
 import 'vue-json-pretty/lib/styles.css'
 
 const props = defineProps({
@@ -29,10 +29,6 @@ const themeConfig = useTheme()
 
 const isDark = themeConfig.isDark
 
-const html = ref(null)
-
-const shiki = useShiki()
-
 const jsonData = computed(() => {
   return typeof props.code === 'string' ? destr(props.code) : props.code
 })
@@ -44,15 +40,11 @@ watch(
       return
     }
 
-    if (props.disableHtmlTransform) {
-      html.value = `<pre><code>${props.code}</code></pre>`
+    if (!props.disableHtmlTransform) {
       return
     }
 
-    html.value = shiki.renderShiki(props.code, {
-      lang: props.lang,
-      theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
-    })
+    html.value = `<pre><code>${props.code}</code></pre>`
   },
   {
     immediate: true,
@@ -80,11 +72,19 @@ watch(
       class="p-2"
     />
 
-    <div
-      v-else-if="html && !props.disableHtmlTransform"
-      class="vp-adaptive-theme"
-      v-html="html"
-    />
+    <Suspense v-else-if="!props.disableHtmlTransform">
+      <template #default>
+        <OACodeBlockShiki
+          :code="props.code"
+          :lang="props.lang"
+          :label="props.label"
+          class="!m-0"
+        />
+      </template>
+      <template #fallback>
+        <div>Loading...</div>
+      </template>
+    </Suspense>
 
     <pre v-else>{{ props.code }}</pre>
   </div>
