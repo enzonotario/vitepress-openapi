@@ -5,7 +5,6 @@ import type { OpenApi } from './lib/OpenApi'
 import { createI18n } from '@byjohann/vue-i18n'
 import { watch } from 'vue'
 import * as components from './components'
-import { useShiki } from './composables/useShiki'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 
 interface OAEnhanceAppContext extends EnhanceAppContext {
@@ -44,8 +43,6 @@ export const theme = {
     Object.entries(components).forEach(([key, component]) => {
       app.component(key, component)
     })
-
-    useShiki().initShiki()
   },
 } as VPTheme
 
