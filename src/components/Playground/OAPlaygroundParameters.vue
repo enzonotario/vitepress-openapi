@@ -13,6 +13,7 @@ import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
+import { Label } from '../ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import SelectWithCustomOption from '../ui/select-with-custom-option/SelectWithCustomOption.vue'
 
@@ -286,23 +287,21 @@ watch(operationData.security.selectedSchemeId, () => {
         <div
           v-for="parameter in [...pathParameters, ...queryParameters]"
           :key="parameter.name"
-          class="flex flex-row gap-2"
+          class="grid grid-cols-2 gap-2 items-center"
         >
-          <div class="w-1/2 flex flex-row items-center space-x-2">
-            <span class="text-sm font-bold">{{ parameter.name }}</span>
+          <Label :for="parameter.name" class="text-sm font-bold">
+            {{ parameter.name }}
             <span
               v-if="parameter.required"
               class="text-sm text-red-500"
             >*</span>
-          </div>
-          <div class="w-1/2 flex flex-row items-center space-x-2">
-            <OAPlaygroundParameterInput
-              v-model="variables[parameter.name ?? '']"
-              :parameter="parameter"
-              class="w-full"
-              @submit="emits('submit')"
-            />
-          </div>
+          </Label>
+          <OAPlaygroundParameterInput
+            v-model="variables[parameter.name ?? '']"
+            :parameter="parameter"
+            class="w-full"
+            @submit="emits('submit')"
+          />
         </div>
       </div>
     </details>
