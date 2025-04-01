@@ -304,23 +304,21 @@ function hasSlot(name: OperationSlot): boolean {
       v-else
       #playground="playground"
     >
-      <ClientOnly>
-        <OAPlayground
-          :request="playground.request"
-          :operation-id="playground.operationId"
-          :path="playground.path"
-          :method="playground.method"
-          :base-url="playground.baseUrl"
-          :parameters="playground.parameters"
-          :request-body="playground.requestBody"
-          :security-ui="playground.securityUi"
-          :content-type="playground.contentType"
-          :servers="playground.servers"
-          :heading-prefix="headingPrefix"
-          @update:selected-server="playground.updateSelectedServer"
-          @update:request="playground.updateRequest"
-        />
-      </ClientOnly>
+      <OAPlayground
+        :request="playground.request"
+        :operation-id="playground.operationId"
+        :path="playground.path"
+        :method="playground.method"
+        :base-url="playground.baseUrl"
+        :parameters="playground.parameters"
+        :request-body="playground.requestBody"
+        :security-ui="playground.securityUi"
+        :content-type="playground.contentType"
+        :servers="playground.servers"
+        :heading-prefix="headingPrefix"
+        @update:selected-server="playground.updateSelectedServer"
+        @update:request="playground.updateRequest"
+      />
     </template>
 
     <template
