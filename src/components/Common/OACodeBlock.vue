@@ -23,6 +23,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  active: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const themeConfig = useTheme()
@@ -38,17 +42,18 @@ const jsonData = computed(() => {
 })
 
 watch(
-  [() => props.code, () => props.lang, isDark],
+  [() => props.code, () => props.lang, isDark, () => props.active],
   async () => {
     if (props.lang === 'json') {
       return
     }
 
-    if (props.disableHtmlTransform) {
+    if (!props.active || props.disableHtmlTransform) {
       html.value = `<pre><code>${props.code}</code></pre>`
       return
     }
 
+    await shiki.initShiki()
     html.value = shiki.renderShiki(props.code, {
       lang: props.lang,
       theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
@@ -61,10 +66,7 @@ watch(
 </script>
 
 <template>
-  <div
-    class="vp-adaptive-theme min-h-16"
-    :class="[`language-${props.lang}`]"
-  >
+  <div class="vp-adaptive-theme min-h-16" :class="[`language-${props.lang}`]">
     <button
       title="Copy Code"
       class="copy"
