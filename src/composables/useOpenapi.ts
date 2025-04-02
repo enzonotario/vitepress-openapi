@@ -40,10 +40,12 @@ export function useOpenapi({
   } = {}) {
     if (spec) {
       setInstance(
-        parseOpenapi().instanceSync({
-          spec,
-          defaultTag: config?.spec?.defaultTag,
-          defaultTagDescription: config?.spec?.defaultTagDescription,
+        OpenApi({
+          spec: parseOpenapi().parseSync({
+            spec,
+            defaultTag: config?.spec?.defaultTag,
+            defaultTagDescription: config?.spec?.defaultTagDescription,
+          }),
         }),
       )
     } else {
@@ -60,10 +62,12 @@ export function useOpenapi({
   } = {}) {
     if (spec) {
       setInstance(
-        await parseOpenapi().instanceAsync({
-          spec,
-          defaultTag: config?.spec?.defaultTag,
-          defaultTagDescription: config?.spec?.defaultTagDescription,
+        OpenApi({
+          spec: await parseOpenapi().parseAsync({
+            spec,
+            defaultTag: config?.spec?.defaultTag,
+            defaultTagDescription: config?.spec?.defaultTagDescription,
+          }),
         }),
       )
     } else {
