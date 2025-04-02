@@ -23,8 +23,6 @@ const props = defineProps({
 
 const emit = defineEmits(['update:spec'])
 
-await useShiki().initShiki()
-
 const spec = props.spec || await fetchSpec(props.specUrl)
 emit('update:spec', spec)
 
