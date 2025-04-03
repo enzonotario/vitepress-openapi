@@ -23,6 +23,8 @@ export default {
             jsonViewer: {
                 // Set the JSON viewer depth.
                 deep: Infinity,
+                // Set the JSON viewer renderer.
+                renderer: 'vue-json-pretty', // vue-json-pretty or shiki
             },
             schemaViewer: {
                 // Set the schema viewer depth.
@@ -137,9 +139,10 @@ export default {
 
 ## JSON Viewer Configuration
 
-| Function            | Description                 | Default Value | Allowed Values |
-|---------------------|-----------------------------|---------------|----------------|
-| `setJsonViewerDeep` | Sets the JSON viewer depth. | `Infinity`    | `number`       |
+| Function                | Description                    | Default Value       | Allowed Values                 |
+|-------------------------|--------------------------------|---------------------|--------------------------------|
+| `setJsonViewerDeep`     | Sets the JSON viewer depth.    | `Infinity`          | `number`                       |
+| `setJsonViewerRenderer` | Sets the JSON viewer renderer. | `'vue-json-pretty'` | `'vue-json-pretty'`, `'shiki'` |
 
 ## Schema Viewer Configuration
 

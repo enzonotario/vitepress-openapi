@@ -96,6 +96,7 @@ function downloadBlob(blob: Blob, fileName: string) {
       :lang="lang"
       :label="label"
       :disable-html-transform="disableHtmlTransform"
+      active
       class="!m-0"
     />
     <img v-else-if="isImage" :src="response.body" alt="Response Image">
