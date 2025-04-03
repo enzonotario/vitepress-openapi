@@ -225,12 +225,13 @@ watch(operationData.security.selectedSchemeId, () => {
           class="flex flex-col"
         >
           <div class="flex flex-row items-center space-x-2">
-            <span class="text-sm font-bold">{{ authorization.label }}</span>
+            <Label :for="authorization.name" class="text-sm font-bold">{{ authorization.label }}</Label>
           </div>
           <div class="flex flex-row items-center space-x-2">
             <OAPlaygroundSecurityInput
               v-model="authorization.value"
               :scheme="authorization"
+              :name="authorization.name"
               class="w-full"
               @submit="emits('submit')"
             />
