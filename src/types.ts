@@ -62,6 +62,7 @@ export type AllSecuritySchemes = OpenAPIV3.HttpSecurityScheme & OpenAPIV3.ApiKey
 export type PlaygroundSecurityScheme = AllSecuritySchemes & {
   value: string | RemovableRef<any>
   label: string
+  name: string
 }
 
 export interface SecurityUi extends Array<SecurityUiItem> {}
