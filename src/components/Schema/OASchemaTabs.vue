@@ -86,6 +86,7 @@ const defaultValue = computed(() => {
           :code="example?.value"
           :lang="example?.lang ?? 'json'"
           :label="(example?.lang ?? 'json').toUpperCase()"
+          active
           class="!m-0"
         />
       </div>
