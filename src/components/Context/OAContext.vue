@@ -2,7 +2,6 @@
 import { parseYAML } from 'confbox'
 import { provide } from 'vue'
 import { OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
-import { useShiki } from '../../composables/useShiki'
 import { OpenApi } from '../../lib/OpenApi'
 import { parseOpenapi } from '../../lib/parser/parseOpenapi'
 
