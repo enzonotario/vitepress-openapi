@@ -41,10 +41,18 @@ const jsonData = computed(() => {
   return typeof props.code === 'string' ? destr(props.code) : props.code
 })
 
+const jsonViwerDeep = computed(() => {
+  return themeConfig.getJsonViewerDeep()
+})
+
+const jsonViewerRenderer = computed(() => {
+  return themeConfig.getJsonViewerRenderer()
+})
+
 watch(
   [() => props.code, () => props.lang, isDark, () => props.active],
   async () => {
-    if (props.lang === 'json') {
+    if (props.lang === 'json' && jsonViewerRenderer.value !== 'shiki') {
       return
     }
 
@@ -53,8 +61,9 @@ watch(
       return
     }
 
+    const codeToHighlight = typeof props.code === 'string' ? props.code : JSON.stringify(props.code, null, 2)
     await shiki.initShiki()
-    html.value = shiki.renderShiki(props.code, {
+    html.value = shiki.renderShiki(codeToHighlight, {
       lang: props.lang,
       theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
     })
@@ -74,10 +83,10 @@ watch(
     <span class="lang">{{ props.label }}</span>
 
     <VueJsonPretty
-      v-if="props.lang === 'json' && !props.disableHtmlTransform"
+      v-if="props.lang === 'json' && !props.disableHtmlTransform && jsonViewerRenderer === 'vue-json-pretty'"
       :data="jsonData"
       :theme="isDark ? 'dark' : 'light'"
-      :deep="themeConfig.getJsonViewerDeep()"
+      :deep="jsonViwerDeep"
       show-icon
       class="p-2"
     />

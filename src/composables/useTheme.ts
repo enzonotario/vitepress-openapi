@@ -26,6 +26,7 @@ export interface RequestConfig {
 
 export interface JsonViewerConfig {
   deep: Ref<number>
+  renderer: Ref<'vue-json-pretty' | 'shiki' | string>
 }
 
 export interface SchemaViewerConfig {
@@ -204,6 +205,7 @@ const themeConfig: UseThemeConfig = {
   },
   jsonViewer: {
     deep: ref<number>(Number.POSITIVE_INFINITY),
+    renderer: ref<'vue-json-pretty' | 'shiki' | string>('vue-json-pretty'),
   },
   schemaViewer: {
     deep: ref<number>(Number.POSITIVE_INFINITY),
@@ -322,6 +324,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
     if (config?.jsonViewer?.deep !== undefined) {
       setJsonViewerDeep(config.jsonViewer.deep)
+    }
+
+    if (config?.jsonViewer?.renderer !== undefined) {
+      setJsonViewerRenderer(config.jsonViewer.renderer)
     }
 
     if (config?.schemaViewer?.deep !== undefined) {
@@ -463,6 +469,15 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   function setJsonViewerDeep(value: number) {
     // @ts-expect-error: This is a valid expression.
     themeConfig.jsonViewer.deep.value = value
+  }
+
+  function getJsonViewerRenderer(): 'vue-json-pretty' | 'shiki' | string {
+    return themeConfig?.jsonViewer?.renderer?.value || 'vue-json-pretty'
+  }
+
+  function setJsonViewerRenderer(value: 'vue-json-pretty' | 'shiki' | string) {
+    // @ts-expect-error: This is a valid expression.
+    themeConfig.jsonViewer.renderer.value = value
   }
 
   function getSchemaViewerDeep(): number | undefined {
@@ -833,6 +848,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setShowBaseURL,
     getJsonViewerDeep,
     setJsonViewerDeep,
+    getJsonViewerRenderer,
+    setJsonViewerRenderer,
     getSchemaViewerDeep,
     setSchemaViewerDeep,
     getHeadingLevels,
