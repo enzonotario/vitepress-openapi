@@ -66,12 +66,5 @@ export function buildHarRequest(
     }
   }
 
-  if (oaRequest.body && !harRequest.headers.some(header => header.name === 'Content-Type')) {
-    harRequest.headers.push({
-      name: 'Content-Type',
-      value: oaRequest.contentType || 'application/json',
-    })
-  }
-
   return harRequest
 }
