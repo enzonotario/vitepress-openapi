@@ -88,10 +88,6 @@ export function usePlayground() {
       innerResponse.body = '{}'
       loading.value = true
 
-      const headers = request.headers ?? {}
-      if (request.body && !headers['Content-Type']) {
-        headers['Content-Type'] = 'application/json'
-      }
       const url = new URL(request.url ?? defaultRequestUrl)
       for (const [key, value] of Object.entries(request.query)) {
         url.searchParams.set(key, String(value))
@@ -99,7 +95,7 @@ export function usePlayground() {
 
       const data = await fetch(url.toString(), {
         method: method.toUpperCase(),
-        headers,
+        headers: request.headers ?? {},
         body: request.body ? JSON.stringify(request.body) : null,
         signal: controller.signal,
       })
