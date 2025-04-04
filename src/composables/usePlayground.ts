@@ -1,7 +1,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { ref } from 'vue'
 
-interface SecuritySchemeDefaultValues {
+export interface SecuritySchemeDefaultValues {
   'http-basic': string
   'http-bearer': string
   'apiKey': string | null
@@ -9,14 +9,14 @@ interface SecuritySchemeDefaultValues {
   'oauth2': string
 }
 
-interface PlaygroundResponse {
+export interface PlaygroundResponse {
   body: any
   type: string
   time: string | null
   status: number | null
 }
 
-interface SubmitOptions {
+export interface SubmitOptions {
   request: any
   method: string
   baseUrl: string
