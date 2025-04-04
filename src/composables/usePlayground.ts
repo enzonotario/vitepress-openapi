@@ -130,8 +130,9 @@ export function usePlayground() {
       innerResponse.time = (end - start).toFixed(2)
 
       response.value = innerResponse
-      return innerResponse
     }
+
+    return innerResponse
   }
 
   function trackEvent(operationId: string) {
