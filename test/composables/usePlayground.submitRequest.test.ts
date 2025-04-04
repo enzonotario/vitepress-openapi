@@ -97,7 +97,7 @@ describe('usePlayground', () => {
       expect(mockFetch.mock.calls[0][1]).toEqual({
         method: 'GET',
         headers: {},
-        body: null,
+        body: undefined,
         signal: expect.any(AbortSignal),
       })
       expect(mockResponse.json).toHaveBeenCalled()
@@ -366,7 +366,7 @@ describe('usePlayground', () => {
       expect(mockFetch.mock.calls[0][1]).toEqual({
         method: 'DELETE',
         headers: {},
-        body: null,
+        body: undefined,
         signal: expect.any(AbortSignal),
       })
       expect(result?.status).toBe(204)
