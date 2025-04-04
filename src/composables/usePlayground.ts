@@ -96,7 +96,7 @@ export function usePlayground() {
       const data = await fetch(url.toString(), {
         method: method.toUpperCase(),
         headers: request.headers ?? {},
-        body: request.body ? JSON.stringify(request.body) : null,
+        body: (typeof request.body === 'string' || request.body instanceof Blob) ? request.body : JSON.stringify(request.body),
         signal: controller.signal,
       })
 
