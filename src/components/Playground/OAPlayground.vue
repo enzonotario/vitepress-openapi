@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { computed, defineEmits, defineProps, onBeforeUnmount, ref } from 'vue'
+import { computed, defineEmits, defineProps, onBeforeUnmount } from 'vue'
+import { usePlayground } from '../../composables/usePlayground'
 import OAHeading from '../Common/OAHeading.vue'
 import { Button } from '../ui/button'
 import OAPlaygroundParameters from './OAPlaygroundParameters.vue'
 import OAPlaygroundResponse from './OAPlaygroundResponse.vue'
-
-interface PlaygroundResponse {
-  body: any
-  type: string
-  time: string | null
-  status: number | null
-}
 
 const props = defineProps({
   operationId: {
@@ -70,13 +64,7 @@ const emits = defineEmits([
   'update:selectedServer',
 ])
 
-const defaultRequestUrl = `${props.baseUrl}${props.path}`
-
-const loading = ref(false)
-
-const response = ref<PlaygroundResponse | null>(null)
-
-const imageUrls = ref<string[]>([])
+const { loading, response, submitRequest, cleanupImageUrls } = usePlayground()
 
 const hasBody = computed(() =>
   Boolean(props.requestBody),
@@ -95,89 +83,17 @@ async function onSubmit() {
     return
   }
 
-  response.value = null
-
-  const innerResponse: PlaygroundResponse = {
-    body: null,
-    type: '',
-    time: null,
-    status: null,
-  }
-
-  trackEvent()
-
-  const start = performance.now()
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), 30000) // 30s timeout
-
-  try {
-    innerResponse.time = null
-    innerResponse.body = '{}'
-    loading.value = true
-
-    const headers = props.request.headers ?? {}
-    if (props.request.body && !headers['Content-Type']) {
-      headers['Content-Type'] = 'application/json'
-    }
-
-    const url = new URL(props.request.url ?? defaultRequestUrl)
-    for (const [key, value] of Object.entries(props.request.query)) {
-      url.searchParams.set(key, String(value))
-    }
-
-    const data = await fetch(url.toString(), {
-      method: props.method.toUpperCase(),
-      headers,
-      body: props.request.body ? JSON.stringify(props.request.body) : null,
-      signal: controller.signal,
-    })
-
-    const contentType = data.headers.get('Content-Type') || 'text/plain'
-    innerResponse.type = contentType
-
-    if (/json/i.test(contentType)) {
-      innerResponse.body = await data.json()
-    } else if (/xml/i.test(contentType) || /html/i.test(contentType) || /text\/plain/.test(contentType)) {
-      innerResponse.body = await data.text()
-    } else if (/^image\//i.test(contentType)) {
-      const blob = await data.blob()
-      innerResponse.body = URL.createObjectURL(blob)
-      // Store the blob URL to release it later.
-      imageUrls.value.push(innerResponse.body)
-    } else if (/^audio\//i.test(contentType)) {
-      innerResponse.body = await data.blob()
-    } else {
-      innerResponse.body = await data.text()
-    }
-
-    innerResponse.status = data.status
-  } catch (error: any) {
-    innerResponse.body = error?.message
-    innerResponse.type = 'text/plain'
-    innerResponse.status = 500
-  } finally {
-    clearTimeout(timeoutId)
-    loading.value = false
-    const end = performance.now()
-    innerResponse.time = (end - start).toFixed(2)
-
-    response.value = innerResponse
-  }
-}
-
-function trackEvent() {
-  try {
-    // @ts-expect-error: gtag is defined in the global scope
-    window.gtag('event', 'try_it', {
-      event_category: 'api',
-      event_label: props.operationId,
-    })
-  } catch { }
+  await submitRequest({
+    request: props.request,
+    method: props.method,
+    baseUrl: props.baseUrl,
+    path: props.path,
+    operationId: props.operationId,
+  })
 }
 
 onBeforeUnmount(() => {
-  // Release the blob URLs to prevent memory leaks.
-  imageUrls.value.forEach(URL.revokeObjectURL)
+  cleanupImageUrls()
 })
 </script>
 
