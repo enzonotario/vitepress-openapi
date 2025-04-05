@@ -19,7 +19,7 @@ const { response, loading } = defineProps({
   <details v-if="response || loading" open>
     <summary class="!my-0 text-lg font-bold cursor-pointer">
       <div class="inline-flex items-center gap-2 w-[calc(100%-24px)]">
-        <span>{{ loading ? $t('Loading...') : $t('Response') }}</span>
+        <span>{{ loading ? $t('Loading') : $t('Response') }}</span>
 
         <span class="flex-1" />
 
@@ -40,7 +40,7 @@ const { response, loading } = defineProps({
 
     <div class="flex flex-col gap-2">
       <div v-if="response" class="text-sm text-muted-foreground">
-        {{ $t('Response time') }}: {{ loading ? $t('Loading...') : `${response.time}ms` }}
+        {{ $t('Response time') }}: {{ loading ? $t('Loading') : `${response.time}ms` }}
       </div>
 
       <div class="flex flex-col max-h-96 overflow-y-auto">

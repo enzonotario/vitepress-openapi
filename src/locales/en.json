@@ -2,7 +2,7 @@
   "Response": "Response",
   "Responses": "Responses",
   "Try it out": "Try it out",
-  "Loading...": "Loading...",
+  "Loading": "Loading...",
   "Samples": "Samples",
   "Response time": "Response time",
   "Parameters": "Parameters",
@@ -34,7 +34,7 @@
   "Your browser does not support the audio element.": "Your browser does not support the audio element.",
   "Unrecognized response type. Raw content:": "Unrecognized response type. Raw content:",
   "Download file": "Download file",
-  "Select...": "Select...",
+  "Select": "Select...",
   "operation.badgePrefix.operationId": "ID: ",
   "Content-Type": "Content-Type",
   "Hide operations": "Hide operations",
@@ -49,6 +49,6 @@
   "Copy endpoint": "Copy endpoint",
   "Custom Server": "Custom Server",
   "Enter a custom server URL": "Enter a custom server URL",
-  "Select a server...": "Select a server...",
+  "Select a server": "Select a server...",
   "Playground": "Playground"
 }
