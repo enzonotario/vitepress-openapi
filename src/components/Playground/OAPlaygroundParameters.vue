@@ -290,8 +290,8 @@ watch(operationData.security.selectedSchemeId, () => {
           :key="parameter.name"
           class="grid grid-cols-2 gap-2 items-center"
         >
-          <Label :for="parameter.name" class="text-sm font-bold">
-            {{ parameter.name }}
+          <Label :for="parameter.name" class="text-sm font-bold space-x-2">
+            <span>{{ parameter.name }}</span>
             <span
               v-if="parameter.required"
               class="text-sm text-red-500"
