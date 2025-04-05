@@ -68,8 +68,8 @@ const parameterExample = getPropertyExample(props.parameter)
     :name="parameter.name"
     @update:model-value="emits('update:modelValue', $event)"
   >
-    <SelectTrigger :aria-label="String(parameterExample ?? $t('Select...'))">
-      <SelectValue :placeholder="String(parameterExample ?? $t('Select...'))" />
+    <SelectTrigger :aria-label="String(parameterExample ?? $t('Select'))">
+      <SelectValue :placeholder="String(parameterExample ?? $t('Select'))" />
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>

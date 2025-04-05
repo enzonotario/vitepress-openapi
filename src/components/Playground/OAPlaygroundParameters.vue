@@ -180,7 +180,7 @@ watch(operationData.security.selectedSchemeId, () => {
           :allow-custom-option="allowCustomServer"
           :custom-option-label="$t('Custom Server')"
           :custom-placeholder="$t('Enter a custom server URL')"
-          :placeholder="$t('Select a server...')"
+          :placeholder="$t('Select a server')"
           @update:model-value="selectedServer = $event"
           @update:custom-value="customServer = $event"
           @update:is-custom="useCustomServer = $event"
@@ -201,7 +201,7 @@ watch(operationData.security.selectedSchemeId, () => {
               aria-label="Security Scheme"
               class="h-9 px-3 py-1.5 text-foreground font-normal"
             >
-              <SelectValue :placeholder="operationData.security.selectedSchemeId.value ?? $t('Select...')" />
+              <SelectValue :placeholder="operationData.security.selectedSchemeId.value ?? $t('Select')" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
