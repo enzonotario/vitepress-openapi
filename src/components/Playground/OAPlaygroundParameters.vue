@@ -255,7 +255,7 @@ watch(operationData.security.selectedSchemeId, () => {
             <span class="text-sm font-bold">{{ parameter.name }}</span>
             <span
               v-if="parameter.required"
-              class="text-sm text-red-500"
+              class="text-sm text-destructive"
             >*</span>
           </div>
           <div class="flex flex-row items-center space-x-2">
@@ -294,7 +294,7 @@ watch(operationData.security.selectedSchemeId, () => {
             <span>{{ parameter.name }}</span>
             <span
               v-if="parameter.required"
-              class="text-sm text-red-500"
+              class="text-sm text-destructive"
             >*</span>
           </Label>
           <OAPlaygroundParameterInput
