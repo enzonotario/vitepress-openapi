@@ -1,31 +1,38 @@
 <script setup lang="ts">
+import { onBeforeMount, onBeforeUnmount } from 'vue'
 import { useTheme, generateCodeSample } from 'vitepress-openapi/client'
 
-useTheme({
-    codeSamples: {
-        // List of languages to show in Code Samples section.
-        langs: [
-            'bruno',
-            ...useTheme().getCodeSamplesLangs(),
-        ],
-        // List of available languages to select from.
-        availableLanguages: [
-            {
-                lang: 'bruno',
-                label: 'Bruno',
-                highlighter: 'plaintext',
+onBeforeMount(() => {
+    useTheme({
+        codeSamples: {
+            // List of languages to show in Code Samples section.
+            langs: [
+                'bruno',
+                ...useTheme().getCodeSamplesLangs(),
+            ],
+            // List of available languages to select from.
+            availableLanguages: [
+                {
+                    lang: 'bruno',
+                    label: 'Bruno',
+                    highlighter: 'plaintext',
+                },
+                ...useTheme().getCodeSamplesAvailableLanguages(),
+            ],
+            defaultLang: 'bruno',
+            generator: async (lang, request) => {
+                if (lang === 'bruno') {
+                    return generateBruRequest(request)
+                }
+    
+                return generateCodeSample(lang, request)
             },
-            ...useTheme().getCodeSamplesAvailableLanguages(),
-        ],
-        defaultLang: 'bruno',
-        generator: async (lang, request) => {
-            if (lang === 'bruno') {
-                return generateBruRequest(request)
-            }
-
-            return generateCodeSample(lang, request)
         },
-    },
+    })
+})
+
+onBeforeUnmount(() => {
+    useTheme().reset()
 })
 
 function generateBruRequest(request) {
