@@ -22,7 +22,7 @@ const constraints = getConstraints(props.parameter.schema)
         <span class="text-sm font-bold">{{ props.parameter.name }}</span>
         <span
           v-if="props.parameter.required"
-          class="text-sm text-red-500"
+          class="text-sm text-destructive"
         >*</span>
       </div>
 
@@ -47,7 +47,7 @@ const constraints = getConstraints(props.parameter.schema)
 
         <span
           v-if="props.parameter.required"
-          class="text-sm text-red-500"
+          class="text-sm text-destructive"
         >{{ $t('Required') }}</span>
       </div>
 
