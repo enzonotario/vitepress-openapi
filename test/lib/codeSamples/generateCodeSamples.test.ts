@@ -230,30 +230,11 @@ describe('php', () => {
       method: 'GET',
     })
     const result = await generateCodeSample('php', request)
-    expect(result).toBe(`<?php
+    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
 
-$curl = curl_init();
+curl_exec($ch);
 
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://api.example.com/resource",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "GET",
-]);
-
-$response = curl_exec($curl);
-$err = curl_error($curl);
-
-curl_close($curl);
-
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}`)
+curl_close($ch);`)
   })
 
   it('generates PHP code for POST request with body', async () => {
@@ -264,36 +245,17 @@ if ($err) {
       body: { key: 'value' },
     })
     const result = await generateCodeSample('php', request)
-    expect(result).toBe(`<?php
+    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
 
-$curl = curl_init();
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'key' => 'value'
+]));
 
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://api.example.com/resource",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "POST",
-  CURLOPT_POSTFIELDS => json_encode([
-    'key' => 'value'
-  ]),
-  CURLOPT_HTTPHEADER => [
-    "Content-Type: application/json"
-  ],
-]);
+curl_exec($ch);
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
-
-curl_close($curl);
-
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}`)
+curl_close($ch);`)
   })
 
   it('generates PHP code for POST request with deep body', async () => {
@@ -304,45 +266,26 @@ if ($err) {
       body: { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } },
     })
     const result = await generateCodeSample('php', request)
-    expect(result).toBe(`<?php
+    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
 
-$curl = curl_init();
-
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://api.example.com/resource",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "POST",
-  CURLOPT_POSTFIELDS => json_encode([
-    'key' => [
-        'nested' => 'value',
-        'nestedArray' => [
-                1,
-                2,
-                [
-                                'deep' => 'value'
-                ]
-        ]
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'key' => [
+    'nested' => 'value',
+    'nestedArray' => [
+      1,
+      2,
+      [
+        'deep' => 'value'
+      ]
     ]
-  ]),
-  CURLOPT_HTTPHEADER => [
-    "Content-Type: application/json"
-  ],
-]);
+  ]
+]));
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
+curl_exec($ch);
 
-curl_close($curl);
-
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}`)
+curl_close($ch);`)
   })
 
   it('generates PHP code with headers', async () => {
@@ -353,33 +296,13 @@ if ($err) {
       headers: { Authorization: 'Bearer token' },
     })
     const result = await generateCodeSample('php', request)
-    expect(result).toBe(`<?php
+    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
 
-$curl = curl_init();
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer token']);
 
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://api.example.com/resource",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "GET",
-  CURLOPT_HTTPHEADER => [
-    "Authorization: Bearer token"
-  ],
-]);
+curl_exec($ch);
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
-
-curl_close($curl);
-
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}`)
+curl_close($ch);`)
   })
 
   it('generates PHP code with query parameters', async () => {
@@ -391,30 +314,11 @@ if ($err) {
       variables: { search: 'query' },
     })
     const result = await generateCodeSample('php', request)
-    expect(result).toBe(`<?php
+    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource?search=query");
 
-$curl = curl_init();
+curl_exec($ch);
 
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://api.example.com/resource",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "GET",
-]);
-
-$response = curl_exec($curl);
-$err = curl_error($curl);
-
-curl_close($curl);
-
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}`)
+curl_close($ch);`)
   })
 
   it('generates PHP code with all parameters', async () => {
@@ -428,36 +332,16 @@ if ($err) {
       variables: { search: 'query' },
     })
     const result = await generateCodeSample('php', request)
-    expect(result).toBe(`<?php
+    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource?search=query");
 
-$curl = curl_init();
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+  'key' => 'value'
+]));
 
-curl_setopt_array($curl, [
-  CURLOPT_URL => "https://api.example.com/resource",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "PUT",
-  CURLOPT_POSTFIELDS => json_encode([
-    'key' => 'value'
-  ]),
-  CURLOPT_HTTPHEADER => [
-    "Content-Type: application/json"
-  ],
-]);
+curl_exec($ch);
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
-
-curl_close($curl);
-
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo $response;
-}`)
+curl_close($ch);`)
   })
 })
 
@@ -469,13 +353,7 @@ describe('python', () => {
       method: 'GET',
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
-
-url = "https://api.example.com/resource"
-
-response = requests.get(url)
-
-print(response.json())`)
+    expect(result).toBe(`requests.get("https://api.example.com/resource")`)
   })
 
   it('generates Python code for POST request with body', async () => {
@@ -486,16 +364,14 @@ print(response.json())`)
       body: { key: 'value' },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
-
-url = "https://api.example.com/resource"
-
-payload = { "key": "value" }
-headers = {"Content-Type": "application/json"}
-
-response = requests.post(url, json=payload, headers=headers)
-
-print(response.json())`)
+    expect(result).toBe(`requests.post("https://api.example.com/resource",
+    headers={
+      "Content-Type": "application/json"
+    },
+    json={
+      "key": "value"
+    }
+)`)
   })
 
   it('generates Python code for POST request with deep body', async () => {
@@ -506,19 +382,23 @@ print(response.json())`)
       body: { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
-
-url = "https://api.example.com/resource"
-
-payload = { "key": {
+    expect(result).toBe(`requests.post("https://api.example.com/resource",
+    headers={
+      "Content-Type": "application/json"
+    },
+    json={
+      "key": {
         "nested": "value",
-        "nestedArray": [1, 2, { "deep": "value" }]
-    } }
-headers = {"Content-Type": "application/json"}
-
-response = requests.post(url, json=payload, headers=headers)
-
-print(response.json())`)
+        "nestedArray": [
+          1,
+          2,
+          {
+            "deep": "value"
+          }
+        ]
+      }
+    }
+)`)
   })
 
   it('generates Python code with headers', async () => {
@@ -529,15 +409,11 @@ print(response.json())`)
       headers: { Authorization: 'Bearer token' },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
-
-url = "https://api.example.com/resource"
-
-headers = {"Authorization": "Bearer token"}
-
-response = requests.get(url, headers=headers)
-
-print(response.json())`)
+    expect(result).toBe(`requests.get("https://api.example.com/resource",
+    headers={
+      "Authorization": "Bearer token"
+    }
+)`)
   })
 
   it('generates Python code with query parameters', async () => {
@@ -549,13 +425,11 @@ print(response.json())`)
       variables: { search: 'query' },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
-
-url = "https://api.example.com/resource"
-
-response = requests.get(url)
-
-print(response.json())`)
+    expect(result).toBe(`requests.get("https://api.example.com/resource",
+    params={
+      "search": "query"
+    }
+)`)
   })
 
   it('generates Python code with all parameters', async () => {
@@ -569,16 +443,17 @@ print(response.json())`)
       variables: { search: 'query' },
     })
     const result = await generateCodeSample('python', request)
-    expect(result).toBe(`import requests
-
-url = "https://api.example.com/resource"
-
-payload = { "key": "value" }
-headers = {"Content-Type": "application/json"}
-
-response = requests.put(url, json=payload, headers=headers)
-
-print(response.json())`)
+    expect(result).toBe(`requests.put("https://api.example.com/resource",
+    headers={
+      "Content-Type": "application/json"
+    },
+    params={
+      "search": "query"
+    },
+    json={
+      "key": "value"
+    }
+)`)
   })
 })
 
