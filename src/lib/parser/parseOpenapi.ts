@@ -3,7 +3,6 @@ import type { OpenAPIDocument, ParsedOpenAPI } from '../../types'
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { $trycatch } from '@tszen/trycatch'
 import { merge } from 'allof-merge'
-import { OpenApi } from '../OpenApi'
 import { generateCodeSamples } from './generateCodeSamples'
 import { generateMissingOperationIds } from './generateMissingOperationIds'
 import { generateMissingSummary } from './generateMissingSummary'
@@ -47,6 +46,17 @@ export function parseOpenapi() {
     spec.tags = spec.tags || spec.tags || []
 
     return Object.assign({}, spec)
+  }
+
+  async function transformAsync({
+    spec,
+  }: {
+    spec: ParsedOpenAPI
+  }): Promise<ParsedOpenAPI> {
+    const [result, err] = await $trycatch(() => generateCodeSamples(spec))
+    spec = err ? spec : result
+
+    return spec
   }
 
   function parseSync({
@@ -104,53 +114,17 @@ export function parseOpenapi() {
       defaultTagDescription,
     })
 
-    const [result, err] = await $trycatch(() => generateCodeSamples(parsedSpec))
-    parsedSpec = err ? parsedSpec : result
+    parsedSpec = await transformAsync({
+      spec: parsedSpec,
+    })
 
     return parsedSpec
   }
 
-  function instanceSync({
-    spec,
-    defaultTag = undefined,
-    defaultTagDescription = undefined,
-  }: {
-    spec: OpenAPIDocument
-    defaultTag?: string
-    defaultTagDescription?: string
-  }) {
-    return OpenApi({
-      spec: parseSync({
-        spec,
-        defaultTag,
-        defaultTagDescription,
-      }),
-    })
-  }
-
-  async function instanceAsync({
-    spec,
-    defaultTag = undefined,
-    defaultTagDescription = undefined,
-  }: {
-    spec: OpenAPIDocument
-    defaultTag?: string
-    defaultTagDescription?: string
-  }) {
-    return OpenApi({
-      spec: await parseAsync({
-        spec,
-        defaultTag,
-        defaultTagDescription,
-      }),
-    })
-  }
-
   return {
     transformSync,
+    transformAsync,
     parseSync,
     parseAsync,
-    instanceSync,
-    instanceAsync,
   }
 }

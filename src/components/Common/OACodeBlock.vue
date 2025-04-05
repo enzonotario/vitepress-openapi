@@ -23,6 +23,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  active: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const themeConfig = useTheme()
@@ -37,19 +41,29 @@ const jsonData = computed(() => {
   return typeof props.code === 'string' ? destr(props.code) : props.code
 })
 
+const jsonViwerDeep = computed(() => {
+  return themeConfig.getJsonViewerDeep()
+})
+
+const jsonViewerRenderer = computed(() => {
+  return themeConfig.getJsonViewerRenderer()
+})
+
 watch(
-  [() => props.code, () => props.lang, isDark],
+  [() => props.code, () => props.lang, isDark, () => props.active],
   async () => {
-    if (props.lang === 'json') {
+    if (props.lang === 'json' && jsonViewerRenderer.value !== 'shiki') {
       return
     }
 
-    if (props.disableHtmlTransform) {
+    if (!props.active || props.disableHtmlTransform) {
       html.value = `<pre><code>${props.code}</code></pre>`
       return
     }
 
-    html.value = shiki.renderShiki(props.code, {
+    const codeToHighlight = typeof props.code === 'string' ? props.code : JSON.stringify(props.code, null, 2)
+    await shiki.initShiki()
+    html.value = shiki.renderShiki(codeToHighlight, {
       lang: props.lang,
       theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
     })
@@ -61,10 +75,7 @@ watch(
 </script>
 
 <template>
-  <div
-    class="vp-adaptive-theme min-h-16"
-    :class="[`language-${props.lang}`]"
-  >
+  <div class="vp-adaptive-theme min-h-16" :class="[`language-${props.lang}`]">
     <button
       title="Copy Code"
       class="copy"
@@ -72,10 +83,10 @@ watch(
     <span class="lang">{{ props.label }}</span>
 
     <VueJsonPretty
-      v-if="props.lang === 'json' && !props.disableHtmlTransform"
+      v-if="props.lang === 'json' && !props.disableHtmlTransform && jsonViewerRenderer === 'vue-json-pretty'"
       :data="jsonData"
       :theme="isDark ? 'dark' : 'light'"
-      :deep="themeConfig.getJsonViewerDeep()"
+      :deep="jsonViwerDeep"
       show-icon
       class="p-2"
     />

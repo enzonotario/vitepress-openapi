@@ -1,5 +1,5 @@
 import type { HighlighterCore } from 'shiki'
-import { createHighlighterCoreSync } from 'shiki/core'
+import { createHighlighter } from 'shiki'
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
 import bash from 'shiki/langs/bash.mjs'
 import js from 'shiki/langs/javascript.mjs'
@@ -20,18 +20,18 @@ const loading = ref(true)
 const themeConfig = useTheme()
 
 export function useShiki() {
-  const initShiki = () => {
+  async function initShiki() {
     if (shiki) {
       return
     }
-    shiki = createHighlighterCoreSync({
+    shiki = await createHighlighter({
       themes: [themeConfig.getHighlighterTheme()?.light, themeConfig.getHighlighterTheme()?.dark],
       langs,
       engine: createJavaScriptRegexEngine(),
     })
   }
 
-  const renderShiki = (content: string, { lang, theme }: { lang: string, theme: string }) => {
+  function renderShiki(content: string, { lang, theme }: { lang: string, theme: string }) {
     if (shiki && shiki.getLoadedLanguages().includes(lang)) {
       return shiki.codeToHtml(content, {
         lang,
@@ -42,5 +42,9 @@ export function useShiki() {
     }
   }
 
-  return { loading, renderShiki, initShiki }
+  return {
+    loading,
+    renderShiki,
+    initShiki,
+  }
 }

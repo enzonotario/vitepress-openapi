@@ -12,6 +12,10 @@ const props = defineProps({
     type: [String, Number],
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
 })
 
 const emits = defineEmits([
@@ -35,7 +39,9 @@ const placeholder = computed(() => {
 <template>
   <div class="flex flex-col space-y-2">
     <Input
+      :id="name"
       :value="modelValue"
+      :name="name"
       type="text"
       :placeholder="placeholder"
       class="bg-muted"

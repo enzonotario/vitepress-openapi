@@ -37,6 +37,8 @@ const defaultLang = computed(() => {
   return defaultValue
 })
 
+const activeSample = ref(samples.value?.find(sample => sample.lang === defaultLang.value)?.lang)
+
 const loadSamples = async () => {
   samples.value = await Promise.all(
     availableLanguages
@@ -50,12 +52,11 @@ const loadSamples = async () => {
             ...props.request.headers,
           },
         }),
-      }
-      )),
+      })),
   )
 }
 
-watch(() => props.request, loadSamples, { deep: true, immediate: true })
+watch(() => props.request, loadSamples, { deep: true })
 </script>
 
 <template>
@@ -71,6 +72,7 @@ watch(() => props.request, loadSamples, { deep: true, immediate: true })
             type="radio"
             :name="`group-${props.operationId}`"
             :checked="sample.lang === defaultLang"
+            @change="activeSample = sample.lang"
           >
           <label :for="`tab-${props.operationId}-${sample.lang}`">{{ sample.label || sample.lang }}</label>
         </template>
@@ -83,6 +85,7 @@ watch(() => props.request, loadSamples, { deep: true, immediate: true })
           :code="sample.source"
           :lang="sample.highlighter"
           :label="sample.label"
+          :active="activeSample === sample.lang"
           :class="{ active: sample.lang === defaultLang }"
           class="!m-0"
         />

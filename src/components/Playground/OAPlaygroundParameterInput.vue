@@ -41,42 +41,46 @@ const parameterExample = getPropertyExample(props.parameter)
 </script>
 
 <template>
-  <div class="flex flex-col space-y-2">
-    <Input
-      v-if="['string', 'number', 'integer'].includes(parameter.schema?.type) && !parameter.schema?.enum"
-      :value="modelValue"
-      :type="inputType(parameter)"
-      :placeholder="String(parameterExample ?? '')"
-      class="bg-muted"
-      @update:model-value="emits('update:modelValue', $event)"
-      @keydown.enter="emits('submit')"
-    />
+  <Input
+    v-if="['string', 'number', 'integer'].includes(parameter.schema?.type) && !parameter.schema?.enum"
+    :id="parameter.name"
+    :name="parameter.name"
+    :value="modelValue"
+    :type="inputType(parameter)"
+    :placeholder="String(parameterExample ?? '')"
+    class="bg-muted"
+    @update:model-value="emits('update:modelValue', $event)"
+    @keydown.enter="emits('submit')"
+  />
 
-    <Checkbox
-      v-if="['boolean'].includes(parameter.schema?.type)"
-      :checked="String(modelValue) === '' ? 'indeterminate' : (modelValue as boolean)"
-      @update:checked="emits('update:modelValue', $event)"
-      @keydown.enter="emits('submit')"
-    />
+  <Checkbox
+    v-if="['boolean'].includes(parameter.schema?.type)"
+    :id="parameter.name"
+    :name="parameter.name"
+    :checked="String(modelValue) === '' ? 'indeterminate' : (modelValue as boolean)"
+    @update:checked="emits('update:modelValue', $event)"
+    @keydown.enter="emits('submit')"
+  />
 
-    <Select
-      v-if="parameter.schema?.enum"
-      @update:model-value="emits('update:modelValue', $event)"
-    >
-      <SelectTrigger :aria-label="String(parameterExample ?? $t('Select...'))">
-        <SelectValue :placeholder="String(parameterExample ?? $t('Select...'))" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectItem
-            v-for="enumValue in parameter.schema.enum"
-            :key="enumValue"
-            :value="String(enumValue)"
-          >
-            {{ enumValue }}
-          </SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-  </div>
+  <Select
+    v-if="parameter.schema?.enum"
+    :id="parameter.name"
+    :name="parameter.name"
+    @update:model-value="emits('update:modelValue', $event)"
+  >
+    <SelectTrigger :aria-label="String(parameterExample ?? $t('Select...'))">
+      <SelectValue :placeholder="String(parameterExample ?? $t('Select...'))" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectItem
+          v-for="enumValue in parameter.schema.enum"
+          :key="enumValue"
+          :value="String(enumValue)"
+        >
+          {{ enumValue }}
+        </SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
 </template>
