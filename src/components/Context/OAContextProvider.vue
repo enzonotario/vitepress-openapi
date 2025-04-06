@@ -2,6 +2,7 @@
 import { useOpenapi } from '../../composables/useOpenapi'
 import OASpecSkeleton from '../Feature/OASpecSkeleton.vue'
 import OAContext from './OAContext.vue'
+import OAContextAsync from './OAContextAsync.vue'
 
 const props = defineProps({
   spec: {
@@ -22,23 +23,24 @@ const globalOpenApi = useOpenapi()
 </script>
 
 <template>
-  <Suspense>
-    <OAContext v-if="props.spec || props.specUrl" :spec="props.spec" :spec-url="props.specUrl" @update:spec="emit('update:spec', $event)">
+  <Suspense v-if="props.spec || props.specUrl">
+    <OAContextAsync :spec="props.spec" :spec-url="props.specUrl" @update:spec="emit('update:spec', $event)">
       <template #default="{ openapi }">
         <slot :openapi="openapi" />
       </template>
-    </OAContext>
-    <OAContext v-else-if="globalOpenApi" :openapi="globalOpenApi">
-      <template #default="{ openapi }">
-        <slot :openapi="openapi" />
-      </template>
-    </OAContext>
-    <div v-else>
-      <p>OpenAPI instance not found</p>
-    </div>
-
+    </OAContextAsync>
     <template #fallback>
       <OASpecSkeleton />
     </template>
   </Suspense>
+  <template v-else-if="globalOpenApi">
+    <OAContext :openapi="globalOpenApi">
+      <template #default="{ openapi }">
+        <slot :openapi="openapi" />
+      </template>
+    </OAContext>
+  </template>
+  <div v-else>
+    <p>OpenAPI instance not found</p>
+  </div>
 </template>
