@@ -160,7 +160,6 @@ function hasSlot(name: OperationSlot): boolean {
       <OAMarkdown
         v-if="description.operation.description"
         :content="description.operation.description"
-        class="description"
       />
     </template>
 
