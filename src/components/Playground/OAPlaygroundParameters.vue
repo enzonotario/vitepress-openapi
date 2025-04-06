@@ -262,7 +262,6 @@ watch(operationData.security.selectedSchemeId, () => {
             <OAPlaygroundParameterInput
               v-model="variables[parameter.name ?? '']"
               :parameter="parameter"
-              class="w-full"
               @submit="emits('submit')"
             />
           </div>
@@ -300,7 +299,6 @@ watch(operationData.security.selectedSchemeId, () => {
           <OAPlaygroundParameterInput
             v-model="variables[parameter.name ?? '']"
             :parameter="parameter"
-            class="w-full"
             @submit="emits('submit')"
           />
         </div>
@@ -328,7 +326,6 @@ watch(operationData.security.selectedSchemeId, () => {
         v-else
         v-model="body"
         :parameter="{ name: 'body', schema: { type: 'string' } }"
-        class="w-full"
         @submit="emits('submit')"
       />
     </details>
