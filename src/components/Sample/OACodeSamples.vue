@@ -25,7 +25,12 @@ const configuredLanguages = themeConfig.getCodeSamplesLangs()
 
 const generator = themeConfig.getCodeSamplesGenerator()
 
-const samples = ref(props.codeSamples)
+const samples = ref(typeof props.codeSamples === 'object' && !Array.isArray(props.codeSamples)
+  ? Object.entries(props.codeSamples).map(([lang, source]) => ({
+      lang,
+      source,
+    }))
+  : props.codeSamples)
 
 const defaultLang = computed(() => {
   const defaultValue = themeConfig.getCodeSamplesDefaultLang()
@@ -39,7 +44,7 @@ const defaultLang = computed(() => {
 
 const activeSample = ref(samples.value?.find(sample => sample.lang === defaultLang.value)?.lang)
 
-const loadSamples = async () => {
+watch(() => props.request, async () => {
   samples.value = await Promise.all(
     availableLanguages
       .filter(availableLanguage => configuredLanguages.includes(availableLanguage.lang))
@@ -54,9 +59,7 @@ const loadSamples = async () => {
         }),
       })),
   )
-}
-
-watch(() => props.request, loadSamples, { deep: true })
+}, { deep: true })
 </script>
 
 <template>
