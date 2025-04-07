@@ -63,10 +63,11 @@ watch(
 
     const codeToHighlight = typeof props.code === 'string' ? props.code : JSON.stringify(props.code, null, 2)
     await shiki.initShiki()
-    html.value = shiki.renderShiki(codeToHighlight, {
+    const highlightedCode = shiki.renderShiki(codeToHighlight, {
       lang: props.lang,
       theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
     })
+    html.value = highlightedCode.replace(/background-color:[^;]+;/g, 'background-color:transparent;')
   },
   {
     immediate: true,
@@ -93,7 +94,6 @@ watch(
 
     <div
       v-else-if="html && !props.disableHtmlTransform"
-      class="vp-adaptive-theme"
       v-html="html"
     />
 

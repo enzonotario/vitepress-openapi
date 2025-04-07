@@ -1,14 +1,14 @@
-import type { HighlighterCore } from 'shiki'
-import { createHighlighter } from 'shiki'
+import type { HighlighterCore } from 'shiki/core'
+import bash from '@shikijs/langs-precompiled/bash'
+import js from '@shikijs/langs-precompiled/javascript'
+import json from '@shikijs/langs-precompiled/json'
+import markdown from '@shikijs/langs-precompiled/markdown'
+import php from '@shikijs/langs-precompiled/php'
+import python from '@shikijs/langs-precompiled/python'
+import ts from '@shikijs/langs-precompiled/typescript'
+import xml from '@shikijs/langs-precompiled/xml'
+import { createHighlighterCore } from 'shiki/core'
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
-import bash from 'shiki/langs/bash.mjs'
-import js from 'shiki/langs/javascript.mjs'
-import json from 'shiki/langs/json.mjs'
-import markdown from 'shiki/langs/markdown.mjs'
-import php from 'shiki/langs/php.mjs'
-import python from 'shiki/langs/python.mjs'
-import ts from 'shiki/langs/typescript.mjs'
-import xml from 'shiki/langs/xml.mjs'
 import { ref } from 'vue'
 import { useTheme } from './useTheme'
 
@@ -24,8 +24,11 @@ export function useShiki() {
     if (shiki) {
       return
     }
-    shiki = await createHighlighter({
-      themes: [themeConfig.getHighlighterTheme()?.light, themeConfig.getHighlighterTheme()?.dark],
+    shiki = await createHighlighterCore({
+      themes: [
+        themeConfig.getHighlighterTheme()?.light,
+        themeConfig.getHighlighterTheme()?.dark,
+      ],
       langs,
       engine: createJavaScriptRegexEngine(),
     })
