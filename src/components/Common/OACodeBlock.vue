@@ -41,7 +41,7 @@ const jsonData = computed(() => {
   return typeof props.code === 'string' ? destr(props.code) : props.code
 })
 
-const jsonViwerDeep = computed(() => {
+const jsonViewerDeep = computed(() => {
   return themeConfig.getJsonViewerDeep()
 })
 
@@ -87,7 +87,7 @@ watch(
       v-if="props.lang === 'json' && !props.disableHtmlTransform && jsonViewerRenderer === 'vue-json-pretty'"
       :data="jsonData"
       :theme="isDark ? 'dark' : 'light'"
-      :deep="jsonViwerDeep"
+      :deep="jsonViewerDeep"
       show-icon
       class="p-2"
     />
