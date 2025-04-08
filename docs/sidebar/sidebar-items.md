@@ -54,6 +54,37 @@ module.exports = {
 
 </div>
 
+The `generateSidebarGroups` function returns an array of sidebar groups, with each group containing an `items` array. Each item in this array represents a sidebar entry with `link` and `text` properties. You can map over these groups to customize them according to the VitePress sidebar structure. For instance, you can add `collapsed: true` to a group object to make it collapsible by default.
+
+```ts
+import { useSidebar } from 'vitepress-openapi'
+import spec from '../public/openapi.json' with { type: 'json' }
+
+const sidebar = useSidebar({
+  spec,
+  // Optionally, you can specify a link prefix for all generated sidebar items. Default is `/operations/`.
+  linkPrefix: '/operations/',
+})
+
+module.exports = {
+  // ...
+  themeConfig: {
+    sidebar: [
+      ...sidebar.generateSidebarGroups({
+        // Optionally, you can generate sidebar items with another link prefix. Default is `/operations/`.
+        linkPrefix: '/operations/',
+
+        // Optionally, you can specify a list of tags to generate sidebar items. Default is all tags.
+        //tags: [],
+      }).map(group => ({
+        ...group,
+        collapsed: true, // Collapsible and open by default.
+      })),
+    ],
+  },
+}
+```
+
 ## Items by Tags
 
 <div class="grid grid-cols-3 gap-4">

@@ -11,9 +11,23 @@ export const examples = ([
     slug: 'operationsByTags',
     label: 'Operations Grouped By Tags',
     config: () => {
-      return sidebar.generateSidebarGroups({
-        linkPrefix: '/sidebar-examples/operationsByTags/',
-      })
+      return [
+        {
+          text: 'Operations',
+          items: sidebar.generateSidebarGroups({
+            linkPrefix: '/sidebar-examples/operationsByTags/',
+          }),
+        },
+        {
+          text: 'Collapsed operations',
+          items: sidebar.generateSidebarGroups({
+            linkPrefix: '/sidebar-examples/operationsByTags/',
+          }).map(group => ({
+            ...group,
+            collapsed: true,
+          })),
+        },
+      ]
     },
   },
   {
