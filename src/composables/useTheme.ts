@@ -282,9 +282,7 @@ const themeConfig: UseThemeConfig = {
     defaultLang: 'curl',
     availableLanguages,
     generator: (lang: string, request: OARequest) => generateCodeSample(lang, request),
-    defaultHeaders: {
-      'Content-Type': 'application/json',
-    },
+    defaultHeaders: {},
   },
   linksPrefixes: {
     tags: '/tags/',
