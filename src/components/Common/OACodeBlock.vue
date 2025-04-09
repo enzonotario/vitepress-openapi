@@ -1,10 +1,8 @@
 <script setup>
-import { destr } from 'destr'
-import { computed, ref, watch } from 'vue'
-import VueJsonPretty from 'vue-json-pretty'
-import { useShiki } from '../../composables/useShiki'
+import { computed } from 'vue'
 import { useTheme } from '../../composables/useTheme'
-import 'vue-json-pretty/lib/styles.css'
+import OAShiki from './Highlight/OAShiki.vue'
+import OAVueJsonPretty from './Highlight/OAVueJsonPretty.vue'
 
 const props = defineProps({
   code: {
@@ -31,48 +29,21 @@ const props = defineProps({
 
 const themeConfig = useTheme()
 
-const isDark = themeConfig.isDark
-
-const html = ref(null)
-
-const shiki = useShiki()
-
-const jsonData = computed(() => {
-  return typeof props.code === 'string' ? destr(props.code) : props.code
-})
-
-const jsonViewerDeep = computed(() => {
-  return themeConfig.getJsonViewerDeep()
-})
-
 const jsonViewerRenderer = computed(() => {
   return themeConfig.getJsonViewerRenderer()
 })
 
-watch(
-  [() => props.code, () => props.lang, isDark, () => props.active],
-  async () => {
-    if (props.lang === 'json' && jsonViewerRenderer.value !== 'shiki') {
-      return
-    }
+const shouldUseVueJsonPretty = computed(() => {
+  return props.lang === 'json' && !props.disableHtmlTransform && jsonViewerRenderer.value === 'vue-json-pretty'
+})
 
-    if (!props.active || props.disableHtmlTransform) {
-      html.value = `<pre><code>${props.code}</code></pre>`
-      return
-    }
+const shouldUseShiki = computed(() => {
+  if (props.disableHtmlTransform) {
+    return false
+  }
 
-    const codeToHighlight = typeof props.code === 'string' ? props.code : JSON.stringify(props.code, null, 2)
-    await shiki.initShiki()
-    const highlightedCode = shiki.renderShiki(codeToHighlight, {
-      lang: props.lang,
-      theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
-    })
-    html.value = highlightedCode.replace(/background-color:[^;]+;/g, 'background-color:transparent;')
-  },
-  {
-    immediate: true,
-  },
-)
+  return props.lang !== 'json' || jsonViewerRenderer.value === 'shiki'
+})
 </script>
 
 <template>
@@ -83,20 +54,10 @@ watch(
     />
     <span class="lang">{{ props.label }}</span>
 
-    <VueJsonPretty
-      v-if="props.lang === 'json' && !props.disableHtmlTransform && jsonViewerRenderer === 'vue-json-pretty'"
-      :data="jsonData"
-      :theme="isDark ? 'dark' : 'light'"
-      :deep="jsonViewerDeep"
-      show-icon
-      class="p-2"
-    />
+    <OAVueJsonPretty v-if="shouldUseVueJsonPretty" :code="props.code" />
 
-    <div
-      v-else-if="html && !props.disableHtmlTransform"
-      v-html="html"
-    />
+    <OAShiki v-else-if="shouldUseShiki" :code="props.code" :lang="props.lang" />
 
-    <pre v-else>{{ props.code }}</pre>
+    <pre v-else><code>{{ props.code }}</code></pre>
   </div>
 </template>
