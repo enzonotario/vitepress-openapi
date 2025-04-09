@@ -456,26 +456,19 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
             "highlighter": "bash",
             "label": "cURL",
             "lang": "curl",
-            "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1' \\
-  --header 'Content-Type: application/json'",
+            "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1'",
           },
           {
             "highlighter": "javascript",
             "label": "JavaScript",
             "lang": "javascript",
-            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1', {
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1')",
           },
           {
             "highlighter": "php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1");
-
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
 curl_exec($ch);
 
@@ -487,9 +480,6 @@ curl_close($ch);",
             "lang": "python",
             "source": "requests.get(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists",
-    headers={
-      "Content-Type": "application/json"
-    },
     params={
       "limit": 10,
       "offset": 1
@@ -1438,8 +1428,7 @@ curl_close($ch);",
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
   --request DELETE \\
-  --header 'Authorization: Bearer bearerAuth' \\
-  --header 'Content-Type: application/json'",
+  --header 'Authorization: Bearer bearerAuth'",
           },
           {
             "highlighter": "javascript",
@@ -1448,8 +1437,7 @@ curl_close($ch);",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1', {
   method: 'DELETE',
   headers: {
-    Authorization: 'Bearer bearerAuth',
-    'Content-Type': 'application/json'
+    Authorization: 'Bearer bearerAuth'
   }
 })",
           },
@@ -1459,7 +1447,7 @@ curl_close($ch);",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
 
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer bearerAuth', 'Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer bearerAuth']);
 
 curl_exec($ch);
 
@@ -1472,8 +1460,7 @@ curl_close($ch);",
             "source": "requests.delete(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
     headers={
-      "Authorization": "Bearer bearerAuth",
-      "Content-Type": "application/json"
+      "Authorization": "Bearer bearerAuth"
     }
 )",
           },
@@ -1737,26 +1724,19 @@ curl_close($ch);",
             "highlighter": "bash",
             "label": "cURL",
             "lang": "curl",
-            "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
-  --header 'Content-Type: application/json'",
+            "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
           },
           {
             "highlighter": "javascript",
             "label": "JavaScript",
             "lang": "javascript",
-            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1', {
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1')",
           },
           {
             "highlighter": "php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
-
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
 curl_exec($ch);
 
@@ -1767,10 +1747,7 @@ curl_close($ch);",
             "label": "Python",
             "lang": "python",
             "source": "requests.get(
-    "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
-    headers={
-      "Content-Type": "application/json"
-    }
+    "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1"
 )",
           },
         ],
@@ -2646,26 +2623,19 @@ curl_close($ch);",
             "highlighter": "bash",
             "label": "cURL",
             "lang": "curl",
-            "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1' \\
-  --header 'Content-Type: application/json'",
+            "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1'",
           },
           {
             "highlighter": "javascript",
             "label": "JavaScript",
             "lang": "javascript",
-            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1', {
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})",
+            "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1')",
           },
           {
             "highlighter": "php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1");
-
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
 curl_exec($ch);
 
@@ -2677,9 +2647,6 @@ curl_close($ch);",
             "lang": "python",
             "source": "requests.get(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums",
-    headers={
-      "Content-Type": "application/json"
-    },
     params={
       "limit": 10,
       "offset": 1
