@@ -76,7 +76,7 @@ export interface OperationConfig {
   defaultBaseUrl?: string
 }
 
-export type Languages = 'es' | 'en' | 'pt-BR' | string
+export type Languages = 'es' | 'en' | 'ja' | 'pt-BR' | string
 
 export type Messages = Record<Languages, Record<string, string>>
 
@@ -255,6 +255,10 @@ const themeConfig: UseThemeConfig = {
       {
         code: 'es',
         label: 'Español',
+      },
+      {
+        code: 'ja',
+        label: 'Japanese',
       },
       {
         code: 'pt-BR',

@@ -86,8 +86,8 @@ export default {
             },
             // Set the i18n configuration.
             i18n: {
-                locale: 'en', // en | es | pt-BR | string
-                fallbackLocale: 'en', // en | es | pt-BR | string
+                locale: 'en', // en | es | ja | pt-BR | string
+                fallbackLocale: 'en', // en | es | ja | pt-BR | string
                 messages: {
                     en: {
                         ...locales.en,
@@ -101,6 +101,7 @@ export default {
                 availableLocales: [
                     { code: 'en', label: 'English' },
                     { code: 'es', label: 'Español' },
+                    { code: 'ja', label: 'Japanese' },
                     { code: 'pt-BR', label: 'Português (Brasil)' },
                 ],
             },
@@ -183,7 +184,7 @@ export default {
 
 | Function        | Description                  | Default Value                                               | Allowed Values                                                                                                                           |
 |-----------------|------------------------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
-| `setI18nConfig` | Sets the i18n configuration. | `{ locale: 'en', fallbackLocale: 'en', messages: locales }` | `{ locale: 'es' \| 'en' \| 'pt-BR' \| string, fallbackLocale: 'es' \| 'en' \| 'pt-BR' \| string, messages: Record<'es' \| 'en', Record<string, Record<string, string>>> }` |
+| `setI18nConfig` | Sets the i18n configuration. | `{ locale: 'en', fallbackLocale: 'en', messages: locales }` | `{ locale: 'es' \| 'en' \| 'ja' \| 'pt-BR' \| string, fallbackLocale: 'es' \| 'en' \| 'ja' \| 'pt-BR' \| string, messages: Record<'es' \| 'en' \| 'ja' \| 'pt-BR', Record<string, Record<string, string>>> }` |
 
 ## Spec Configuration
 
