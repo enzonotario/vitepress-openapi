@@ -59,7 +59,10 @@ watch(() => props.request, async () => {
         }),
       })),
   )
-}, { deep: true })
+}, {
+  deep: true,
+  immediate: true,
+})
 </script>
 
 <template>
