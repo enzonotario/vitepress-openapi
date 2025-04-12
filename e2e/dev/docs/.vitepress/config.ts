@@ -1,6 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
+import { testsPages } from '../../../../docs/pages'
 import spec from '../../../../docs/public/openapi.json'
 
 const sidebar = useSidebar({
@@ -20,32 +21,48 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: 'By Tags',
+        text: 'Argentine Rock Legends',
+        collapsed: true,
         items: [
           {
-            text: 'Introduction',
-            link: '/introduction',
+            text: 'By Tags',
+            items: [
+              {
+                text: 'Introduction',
+                link: '/introduction',
+              },
+              ...sidebar.itemsByTags(),
+            ],
           },
-          ...sidebar.itemsByTags(),
+          {
+            text: 'By Operations',
+            items: [
+              ...sidebar.generateSidebarGroups(),
+            ],
+          },
+          {
+            text: 'By Paths',
+            items: [
+              ...sidebar.itemsByPaths(),
+            ],
+          },
+          {
+            text: 'One Page',
+            items: [
+              { text: 'One Page', link: '/one-page' },
+              { text: 'Without Sidebar', link: '/without-sidebar' },
+            ],
+          },
         ],
       },
       {
-        text: 'By Operations',
+        text: 'Tests',
+        collapsed: true,
         items: [
-          ...sidebar.generateSidebarGroups(),
-        ],
-      },
-      {
-        text: 'By Paths',
-        items: [
-          ...sidebar.itemsByPaths(),
-        ],
-      },
-      {
-        text: 'One Page',
-        items: [
-          { text: 'One Page', link: '/one-page' },
-          { text: 'Without Sidebar', link: '/without-sidebar' },
+          ...testsPages.map(page => ({
+            text: page.label,
+            link: `/tests/${page.slug}`,
+          })),
         ],
       },
     ],
