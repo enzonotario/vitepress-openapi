@@ -456,3 +456,155 @@ describe('server configuration', () => {
     expect(themeConfig.getServerConfig().getServers).toBeTypeOf('function')
   })
 })
+
+describe('codeSamples configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns the default code samples languages', () => {
+    const result = themeConfig.getCodeSamplesLangs()
+    expect(result).toEqual(['curl', 'javascript', 'php', 'python'])
+  })
+
+  it('returns the default code samples default language', () => {
+    const result = themeConfig.getCodeSamplesDefaultLang()
+    expect(result).toBe('curl')
+  })
+
+  it('returns the default code samples available languages', () => {
+    const result = themeConfig.getCodeSamplesAvailableLanguages()
+    expect(result).toEqual([
+      {
+        lang: 'curl',
+        label: 'cURL',
+        highlighter: 'bash',
+        icon: 'curl',
+      },
+      {
+        lang: 'javascript',
+        label: 'JavaScript',
+        highlighter: 'javascript',
+        icon: '.js',
+      },
+      {
+        lang: 'php',
+        label: 'PHP',
+        highlighter: 'php',
+        icon: '.php',
+      },
+      {
+        lang: 'python',
+        label: 'Python',
+        highlighter: 'python',
+        icon: '.py',
+      },
+    ])
+  })
+
+  it('returns the default code samples generator', () => {
+    const result = themeConfig.getCodeSamplesGenerator()
+    expect(result).toBeTypeOf('function')
+  })
+
+  it('returns the default code samples default headers', () => {
+    const result = themeConfig.getCodeSamplesDefaultHeaders()
+    expect(result).toEqual({})
+  })
+
+  it('sets and gets the code samples config', () => {
+    const customGenerator = (lang: string, _request: any) => Promise.resolve(`Custom code for ${lang}`)
+    const customHeaders = { 'X-Custom-Header': 'value' }
+
+    themeConfig.setCodeSamplesConfig({
+      langs: ['javascript', 'python', 'go'],
+      defaultLang: 'python',
+      availableLanguages: [
+        {
+          lang: 'go',
+          label: 'Go',
+          highlighter: 'go',
+          icon: '.go',
+        },
+      ],
+      generator: customGenerator,
+      defaultHeaders: customHeaders,
+    })
+
+    expect(themeConfig.getCodeSamplesLangs()).toEqual(['javascript', 'python', 'go'])
+    expect(themeConfig.getCodeSamplesDefaultLang()).toBe('python')
+
+    const availableLanguages = themeConfig.getCodeSamplesAvailableLanguages()
+    expect(availableLanguages).toEqual([
+      {
+        lang: 'go',
+        label: 'Go',
+        highlighter: 'go',
+        icon: '.go',
+      },
+    ])
+
+    expect(themeConfig.getCodeSamplesGenerator()).toBe(customGenerator)
+    expect(themeConfig.getCodeSamplesDefaultHeaders()).toEqual(customHeaders)
+  })
+
+  it('handles duplicate languages in langs array', () => {
+    themeConfig.setCodeSamplesConfig({
+      langs: ['javascript', 'javascript', 'python'],
+    })
+
+    expect(themeConfig.getCodeSamplesLangs()).toEqual(['javascript', 'python'])
+  })
+
+  it('falls back to first available language when default language is not in available languages', () => {
+    themeConfig.setCodeSamplesConfig({
+      langs: ['javascript', 'python'],
+      defaultLang: 'ruby', // Not in the available languages
+    })
+
+    expect(themeConfig.getCodeSamplesDefaultLang()).toBe('javascript')
+  })
+
+  it('can setup icons', () => {
+    themeConfig.setCodeSamplesConfig({
+      availableLanguages: [
+        ...themeConfig.getCodeSamplesAvailableLanguages().map((lang) => {
+          if (lang.lang === 'javascript') {
+            return { ...lang, icon: 'custom-js-icon' }
+          }
+          return lang
+        }),
+      ],
+    })
+
+    const result = themeConfig.getCodeSamplesAvailableLanguages()
+    expect(result).toEqual([
+      {
+        lang: 'curl',
+        label: 'cURL',
+        highlighter: 'bash',
+        icon: 'curl',
+      },
+      {
+        lang: 'javascript',
+        label: 'JavaScript',
+        highlighter: 'javascript',
+        icon: 'custom-js-icon',
+      },
+      {
+        lang: 'php',
+        label: 'PHP',
+        highlighter: 'php',
+        icon: '.php',
+      },
+      {
+        lang: 'python',
+        label: 'Python',
+        highlighter: 'python',
+        icon: '.py',
+      },
+    ])
+  })
+})

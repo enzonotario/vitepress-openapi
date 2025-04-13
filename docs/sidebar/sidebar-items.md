@@ -50,7 +50,7 @@ module.exports = {
 
 </div>
 
-<SandboxIframe :sandbox-data="{sandboxView: 'preview', sidebarItemsType: 'default'}" non-interactive iframe-class="w-[1200px]" class="h-[70 sticky top-[calc(var(--vp-nav-height+16px))]vh] max-h-[700px]" />
+<SandboxIframe :sandbox-data="{sandboxView: 'preview', sidebarItemsType: 'default'}" non-interactive iframe-class="w-[1200px]" class="h-[70vh] sticky top-[calc(var(--vp-nav-height+16px))]vh] max-h-[700px]" />
 
 </div>
 

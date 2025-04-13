@@ -20,10 +20,6 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  spec: {
-    type: Object,
-    required: false,
-  },
   openapi: {
     type: Object,
     required: true,

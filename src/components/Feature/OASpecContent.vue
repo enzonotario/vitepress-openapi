@@ -10,11 +10,6 @@ import OAInfoContent from './OAInfoContent.vue'
 import OAServersContent from './OAServersContent.vue'
 
 const props = defineProps({
-  spec: {
-    type: Object,
-    required: false,
-    default: null,
-  },
   hideInfo: {
     type: Boolean,
     default: false,

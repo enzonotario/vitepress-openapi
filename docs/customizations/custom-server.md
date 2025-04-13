@@ -48,13 +48,11 @@ useTheme({
 
 </ScopeConfigurationTabs>
 
-<ExampleBlock>
+---
+
+<ExampleBlock browser-window-class="h-[70vh] max-h-[700px]">
 
 <template #code>
-
-## Example
-
-The following example is generated from this code:
 
 ```markdown
 ---

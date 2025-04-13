@@ -80,7 +80,10 @@ watch(() => props.request, async () => {
             :checked="sample.lang === defaultLang"
             @change="activeSample = sample.lang"
           >
-          <label :for="`tab-${props.operationId}-${sample.lang}`">{{ sample.label || sample.lang }}</label>
+          <label
+            :for="`tab-${props.operationId}-${sample.lang}`"
+            :data-title="sample.icon"
+          >{{ sample.label || sample.lang }}</label>
         </template>
       </div>
 

@@ -12,7 +12,7 @@ Each operation can have different badges that indicate its state, for example if
 
 By default, only the `deprecated` badge is shown, as appropriate. You can customize the operation badges using the `useTheme({ operation: { badges: string[] })` function. **The order in which you set the badges is the order in which they will be displayed.**
 
-<ExampleBlock>
+<ExampleBlock browser-window-class="h-[70vh] max-h-[700px]">
 
 <template #code>
 
@@ -35,6 +35,8 @@ title: vitepress-openapi
 </template>
 
 </ExampleBlock>
+
+<span style="width:100%;height:16px;display:block"></span>
 
 # Custom Prefix
 

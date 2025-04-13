@@ -11,6 +11,118 @@
     }
   ],
   "paths": {
+    "/users": {
+      "get": {
+        "summary": "List users",
+        "description": "Returns a list of users with optional filtering.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "description": "Filter users by name",
+            "schema": {
+              "type": "string",
+              "example": "John"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "required": false,
+            "description": "Filter users by age",
+            "schema": {
+              "type": "integer",
+              "example": 25,
+              "minimum": 0,
+              "maximum": 120,
+              "multipleOf": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of users to return",
+            "schema": {
+              "type": "integer",
+              "example": 10,
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "description": "Number of users to skip for pagination",
+            "schema": {
+              "type": "integer",
+              "example": 0,
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true,
+            "description": "API key for authentication",
+            "schema": {
+              "type": "string",
+              "example": "api-key-123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "age": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "limit": {
+                      "type": "integer"
+                    },
+                    "offset": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key"
+          }
+        }
+      }
+    },
     "/users/{userId}": {
       "get": {
         "summary": "Get user information by ID",

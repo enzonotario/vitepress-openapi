@@ -3,6 +3,7 @@ import { compressToURL } from '@amoutonbrady/lz-string'
 import { deepUnref } from '../../../../../src/lib/deepUnref'
 import { cn } from '../../../../../src/lib/utils'
 import { initSandboxData } from '../../sandboxData'
+import BrowserWindow from '../BrowserWindow.vue'
 
 const props = defineProps({
   themeConfig: {
@@ -22,10 +23,6 @@ const props = defineProps({
   iframeZoom: {
     type: Number,
     default: 1,
-  },
-  browserWindow: {
-    type: Boolean,
-    default: true,
   },
 })
 
@@ -57,21 +54,7 @@ const url = `${baseUrl}?themeConfig=${themeConfigCompressed}&sandboxData=${sandb
 </script>
 
 <template>
-  <div
-    class="rounded border overflow-hidden"
-    :class="{
-      'shadow-lg': props.browserWindow,
-    }"
-  >
-    <div
-      v-if="props.browserWindow"
-      class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
-    >
-      <span class="w-3 h-3 bg-red-500 rounded-full" />
-      <span class="w-3 h-3 bg-yellow-500 rounded-full" />
-      <span class="w-3 h-3 bg-green-500 rounded-full" />
-    </div>
-
+  <BrowserWindow>
     <div class="relative w-full h-full overflow-x-hidden">
       <iframe
         :class="cn([
@@ -102,9 +85,5 @@ const url = `${baseUrl}?themeConfig=${themeConfigCompressed}&sandboxData=${sandb
         </a>
       </div>
     </div>
-  </div>
+  </BrowserWindow>
 </template>
-
-<style scoped>
-/* Estilos adicionales si los necesitas */
-</style>
