@@ -515,7 +515,7 @@ describe('codeSamples configuration', () => {
   })
 
   it('sets and gets the code samples config', () => {
-    const customGenerator = (lang: string, request: any) => Promise.resolve(`Custom code for ${lang}`)
+    const customGenerator = (lang: string, _request: any) => Promise.resolve(`Custom code for ${lang}`)
     const customHeaders = { 'X-Custom-Header': 'value' }
 
     themeConfig.setCodeSamplesConfig({
@@ -568,19 +568,8 @@ describe('codeSamples configuration', () => {
   })
 
   it('can setup icons', () => {
-    // const customIcon = {
-    //   lang: 'javascript',
-    //   icon: 'custom-js-icon',
-    // }
     themeConfig.setCodeSamplesConfig({
       availableLanguages: [
-        // {
-        //   lang: 'javascript',
-        //   label: 'JavaScript',
-        //   highlighter: 'javascript',
-        //   icon: 'custom-js-icon',
-        // },
-        // ...themeConfig.getCodeSamplesAvailableLanguages(),
         ...themeConfig.getCodeSamplesAvailableLanguages().map((lang) => {
           if (lang.lang === 'javascript') {
             return { ...lang, icon: 'custom-js-icon' }

@@ -77,3 +77,11 @@ export default defineConfigWithTheme({
   },
 })
 ```
+
+<div class="flex justify-center">
+<div class="tip custom-block w-full max-w-xl p-4 text-center">
+
+[Live Example](https://vitepress-openapi-vitepress-plugin-group-icons.vercel.app/) | [Source Code](https://github.com/enzonotario/vitepress-openapi-vitepress-plugin-group-icons)
+
+</div>
+</div>
