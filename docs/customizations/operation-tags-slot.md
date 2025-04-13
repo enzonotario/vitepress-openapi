@@ -7,7 +7,7 @@ outline: false
 
 You can include the tags of an operation using `useTheme({ operation: { slots: [ ...DEFAULT_OPERATION_SLOTS, 'tags' ] })`.
 
-<ExampleBlock>
+<ExampleBlock browser-window-class="h-[70vh] max-h-[700px]">
 
 <template #code>
 

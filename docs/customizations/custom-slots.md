@@ -7,13 +7,13 @@ outline: false
 
 The `OAOperation` component provides several slots for customizing the operation layout.
 
-<ExampleBlock>
-
-<template #code>
-
 ## Description
 
 The `description` slot allows you to customize the operation description.
+
+<ExampleBlock>
+
+<template #code>
 
 ```markdown
 ---
