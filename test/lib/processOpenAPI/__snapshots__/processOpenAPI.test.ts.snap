@@ -454,18 +454,21 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
         "codeSamples": [
           {
             "highlighter": "bash",
+            "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1'",
           },
           {
             "highlighter": "javascript",
+            "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1')",
           },
           {
             "highlighter": "php",
+            "icon": ".php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1");
@@ -476,6 +479,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "python",
+            "icon": ".py",
             "label": "Python",
             "lang": "python",
             "source": "requests.get(
@@ -803,6 +807,7 @@ curl_close($ch);",
         "codeSamples": [
           {
             "highlighter": "bash",
+            "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists \\
@@ -819,6 +824,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "javascript",
+            "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists', {
@@ -838,6 +844,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "php",
+            "icon": ".php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists");
@@ -858,6 +865,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "python",
+            "icon": ".py",
             "label": "Python",
             "lang": "python",
             "source": "requests.post(
@@ -1424,6 +1432,7 @@ curl_close($ch);",
         "codeSamples": [
           {
             "highlighter": "bash",
+            "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
@@ -1432,6 +1441,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "javascript",
+            "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1', {
@@ -1443,6 +1453,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "php",
+            "icon": ".php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
@@ -1455,6 +1466,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "python",
+            "icon": ".py",
             "label": "Python",
             "lang": "python",
             "source": "requests.delete(
@@ -1722,18 +1734,21 @@ curl_close($ch);",
         "codeSamples": [
           {
             "highlighter": "bash",
+            "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
           },
           {
             "highlighter": "javascript",
+            "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1')",
           },
           {
             "highlighter": "php",
+            "icon": ".php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
@@ -1744,6 +1759,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "python",
+            "icon": ".py",
             "label": "Python",
             "lang": "python",
             "source": "requests.get(
@@ -2021,6 +2037,7 @@ curl_close($ch);",
         "codeSamples": [
           {
             "highlighter": "bash",
+            "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
@@ -2037,6 +2054,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "javascript",
+            "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1', {
@@ -2056,6 +2074,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "php",
+            "icon": ".php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
@@ -2075,6 +2094,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "python",
+            "icon": ".py",
             "label": "Python",
             "lang": "python",
             "source": "requests.put(
@@ -2621,18 +2641,21 @@ curl_close($ch);",
         "codeSamples": [
           {
             "highlighter": "bash",
+            "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1'",
           },
           {
             "highlighter": "javascript",
+            "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1')",
           },
           {
             "highlighter": "php",
+            "icon": ".php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1");
@@ -2643,6 +2666,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "python",
+            "icon": ".py",
             "label": "Python",
             "lang": "python",
             "source": "requests.get(
@@ -2951,6 +2975,7 @@ curl_close($ch);",
         "codeSamples": [
           {
             "highlighter": "bash",
+            "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums \\
@@ -2966,6 +2991,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "javascript",
+            "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums', {
@@ -2984,6 +3010,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "php",
+            "icon": ".php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums");
@@ -3003,6 +3030,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "python",
+            "icon": ".py",
             "label": "Python",
             "lang": "python",
             "source": "requests.post(
@@ -3502,6 +3530,7 @@ curl_close($ch);",
         "codeSamples": [
           {
             "highlighter": "bash",
+            "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup \\
@@ -3515,6 +3544,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "javascript",
+            "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup', {
@@ -3531,6 +3561,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "php",
+            "icon": ".php",
             "label": "PHP",
             "lang": "php",
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup");
@@ -3549,6 +3580,7 @@ curl_close($ch);",
           },
           {
             "highlighter": "python",
+            "icon": ".py",
             "label": "Python",
             "lang": "python",
             "source": "requests.post(

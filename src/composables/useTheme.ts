@@ -143,6 +143,7 @@ interface LanguageConfig {
   lang: string
   label: string
   highlighter: string
+  icon?: string
 }
 
 export type PartialUseThemeConfig = Partial<UnwrapNestedRefs<UseThemeConfig>>
@@ -172,21 +173,25 @@ export const availableLanguages: LanguageConfig[] = [
     lang: 'curl',
     label: 'cURL',
     highlighter: 'bash',
+    icon: 'curl',
   },
   {
     lang: 'javascript',
     label: 'JavaScript',
     highlighter: 'javascript',
+    icon: '.js',
   },
   {
     lang: 'php',
     label: 'PHP',
     highlighter: 'php',
+    icon: '.php',
   },
   {
     lang: 'python',
     label: 'Python',
     highlighter: 'python',
+    icon: '.py',
   },
 ]
 
@@ -786,7 +791,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     const uniqueLanguages = [...new Set(languages.map(({ lang }) => lang))]
 
     themeConfig.codeSamples.availableLanguages = uniqueLanguages.map((lang) => {
-      const language = availableLanguages.find(l => l.lang === lang)
+      const language
+        = languages.find(l => l.lang === lang)
+          ?? availableLanguages.find(l => l.lang === lang)
+
       return language || { lang, label: lang, highlighter: 'plaintext' }
     })
   }
