@@ -129,7 +129,7 @@ const groups = computed(() => {
     <div v-if="showInfo || showServers">
       <OAInfoContent v-if="showInfo" :info="openapi.spec.info" :external-docs="openapi.externalDocs" />
 
-      <OAServersContent v-if="showServers" :openapi="openapi" />
+      <OAServersContent v-if="showServers" :servers="openapi.getServers()" />
     </div>
 
     <hr v-if="showInfo || showServers">

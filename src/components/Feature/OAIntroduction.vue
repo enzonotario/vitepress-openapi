@@ -8,14 +8,37 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  info: {
+    type: Object,
+    required: false,
+  },
+  externalDocs: {
+    type: Object,
+    required: false,
+  },
+  servers: {
+    type: Array,
+    required: false,
+  },
 })
 </script>
 
 <template>
-  <OAContextProvider :spec="props.spec">
+  <template v-if="props.info || props.externalDocs || props.servers">
+    <OAInfoContent
+      v-if="props.info || props.externalDocs"
+      :info="props.info"
+      :external-docs="props.externalDocs"
+    />
+    <OAServersContent
+      v-if="props.servers"
+      :servers="props.servers"
+    />
+  </template>
+  <OAContextProvider v-else :spec="props.spec">
     <template #default="{ openapi }">
       <OAInfoContent :info="openapi.spec.info" :external-docs="openapi.externalDocs" />
-      <OAServersContent :openapi="openapi" />
+      <OAServersContent :servers="openapi.getServers()" />
     </template>
   </OAContextProvider>
 </template>

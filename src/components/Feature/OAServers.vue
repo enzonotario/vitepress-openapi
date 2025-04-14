@@ -7,13 +7,19 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  servers: {
+    type: Array,
+    required: false,
+  },
 })
 </script>
 
 <template>
-  <OAContextProvider :spec="props.spec">
+  <OAServersContent v-if="props.servers" :servers="props.servers" />
+
+  <OAContextProvider v-else :spec="props.spec">
     <template #default="{ openapi }">
-      <OAServersContent :openapi="openapi" />
+      <OAServersContent :servers="openapi.getServers()" />
     </template>
   </OAContextProvider>
 </template>
