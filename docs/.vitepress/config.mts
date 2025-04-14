@@ -110,6 +110,10 @@ export default defineConfigWithTheme({
                           text: 'i18n',
                           link: '/customizations/i18n',
                         },
+                        {
+                          text: 'Branding',
+                          link: '/customizations/branding',
+                        },
                       ],
                     },
                   ],
