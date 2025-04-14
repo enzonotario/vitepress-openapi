@@ -19,7 +19,7 @@ export const examples = ([
           }),
         },
         {
-          text: 'Collapsed operations',
+          text: 'Collapsible items',
           items: sidebar.generateSidebarGroups({
             linkPrefix: '/sidebar-examples/operationsByTags/',
           }).map(group => ({

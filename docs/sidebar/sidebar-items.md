@@ -54,6 +54,8 @@ module.exports = {
 
 </div>
 
+### Collapsible items
+
 The `generateSidebarGroups` function returns an array of sidebar groups, with each group containing an `items` array. Each item in this array represents a sidebar entry with `link` and `text` properties. You can map over these groups to customize them according to the VitePress sidebar structure. For instance, you can add `collapsed: true` to a group object to make it collapsible by default.
 
 ```ts
