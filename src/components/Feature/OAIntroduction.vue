@@ -14,7 +14,7 @@ const props = defineProps({
 <template>
   <OAContextProvider :spec="props.spec">
     <template #default="{ openapi }">
-      <OAInfoContent :openapi="openapi" />
+      <OAInfoContent :info="openapi.spec.info" :external-docs="openapi.externalDocs" />
       <OAServersContent :openapi="openapi" />
     </template>
   </OAContextProvider>

@@ -127,7 +127,7 @@ const groups = computed(() => {
 <template>
   <div class="flex flex-col space-y-10">
     <div v-if="showInfo || showServers">
-      <OAInfoContent v-if="showInfo" :openapi="openapi" />
+      <OAInfoContent v-if="showInfo" :info="openapi.spec.info" :external-docs="openapi.externalDocs" />
 
       <OAServersContent v-if="showServers" :openapi="openapi" />
     </div>
