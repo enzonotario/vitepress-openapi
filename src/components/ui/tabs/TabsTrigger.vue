@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { TabsTriggerProps } from 'radix-vue'
+import type { TabsTriggerProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import type { TabsTriggerVariants } from './index'
-import { TabsTrigger, useForwardProps } from 'radix-vue'
+import { TabsTrigger, useForwardProps } from 'reka-ui'
 import { computed } from 'vue'
 import { cn } from '../../../lib/utils'
 import { tabsTriggerVariants } from './index'

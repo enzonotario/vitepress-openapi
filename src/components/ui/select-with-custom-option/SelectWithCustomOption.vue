@@ -73,7 +73,7 @@ const handleSelectChange = (selectedValue: string) => {
     <Select
       :model-value="value"
       class="absolute inset-0"
-      @update:model-value="handleSelectChange"
+      @update:model-value="handleSelectChange(String($event))"
     >
       <SelectTrigger :aria-label="$t('Select')">
         <SelectValue :placeholder="placeholder" class="text-start" />

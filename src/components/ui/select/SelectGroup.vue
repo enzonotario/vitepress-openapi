@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { SelectGroupProps } from 'radix-vue'
+import type { SelectGroupProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { SelectGroup } from 'radix-vue'
+import { SelectGroup } from 'reka-ui'
 import { computed } from 'vue'
 import { cn } from '../../../lib/utils'
 

@@ -195,7 +195,7 @@ watch(operationData.security.selectedSchemeId, () => {
         <div v-if="props.securityUi.length > 1" class="w-full max-w-[33%] md:max-w-[50%] ml-auto -mt-8">
           <Select
             :model-value="operationData.security.selectedSchemeId.value"
-            @update:model-value="operationData.security.selectedSchemeId.value = $event"
+            @update:model-value="operationData.security.selectedSchemeId.value = String($event)"
           >
             <SelectTrigger
               aria-label="Security Scheme"
