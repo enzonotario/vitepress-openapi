@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { ToastViewportProps } from 'radix-vue'
+import type { ToastViewportProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { ToastViewport } from 'radix-vue'
+import { ToastViewport } from 'reka-ui'
 import { computed } from 'vue'
 import { cn } from '../../../../../../src/lib/utils'
 

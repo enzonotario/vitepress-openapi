@@ -57,8 +57,8 @@ const parameterExample = getPropertyExample(props.parameter)
     v-if="['boolean'].includes(parameter.schema?.type)"
     :id="parameter.name"
     :name="parameter.name"
-    :checked="String(modelValue) === '' ? 'indeterminate' : (modelValue as boolean)"
-    @update:checked="emits('update:modelValue', $event)"
+    :model-value="String(modelValue) === '' ? 'indeterminate' : (modelValue as boolean)"
+    @update:model-value="emits('update:modelValue', $event)"
     @keydown.enter="emits('submit')"
   />
 

@@ -195,7 +195,7 @@ watch(operationData.security.selectedSchemeId, () => {
         <div v-if="props.securityUi.length > 1" class="w-full max-w-[33%] md:max-w-[50%] ml-auto -mt-8">
           <Select
             :model-value="operationData.security.selectedSchemeId.value"
-            @update:model-value="operationData.security.selectedSchemeId.value = $event"
+            @update:model-value="operationData.security.selectedSchemeId.value = String($event)"
           >
             <SelectTrigger
               aria-label="Security Scheme"
@@ -251,13 +251,13 @@ watch(operationData.security.selectedSchemeId, () => {
           :key="parameter.name"
           class="flex flex-col gap-2"
         >
-          <div class="flex flex-row items-center space-x-2">
-            <span class="text-sm font-bold">{{ parameter.name }}</span>
+          <Label :for="parameter.name" class="text-sm font-bold space-x-2">
+            <span>{{ parameter.name }}</span>
             <span
               v-if="parameter.required"
               class="text-sm text-destructive"
             >*</span>
-          </div>
+          </Label>
           <div class="flex flex-row items-center space-x-2">
             <OAPlaygroundParameterInput
               v-model="variables[parameter.name ?? '']"

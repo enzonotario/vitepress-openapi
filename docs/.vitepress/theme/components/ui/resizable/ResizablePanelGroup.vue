@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { SplitterGroupEmits, SplitterGroupProps } from 'radix-vue'
+import type { SplitterGroupEmits, SplitterGroupProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { SplitterGroup, useForwardPropsEmits } from 'radix-vue'
+import { SplitterGroup, useForwardPropsEmits } from 'reka-ui'
 import { computed } from 'vue'
 import { cn } from '../../../../../../src/lib/utils'
 
