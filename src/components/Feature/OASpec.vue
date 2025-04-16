@@ -60,7 +60,7 @@ const slots = defineSlots<Record<string, OperationSlot>>()
     <template #default="{ openapi }">
       <OASpecContent
         v-bind="{
-          ...props,
+          ...$attrs,
           openapi,
         }"
       >
