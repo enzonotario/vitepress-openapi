@@ -24,4 +24,4 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<OARemoteSpec :spec-url="specUrl" />
+<OASpec :spec-url="specUrl" />
