@@ -9,6 +9,11 @@ const props = defineProps({
     required: false,
     default: null,
   },
+  specUrl: {
+    type: String,
+    required: false,
+    default: null,
+  },
   hideInfo: {
     type: Boolean,
     default: false,
@@ -52,11 +57,15 @@ const props = defineProps({
   },
 })
 
+const emits = defineEmits([
+  'update:spec',
+])
+
 const slots = defineSlots<Record<string, OperationSlot>>()
 </script>
 
 <template>
-  <OAContextProvider :spec="props.spec">
+  <OAContextProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
     <template #default="{ openapi }">
       <OASpecContent
         v-bind="{

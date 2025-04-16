@@ -12,6 +12,11 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  specUrl: {
+    type: String,
+    required: false,
+    default: null,
+  },
   prefixHeadings: {
     // Whether to add prefixes to component headings (for the One Page view)
     type: Boolean,
@@ -40,11 +45,15 @@ const props = defineProps({
   },
 })
 
+const emits = defineEmits([
+  'update:spec',
+])
+
 const slots = defineSlots<Record<string, OperationSlot>>()
 </script>
 
 <template>
-  <OAContextProvider :spec="props.spec">
+  <OAContextProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
     <template #default="{ openapi }">
       <OAOperationContent
         v-bind="{
