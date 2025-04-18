@@ -59,10 +59,10 @@ export function parseOpenapi() {
       specContent = generateMissingTags({ spec: specContent, defaultTag, defaultTagDescription })
     }
 
-    specContent.externalDocs = specContent.externalDocs || specContent.externalDocs || {}
-    specContent.info = specContent.info || specContent.info || {}
-    specContent.servers = specContent.servers || specContent.servers || []
-    specContent.tags = specContent.tags || specContent.tags || []
+    specContent.externalDocs = specContent.externalDocs || {}
+    specContent.info = specContent.info || {}
+    specContent.servers = specContent.servers || []
+    specContent.tags = specContent.tags || []
 
     return Object.assign({}, specContent)
   }
