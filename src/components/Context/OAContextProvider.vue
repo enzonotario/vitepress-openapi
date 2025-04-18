@@ -6,7 +6,7 @@ import OAContextAsync from './OAContextAsync.vue'
 
 const props = defineProps({
   spec: {
-    type: Object,
+    type: [Object, String],
     required: false,
     default: null,
   },

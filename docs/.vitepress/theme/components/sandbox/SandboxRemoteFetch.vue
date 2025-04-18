@@ -19,21 +19,13 @@ async function fetchSpec() {
   sandboxData.loading.value = true
   sandboxData.specLoaded.value = false
   sandboxData.specUrl.value = null
+  sandboxData.spec.value = undefined
 
-  try {
-    const response = await fetch(innerUrl.value)
-    const data = await response.json()
-
-    sandboxData.spec.value = data
-  } catch (error) {
-    sandboxData.spec.value = {}
-  } finally {
-    await nextTick(() => {
-      sandboxData.specUrl.value = innerUrl.value
-      sandboxData.loading.value = false
-      sandboxData.specLoaded.value = true
-    })
-  }
+  await nextTick(() => {
+    sandboxData.specUrl.value = innerUrl.value
+    sandboxData.loading.value = false
+    sandboxData.specLoaded.value = true
+  })
 }
 </script>
 

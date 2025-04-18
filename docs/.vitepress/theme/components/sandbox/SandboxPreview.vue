@@ -60,7 +60,7 @@ watch(sandboxData.previewComponent, () => {
 
 <template>
   <div>
-    <SandboxPreviewSidebar v-if="sandboxData.showSidebar.value" />
+    <SandboxPreviewSidebar v-if="sandboxData.spec.value && sandboxData.showSidebar.value" />
 
     <div
       class="SandboxPreviewContentWrapper"
@@ -78,14 +78,20 @@ watch(sandboxData.previewComponent, () => {
             :key="sandboxData.operationId.value"
             :operation-id="sandboxData.operationId.value"
             :spec="sandboxData.spec.value"
+            :spec-url="sandboxData.specUrl.value"
+            @update:spec="sandboxData.spec.value = $event"
           />
           <OASpec
             v-else-if="sandboxData.previewComponent.value === 'OASpec'"
             :spec="sandboxData.spec.value"
+            :spec-url="sandboxData.specUrl.value"
+            @update:spec="sandboxData.spec.value = $event"
           />
           <OAIntroduction
             v-else-if="sandboxData.previewComponent.value === 'OAIntroduction'"
             :spec="sandboxData.spec.value"
+            :spec-url="sandboxData.specUrl.value"
+            @update:spec="sandboxData.spec.value = $event"
           />
         </VPHomeContent>
       </div>

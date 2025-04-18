@@ -4,7 +4,7 @@ import OAServersContent from './OAServersContent.vue'
 
 const props = defineProps({
   spec: {
-    type: Object,
+    type: [Object, String],
     required: false,
   },
 })

@@ -9,7 +9,7 @@ const props = defineProps({
     required: true,
   },
   spec: {
-    type: Object,
+    type: [Object, String],
     required: false,
   },
   specUrl: {

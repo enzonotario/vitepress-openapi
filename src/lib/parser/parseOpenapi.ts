@@ -3,6 +3,7 @@ import type { OpenAPIDocument, ParsedOpenAPI } from '../../types'
 import { dereferenceSync } from '@trojs/openapi-dereference'
 import { $trycatch } from '@tszen/trycatch'
 import { merge } from 'allof-merge'
+import { parseYAML } from 'confbox'
 import { generateCodeSamples } from './generateCodeSamples'
 import { generateMissingOperationIds } from './generateMissingOperationIds'
 import { generateMissingSummary } from './generateMissingSummary'
@@ -12,12 +13,28 @@ import { generateResponseUi } from './generateResponseUi'
 import { generateSecurityUi } from './generateSecurityUi'
 
 export function parseOpenapi() {
+  function parseSpecContent(spec: OpenAPIDocument | string): OpenAPIDocument | null {
+    if (typeof spec === 'string') {
+      try {
+        const parsed = parseYAML(spec)
+        return parsed as OpenAPIDocument
+      } catch (e) {
+        console.error('Error parsing spec', e)
+        return null
+      }
+    } else if (typeof spec === 'object') {
+      return spec as OpenAPIDocument
+    } else {
+      throw new TypeError('Invalid spec format')
+    }
+  }
+
   function transformSync({
     spec,
     defaultTag = undefined,
     defaultTagDescription = undefined,
   }: {
-    spec: OpenAPIDocument
+    spec: OpenAPIDocument | string
     defaultTag?: string
     defaultTagDescription?: string
   }) {
@@ -25,38 +42,42 @@ export function parseOpenapi() {
       console.warn('Transforming OpenAPI spec:', spec)
     }
 
-    if (!spec) {
+    let specContent = parseSpecContent(spec)
+
+    if (!specContent) {
       return {}
     }
 
-    if (!spec.openapi || !String(spec.openapi).startsWith('3.')) {
+    if (!specContent.openapi || !String(specContent.openapi).startsWith('3.')) {
       console.warn('Only OpenAPI 3.x is supported')
       return {}
     }
 
-    if (spec?.paths) {
-      spec = generateMissingOperationIds(spec)
-      spec = generateMissingSummary(spec)
-      spec = generateMissingTags({ spec, defaultTag, defaultTagDescription })
+    if (specContent?.paths) {
+      specContent = generateMissingOperationIds(specContent)
+      specContent = generateMissingSummary(specContent)
+      specContent = generateMissingTags({ spec: specContent, defaultTag, defaultTagDescription })
     }
 
-    spec.externalDocs = spec.externalDocs || spec.externalDocs || {}
-    spec.info = spec.info || spec.info || {}
-    spec.servers = spec.servers || spec.servers || []
-    spec.tags = spec.tags || spec.tags || []
+    specContent.externalDocs = specContent.externalDocs || specContent.externalDocs || {}
+    specContent.info = specContent.info || specContent.info || {}
+    specContent.servers = specContent.servers || specContent.servers || []
+    specContent.tags = specContent.tags || specContent.tags || []
 
-    return Object.assign({}, spec)
+    return Object.assign({}, specContent)
   }
 
   async function transformAsync({
     spec,
   }: {
-    spec: ParsedOpenAPI
+    spec: ParsedOpenAPI | string
   }): Promise<ParsedOpenAPI> {
-    const [result, err] = await $trycatch(() => generateCodeSamples(spec))
-    spec = err ? spec : result
+    let specContent = parseSpecContent(spec) as ParsedOpenAPI
 
-    return spec
+    const [result, err] = await $trycatch(() => generateCodeSamples(specContent))
+    specContent = err ? specContent : result
+
+    return specContent
   }
 
   function parseSync({
@@ -64,11 +85,13 @@ export function parseOpenapi() {
     defaultTag = undefined,
     defaultTagDescription = undefined,
   }: {
-    spec: OpenAPIDocument
+    spec: OpenAPIDocument | string
     defaultTag?: string
     defaultTagDescription?: string
   }): ParsedOpenAPI {
-    let parsedSpec = Object.assign({}, spec) as ParsedOpenAPI
+    const specContent = parseSpecContent(spec)
+
+    let parsedSpec = Object.assign({}, specContent) as ParsedOpenAPI
 
     const [mergedSpec, errMerge] = $trycatch(() => merge(
       transformSync({
@@ -104,7 +127,7 @@ export function parseOpenapi() {
     defaultTag = undefined,
     defaultTagDescription = undefined,
   }: {
-    spec: OpenAPIDocument
+    spec: OpenAPIDocument | string
     defaultTag?: string
     defaultTagDescription?: string
   }): Promise<ParsedOpenAPI> {
