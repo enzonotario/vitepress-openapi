@@ -26,7 +26,7 @@ watch(
   [() => props.code, () => isDark.value],
   async () => {
     const codeToHighlight = typeof props.code === 'string' ? props.code : JSON.stringify(props.code, null, 2)
-    await shiki.initShiki()
+    await shiki.init()
     const highlightedCode = shiki.renderShiki(codeToHighlight, {
       lang: props.lang,
       theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
