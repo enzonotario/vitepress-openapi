@@ -1,4 +1,3 @@
-import OAHeading from './Common/OAHeading.vue'
 import OAInfo from './Feature/OAInfo.vue'
 import OAIntroduction from './Feature/OAIntroduction.vue'
 import OALocaleSelect from './Feature/OALocaleSelect.vue'
@@ -8,7 +7,6 @@ import OASpec from './Feature/OASpec.vue'
 import OASpecSkeleton from './Feature/OASpecSkeleton.vue'
 
 export {
-  OAHeading,
   OAInfo,
   OAIntroduction,
   OALocaleSelect,
