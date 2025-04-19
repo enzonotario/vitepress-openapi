@@ -20,13 +20,14 @@ export function parseOpenapi() {
         return parsed as OpenAPIDocument
       } catch (e) {
         console.error('Error parsing spec', e)
-        return null
       }
     } else if (typeof spec === 'object') {
       return spec as OpenAPIDocument
     } else {
-      throw new TypeError('Invalid spec format')
+      console.error('Invalid spec format')
     }
+
+    return {} as OpenAPIDocument
   }
 
   function transformSync({
