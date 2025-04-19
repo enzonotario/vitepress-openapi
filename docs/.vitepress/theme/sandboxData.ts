@@ -29,7 +29,7 @@ export function initSandboxData(options: Partial<UnwrapRef<SandboxData>> = {}): 
   return {
     loading: ref(false),
     specLoaded: ref(options.spec && Object.keys(options.spec).length > 0),
-    spec: ref(options.spec ?? {}),
+    spec: ref(options.spec ?? undefined),
     specUrl: ref(options.specUrl ?? ''),
 
     themeConfig: ref(options.themeConfig ?? {}),

@@ -120,10 +120,7 @@ watch(hash, () => {
 
       <ResizablePanel>
         <div class="w-full h-full overflow-x-hidden overflow-y-auto">
-          <SandboxPreview
-            v-if="sandboxData.specLoaded.value"
-            :spec-url="sandboxData.specUrl.value"
-          />
+          <SandboxPreview v-if="sandboxData.specLoaded.value" />
           <OASpecSkeleton v-else />
         </div>
       </ResizablePanel>

@@ -20,7 +20,7 @@ const loading = ref(true)
 const themeConfig = useTheme()
 
 export function useShiki() {
-  async function initShiki() {
+  async function init() {
     if (shiki) {
       return
     }
@@ -48,6 +48,10 @@ export function useShiki() {
   return {
     loading,
     renderShiki,
-    initShiki,
+    init,
+    initShiki: async () => {
+      console.warn('initShiki is deprecated, use init instead')
+      await init()
+    },
   }
 }

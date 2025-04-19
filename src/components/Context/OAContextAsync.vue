@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { parseYAML } from 'confbox'
 import { OpenApi } from '../../lib/OpenApi'
 import { parseOpenapi } from '../../lib/parser/parseOpenapi'
 import OAContext from './OAContext.vue'
 
 const props = defineProps({
   spec: {
-    type: Object,
+    type: [Object, String],
     required: false,
   },
   specUrl: {
@@ -37,7 +36,7 @@ async function fetchSpec(url?: string): Promise<any> {
   }
 
   if (res.headers.get('content-type')?.toLowerCase().includes('yaml') || url.endsWith('.yaml') || url.endsWith('.yml')) {
-    return parseYAML(await res.text())
+    return await res.text()
   }
 
   return res.json()

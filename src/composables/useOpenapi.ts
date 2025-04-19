@@ -12,7 +12,7 @@ export function useOpenapi({
   spec,
   config,
 }: {
-  spec?: OpenAPIDocument
+  spec?: OpenAPIDocument | string
   config?: PartialUseThemeConfig
 } = {}) {
   if (config) {
@@ -36,7 +36,7 @@ export function useOpenapi({
   function sync({
     spec,
   }: {
-    spec?: OpenAPIDocument
+    spec?: OpenAPIDocument | string
   } = {}) {
     if (spec) {
       setInstance(
@@ -58,7 +58,7 @@ export function useOpenapi({
   async function async({
     spec,
   }: {
-    spec?: OpenAPIDocument
+    spec?: OpenAPIDocument | string
   } = {}) {
     if (spec) {
       setInstance(

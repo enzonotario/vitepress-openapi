@@ -94,6 +94,12 @@ To use the OpenAPI specification, you can either configure it Globally, or in a 
 
 In your `.vitepress/theme/index.[js,ts]` file, import the OpenAPI specification and pass it as `spec` prop to the `useOpenapi` composable.
 
+<details open>
+
+<summary>
+<strong>Using a JSON specification</strong>
+</summary>
+
 ::: code-group
 
 ```js [JavaScript]
@@ -109,13 +115,12 @@ export default {
     extends: DefaultTheme,
     async enhanceApp({ app }) {
         // Set the OpenAPI specification.
-        const openapi = useOpenapi({ // [!code ++]
+        useOpenapi({ // [!code ++]
             spec, // [!code ++]
         }) // [!code ++]
 
         // Use the theme.
-        theme.enhanceApp({ app }) // [!code --]
-        theme.enhanceApp({ app, openapi }) // [!code ++]
+        theme.enhanceApp({ app })
     }
 }
 ```
@@ -134,22 +139,140 @@ export default {
     extends: DefaultTheme,
     async enhanceApp({ app }) {
         // Set the OpenAPI specification.
-        const openapi = useOpenapi({ // [!code ++]
+        useOpenapi({ // [!code ++]
             spec, // [!code ++]
         }) // [!code ++]
 
         // Use the theme.
-        theme.enhanceApp({ app }) // [!code --]
-        theme.enhanceApp({ app, openapi }) // [!code ++]
+        theme.enhanceApp({ app })
     }
 } satisfies Theme
 ```
 
 :::
 
+</details>
+
+<details>
+
+<summary>
+<strong>Using a YAML specification</strong>
+</summary>
+
+The `spec` prop can also accept a YAML string.
+
+::: code-group
+
+```js{11-40} [JavaScript]
+// .vitepress/theme/index.js
+import DefaultTheme from 'vitepress/theme'
+import { theme } from 'vitepress-openapi/client' // [!code --]
+import { theme, useOpenapi } from 'vitepress-openapi/client' // [!code ++]
+import 'vitepress-openapi/dist/style.css'
+
+export default {
+    extends: DefaultTheme,
+    async enhanceApp({ app }) {
+        // Set the OpenAPI specification.
+        useOpenapi({
+            spec: `
+openapi: 3.0.4
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+  - url: http://staging-api.example.com
+    description: Optional server description, e.g. Internal staging server for testing
+
+paths:
+  /users:
+    get:
+      summary: Returns a list of users.
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        "200": # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+`,
+        })
+
+        // Use the theme.
+        theme.enhanceApp({ app })
+    }
+}
+```
+
+```ts{12-41} [TypeScript]
+// .vitepress/theme/index.ts
+import DefaultTheme from 'vitepress/theme'
+import type { Theme } from 'vitepress'
+import { theme } from 'vitepress-openapi/client' // [!code --]
+import { theme, useOpenapi } from 'vitepress-openapi/client' // [!code ++]
+import 'vitepress-openapi/dist/style.css'
+
+export default {
+    extends: DefaultTheme,
+    async enhanceApp({ app }) {
+        // Set the OpenAPI specification.
+        useOpenapi({
+          spec: `
+openapi: 3.0.4
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+  - url: http://staging-api.example.com
+    description: Optional server description, e.g. Internal staging server for testing
+
+paths:
+  /users:
+    get:
+      summary: Returns a list of users.
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        "200": # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+`,
+        })
+
+        // Use the theme.
+        theme.enhanceApp({ app })
+    }
+} satisfies Theme
+```
+
+:::
+
+</details>
+
 </template>
 
 <template #in-markdown>
+
+<details open>
+
+<summary>
+<strong>Using a JSON specification</strong>
+</summary>
 
 In your `.md` files, import the OpenAPI specification and pass it as `spec` prop to the `OASpec` or `OAOperation` component.
 
@@ -190,6 +313,150 @@ const operationId = route.data.params.operationId
 
 :::
 
+</details>
+
+<details>
+
+<summary>
+<strong>Using a YAML specification</strong>
+</summary>
+
+The `spec` prop can also accept a YAML string.
+
+::: code-group
+
+```md [Using OASpec]
+---
+aside: false
+outline: false
+title: vitepress-openapi
+---
+
+<script setup>
+const spec = `
+openapi: 3.0.4
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+  - url: http://staging-api.example.com
+    description: Optional server description, e.g. Internal staging server for testing
+
+paths:
+  /users:
+    get:
+      summary: Returns a list of users.
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        "200": # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+`
+</script>
+
+<OASpec :spec="spec" />
+```
+
+```md [Using OAOperation]
+---
+aside: false
+outline: false
+title: vitepress-openapi
+---
+
+<script setup>
+import { useRoute } from 'vitepress'
+
+const spec = `
+openapi: 3.0.4
+info:
+  title: Sample API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 0.1.9
+
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+  - url: http://staging-api.example.com
+    description: Optional server description, e.g. Internal staging server for testing
+
+paths:
+  /users:
+    get:
+      summary: Returns a list of users.
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        "200": # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+`
+
+const route = useRoute()
+
+const operationId = route.data.params.operationId
+</script>
+
+<OAOperation :spec="spec" :operationId="operationId" />
+```
+
+:::
+
+</details>
+
+<details>
+
+<summary>
+<strong>Using a URL specification</strong>
+</summary>
+
+You can also use a URL to load the OpenAPI specification. The `spec-url` prop accepts a URL string.
+
+::: code-group
+
+```md [Using OASpec]
+---
+aside: false
+outline: false
+title: vitepress-openapi
+---
+
+<OASpec spec-url="https://vitepress-openapi.vercel.app/openapi.json" />
+```
+
+```md [Using OAOperation]
+---
+aside: false
+outline: false
+title: vitepress-openapi
+---
+
+<script setup>
+import { useRoute } from 'vitepress'
+const route = useRoute()
+const operationId = route.data.params.operationId
+</script>
+
+<OAOperation spec-url="https://vitepress-openapi.vercel.app/openapi.json" :operationId="operationId" />
+```
+
+:::
+
+</details>
+
 </template>
 
 </ScopeConfigurationTabs>
@@ -218,7 +485,7 @@ export default {
     extends: DefaultTheme,
     async enhanceApp({ app }) {
         // Set the OpenAPI specification.
-        const openapi = useOpenapi({
+        useOpenapi({
             spec,
             config: { // [!code ++]
             {{''}}    // Custom theme configuration... [!code ++]
@@ -226,7 +493,7 @@ export default {
         })
 
         // Use the theme.
-        theme.enhanceApp({ app, openapi })
+        theme.enhanceApp({ app })
     }
 }
 ```
@@ -244,7 +511,7 @@ export default {
     extends: DefaultTheme,
     async enhanceApp({ app }) {
         // Set the OpenAPI specification.
-        const openapi = useOpenapi({
+        useOpenapi({
             spec,
             config: { // [!code ++]
             {{''}}    // Custom theme configuration... [!code ++]
@@ -252,7 +519,7 @@ export default {
         })
 
         // Use the theme.
-        theme.enhanceApp({ app, openapi })
+        theme.enhanceApp({ app })
     }
 } satisfies Theme
 ```

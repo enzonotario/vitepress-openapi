@@ -96,6 +96,30 @@ const operationId = route.data.params.operationId
 
 </template>
 
+<template #spec-url>
+
+In your `.md` files, import the OpenAPI specification and pass it as `specUrl` prop to the `OAOperation` component.
+
+```markdown
+---
+aside: false
+outline: false
+title: vitepress-openapi
+---
+
+<script setup lang="ts">
+import { useRoute } from 'vitepress'
+
+const route = useRoute()
+
+const operationId = route.data.params.operationId
+</script>
+
+<OAOperation spec-url="https://vitepress-openapi.vercel.app/openapi.json" :operationId="operationId" />
+```
+
+</template>
+
 </ScopeConfigurationTabs>
 
 ## Searching Operations

@@ -4,7 +4,7 @@ import OAInfoContent from './OAInfoContent.vue'
 
 const props = defineProps({
   spec: {
-    type: Object,
+    type: [Object, String],
     required: false,
   },
 })
