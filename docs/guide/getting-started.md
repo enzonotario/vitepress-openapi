@@ -22,9 +22,21 @@ Before you begin, make sure you have the following installed:
 - VitePress
 - OpenAPI Specification (Version 3)
 
-## Installation
+## Starter Template
 
-Install the `vitepress-openapi` package using your package manager.
+To get started quickly with `vitepress-openapi`, you can use the provided starter template. This template includes a basic VitePress setup with `vitepress-openapi` and a sample OpenAPI specification.
+
+You can access the template from:
+- GitHub: [https://github.com/enzonotario/vitepress-openapi-starter](https://github.com/enzonotario/vitepress-openapi-starter)
+- Stackblitz: [https://stackblitz.com/fork/github/enzonotario/vitepress-openapi-starter](https://stackblitz.com/fork/github/enzonotario/vitepress-openapi-starter)
+
+You can also use the template to create a new VitePress project using the following command:
+
+```sh
+npx degit enzonotario/vitepress-openapi-starter my-api-docs
+```
+
+## Installation
 
 ::: code-group
 
