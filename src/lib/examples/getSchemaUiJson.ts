@@ -1,4 +1,4 @@
-import type { OAProperty } from '../parser/getSchemaUi'
+import type { JSONSchemaType, OAProperty } from '../parser/getSchemaUi'
 import { literalTypes } from '../../index'
 import { getPropertyExample } from './getPropertyExample'
 
@@ -141,7 +141,7 @@ function hasAllLiteralTypes(property: OAProperty): boolean {
   return property.types?.every(type => type && literalTypes.includes(type))
 }
 
-function containsType(property: OAProperty, type: string): boolean {
+function containsType(property: OAProperty, type: JSONSchemaType): boolean {
   return property.types?.includes(type) ?? false
 }
 

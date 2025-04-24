@@ -4,7 +4,7 @@ import { getPropertyExamples } from '../examples/getPropertyExamples'
 import { getConstraints, hasConstraints } from './constraintsParser'
 import { resolveCircularRef } from './resolveCircularRef'
 
-type JSONSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object' | 'null'
+export type JSONSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object' | 'null'
 
 interface Metadata {
   isCircularReference?: boolean
