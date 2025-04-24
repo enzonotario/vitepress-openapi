@@ -102,6 +102,25 @@
           }
         }
       }
+    },
+    "/nullable-object": {
+      "get": {
+        "summary": "Get a nullable object",
+        "operationId": "getNullableObject",
+        "description": "Example of a JSON object that can be null.",
+        "responses": {
+          "200": {
+            "description": "A nullable object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NullableObject"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -344,6 +363,20 @@
             "type": "string"
           },
           "finalValue": {
+            "type": "string"
+          }
+        }
+      },
+      "NullableObject": {
+        "type": ["object", "null"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
             "type": "string"
           }
         }

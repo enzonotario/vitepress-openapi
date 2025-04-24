@@ -1316,6 +1316,29 @@ const fixtures: Record<string, FixtureTest> = {
       age: 42,
     },
   },
+
+  'object nullable': {
+    jsonSchema: {
+      type: ['object', 'null'],
+      properties: {
+        name: { type: 'string' },
+        age: { type: 'integer' },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        { name: 'name', required: false, types: ['string'] },
+        { name: 'age', required: false, types: ['integer'] },
+      ],
+      types: ['object', 'null'],
+      required: false,
+    },
+    schemaUiJson: {
+      name: 'string',
+      age: 0,
+    },
+  },
 }
 
 describe('getSchemaUi and getSchemaUiJson from fixtures', () => {
