@@ -149,63 +149,57 @@ class UiPropertyFactory {
 
     const property = UiPropertyFactory.createBaseProperty(name, schema, required)
 
-    switch (schema.type) {
-      case 'array':
-        if (schema.items) {
-          const schemaType = determineSchemaType(schema.items)
+    if (Array.isArray(schema.type) ? schema.type.includes('array') : schema.type === 'array') {
+      if (schema.items) {
+        const schemaType = determineSchemaType(schema.items)
 
-          property.properties = schemaType === 'object'
-            ? UiPropertyFactory.extractProperties(
-                schema.items.properties,
-                schema.items.required || [],
-                schema.items.additionalProperties,
-              )
-            : undefined
+        property.properties = schemaType === 'object'
+          ? UiPropertyFactory.extractProperties(
+              schema.items.properties,
+              schema.items.required || [],
+              schema.items.additionalProperties,
+            )
+          : undefined
 
-          if (schemaType !== undefined) {
-            property.subtype = schemaType as JSONSchemaType
-          }
-
-          const itemsExamples = getPropertyExamples(schema.items)
-          if (itemsExamples) {
-            property.subexamples = itemsExamples
-          }
-
-          if (schema.items.const !== undefined) {
-            property.meta = { ...(property.meta || {}), isConstant: true }
-          }
-
-          if (schema.items.oneOf) {
-            property.meta = { ...(property.meta || {}), isOneOf: true }
-            property.properties = schema.items.oneOf.map((prop: any) => {
-              const propSchema = { ...prop, type: schema.items.type }
-              return {
-                ...UiPropertyFactory.schemaToUiProperty('', propSchema),
-                meta: { ...(prop.meta || {}), isOneOfItem: true },
-              }
-            })
-          }
+        if (schemaType !== undefined) {
+          property.subtype = schemaType as JSONSchemaType
         }
-        break
 
-      case 'object':
+        const itemsExamples = getPropertyExamples(schema.items)
+        if (itemsExamples) {
+          property.subexamples = itemsExamples
+        }
+
+        if (schema.items.const !== undefined) {
+          property.meta = { ...(property.meta || {}), isConstant: true }
+        }
+
+        if (schema.items.oneOf) {
+          property.meta = { ...(property.meta || {}), isOneOf: true }
+          property.properties = schema.items.oneOf.map((prop: any) => {
+            const propSchema = { ...prop, type: schema.items.type }
+            return {
+              ...UiPropertyFactory.schemaToUiProperty('', propSchema),
+              meta: { ...(prop.meta || {}), isOneOfItem: true },
+            }
+          })
+        }
+      }
+    } else if (Array.isArray(schema.type) ? schema.type.includes('object') : schema.type === 'object') {
+      property.properties = UiPropertyFactory.extractProperties(
+        schema.properties,
+        schema.required || [],
+        schema.additionalProperties,
+      )
+    } else if (schema.type === undefined) {
+      if (schema.properties || schema.additionalProperties) {
+        property.types = ['object']
         property.properties = UiPropertyFactory.extractProperties(
           schema.properties,
           schema.required || [],
           schema.additionalProperties,
         )
-        break
-
-      case undefined:
-        if (schema.properties || schema.additionalProperties) {
-          property.types = ['object']
-          property.properties = UiPropertyFactory.extractProperties(
-            schema.properties,
-            schema.required || [],
-            schema.additionalProperties,
-          )
-        }
-        break
+      }
     }
 
     return property

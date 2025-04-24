@@ -38,7 +38,7 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
     }, useExample)
   }
 
-  if (isSingleType(property, 'object')) {
+  if (containsType(property, 'object')) {
     if (isOneOfProperty(property)) {
       return resolveOneOfProperty(property, useExample)
     }
@@ -139,6 +139,10 @@ function isLiteralType(property: OAProperty): boolean {
 
 function hasAllLiteralTypes(property: OAProperty): boolean {
   return property.types?.every(type => type && literalTypes.includes(type))
+}
+
+function containsType(property: OAProperty, type: string): boolean {
+  return property.types?.includes(type) ?? false
 }
 
 function isOneOfProperty(property: OAProperty): boolean {
