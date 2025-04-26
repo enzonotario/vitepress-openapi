@@ -10,7 +10,6 @@ You can use the `OASpec` component to render all operations in any Markdown file
 
 <SandboxIframe :sandbox-data="{sandboxView: 'preview', previewComponent: 'PagesBySpec', showSidebar: false}" :iframe-zoom="0.6" class="h-[70vh] max-h-[700px]" />
 
-
 ## Markdown File
 
 <ScopeConfigurationTabs>
