@@ -16,5 +16,10 @@
   {
     "name": "pyDolarVenezuela API",
     "url": "https://docs.pydolarve.org"
+  },
+  {
+    "name": "apidocs.ar",
+    "url": "https://apidocs.ar",
+    "image": "https://apidocs.ar/og.png"
   }
 ]
