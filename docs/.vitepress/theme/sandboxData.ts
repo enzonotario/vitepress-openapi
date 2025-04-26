@@ -13,7 +13,7 @@ export interface SandboxData {
   sandboxView: Ref<'edit' | 'preview'>
   hideSandboxNav: Ref<boolean>
 
-  previewComponent: Ref<'PagesByOperation' | 'PagesBySpec' | 'PagesByTag', 'Introduction' | string>
+  previewComponent: Ref<'PagesByOperation' | 'PagesBySpec' | 'PagesByTag' | 'Introduction' | string>
   previewHeaders: Ref<Array<any>>
   operationId: Ref<string | null>
   tags: Ref<Array<string>>
