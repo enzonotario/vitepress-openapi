@@ -8,9 +8,10 @@ const sandboxData = inject('sandboxData') as SandboxData
 const themeConfig = useTheme()
 
 const availableComponents = [
-  'OAOperation',
-  'OASpec',
-  'OAIntroduction',
+  'PagesByOperation',
+  'PagesBySpec',
+  'PagesByTag',
+  'Introduction',
 ]
 
 const availableSidebarItemsTypes = [
@@ -117,7 +118,7 @@ const availableSidebarItemsTypes = [
     </div>
 
     <div
-      v-if="sandboxData.previewComponent.value === 'OASpec'"
+      v-if="sandboxData.previewComponent.value === 'PagesBySpec'"
       class="flex flex-col gap-2"
     >
       <h3>Spec</h3>

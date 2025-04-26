@@ -13,9 +13,10 @@ export interface SandboxData {
   sandboxView: Ref<'edit' | 'preview'>
   hideSandboxNav: Ref<boolean>
 
-  previewComponent: Ref<'OASpec' | 'OAOperation' | 'OAIntroduction'>
+  previewComponent: Ref<'PagesByOperation' | 'PagesBySpec' | 'PagesByTag', 'Introduction'>
   previewHeaders: Ref<Array<any>>
   operationId: Ref<string | null>
+  tags: Ref<Array<string>>
 
   showSidebar: Ref<boolean>
   sidebarItemsType: Ref<'default' | 'itemsByPaths' | 'itemsByTags'>
@@ -37,9 +38,10 @@ export function initSandboxData(options: Partial<UnwrapRef<SandboxData>> = {}): 
     sandboxView: ref(options.sandboxView ?? 'edit'),
     hideSandboxNav: ref(options.hideSandboxNav ?? false),
 
-    previewComponent: ref(options.previewComponent ?? 'OASpec'),
+    previewComponent: ref(options.previewComponent ?? 'PagesBySpec'),
     previewHeaders: ref([]),
     operationId: ref(options.operationId ?? null),
+    tags: ref(typeof options.tags === 'string' ? [options.tags] : options.tags ?? []),
 
     showSidebar: ref(options.showSidebar ?? true),
     sidebarItemsType: ref(options.sidebarItemsType ?? 'default'),

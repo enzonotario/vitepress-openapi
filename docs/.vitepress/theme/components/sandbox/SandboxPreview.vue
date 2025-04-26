@@ -18,8 +18,8 @@ onMounted(() => {
 
 // Scroll into the operation when the operationId changes.
 watch(sandboxData.operationId, () => {
-  if (sandboxData.previewComponent.value === 'OAOperation') {
-  } else if (sandboxData.previewComponent.value === 'OASpec') {
+  if (sandboxData.previewComponent.value === 'PagesByOperation') {
+  } else if (sandboxData.previewComponent.value === 'PagesBySpec') {
     scrollToHash({
       hash: `#${sandboxData.operationId.value}`,
     })
@@ -40,9 +40,12 @@ watch(sandboxData.spec, (spec) => {
   }
 })
 
-// If the preview component is OAOperation and the operationId is not set, set it to the first operationId in the spec.
+/**
+ * If the preview component is PagesByOperation and the `operationId` is not
+ * set, set it to the first operationId in the spec.
+ */
 watch(sandboxData.previewComponent, () => {
-  if (sandboxData.previewComponent.value === 'OAOperation'
+  if (sandboxData.previewComponent.value === 'PagesByOperation'
     && !sandboxData.operationId.value) {
     const operationId = Object.entries(sandboxData.spec.value.paths)
       .map(([_, methods]) => {
@@ -54,6 +57,26 @@ watch(sandboxData.previewComponent, () => {
       .filter(Boolean)[0]
 
     sandboxData.operationId.value = operationId
+  }
+})
+
+/**
+ * If the preview component is PagesByTag and `tags` is not set, set it to
+ * the first tag in the spec.
+ */
+watch(sandboxData.previewComponent, () => {
+  if (sandboxData.previewComponent.value === 'PagesByTag'
+    && (!sandboxData.tags.value || sandboxData.tags.value.length === 0)) {
+    const tags = Object.entries(sandboxData.spec.value.paths)
+      .map(([_, methods]) => {
+        return Object.entries(methods).map(([_, operation]) => {
+          return operation.tags
+        })
+      })
+      .flat()
+      .filter(Boolean)[0]
+
+    sandboxData.tags.value = tags
   }
 })
 </script>
@@ -74,7 +97,7 @@ watch(sandboxData.previewComponent, () => {
       <div class="VPDoc">
         <VPHomeContent>
           <OAOperation
-            v-if="sandboxData.previewComponent.value === 'OAOperation' && sandboxData.operationId.value"
+            v-if="sandboxData.previewComponent.value === 'PagesByOperation' && sandboxData.operationId.value"
             :key="sandboxData.operationId.value"
             :operation-id="sandboxData.operationId.value"
             :spec="sandboxData.spec.value"
@@ -82,13 +105,22 @@ watch(sandboxData.previewComponent, () => {
             @update:spec="sandboxData.spec.value = $event"
           />
           <OASpec
-            v-else-if="sandboxData.previewComponent.value === 'OASpec'"
+            v-else-if="sandboxData.previewComponent.value === 'PagesBySpec'"
             :spec="sandboxData.spec.value"
             :spec-url="sandboxData.specUrl.value"
             @update:spec="sandboxData.spec.value = $event"
           />
+          <OASpec
+            v-else-if="sandboxData.previewComponent.value === 'PagesByTag' && sandboxData.tags.value"
+            :spec="sandboxData.spec.value"
+            :spec-url="sandboxData.specUrl.value"
+            :tags="sandboxData.tags.value"
+            hide-info
+            hide-servers
+            @update:spec="sandboxData.spec.value = $event"
+          />
           <OAIntroduction
-            v-else-if="sandboxData.previewComponent.value === 'OAIntroduction'"
+            v-else-if="sandboxData.previewComponent.value === 'Introduction'"
             :spec="sandboxData.spec.value"
             :spec-url="sandboxData.specUrl.value"
             @update:spec="sandboxData.spec.value = $event"

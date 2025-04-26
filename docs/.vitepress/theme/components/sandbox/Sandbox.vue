@@ -69,7 +69,15 @@ function share() {
 
 watch(hash, () => {
   const segments = hash.value.split('#')
-  sandboxData.operationId.value = segments.length > 1 ? segments[1] : ''
+
+  switch (sandboxData.previewComponent.value) {
+    case 'PagesByOperation':
+      sandboxData.operationId.value = segments.length > 1 ? segments[1] : ''
+      break
+    case 'PagesByTag':
+      sandboxData.tags.value = segments.length > 1 ? segments[1].split(',') : []
+      break
+  }
 })
 </script>
 
