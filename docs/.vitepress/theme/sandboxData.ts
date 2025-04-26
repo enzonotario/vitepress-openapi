@@ -13,9 +13,10 @@ export interface SandboxData {
   sandboxView: Ref<'edit' | 'preview'>
   hideSandboxNav: Ref<boolean>
 
-  previewComponent: Ref<'OASpec' | 'OAOperation' | 'OAIntroduction'>
+  previewComponent: Ref<'PagesByOperation' | 'PagesBySpec' | 'PagesByTag' | 'Introduction' | string>
   previewHeaders: Ref<Array<any>>
   operationId: Ref<string | null>
+  tags: Ref<Array<string>>
 
   showSidebar: Ref<boolean>
   sidebarItemsType: Ref<'default' | 'itemsByPaths' | 'itemsByTags'>
@@ -23,6 +24,24 @@ export interface SandboxData {
   sidebarItemsCollapsible: Ref<boolean>
 
   showAside: Ref<boolean>
+}
+
+function parsePreviewComponent(options: Partial<UnwrapRef<SandboxData>>) {
+  const previewComponent = options.previewComponent ?? 'PagesBySpec'
+
+  if (previewComponent === 'OASpec') {
+    return 'PagesBySpec'
+  }
+
+  if (previewComponent === 'OAOperation') {
+    return 'PagesByOperation'
+  }
+
+  if (previewComponent === 'OAIntroduction') {
+    return 'Introduction'
+  }
+
+  return previewComponent
 }
 
 export function initSandboxData(options: Partial<UnwrapRef<SandboxData>> = {}): SandboxData {
@@ -37,9 +56,10 @@ export function initSandboxData(options: Partial<UnwrapRef<SandboxData>> = {}): 
     sandboxView: ref(options.sandboxView ?? 'edit'),
     hideSandboxNav: ref(options.hideSandboxNav ?? false),
 
-    previewComponent: ref(options.previewComponent ?? 'OASpec'),
+    previewComponent: ref(parsePreviewComponent(options)),
     previewHeaders: ref([]),
     operationId: ref(options.operationId ?? null),
+    tags: ref(typeof options.tags === 'string' ? [options.tags] : options.tags ?? []),
 
     showSidebar: ref(options.showSidebar ?? true),
     sidebarItemsType: ref(options.sidebarItemsType ?? 'default'),

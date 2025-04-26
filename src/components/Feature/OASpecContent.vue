@@ -73,19 +73,18 @@ const showServers = !props.hideServers && servers.length
 
 const groupByTags = computed(() => props.groupByTags ?? themeConfig.getSpecConfig()?.groupByTags?.value)
 
-const operationsTags = props.tags ?? props.openapi.getOperationsTags()
+const operationsTags = computed(() => props.tags ?? props.openapi.getOperationsTags())
 
 const specTags: OpenAPIV3.TagObject[] = props.openapi.getTags()
 
 const paths = props.openapi.getPaths()
 
-const pathsByTags = operationsTags.map((tag: string) => {
+const pathsByTags = computed(() => operationsTags.value.map((tag: string) => {
   return {
     tag,
     paths: props.openapi.getPathsByTags(tag),
   }
-})
-
+}))
 const pathsWithoutTags = props.openapi.getPathsWithoutTags()
 
 const groups = computed(() => {
@@ -102,7 +101,7 @@ const groups = computed(() => {
           ]
         : []),
 
-      ...pathsByTags.map((tag: { tag: string, paths: Record<string, any> }) => {
+      ...pathsByTags.value.map((tag: { tag: string, paths: Record<string, any> }) => {
         return {
           name: tag.tag,
           paths: tag.paths,

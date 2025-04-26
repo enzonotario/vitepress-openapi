@@ -57,6 +57,7 @@ const slots = defineSlots<Record<string, OperationSlot>>()
     <template #default="{ openapi }">
       <OAOperationContent
         v-bind="{
+          ...$props,
           ...$attrs,
           operationId: props.operationId,
           openapi,

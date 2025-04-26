@@ -6,6 +6,12 @@ outline: 2
 
 You can use the `OAIntroduction` component to display the OpenAPI `info` and `servers` sections.
 
+## Example
+
+<SandboxIframe :sandbox-data="{sandboxView: 'preview', previewComponent: 'Introduction', showSidebar: false}" :iframe-zoom="0.6" class="h-[70vh] max-h-[700px]" />
+
+## Markdown File
+
 <ScopeConfigurationTabs>
 
 <template #global>
@@ -33,10 +39,6 @@ import spec from '../public/openapi.json'
 </template>
 
 </ScopeConfigurationTabs>
-
-## Example
-
-<SandboxIframe :sandbox-data="{sandboxView: 'preview', previewComponent: 'OAIntroduction', showSidebar: false}" :iframe-zoom="0.6" class="h-[70vh] max-h-[700px]" />
 
 ## Info and Servers
 

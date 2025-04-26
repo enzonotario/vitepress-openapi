@@ -6,6 +6,10 @@ outline: 2
 
 You can use the `OAOperation` component to render a specific operation.
 
+## Example
+
+<SandboxIframe :sandbox-data="{sandboxView: 'preview', previewComponent: 'PagesByOperation', operationId: 'getAllArtists'}" :iframe-zoom="0.6" class="h-[70vh] max-h-[700px]" />
+
 ## Creating `operations` pages
 
 To generate pages for each operation, create a directory named `operations` in the `docs` directory. Inside the `operations` directory, create a file named `[operationId].md` and a file named `[operationId].paths.js`.
@@ -127,7 +131,3 @@ const operationId = route.data.params.operationId
 If you want to make use of search on your site, the default `local` search will not work due to https://github.com/vuejs/vitepress/issues/2939
 
 Consider using [vitepress-plugin-pagefind](https://www.npmjs.com/package/vitepress-plugin-pagefind), which works with dynamic routes.
-
-## Example
-
-<SandboxIframe :sandbox-data="{sandboxView: 'preview', previewComponent: 'OAOperation', operationId: 'getAllArtists'}" :iframe-zoom="0.6" class="h-[70vh] max-h-[700px]" />
