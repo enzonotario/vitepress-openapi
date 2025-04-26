@@ -8,7 +8,7 @@ You can use the `OASpec` component to render all operations that have a specific
 
 ## Example
 
-<SandboxIframe :sandbox-data="{sandboxView: 'preview', previewComponent: 'PagesByTag', tags: 'Artists', sidebarItemsType: 'itemsByTags'}" :iframe-zoom="0.6" class="h-[70vh] max-h-[700px]" />
+<SandboxIframe :sandbox-data="{sandboxView: 'preview', previewComponent: 'PagesByTag', tags: 'Authentication', sidebarItemsType: 'itemsByTags'}" :iframe-zoom="0.6" class="h-[70vh] max-h-[700px]" />
 
 ## Creating `tags` pages
 
