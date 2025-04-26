@@ -27,7 +27,7 @@ export interface SandboxData {
 }
 
 function parsePreviewComponent(options: Partial<UnwrapRef<SandboxData>>) {
-  const previewComponent = options.previewComponent
+  const previewComponent = options.previewComponent ?? 'PagesBySpec'
 
   if (previewComponent === 'OASpec') {
     return 'PagesBySpec'
