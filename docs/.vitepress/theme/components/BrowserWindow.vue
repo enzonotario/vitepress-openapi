@@ -31,6 +31,10 @@ const props = defineProps({
       <span class="w-3 h-3 bg-red-500 rounded-full" />
       <span class="w-3 h-3 bg-yellow-500 rounded-full" />
       <span class="w-3 h-3 bg-green-500 rounded-full" />
+
+      <span class="flex-1" />
+
+      <slot name="title-end" />
     </div>
 
     <div class="relative w-full h-full overflow-x-hidden">

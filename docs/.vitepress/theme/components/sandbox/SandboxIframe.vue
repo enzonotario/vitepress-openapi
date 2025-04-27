@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { compressToURL } from '@amoutonbrady/lz-string'
+import { ExternalLink } from 'lucide-vue-next'
 import { deepUnref } from '../../../../../src/lib/deepUnref'
 import { cn } from '../../../../../src/lib/utils'
 import { initSandboxData } from '../../sandboxData'
@@ -36,13 +37,25 @@ const themeConfigCompressed = compressToURL(
   }),
 )
 
+const data = {
+  ...deepUnref(sandboxData),
+  loading: undefined,
+  specLoaded: undefined,
+  themeConfig: undefined,
+}
+
 const sandboxDataCompressed = compressToURL(
   JSON.stringify({
-    ...deepUnref(sandboxData),
-    loading: undefined,
-    specLoaded: undefined,
-    themeConfig: undefined,
+    ...data,
     hideSandboxNav: true,
+  }),
+)
+
+const openSandboxDataCompressed = compressToURL(
+  JSON.stringify({
+    ...data,
+    sandboxView: 'edit',
+    hideSandboxNav: false,
   }),
 )
 
@@ -51,10 +64,26 @@ const baseUrl = process.env.NODE_ENV === 'production'
   : 'http://localhost:5173/sandbox/'
 
 const url = `${baseUrl}?themeConfig=${themeConfigCompressed}&sandboxData=${sandboxDataCompressed}`
+
+const openSandboxUrl = `${baseUrl}?themeConfig=${themeConfigCompressed}&sandboxData=${openSandboxDataCompressed}`
 </script>
 
 <template>
   <BrowserWindow>
+    <template #title-end>
+      <a
+        :href="openSandboxUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="!no-underline"
+      >
+        <button class="text-muted-foreground flex items-center gap-2 hover:text-primary">
+          <ExternalLink class="w-4 h-4" />
+          <span>Open in Sandbox</span>
+        </button>
+      </a>
+    </template>
+
     <div class="relative w-full h-full overflow-x-hidden">
       <iframe
         :class="cn([
@@ -69,21 +98,7 @@ const url = `${baseUrl}?themeConfig=${themeConfigCompressed}&sandboxData=${sandb
         :style="{ zoom: props.iframeZoom ?? 1 }"
       />
 
-      <div
-        v-if="props.nonInteractive"
-        class="absolute inset-0 flex flex-col justify-center items-start rounded-b opacity-0 hover:opacity-100 bg-gray-800/50 transition-opacity"
-      >
-        <a
-          :href="url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="ml-4"
-        >
-          <button class="p-2 bg-primary text-primary-foreground rounded">
-            Open in Sandbox
-          </button>
-        </a>
-      </div>
+      <div v-if="props.nonInteractive" class="absolute inset-0" />
     </div>
   </BrowserWindow>
 </template>
