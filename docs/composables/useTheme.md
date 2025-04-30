@@ -57,6 +57,8 @@ export default {
                     mainMenuBar: false,
                     // Set the visibility of the navigation bar.
                     navigationBar: false,
+                    // Set the visibility of the status bar.
+                    statusBar: false,
                 },
             },
             operation: {
@@ -172,6 +174,7 @@ export default {
 | `setPlaygroundJsonEditorMode`          | Sets the mode of the JSON editor.          | `'tree'`      | `'text'`, `'tree'`, `'table'` |
 | `setPlaygroundJsonEditorMainMenuBar`   | Sets the visibility of the main menu bar.  | `false`       | `true`, `false`               |
 | `setPlaygroundJsonEditorNavigationBar` | Sets the visibility of the navigation bar. | `false`       | `true`, `false`               |
+| `setPlaygroundJsonEditorStatusBar`     | Sets the visibility of the status bar.     | `false`       | `true`, `false`               |
 
 ## Operation Configuration
 
