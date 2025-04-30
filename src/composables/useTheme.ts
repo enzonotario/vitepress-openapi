@@ -57,6 +57,7 @@ export interface PlaygroundConfig {
     mode: Ref<PlaygroundJsonEditorMode>
     mainMenuBar: Ref<boolean>
     navigationBar: Ref<boolean>
+    statusBar: Ref<boolean>
   }
 }
 
@@ -235,6 +236,7 @@ const themeConfig: UseThemeConfig = {
       mode: ref<PlaygroundJsonEditorMode>('tree'),
       mainMenuBar: ref<boolean>(false),
       navigationBar: ref<boolean>(false),
+      statusBar: ref<boolean>(false),
     },
   },
   security: {
@@ -367,6 +369,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
     if (config?.playground?.jsonEditor?.navigationBar !== undefined) {
       setPlaygroundJsonEditorNavigationBar(config.playground.jsonEditor.navigationBar)
+    }
+
+    if (config?.playground?.jsonEditor?.statusBar !== undefined) {
+      setPlaygroundJsonEditorStatusBar(config.playground.jsonEditor.statusBar)
     }
 
     if (config?.security?.defaultScheme !== undefined) {
@@ -582,6 +588,15 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   function setPlaygroundJsonEditorNavigationBar(value: boolean) {
     // @ts-expect-error: This is a valid expression.
     themeConfig.playground.jsonEditor.navigationBar.value = value
+  }
+
+  function getPlaygroundJsonEditorStatusBar(): boolean | undefined {
+    return themeConfig?.playground?.jsonEditor?.statusBar.value
+  }
+
+  function setPlaygroundJsonEditorStatusBar(value: boolean) {
+    // @ts-expect-error: This is a valid expression.
+    themeConfig.playground.jsonEditor.statusBar.value = value
   }
 
   function getSecurityDefaultScheme(): string | null | undefined {
@@ -877,6 +892,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setPlaygroundJsonEditorMainMenuBar,
     getPlaygroundJsonEditorNavigationBar,
     setPlaygroundJsonEditorNavigationBar,
+    getPlaygroundJsonEditorStatusBar,
+    setPlaygroundJsonEditorStatusBar,
     getSecurityDefaultScheme,
     setSecurityDefaultScheme,
     getOperationBadges,

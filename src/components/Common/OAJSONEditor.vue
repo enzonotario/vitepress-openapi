@@ -32,6 +32,7 @@ const isDark = themeConfig.isDark
     :main-menu-bar="themeConfig.getPlaygroundJsonEditorMainMenuBar()"
     :navigation-bar="themeConfig.getPlaygroundJsonEditorNavigationBar()"
     :mode="themeConfig.getPlaygroundJsonEditorMode()"
+    :status-bar="themeConfig.getPlaygroundJsonEditorStatusBar()"
     class="oa-jse"
     :class="{
       'oa-jse-theme-dark': isDark,
