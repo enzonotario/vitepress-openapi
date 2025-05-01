@@ -67,7 +67,7 @@
     "@scalar/openapi-types": "^0.2.1",
     "@scalar/snippetz": "^0.2.19",
     "@scalar/types": "^0.1.11",
-    "@shikijs/langs-precompiled": "^3.3.0",
+    "@shikijs/langs": "^3.3.0",
     "@shikijs/themes": "^3.3.0",
     "@sindresorhus/slugify": "^2.2.1",
     "@trojs/openapi-dereference": "^1.1.0",
