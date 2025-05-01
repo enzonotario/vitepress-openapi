@@ -30,7 +30,9 @@ export function useShiki() {
         themeConfig.getHighlighterTheme()?.dark,
       ],
       langs,
-      engine: createJavaScriptRegexEngine(),
+      engine: createJavaScriptRegexEngine({
+        target: 'ES2018',
+      }),
     })
   }
 
