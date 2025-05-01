@@ -45,7 +45,7 @@ importers:
       '@scalar/types':
         specifier: ^0.1.11
         version: 0.1.11
-      '@shikijs/langs-precompiled':
+      '@shikijs/langs':
         specifier: ^3.3.0
         version: 3.3.0
       '@shikijs/themes':
@@ -1171,10 +1171,6 @@ packages:
 
   '@shikijs/engine-oniguruma@3.3.0':
     resolution: {integrity: sha512-l0vIw+GxeNU7uGnsu6B+Crpeqf+WTQ2Va71cHb5ZYWEVEPdfYwY5kXwYqRJwHrxz9WH+pjSpXQz+TJgAsrkA5A==}
-
-  '@shikijs/langs-precompiled@3.3.0':
-    resolution: {integrity: sha512-2qsvPdopTt15OPzvDGYCl7gy08F7JN+EKLbo7DmhO/QchkYy2W4EltMpYKBz1KHP4136z3+Wt9QP9+2Rxfq7Yg==}
-    engines: {node: '>=20'}
 
   '@shikijs/langs@2.5.0':
     resolution: {integrity: sha512-Qfrrt5OsNH5R+5tJ/3uYBBZv3SuGmnRPejV9IlIbFH3HTGLDlkqgHymAlzklVmKBjAaVmkPkyikAV/sQ1wSL+w==}
@@ -4489,11 +4485,6 @@ snapshots:
     dependencies:
       '@shikijs/types': 3.3.0
       '@shikijs/vscode-textmate': 10.0.2
-
-  '@shikijs/langs-precompiled@3.3.0':
-    dependencies:
-      '@shikijs/types': 3.3.0
-      oniguruma-to-es: 4.3.1
 
   '@shikijs/langs@2.5.0':
     dependencies:

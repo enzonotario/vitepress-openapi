@@ -1,12 +1,12 @@
 import type { HighlighterCore } from 'shiki/core'
-import bash from '@shikijs/langs-precompiled/bash'
-import js from '@shikijs/langs-precompiled/javascript'
-import json from '@shikijs/langs-precompiled/json'
-import markdown from '@shikijs/langs-precompiled/markdown'
-import php from '@shikijs/langs-precompiled/php'
-import python from '@shikijs/langs-precompiled/python'
-import ts from '@shikijs/langs-precompiled/typescript'
-import xml from '@shikijs/langs-precompiled/xml'
+import bash from '@shikijs/langs/bash'
+import js from '@shikijs/langs/javascript'
+import json from '@shikijs/langs/json'
+import markdown from '@shikijs/langs/markdown'
+import php from '@shikijs/langs/php'
+import python from '@shikijs/langs/python'
+import ts from '@shikijs/langs/typescript'
+import xml from '@shikijs/langs/xml'
 import { createHighlighterCore } from 'shiki/core'
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
 import { ref } from 'vue'
@@ -30,7 +30,9 @@ export function useShiki() {
         themeConfig.getHighlighterTheme()?.dark,
       ],
       langs,
-      engine: createJavaScriptRegexEngine(),
+      engine: createJavaScriptRegexEngine({
+        target: 'ES2018',
+      }),
     })
   }
 

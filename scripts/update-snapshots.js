@@ -29,7 +29,7 @@ function main() {
 
         const testDir = path.basename(path.dirname(itemPath))
         const testName = testDir.split('-')[0]
-        const testCase = testDir.split('-')[1]
+        const testCase = testDir.split('-').slice(1, -1).join('-')
         const browser = testDir.includes('chromium') ? 'chromium' : 'firefox'
 
         const targetDirBase = `${testName}.spec.ts-snapshots`
