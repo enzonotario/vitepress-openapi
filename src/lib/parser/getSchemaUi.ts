@@ -12,6 +12,10 @@ interface Metadata {
   isOneOf?: boolean
   isOneOfItem?: boolean
   isConstant?: boolean
+  isPrefixItem?: boolean
+  prefixItemIndex?: number
+  hasPrefixItems?: boolean
+  isAdditionalItems?: boolean
   extra?: Record<string, unknown>
 }
 
@@ -184,6 +188,51 @@ class UiPropertyFactory {
             }
           })
         }
+      }
+
+      if (schema.prefixItems && Array.isArray(schema.prefixItems)) {
+        property.properties = schema.prefixItems.map((prefixItem, index) => {
+          const prefixItemProperty = UiPropertyFactory.schemaToUiProperty(
+            `[${index}]`,
+            prefixItem,
+            false,
+          )
+
+          prefixItemProperty.meta = {
+            ...(prefixItemProperty.meta || {}),
+            isPrefixItem: true,
+            prefixItemIndex: index,
+          }
+
+          return prefixItemProperty
+        })
+
+        property.meta = {
+          ...(property.meta || {}),
+          hasPrefixItems: true,
+        }
+      }
+
+      // Handle case when both prefixItems and items are present.
+      if (schema.prefixItems && Array.isArray(schema.prefixItems) && schema.items) {
+        const additionalItemsProperty = UiPropertyFactory.schemaToUiProperty(
+          '[n+]', // Name indicating "additional items".
+          schema.items,
+          false,
+        )
+
+        additionalItemsProperty.meta = {
+          ...(additionalItemsProperty.meta || {}),
+          isAdditionalItems: true,
+        }
+
+        property.properties = [
+          ...(property.properties || []),
+          additionalItemsProperty,
+        ]
+
+        // Don't set subtype when we have prefixItems.
+        property.subtype = undefined
       }
     } else if (Array.isArray(schema.type) ? schema.type.includes('object') : schema.type === 'object') {
       property.properties = UiPropertyFactory.extractProperties(
