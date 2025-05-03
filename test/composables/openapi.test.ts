@@ -6,6 +6,19 @@ import { spec, specWithSchemaAndContentTypes } from '../testsConstants'
 describe('openapi with spec', () => {
   const openapi = OpenApi({ spec })
 
+  it('setSpec and getSpec work correctly', () => {
+    const customOpenapi = OpenApi()
+
+    expect(customOpenapi.getSpec()).toEqual({})
+
+    customOpenapi.setSpec(spec)
+    expect(customOpenapi.getSpec()).toEqual(spec)
+
+    const newSpec = { openapi: '3.0.0', info: { title: 'Custom API', version: '2.0.0' } }
+    customOpenapi.setSpec(newSpec)
+    expect(customOpenapi.getSpec()).toEqual(newSpec)
+  })
+
   it('returns the correct operation for getOperation', () => {
     const result = openapi.getOperation('getUsers')
     expect(result).toEqual(spec.paths['/users'].get)
@@ -163,6 +176,44 @@ describe('openapi with spec', () => {
     const api = useOpenapi({ spec: { openapi: '3.0.0', paths: {} } })
     const tags = api.getTags()
     expect(tags).toEqual([])
+  })
+
+  it('getFilteredTags returns tags filtered by operations', () => {
+    const filteredTags = openapi.getFilteredTags()
+
+    expect(filteredTags).toEqual([
+      {
+        name: 'users',
+        description: 'Operations about users',
+      },
+      {
+        name: 'pets',
+        description: 'Operations about pets',
+      },
+    ])
+  })
+
+  it('getFilteredTags handles tags not defined in spec.tags', () => {
+    const customSpec = {
+      openapi: '3.0.0',
+      paths: {
+        '/test': {
+          get: {
+            operationId: 'test',
+            tags: ['customTag'],
+          },
+        },
+      },
+    }
+    const api = useOpenapi({ spec: customSpec })
+    const filteredTags = api.getFilteredTags()
+
+    expect(filteredTags).toEqual([
+      {
+        name: 'customTag',
+        description: null,
+      },
+    ])
   })
 
   it('returns the correct operation servers for getOperationServers', () => {
