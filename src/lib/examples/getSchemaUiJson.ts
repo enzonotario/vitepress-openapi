@@ -53,6 +53,12 @@ function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
     return [resolveOneOfProperty(property, useExample)]
   }
 
+  if (property.meta?.hasPrefixItems && property.properties && Array.isArray(property.properties)) {
+    return property.properties.map((prop) => {
+      return uiPropertyToJson(prop, useExample)
+    })
+  }
+
   if (property.properties && Array.isArray(property.properties)) {
     return [uiPropertyObjectToJson(property.properties, useExample)]
   }

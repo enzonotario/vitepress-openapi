@@ -121,6 +121,44 @@
           }
         }
       }
+    },
+    "/tuple-array": {
+      "get": {
+        "summary": "Get a tuple array with prefixItems",
+        "operationId": "getTupleArray",
+        "description": "Example of a JSON array with prefixItems defining a tuple structure.",
+        "responses": {
+          "200": {
+            "description": "A tuple array with fixed positions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TupleArray"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mixed-array": {
+      "get": {
+        "summary": "Get a mixed array with prefixItems and items",
+        "operationId": "getMixedArray",
+        "description": "Example of a JSON array with both prefixItems and items schemas.",
+        "responses": {
+          "200": {
+            "description": "An array with fixed positions followed by additional items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MixedArray"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -380,6 +418,117 @@
             "type": "string"
           }
         }
+      },
+      "TupleArray": {
+        "type": "array",
+        "description": "A tuple array with fixed position types using prefixItems",
+        "prefixItems": [
+          {
+            "type": "string",
+            "description": "First element - always a string",
+            "example": "username"
+          },
+          {
+            "type": "number",
+            "description": "Second element - always a number",
+            "example": 42
+          },
+          {
+            "type": "boolean",
+            "description": "Third element - always a boolean",
+            "example": true
+          },
+          {
+            "type": "object",
+            "description": "Fourth element - a complex object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "abc123"
+              },
+              "value": {
+                "type": "number",
+                "example": 99.5
+              }
+            }
+          },
+          {
+            "type": "array",
+            "description": "Fifth element - an array of strings",
+            "items": {
+              "type": "string"
+            },
+            "example": ["tag1", "tag2", "tag3"]
+          }
+        ],
+        "minItems": 5,
+        "maxItems": 5
+      },
+      "MixedArray": {
+        "type": "array",
+        "description": "An array with both prefixItems and items schemas",
+        "prefixItems": [
+          {
+            "type": "string",
+            "description": "First element - always a string identifier",
+            "example": "user-id-123"
+          },
+          {
+            "type": "object",
+            "description": "Second element - user metadata",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "John Doe"
+              },
+              "role": {
+                "type": "string",
+                "enum": ["admin", "user", "guest"],
+                "example": "admin"
+              }
+            }
+          }
+        ],
+        "items": {
+          "type": "object",
+          "description": "Additional elements - data entries",
+          "properties": {
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-01-15T14:30:00Z"
+            },
+            "value": {
+              "type": "number",
+              "example": 42.5
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": ["important", "reviewed"]
+            }
+          }
+        },
+        "minItems": 2,
+        "example": [
+          "user-id-123",
+          {
+            "name": "John Doe",
+            "role": "admin"
+          },
+          {
+            "timestamp": "2023-01-15T14:30:00Z",
+            "value": 42.5,
+            "tags": ["important", "reviewed"]
+          },
+          {
+            "timestamp": "2023-01-16T09:15:00Z",
+            "value": 17.8,
+            "tags": ["pending"]
+          }
+        ]
       }
     }
   }

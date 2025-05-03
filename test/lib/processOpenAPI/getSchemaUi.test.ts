@@ -1339,6 +1339,124 @@ const fixtures: Record<string, FixtureTest> = {
       age: 0,
     },
   },
+
+  'array with prefixItems': {
+    jsonSchema: {
+      type: 'array',
+      prefixItems: [
+        { type: 'string' },
+        { type: 'number' },
+        { type: 'boolean' },
+      ],
+    },
+    schemaUi: {
+      name: '',
+      types: ['array'],
+      required: false,
+      properties: [
+        {
+          name: '[0]',
+          types: ['string'],
+          required: false,
+          meta: {
+            isPrefixItem: true,
+            prefixItemIndex: 0,
+          },
+        },
+        {
+          name: '[1]',
+          types: ['number'],
+          required: false,
+          meta: {
+            isPrefixItem: true,
+            prefixItemIndex: 1,
+          },
+        },
+        {
+          name: '[2]',
+          types: ['boolean'],
+          required: false,
+          meta: {
+            isPrefixItem: true,
+            prefixItemIndex: 2,
+          },
+        },
+      ],
+      meta: {
+        hasPrefixItems: true,
+      },
+    },
+    schemaUiJson: [
+      'string',
+      0,
+      true,
+    ],
+  },
+
+  'array with prefixItems and items': {
+    jsonSchema: {
+      type: 'array',
+      prefixItems: [
+        { type: 'string' },
+        { type: 'number' },
+      ],
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          age: { type: 'integer' },
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['array'],
+      required: false,
+      properties: [
+        {
+          name: '[0]',
+          types: ['string'],
+          required: false,
+          meta: {
+            isPrefixItem: true,
+            prefixItemIndex: 0,
+          },
+        },
+        {
+          name: '[1]',
+          types: ['number'],
+          required: false,
+          meta: {
+            isPrefixItem: true,
+            prefixItemIndex: 1,
+          },
+        },
+        {
+          name: '[n+]',
+          types: ['object'],
+          required: false,
+          properties: [
+            { name: 'name', types: ['string'], required: false },
+            { name: 'age', types: ['integer'], required: false },
+          ],
+          meta: {
+            isAdditionalItems: true,
+          },
+        },
+      ],
+      meta: {
+        hasPrefixItems: true,
+      },
+    },
+    schemaUiJson: [
+      'string',
+      0,
+      {
+        name: 'string',
+        age: 0,
+      },
+    ],
+  },
 }
 
 describe('getSchemaUi and getSchemaUiJson from fixtures', () => {
