@@ -50,5 +50,9 @@
   "Custom Server": "Servidor personalizado",
   "Enter a custom server URL": "Introduce una URL de servidor personalizada",
   "Select a server": "Selecciona un servidor...",
-  "Playground": "Playground"
+  "Playground": "Playground",
+  "Collapse all": "Colapsar todo",
+  "Expand all": "Expandir todo",
+  "Collapse": "Colapsar",
+  "Expand": "Expandir"
 }
