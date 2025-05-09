@@ -1,8 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { ChevronDown, ChevronRight, Maximize2, Minimize2 } from 'lucide-vue-next'
+import { computed, ref, watch } from 'vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Badge } from '../ui/badge'
+import { Button } from '../ui/button/index'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip/index'
 import OASchemaPropertyAttributes from './OASchemaPropertyAttributes.vue'
 
 const props = defineProps({
@@ -26,13 +29,38 @@ const props = defineProps({
     type: Boolean,
     default: undefined,
   },
+  expandAll: {
+    type: Boolean,
+    default: undefined,
+  },
 })
 
 const isOpen = ref(props.open !== undefined ? props.open : props.deep > 0 && props.level <= 10)
 
+const childrenExpandState = ref(undefined)
+
+watch(() => props.expandAll, (newValue) => {
+  if (newValue !== undefined) {
+    isOpen.value = newValue
+    childrenExpandState.value = newValue
+  }
+}, { immediate: true })
+
+const toggleAllChildren = (expand) => {
+  childrenExpandState.value = expand
+  isOpen.value = expand
+}
+
 const isObject = props.property.types?.includes('object')
 const isArray = props.property.types?.includes('array')
 const isObjectOrArray = isObject || isArray || props.property.type === 'object' || props.property.type === 'array'
+
+const hasExpandableProperties = computed(() => {
+  return isObjectOrArray
+    && props.property.properties
+    && props.property.properties.length > 0
+    && props.property.properties.some(p => (p.types?.includes('object') || p.types?.includes('array') || p.type === 'object' || p.type === 'array') && p.properties)
+})
 </script>
 
 <template>
@@ -51,30 +79,26 @@ const isObjectOrArray = isObject || isArray || props.property.type === 'object' 
               {{ props.property.name }}
             </span>
 
-            <div
-              v-if="isObjectOrArray && props.property.properties"
-              class="flex-shrink-0 w-4 h-4 cursor-pointer"
-            >
-              <svg
-                v-if="!isOpen"
-                xmlns="http://www.w3.org/2000/svg"
-                width="100%"
-                height="100%"
-                viewBox="0 0 24 24"
-              ><path
-                fill="currentColor"
-                d="M8.59 16.58L13.17 12L8.59 7.41L10 6l6 6l-6 6z"
-              /></svg>
-              <svg
-                v-if="isOpen"
-                xmlns="http://www.w3.org/2000/svg"
-                width="100%"
-                height="100%"
-                viewBox="0 0 24 24"
-              ><path
-                fill="currentColor"
-                d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6z"
-              /></svg>
+            <div class="flex items-center">
+              <TooltipProvider>
+                <Tooltip delay-duration="200">
+                  <TooltipTrigger as-child>
+                    <Button
+                      v-if="isObjectOrArray && props.property.properties"
+                      size="icon"
+                      variant="icon"
+                      :aria-label="isOpen ? $t('Collapse') : $t('Expand')"
+                      class="flex-shrink-0 w-4 h-4 cursor-pointer"
+                    >
+                      <ChevronDown v-if="isOpen" />
+                      <ChevronRight v-else />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{{ isOpen ? $t('Collapse') : $t('Expand') }}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <div class="flex flex-row items-center gap-1 text-muted-foreground">
@@ -100,6 +124,30 @@ const isObjectOrArray = isObject || isArray || props.property.type === 'object' 
                   <span v-if="index !== props.property.types.length - 1">|</span>
                 </span>
               </template>
+            </div>
+
+            <div
+              v-if="hasExpandableProperties"
+              class="flex items-center"
+            >
+              <TooltipProvider>
+                <Tooltip delay-duration="200">
+                  <TooltipTrigger as-child>
+                    <Button
+                      size="icon"
+                      variant="icon"
+                      :aria-label="isOpen ? $t('Collapse all') : $t('Expand all')"
+                      @click.stop.prevent="toggleAllChildren(!isOpen)"
+                    >
+                      <Minimize2 v-if="isOpen" />
+                      <Maximize2 v-else />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{{ isOpen ? $t('Collapse all') : $t('Expand all') }}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
 
             <div class="flex-grow mx-2">
@@ -144,7 +192,8 @@ const isObjectOrArray = isObject || isArray || props.property.type === 'object' 
             :schema="props.schema"
             :deep="props.deep - 1"
             :level="props.level + 1"
-            :open="subProperty?.meta?.isOneOf === true"
+            :open="childrenExpandState !== undefined ? childrenExpandState : subProperty?.meta?.isOneOf === true"
+            :expand-all="childrenExpandState"
           />
         </div>
       </CollapsibleContent>
