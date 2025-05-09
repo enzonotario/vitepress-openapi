@@ -87,6 +87,7 @@ const hasExpandableProperties = computed(() => {
                       v-if="isObjectOrArray && props.property.properties"
                       size="icon"
                       variant="icon"
+                      :aria-label="isOpen ? $t('Collapse') : $t('Expand')"
                       class="flex-shrink-0 w-4 h-4 cursor-pointer"
                     >
                       <ChevronDown v-if="isOpen" />
@@ -135,6 +136,7 @@ const hasExpandableProperties = computed(() => {
                     <Button
                       size="icon"
                       variant="icon"
+                      :aria-label="isOpen ? $t('Collapse all') : $t('Expand all')"
                       @click.stop.prevent="toggleAllChildren(!isOpen)"
                     >
                       <Minimize2 v-if="isOpen" />
