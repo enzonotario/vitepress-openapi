@@ -44,7 +44,7 @@ watch(() => props.expandAll, (newValue) => {
     isOpen.value = newValue
     childrenExpandState.value = newValue
   }
-}, { immediate: true, deep: true })
+}, { immediate: true })
 
 const toggleAllChildren = (expand) => {
   childrenExpandState.value = expand
