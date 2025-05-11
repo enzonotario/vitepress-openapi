@@ -125,7 +125,7 @@ describe('buildHarRequest', () => {
       headersSize: -1,
       bodySize: -1,
       postData: {
-        mimeType: 'application/json',
+        mimeType: 'text/plain',
         text: 'plain text body',
       },
     })

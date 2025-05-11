@@ -196,5 +196,6 @@ export function buildRequest({
     headers: resolvedHeaders,
     query: resolvedQuery,
     cookies,
+    contentType: resolvedHeaders['content-type'],
   })
 }
