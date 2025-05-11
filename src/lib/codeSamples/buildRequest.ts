@@ -134,6 +134,7 @@ export function buildRequest({
   body = undefined,
   headers = undefined,
   variables = {},
+  cookies = {},
 }: Partial<OARequest>): OARequest {
   const resolvedVariables = setExamplesAsVariables(parameters, variables)
 
@@ -194,5 +195,6 @@ export function buildRequest({
     variables: resolvedVariables,
     headers: resolvedHeaders,
     query: resolvedQuery,
+    cookies,
   })
 }
