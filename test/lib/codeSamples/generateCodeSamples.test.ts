@@ -220,6 +220,16 @@ describe('curl', () => {
   --header 'Authorization: Bearer token' \\
   --header 'Content-Type: application/json'`)
   })
+
+  it('displays encoded URLs correctly', async () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/users/{userId}/posts',
+      method: 'GET',
+    })
+    const result = await generateCodeSample('curl', request)
+    expect(result).toBe(`curl 'https://api.example.com/users/{userId}/posts'`)
+  })
 })
 
 describe('php', () => {

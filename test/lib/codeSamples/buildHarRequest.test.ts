@@ -299,4 +299,25 @@ describe('buildHarRequest', () => {
       },
     })
   })
+
+  it('decodes URL encoded strings', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/users/{id}',
+      method: 'GET',
+    })
+
+    const result = buildHarRequest(request)
+
+    expect(result).toEqual({
+      method: 'GET',
+      url: 'https://api.example.com/users/{id}',
+      httpVersion: 'HTTP/1.1',
+      headers: [],
+      queryString: [],
+      cookies: [],
+      headersSize: -1,
+      bodySize: -1,
+    })
+  })
 })
