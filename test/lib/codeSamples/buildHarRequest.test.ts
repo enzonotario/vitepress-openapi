@@ -320,4 +320,23 @@ describe('buildHarRequest', () => {
       bodySize: -1,
     })
   })
+
+  it('decodes percent-encoded spaces and Unicode chars', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/files/Space%20Name%20%C3%87har',
+      method: 'GET',
+    })
+    const result = buildHarRequest(request)
+    expect(result).toEqual({
+      method: 'GET',
+      url: 'https://api.example.com/files/Space Name Çhar',
+      httpVersion: 'HTTP/1.1',
+      headers: [],
+      queryString: [],
+      cookies: [],
+      headersSize: -1,
+      bodySize: -1,
+    })
+  })
 })
