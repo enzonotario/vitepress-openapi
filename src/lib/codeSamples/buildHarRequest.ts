@@ -6,7 +6,7 @@ export function buildHarRequest(
 ): HarRequest {
   const harRequest: HarRequest = {
     method: oaRequest.method.toUpperCase(),
-    url: oaRequest.url.toString(),
+    url: decodeURI(oaRequest.url.toString()),
     httpVersion: 'HTTP/1.1',
     headers: Object.entries(oaRequest.headers).map(([name, value]) => ({
       name: name.replace(/\b\w/g, letter => letter.toUpperCase()), // Convert to title case.

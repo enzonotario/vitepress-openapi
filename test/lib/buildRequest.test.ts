@@ -223,6 +223,31 @@ describe('buildRequest', () => {
   })
 })
 
+describe('cookies', () => {
+  it('builds request with cookies', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [],
+      cookies: { session: 'abc123' },
+    })
+    expect(request.cookies.session).toBe('abc123')
+  })
+
+  it('builds request with multiple cookies', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'GET',
+      baseUrl: 'https://api.example.com',
+      parameters: [],
+      cookies: { session: 'abc123', user: 'john' },
+    })
+    expect(request.cookies.session).toBe('abc123')
+    expect(request.cookies.user).toBe('john')
+  })
+})
+
 describe('update request', () => {
   it('updates request with new headers', () => {
     const request = buildRequest({
@@ -344,5 +369,22 @@ describe('update request', () => {
     })
 
     expect(fixedRequest.query.search).toBeUndefined()
+  })
+
+  it('updates request with new cookies', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      cookies: { session: 'old-session' },
+    })
+
+    const fixedRequest = buildRequest({
+      ...request,
+      cookies: { session: 'new-session', user: 'john' },
+    })
+
+    expect(fixedRequest.cookies.session).toBe('new-session')
+    expect(fixedRequest.cookies.user).toBe('john')
   })
 })
