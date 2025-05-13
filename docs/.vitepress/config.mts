@@ -160,6 +160,19 @@ export default defineConfigWithTheme({
                     },
                   ],
                 },
+                {
+                  text: 'Playground',
+                  items: [
+                    {
+                      items: [
+                        {
+                          text: 'Examples',
+                          link: '/customizations/playground-examples',
+                        },
+                      ],
+                    },
+                  ],
+                },
               ],
             },
           ],

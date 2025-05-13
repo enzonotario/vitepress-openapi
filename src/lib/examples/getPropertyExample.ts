@@ -1,4 +1,12 @@
 export function getPropertyExample(property: any): any {
+  if (property?.['x-playground-example'] !== undefined) {
+    return property['x-playground-example']
+  }
+
+  if (property?.schema?.['x-playground-example'] !== undefined) {
+    return property.schema['x-playground-example']
+  }
+
   if (property?.example !== undefined) {
     return property.example
   }

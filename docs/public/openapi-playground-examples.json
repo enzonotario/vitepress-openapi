@@ -1,0 +1,396 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Playground Examples API",
+    "description": "API to demonstrate the use of x-playground-example extension",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com/v1",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/items": {
+      "get": {
+        "summary": "List items with playground-specific examples",
+        "description": "Demonstrates the use of x-playground-example extension.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "description": "Filter by ID (with playground-specific example)",
+            "x-playground-example": "custom-playground-id-123",
+            "schema": {
+              "type": "string",
+              "example": "general-id-456"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "description": "Filter by name (with schema-level playground example)",
+            "schema": {
+              "type": "string",
+              "example": "General Item Name",
+              "x-playground-example": "Custom Playground Name Example"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "description": "Filter by category (with standard example)",
+            "schema": {
+              "type": "string",
+              "example": "electronics"
+            }
+          },
+          {
+            "name": "X-Custom",
+            "in": "header",
+            "required": false,
+            "description": "Optionally provide parameters as a JSON object in this header.",
+            "schema": {
+              "type": "string",
+              "example": "{\"id\":\"header-id-789\"}",
+              "x-playground-example": ""
+            }
+          },
+          {
+            "name": "X-Api-Key",
+            "in": "header",
+            "required": true,
+            "description": "API key for authentication",
+            "schema": {
+              "type": "string",
+              "example": "api-key-123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "item-123"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Sample Item"
+                          },
+                          "description": {
+                            "type": "string",
+                            "example": "This is a sample item description"
+                          },
+                          "price": {
+                            "type": "number",
+                            "format": "float",
+                            "example": 19.99
+                          },
+                          "category": {
+                            "type": "string",
+                            "example": "electronics"
+                          }
+                        }
+                      }
+                    },
+                    "total": {
+                      "type": "integer",
+                      "example": 1
+                    }
+                  }
+                },
+                "examples": {
+                  "default": {
+                    "value": {
+                      "items": [
+                        {
+                          "id": "item-123",
+                          "name": "Sample Item",
+                          "description": "This is a sample item description",
+                          "price": 19.99,
+                          "category": "electronics"
+                        }
+                      ],
+                      "total": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid request parameters"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid or missing API key"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new item",
+        "description": "Creates a new item with the provided details",
+        "parameters": [
+          {
+            "name": "X-Api-Key",
+            "in": "header",
+            "required": true,
+            "description": "API key for authentication",
+            "schema": {
+              "type": "string",
+              "example": "api-key-123"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Item details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "New Item",
+                    "x-playground-example": "Custom Playground Item Name"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Description of the new item",
+                    "x-playground-example": "This is a custom playground description"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "float",
+                    "example": 29.99
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "furniture"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "item-456"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "New Item"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Description of the new item"
+                    },
+                    "price": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 29.99
+                    },
+                    "category": {
+                      "type": "string",
+                      "example": "furniture"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-06-15T14:30:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid request body"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/items/{id}": {
+      "get": {
+        "summary": "Get item by ID",
+        "description": "Retrieves a specific item by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Item ID",
+            "schema": {
+              "type": "string",
+              "example": "item-123"
+            },
+            "x-playground-example": "custom-item-id-789"
+          },
+          {
+            "name": "X-Api-Key",
+            "in": "header",
+            "required": true,
+            "description": "API key for authentication",
+            "schema": {
+              "type": "string",
+              "example": "api-key-123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "item-123"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Sample Item"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "This is a sample item description"
+                    },
+                    "price": {
+                      "type": "number",
+                      "format": "float",
+                      "example": 19.99
+                    },
+                    "category": {
+                      "type": "string",
+                      "example": "electronics"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Item not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Item": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "item-123"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sample Item"
+          },
+          "description": {
+            "type": "string",
+            "example": "This is a sample item description"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 19.99
+          },
+          "category": {
+            "type": "string",
+            "example": "electronics"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Error message"
+          }
+        }
+      }
+    }
+  }
+}

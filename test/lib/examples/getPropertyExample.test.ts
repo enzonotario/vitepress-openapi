@@ -2,6 +2,37 @@ import { describe, expect, it } from 'vitest'
 import { getPropertyExample } from '../../../src/lib/examples/getPropertyExample'
 
 describe('getPropertyExample', () => {
+  it('returns the x-playground-example property if it exists', () => {
+    const property = {
+      'x-playground-example': 'playgroundExample',
+      'example': 'exampleValue',
+    }
+    expect(getPropertyExample(property)).toBe('playgroundExample')
+  })
+
+  it('returns the schema.x-playground-example property if it exists', () => {
+    const property = {
+      schema: {
+        'x-playground-example': 'schemaPlaygroundExample',
+        'example': 'schemaExample',
+      },
+      example: 'exampleValue',
+    }
+    expect(getPropertyExample(property)).toBe('schemaPlaygroundExample')
+  })
+
+  it('prioritizes x-playground-example over schema.x-playground-example', () => {
+    const property = {
+      'x-playground-example': 'playgroundExample',
+      'schema': {
+        'x-playground-example': 'schemaPlaygroundExample',
+        'example': 'schemaExample',
+      },
+      'example': 'exampleValue',
+    }
+    expect(getPropertyExample(property)).toBe('playgroundExample')
+  })
+
   it('returns the example property if it exists', () => {
     const property = { example: 'exampleValue' }
     expect(getPropertyExample(property)).toBe('exampleValue')
