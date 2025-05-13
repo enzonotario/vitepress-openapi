@@ -12,6 +12,202 @@
   ],
   "paths": {
     "/users": {
+      "post": {
+        "summary": "Create a new user",
+        "description": "Creates a new user with the provided information.",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true,
+            "description": "API key for authentication",
+            "schema": {
+              "type": "string",
+              "example": "api-key-123"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "description": "Unique request identifier for tracing",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "dryRun",
+            "in": "query",
+            "required": false,
+            "description": "If true, validates the request without creating the user",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "description": "Region for user creation",
+            "schema": {
+              "type": "string",
+              "enum": ["us-east", "us-west", "eu-central"],
+              "default": "us-east"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "User's full name",
+                    "example": "John Doe",
+                    "minLength": 2,
+                    "maxLength": 100
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email address",
+                    "example": "john.doe@example.com"
+                  },
+                  "age": {
+                    "type": "integer",
+                    "description": "User's age in years",
+                    "example": 30,
+                    "minimum": 18,
+                    "maximum": 120
+                  },
+                  "address": {
+                    "type": "object",
+                    "description": "User's address information",
+                    "properties": {
+                      "street": {
+                        "type": "string",
+                        "example": "123 Main St"
+                      },
+                      "city": {
+                        "type": "string",
+                        "example": "Anytown"
+                      },
+                      "state": {
+                        "type": "string",
+                        "example": "CA"
+                      },
+                      "zipCode": {
+                        "type": "string",
+                        "example": "12345"
+                      },
+                      "country": {
+                        "type": "string",
+                        "example": "USA"
+                      }
+                    }
+                  },
+                  "preferences": {
+                    "type": "array",
+                    "description": "User's preferences",
+                    "items": {
+                      "type": "string",
+                      "enum": ["email", "sms", "push"]
+                    },
+                    "example": ["email", "push"]
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "description": "Additional user metadata",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "example": {
+                      "source": "web",
+                      "referral": "friend"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string",
+                      "description": "The ID of the newly created user",
+                      "example": "user-123"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "john.doe@example.com"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-01-01T12:00:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key"
+          },
+          "409": {
+            "description": "Conflict - User with the same email already exists"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "field": {
+                            "type": "string",
+                            "example": "email"
+                          },
+                          "message": {
+                            "type": "string",
+                            "example": "Invalid email format"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "get": {
         "summary": "List users",
         "description": "Returns a list of users with optional filtering.",
@@ -225,6 +421,150 @@
           },
           "404": {
             "description": "User not found"
+          }
+        }
+      }
+    },
+    "/documents/{documentId}": {
+      "put": {
+        "summary": "Update document content",
+        "description": "Updates an existing document with plain text content.",
+        "parameters": [
+          {
+            "name": "documentId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the document to update",
+            "schema": {
+              "type": "string",
+              "example": "doc-123"
+            }
+          },
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true,
+            "description": "API key for authentication",
+            "schema": {
+              "type": "string",
+              "example": "api-key-123"
+            }
+          },
+          {
+            "name": "X-Transaction-ID",
+            "in": "header",
+            "required": false,
+            "description": "Unique transaction identifier for tracing",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "description": "Document version for concurrency control",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "example": 2
+            }
+          },
+          {
+            "name": "overwrite",
+            "in": "query",
+            "required": false,
+            "description": "If true, completely overwrites the document instead of merging changes",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "description": "Format of the document content",
+            "schema": {
+              "type": "string",
+              "enum": ["plain", "markdown", "html"],
+              "default": "plain"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "description": "Tags to associate with the document",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "example": ["important", "draft"]
+            },
+            "style": "form",
+            "explode": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "text/plain": {
+              "schema": {
+                "type": "string",
+                "example": "This is the updated content of the document. It can contain multiple paragraphs and lines of text.\n\nThis is a new paragraph in the document."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Document updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "documentId": {
+                      "type": "string",
+                      "example": "doc-123"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-01-01T12:00:00Z"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "example": 1024,
+                      "description": "Size of the document in bytes"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key"
+          },
+          "404": {
+            "description": "Document not found"
+          },
+          "409": {
+            "description": "Conflict - Version mismatch"
+          },
+          "413": {
+            "description": "Payload Too Large - Document size exceeds limits"
           }
         }
       }

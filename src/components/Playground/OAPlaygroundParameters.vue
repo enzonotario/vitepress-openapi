@@ -98,6 +98,15 @@ const variables = ref({
   ...initializeVariables(queryParameters),
 })
 
+const enabledParameters = ref(
+  [...headerParameters, ...pathParameters, ...queryParameters].reduce((acc, parameter) => {
+    if (parameter.name) {
+      acc[parameter.name] = parameter.required === true
+    }
+    return acc
+  }, { body: true } as Record<string, boolean>),
+)
+
 function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
   return parameters
     .reduce((acc: Record<string, string>, parameter: OpenAPIV3.ParameterObject) => {
@@ -138,15 +147,19 @@ function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   })
 }
 
-watch([variables, authorizations, body, selectedServer], () => {
+watch([variables, authorizations, body, selectedServer, enabledParameters], () => {
+  const filteredParameters = props.parameters.filter(parameter =>
+    parameter.name && enabledParameters.value[parameter.name],
+  )
+
   emits('update:request', buildRequest({
     baseUrl: String(selectedServer.value),
     method: props.method as OpenAPIV3.HttpMethods,
     path: props.path,
     variables: variables.value,
     authorizations: authorizations.value,
-    body: body.value,
-    parameters: props.parameters,
+    body: enabledParameters.value.body ? body.value : undefined,
+    parameters: filteredParameters,
   }))
 }, { deep: true })
 
@@ -251,20 +264,13 @@ watch(operationData.security.selectedSchemeId, () => {
           :key="parameter.name"
           class="flex flex-col gap-2"
         >
-          <Label :for="parameter.name" class="text-sm font-bold space-x-2">
-            <span>{{ parameter.name }}</span>
-            <span
-              v-if="parameter.required"
-              class="text-sm text-destructive"
-            >*</span>
-          </Label>
-          <div class="flex flex-row items-center space-x-2">
-            <OAPlaygroundParameterInput
-              v-model="variables[parameter.name ?? '']"
-              :parameter="parameter"
-              @submit="emits('submit')"
-            />
-          </div>
+          <OAPlaygroundParameterInput
+            v-model="variables[parameter.name ?? '']"
+            :parameter="parameter"
+            :enabled="enabledParameters[parameter.name ?? '']"
+            @update:enabled="enabledParameters[parameter.name ?? ''] = $event"
+            @submit="emits('submit')"
+          />
         </div>
       </div>
     </details>
@@ -276,32 +282,26 @@ watch(operationData.security.selectedSchemeId, () => {
 
       <div class="flex flex-col gap-1">
         <div class="flex flex-row gap-2">
-          <div class="w-1/2 flex justify-start">
-            <span class="text-xs text-muted-foreground uppercase">{{ $t('Key') }}</span>
-          </div>
-          <div class="w-1/2 flex justify-start">
-            <span class="text-xs text-muted-foreground uppercase">{{ $t('Value') }}</span>
+          <div class="w-[16px]" />
+          <div class="flex flex-row flex-grow gap-2">
+            <div class="w-1/2 flex justify-start">
+              <span class="text-xs text-muted-foreground uppercase">{{ $t('Key') }}</span>
+            </div>
+            <div class="w-1/2 flex justify-start">
+              <span class="text-xs text-muted-foreground uppercase">{{ $t('Value') }}</span>
+            </div>
           </div>
         </div>
 
-        <div
+        <OAPlaygroundParameterInput
           v-for="parameter in [...pathParameters, ...queryParameters]"
           :key="parameter.name"
-          class="grid grid-cols-2 gap-2 items-center"
-        >
-          <Label :for="parameter.name" class="text-sm font-bold space-x-2">
-            <span>{{ parameter.name }}</span>
-            <span
-              v-if="parameter.required"
-              class="text-sm text-destructive"
-            >*</span>
-          </Label>
-          <OAPlaygroundParameterInput
-            v-model="variables[parameter.name ?? '']"
-            :parameter="parameter"
-            @submit="emits('submit')"
-          />
-        </div>
+          v-model="variables[parameter.name ?? '']"
+          :parameter="parameter"
+          :enabled="enabledParameters[parameter.name ?? '']"
+          @update:enabled="enabledParameters[parameter.name ?? ''] = $event"
+          @submit="emits('submit')"
+        />
       </div>
     </details>
 
@@ -326,6 +326,8 @@ watch(operationData.security.selectedSchemeId, () => {
         v-else
         v-model="body"
         :parameter="{ name: 'body', schema: { type: 'string' } }"
+        :enabled="enabledParameters.body"
+        @update:enabled="enabledParameters.body = $event"
         @submit="emits('submit')"
       />
     </details>

@@ -3,6 +3,7 @@ import { defineEmits, defineProps, onMounted } from 'vue'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import { Checkbox } from '../ui/checkbox'
 import { Input } from '../ui/input'
+import { Label } from '../ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 const props = defineProps({
@@ -14,12 +15,25 @@ const props = defineProps({
     type: [String, Number, Boolean],
     required: true,
   },
+  enabled: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const emits = defineEmits([
   'update:modelValue',
+  'update:enabled',
   'submit',
 ])
+
+function handleInputChange(value: any) {
+  if (!props.enabled) {
+    emits('update:enabled', true)
+  }
+
+  emits('update:modelValue', value)
+}
 
 function inputType(parameter: any) {
   if (parameter.schema?.type === 'integer') {
@@ -41,46 +55,71 @@ const parameterExample = getPropertyExample(props.parameter)
 </script>
 
 <template>
-  <Input
-    v-if="['string', 'number', 'integer'].includes(parameter.schema?.type) && !parameter.schema?.enum"
-    :id="parameter.name"
-    :name="parameter.name"
-    :value="modelValue"
-    :type="inputType(parameter)"
-    :placeholder="String(parameterExample ?? '')"
-    class="bg-muted"
-    @update:model-value="emits('update:modelValue', $event)"
-    @keydown.enter="emits('submit')"
-  />
+  <div class="grid grid-cols-2 gap-2 items-center">
+    <div class="flex items-center gap-2">
+      <Checkbox
+        :id="`enable-${parameter.name}`"
+        :name="`enable-${parameter.name}`"
+        :model-value="enabled"
+        variant="toggle"
+        @update:model-value="emits('update:enabled', $event)"
+      />
 
-  <Checkbox
-    v-if="['boolean'].includes(parameter.schema?.type)"
-    :id="parameter.name"
-    :name="parameter.name"
-    :model-value="String(modelValue) === '' ? 'indeterminate' : (modelValue as boolean)"
-    @update:model-value="emits('update:modelValue', $event)"
-    @keydown.enter="emits('submit')"
-  />
+      <Label v-if="parameter.name" :for="parameter.name" class="text-sm font-bold space-x-2">
+        <span>{{ parameter.name }}</span>
+        <span
+          v-if="parameter.required"
+          class="text-sm text-destructive"
+        >*</span>
+      </Label>
+    </div>
 
-  <Select
-    v-if="parameter.schema?.enum"
-    :id="parameter.name"
-    :name="parameter.name"
-    @update:model-value="emits('update:modelValue', $event)"
-  >
-    <SelectTrigger :aria-label="String(parameterExample ?? $t('Select'))">
-      <SelectValue :placeholder="String(parameterExample ?? $t('Select'))" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectGroup>
-        <SelectItem
-          v-for="enumValue in parameter.schema.enum"
-          :key="enumValue"
-          :value="String(enumValue)"
-        >
-          {{ enumValue }}
-        </SelectItem>
-      </SelectGroup>
-    </SelectContent>
-  </Select>
+    <div
+      class="flex items-center flex-grow gap-2"
+      :class="{ 'opacity-50': !enabled }"
+    >
+      <Checkbox
+        v-if="['boolean'].includes(parameter.schema?.type)"
+        :id="parameter.name"
+        :name="parameter.name"
+        :model-value="String(modelValue) === '' ? 'indeterminate' : (modelValue as boolean)"
+        @update:model-value="handleInputChange($event)"
+        @keydown.enter="emits('submit')"
+      />
+
+      <Select
+        v-else-if="parameter.schema?.enum"
+        :id="parameter.name"
+        :name="parameter.name"
+        @update:model-value="handleInputChange($event)"
+      >
+        <SelectTrigger :aria-label="String(parameterExample ?? $t('Select'))">
+          <SelectValue :placeholder="String(parameterExample ?? $t('Select'))" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem
+              v-for="enumValue in parameter.schema.enum"
+              :key="enumValue"
+              :value="String(enumValue)"
+            >
+              {{ enumValue }}
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      <Input
+        v-else
+        :id="parameter.name"
+        :name="parameter.name"
+        :value="modelValue"
+        :type="inputType(parameter)"
+        :placeholder="String(parameterExample ?? '')"
+        class="bg-muted"
+        @update:model-value="handleInputChange($event)"
+        @keydown.enter="emits('submit')"
+      />
+    </div>
+  </div>
 </template>
