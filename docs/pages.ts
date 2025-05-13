@@ -29,6 +29,12 @@ export const testsPages = [
     specPath: './public/openapi-security.json',
     themeConfig: {},
   },
+  {
+    slug: 'playground-examples',
+    label: 'Playground Examples',
+    specPath: './public/openapi-playground-examples.json',
+    themeConfig: {},
+  },
 ]
 
 export const examplesPages = [
