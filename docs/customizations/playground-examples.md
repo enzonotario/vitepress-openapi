@@ -14,7 +14,7 @@ useOpenapi({
 
 When using the Playground, parameter examples are automatically populated from the OpenAPI specification. By default, the Playground uses the `example` or `examples` properties defined in the OpenAPI spec.
 
-### Playground-specific Examples
+## Playground-specific Examples
 
 If you want to specify examples specifically for the Playground that are different from the examples in the OpenAPI spec, you can use the `x-playground-example` extension:
 
@@ -49,6 +49,7 @@ The `x-playground-example` extension can be used at both the parameter level and
 ```
 
 The Playground will prioritize examples in the following order:
+
 1. `x-playground-example` at the parameter level
 2. `x-playground-example` at the schema level
 3. `example` at the parameter level
