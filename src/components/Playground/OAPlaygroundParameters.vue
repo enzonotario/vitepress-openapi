@@ -92,6 +92,13 @@ const customServer = typeof localStorage !== 'undefined'
   ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
   : ref(selectedServer.value)
 
+function createCompositeKey(parameter: OpenAPIV3.ParameterObject): string {
+  if (!parameter.name || !parameter.in) {
+    return ''
+  }
+  return `${props.operationId}:${parameter.in}:${parameter.name}`
+}
+
 const variables = ref({
   ...initializeVariables(headerParameters),
   ...initializeVariables(pathParameters),
@@ -101,7 +108,8 @@ const variables = ref({
 const enabledParameters = ref(
   [...headerParameters, ...pathParameters, ...queryParameters].reduce((acc, parameter) => {
     if (parameter.name) {
-      acc[parameter.name] = parameter.required === true
+      const key = createCompositeKey(parameter)
+      acc[key] = parameter.required === true
     }
     return acc
   }, { body: true } as Record<string, boolean>),
@@ -149,7 +157,7 @@ function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
 
 watch([variables, authorizations, body, selectedServer, enabledParameters], () => {
   const filteredParameters = props.parameters.filter(parameter =>
-    parameter.name && enabledParameters.value[parameter.name],
+    parameter.name && enabledParameters.value[createCompositeKey(parameter)],
   )
 
   emits('update:request', buildRequest({
@@ -261,14 +269,15 @@ watch(operationData.security.selectedSchemeId, () => {
       <div class="flex flex-col gap-2">
         <div
           v-for="parameter in headerParameters"
-          :key="parameter.name"
+          :key="createCompositeKey(parameter)"
           class="flex flex-col gap-2"
         >
           <OAPlaygroundParameterInput
             v-model="variables[parameter.name ?? '']"
             :parameter="parameter"
-            :enabled="enabledParameters[parameter.name ?? '']"
-            @update:enabled="enabledParameters[parameter.name ?? ''] = $event"
+            :composite-key="createCompositeKey(parameter)"
+            :enabled="enabledParameters[createCompositeKey(parameter)]"
+            @update:enabled="enabledParameters[createCompositeKey(parameter)] = $event"
             @submit="emits('submit')"
           />
         </div>
@@ -295,11 +304,12 @@ watch(operationData.security.selectedSchemeId, () => {
 
         <OAPlaygroundParameterInput
           v-for="parameter in [...pathParameters, ...queryParameters]"
-          :key="parameter.name"
+          :key="createCompositeKey(parameter)"
           v-model="variables[parameter.name ?? '']"
           :parameter="parameter"
-          :enabled="enabledParameters[parameter.name ?? '']"
-          @update:enabled="enabledParameters[parameter.name ?? ''] = $event"
+          :composite-key="createCompositeKey(parameter)"
+          :enabled="enabledParameters[createCompositeKey(parameter)]"
+          @update:enabled="enabledParameters[createCompositeKey(parameter)] = $event"
           @submit="emits('submit')"
         />
       </div>
@@ -326,6 +336,7 @@ watch(operationData.security.selectedSchemeId, () => {
         v-else
         v-model="body"
         :parameter="{ name: 'body', schema: { type: 'string' } }"
+        :composite-key="`${props.operationId}:body:body`"
         :enabled="enabledParameters.body"
         @update:enabled="enabledParameters.body = $event"
         @submit="emits('submit')"
