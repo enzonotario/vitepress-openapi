@@ -15,6 +15,10 @@ const props = defineProps({
     type: [String, Number, Boolean],
     required: true,
   },
+  compositeKey: {
+    type: String,
+    required: true,
+  },
   enabled: {
     type: Boolean,
     default: true,
@@ -58,14 +62,14 @@ const parameterExample = getPropertyExample(props.parameter)
   <div class="grid grid-cols-2 gap-2 items-center">
     <div class="flex items-center gap-2">
       <Checkbox
-        :id="`enable-${parameter.name}`"
-        :name="`enable-${parameter.name}`"
+        :id="`enable-${compositeKey}`"
+        :name="`enable-${compositeKey}`"
         :model-value="enabled"
         variant="toggle"
         @update:model-value="emits('update:enabled', $event)"
       />
 
-      <Label v-if="parameter.name" :for="parameter.name" class="text-sm font-bold space-x-2">
+      <Label v-if="parameter.name" :for="compositeKey" class="text-sm font-bold space-x-2">
         <span>{{ parameter.name }}</span>
         <span
           v-if="parameter.required"
@@ -80,8 +84,8 @@ const parameterExample = getPropertyExample(props.parameter)
     >
       <Checkbox
         v-if="['boolean'].includes(parameter.schema?.type)"
-        :id="parameter.name"
-        :name="parameter.name"
+        :id="compositeKey"
+        :name="compositeKey"
         :model-value="String(modelValue) === '' ? 'indeterminate' : (modelValue as boolean)"
         @update:model-value="handleInputChange($event)"
         @keydown.enter="emits('submit')"
@@ -89,8 +93,8 @@ const parameterExample = getPropertyExample(props.parameter)
 
       <Select
         v-else-if="parameter.schema?.enum"
-        :id="parameter.name"
-        :name="parameter.name"
+        :id="compositeKey"
+        :name="compositeKey"
         @update:model-value="handleInputChange($event)"
       >
         <SelectTrigger :aria-label="String(parameterExample ?? $t('Select'))">
@@ -111,8 +115,8 @@ const parameterExample = getPropertyExample(props.parameter)
 
       <Input
         v-else
-        :id="parameter.name"
-        :name="parameter.name"
+        :id="compositeKey"
+        :name="compositeKey"
         :value="modelValue"
         :type="inputType(parameter)"
         :placeholder="String(parameterExample ?? '')"
