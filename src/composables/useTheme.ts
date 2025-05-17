@@ -206,6 +206,8 @@ export const availableLanguages: LanguageConfig[] = [
   },
 ]
 
+const DEFAULT_OPERATIONS_PREFIX = '/operations/'
+
 const themeConfig: UseThemeConfig = {
   theme: {
     highlighterTheme: {
@@ -307,7 +309,7 @@ const themeConfig: UseThemeConfig = {
   },
   linksPrefixes: {
     tags: '/tags/',
-    operations: '/operations/',
+    operations: DEFAULT_OPERATIONS_PREFIX,
   },
   server: {
     allowCustomServer: false,
@@ -315,7 +317,7 @@ const themeConfig: UseThemeConfig = {
   },
   markdown: {
     operationLink: {
-      linkPrefix: '/operations/',
+      linkPrefix: DEFAULT_OPERATIONS_PREFIX,
     },
   },
 }

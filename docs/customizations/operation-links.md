@@ -40,7 +40,7 @@ You can customize the plugin using the following options:
 
 ### Usage in OpenAPI specification
 
-In the `description` field of an OpenAPI operation you can write:
+In the `description` field of an OpenAPI operation, you can write:
 
 ::: code-group
 
