@@ -1,5 +1,7 @@
 <script setup>
 import markdownit from 'markdown-it'
+import { useTheme } from '../../composables/useTheme'
+import { operationLink } from '../../lib/markdown/operationLink'
 import { cn } from '../../lib/utils'
 
 const props = defineProps({
@@ -14,10 +16,13 @@ const props = defineProps({
   },
 })
 
-const md = markdownit({
+const theme = useTheme()
+const operationLinkConfig = theme.getOperationLinkConfig()
+
+const md = (markdownit({
   html: true,
   breaks: true,
-})
+})).use(operationLink, operationLinkConfig)
 </script>
 
 <template>
