@@ -25,7 +25,10 @@ withDefaults(defineProps<Props>(), {
 
 <style>
 .OAOperationLink {
-  @apply inline-block px-1 space-x-1 rounded cursor-pointer !no-underline !text-foreground !font-normal;
+  @apply inline-block px-1 space-x-1 rounded cursor-pointer;
+  text-decoration: none !important;
+  color: var(--vp-c-text-1) !important;
+  font-weight: normal !important;
 }
 
 .OAOperationLink:hover {
