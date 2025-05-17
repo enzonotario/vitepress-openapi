@@ -1,7 +1,5 @@
 <script setup>
-import markdownit from 'markdown-it'
-import { useTheme } from '../../composables/useTheme'
-import { operationLink } from '../../lib/markdown/operationLink'
+import { useMarkdown } from '../../composables/useMarkdown'
 import { cn } from '../../lib/utils'
 
 const props = defineProps({
@@ -16,18 +14,12 @@ const props = defineProps({
   },
 })
 
-const theme = useTheme()
-const operationLinkConfig = theme.getOperationLinkConfig()
-
-const md = (markdownit({
-  html: true,
-  breaks: true,
-})).use(operationLink, operationLinkConfig)
+const { render } = useMarkdown()
 </script>
 
 <template>
   <div
     :class="cn('oa-doc', props.class)"
-    v-html="md.render(props.content)"
+    v-html="render(props.content)"
   />
 </template>
