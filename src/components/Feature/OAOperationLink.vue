@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { computed } from 'vue'
 
 interface Props {
   href?: string
@@ -26,7 +25,7 @@ withDefaults(defineProps<Props>(), {
 
 <style>
 .OAOperationLink {
-  @apply px-1 space-x-1 rounded cursor-pointer !no-underline !text-foreground !font-normal;
+  @apply inline-block px-1 space-x-1 rounded cursor-pointer !no-underline !text-foreground !font-normal;
 }
 
 .OAOperationLink:hover {

@@ -143,6 +143,10 @@ export default defineConfigWithTheme({
                           text: 'Custom Server',
                           link: '/customizations/custom-server',
                         },
+                        {
+                          text: 'Operation Links',
+                          link: '/customizations/operation-links',
+                        },
                       ],
                     },
                   ],

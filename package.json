@@ -73,6 +73,7 @@
     "@trojs/openapi-dereference": "^1.1.0",
     "@tszen/trycatch": "^0.1.0",
     "@types/har-format": "^1.2.16",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.15.2",
     "@vitejs/plugin-vue": "^5.2.3",
     "allof-merge": "^0.6.6",

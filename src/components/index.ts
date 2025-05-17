@@ -1,3 +1,4 @@
+import OAMarkdown from './Common/OAMarkdown.vue'
 import OAInfo from './Feature/OAInfo.vue'
 import OAIntroduction from './Feature/OAIntroduction.vue'
 import OALocaleSelect from './Feature/OALocaleSelect.vue'
@@ -11,6 +12,7 @@ export {
   OAInfo,
   OAIntroduction,
   OALocaleSelect,
+  OAMarkdown,
   OAOperation,
   OAOperationLink,
   OAServers,

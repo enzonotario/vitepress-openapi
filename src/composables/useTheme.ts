@@ -109,6 +109,15 @@ export interface ServerConfig {
   getServers: GetServersFunction | null
 }
 
+export interface OperationLinkConfig {
+  linkPrefix?: string
+  transformHref?: (href: string) => string
+}
+
+export interface MarkdownConfig {
+  operationLink?: OperationLinkConfig
+}
+
 export interface UseThemeConfig {
   theme?: Partial<ThemeConfig>
   path?: Partial<PathConfig>
@@ -125,6 +134,7 @@ export interface UseThemeConfig {
   codeSamples?: Partial<CodeSamplesConfig>
   linksPrefixes?: Partial<LinksPrefixesConfig>
   server?: Partial<ServerConfig>
+  markdown?: Partial<MarkdownConfig>
 }
 
 export interface CodeSamplesConfig {
@@ -303,6 +313,11 @@ const themeConfig: UseThemeConfig = {
     allowCustomServer: false,
     getServers: null,
   },
+  markdown: {
+    operationLink: {
+      linkPrefix: '/operations/',
+    },
+  },
 }
 
 const defaultThemeConfig: UnwrapNestedRefs<UseThemeConfig> = { ...deepUnref(themeConfig) } as PartialUseThemeConfig
@@ -421,6 +436,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
     if (config?.server !== undefined) {
       setServerConfig(config.server)
+    }
+
+    if (config?.markdown !== undefined) {
+      setMarkdownConfig(config.markdown)
     }
   }
 
@@ -855,6 +874,34 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     return themeConfig.server?.allowCustomServer || false
   }
 
+  function getMarkdownConfig(): MarkdownConfig {
+    return themeConfig.markdown as MarkdownConfig
+  }
+
+  function setMarkdownConfig(config: Partial<UnwrapNestedRefs<MarkdownConfig>>) {
+    if (!themeConfig.markdown) {
+      themeConfig.markdown = {}
+    }
+
+    if (config.operationLink) {
+      if (!themeConfig.markdown.operationLink) {
+        themeConfig.markdown.operationLink = {}
+      }
+
+      if (config.operationLink.linkPrefix !== undefined) {
+        (themeConfig.markdown.operationLink as OperationLinkConfig).linkPrefix = config.operationLink.linkPrefix
+      }
+
+      if (config.operationLink.transformHref !== undefined) {
+        (themeConfig.markdown.operationLink as OperationLinkConfig).transformHref = config.operationLink.transformHref
+      }
+    }
+  }
+
+  function getOperationLinkConfig(): OperationLinkConfig | undefined {
+    return themeConfig.markdown?.operationLink
+  }
+
   return {
     isDark,
     schemaConfig: themeConfig.requestBody,
@@ -924,5 +971,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     getServerConfig,
     setServerConfig,
     getServerAllowCustomServer,
+    getMarkdownConfig,
+    setMarkdownConfig,
+    getOperationLinkConfig,
   }
 }

@@ -491,7 +491,7 @@ curl_close($ch);",
 )",
           },
         ],
-        "description": "Get a list of all legendary Argentine Rock artists and explore their contributions to the music scene.",
+        "description": "Get a list of all legendary Argentine Rock artists and explore their contributions to the music scene. You can get one using the [](/operations/getArtist) endpoint.",
         "operationId": "getAllArtists",
         "parameters": [
           {
@@ -884,7 +884,7 @@ curl_close($ch);",
 )",
           },
         ],
-        "description": "Add a new legendary Argentine Rock artist. Make sure they truly deserve the title!",
+        "description": "Add a new legendary Argentine Rock artist. Make sure they truly deserve the title! You can view it later using the [](/operations/getArtist) endpoint.",
         "operationId": "createArtist",
         "requestBody": {
           "content": {
@@ -1478,7 +1478,7 @@ curl_close($ch);",
           },
         ],
         "deprecated": true,
-        "description": "This endpoint was used to delete artists. Unfortunately, that caused a lot of controversy. So, this endpoint is now deprecated and should not be used anymore.",
+        "description": "This endpoint was used to delete artists. Unfortunately, that caused a lot of controversy. So, this endpoint is now deprecated and should not be used anymore. You can use the [](/operations/updateArtist) endpoint instead.",
         "operationId": "deleteArtist",
         "parameters": [
           {
@@ -1767,7 +1767,7 @@ curl_close($ch);",
 )",
           },
         ],
-        "description": "Learn more about a specific Argentine Rock artist and their legacy.",
+        "description": "Learn more about a specific Argentine Rock artist and their legacy. You can update it using the [](/operations/updateArtist) endpoint.",
         "operationId": "getArtist",
         "parameters": [
           {
@@ -2113,7 +2113,7 @@ curl_close($ch);",
 )",
           },
         ],
-        "description": "Update the information of a legendary Argentine Rock artist. Make sure to provide accurate data.",
+        "description": "Update the information of a legendary Argentine Rock artist. Make sure to provide accurate data. You can get the current data using the [](/operations/getArtist) endpoint.",
         "operationId": "updateArtist",
         "parameters": [
           {
@@ -2678,7 +2678,7 @@ curl_close($ch);",
 )",
           },
         ],
-        "description": "Get a list of all albums from a legendary Argentine Rock artist.",
+        "description": "Get a list of all albums from a legendary Argentine Rock artist. You can add a new album using the [](/operations/createAlbum) endpoint.",
         "operationId": "getAllAlbums",
         "parameters": [
           {
@@ -3048,7 +3048,7 @@ curl_close($ch);",
 )",
           },
         ],
-        "description": "Add a new album to a legendary Argentine Rock artist. Make sure it’s a masterpiece!",
+        "description": "Add a new album to a legendary Argentine Rock artist. Make sure it's a masterpiece! You can view all albums using the [](/operations/getAllAlbums) endpoint.",
         "operationId": "createAlbum",
         "parameters": [
           {
@@ -3596,7 +3596,7 @@ curl_close($ch);",
 )",
           },
         ],
-        "description": "Create a user account to access exclusive content about Argentine Rock legends.",
+        "description": "Create a user account to access exclusive content about Argentine Rock legends. After signing up, you can access endpoints like [](/operations/getAllArtists) to explore the data.",
         "operationId": "createUser",
         "requestBody": {
           "content": {

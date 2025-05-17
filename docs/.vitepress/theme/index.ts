@@ -13,6 +13,15 @@ export default {
     // Set the OpenAPI specification.
     useOpenapi({
       spec,
+      config: {
+        markdown: {
+          operationLink: {
+            transformHref: (href) => {
+              return `/example${href}`
+            },
+          },
+        },
+      },
     })
 
     // Initialize Shiki for syntax highlighting.

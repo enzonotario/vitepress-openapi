@@ -84,7 +84,7 @@ export default {
                 // Set the default base URL.
                 defaultBaseUrl: 'http://localhost',
                 // Deprecated. Use `server.getServers` instead.
-                getServers: ({ method, path, operation }) => string[],
+                getServers: ({ method, path, operation }) => Array<string>,
             },
             // Set the i18n configuration.
             i18n: {
@@ -119,9 +119,19 @@ export default {
             },
             server: {
                 // Set a custom function to get servers.
-                getServers: ({ method, path, operation }) => string[],
+                getServers: ({ method, path, operation }) => Array<string>,
                 // Allow custom servers.
                 allowCustomServer: true,
+            },
+            markdown: {
+                operationLink: {
+                    // Link prefix to search for operations.
+                    linkPrefix: '/operations/',
+                    // Transform the href of operation links.
+                    transformHref: (href) => {
+                        return `/example${href}`
+                    },
+                },
             },
         })
     }
@@ -199,6 +209,14 @@ export default {
 
 | Function                      | Description                              | Default Value                                                                         | Allowed Values                                                                           |
 |-------------------------------|------------------------------------------|---------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| `setServerConfig`             | Sets the server configuration.           | `{ getServers: ({ method, path, operation }) => string[], allowCustomServer: true }` | `{ getServers: ({ method, path, operation }) => string[], allowCustomServer: boolean }` |
-| `getServers`                  | Gets the servers for an operation.       | `({ method, path, operation }) => string[]`                                           | `({ method, path, operation }) => string[]`                                              |
+| `setServerConfig`             | Sets the server configuration.           | `{ getServers: ({ method, path, operation }) => Array<string>, allowCustomServer: true }` | `{ getServers: ({ method, path, operation }) => Array<string>, allowCustomServer: boolean }` |
+| `getServers`                  | Gets the servers for an operation.       | `({ method, path, operation }) => Array<string>`                                           | `({ method, path, operation }) => Array<string>`                                              |
 | `getServerAllowCustomServer` | Gets whether custom servers are allowed. | `true`                                                                                | `true`, `false`                                                                          |
+
+## Markdown Configuration
+
+| Function              | Description                       | Default Value                                                | Allowed Values                                                                                                                                                                    |
+|------------------------|-----------------------------------|------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
+| `setMarkdownConfig`    | Sets the markdown configuration.  | `{ operationLink: { linkPrefix: '/operations/' } }`        | `{ operationLink: { linkPrefix: string, transformHref: (href: string) => string, createOperationLinkHtml: (href: string, method: string, title: string) => string } }`            |
+| `getMarkdownConfig`    | Gets the markdown configuration.  | `{ operationLink: { linkPrefix: '/operations/' } }`        | `{ operationLink: { linkPrefix: string, transformHref: (href: string) => string, createOperationLinkHtml: (href: string, method: string, title: string) => string } }` |
+| `getOperationLinkConfig` | Gets the operation link configuration. | `{ linkPrefix: '/operations/' }`                    | `{ linkPrefix: string, transformHref: (href: string) => string, createOperationLinkHtml: (href: string, method: string, title: string) => string }`                    |
