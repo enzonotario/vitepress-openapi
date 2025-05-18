@@ -1,7 +1,7 @@
 {
   "name": "vitepress-openapi",
   "type": "module",
-  "version": "0.0.3-alpha.79",
+  "version": "0.0.3-alpha.80",
   "packageManager": "pnpm@10.9.0",
   "homepage": "https://vitepress-openapi.vercel.app/",
   "repository": {
