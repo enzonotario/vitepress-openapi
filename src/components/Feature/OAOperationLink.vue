@@ -15,7 +15,7 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <a :href="href" class="OAOperationLink group/oaSidebarItem">
+  <a :href="href" class="OAOperationLink group/oaOperationLink">
     <span class="OAOperationLink-badge" :class="[`OAMethodBadge--${method.toLowerCase()}`]">
       {{ method.toUpperCase() }}
     </span>
