@@ -30,7 +30,23 @@ The `operationLink` plugin for `markdown-it` allows you to automatically convert
 
 ### Configuration
 
-You can customize the plugin using the following options:
+You can use the `useTheme` composable to configure the `operationLink` plugin. This is typically done in your `theme/index.[js,ts]` file.
+
+```js
+import { useTheme } from 'vitepress-openapi/client'
+
+useTheme({
+  markdown: {
+    operationLink: {
+      linkPrefix: '/operations/',
+      transformHref: (href) => href.replace('/operations/', '/api/'),
+      createOperationLinkHtml: (href, method, title) => `<a href="${href}" class="operation-link">${title} (${method})</a>`,
+    },
+  },
+})
+```
+
+### Options
 
 | Option | Type | Default | Description |
 | ------ | ---- | ------- | ----------- |
