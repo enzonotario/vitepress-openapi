@@ -7,7 +7,7 @@ describe('useSidebar', () => {
 
   it('creates a sidebar item template', () => {
     const result = useSidebar().sidebarItemTemplate('get', 'GET /users With a Long Title')
-    expect(result).toBe(`<span class="OASidebarItem group/oaSidebarItem">
+    expect(result).toBe(`<span class="OASidebarItem group/oaOperationLink">
         <span class="OASidebarItem-badge OAMethodBadge--get">GET</span>
         <span class="OASidebarItem-text text">GET /users With a Long Title</span>
       </span>`)

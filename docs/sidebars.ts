@@ -57,7 +57,7 @@ export const examples = ([
         sidebarItemTemplate: (method, path) => {
           const operation = spec.paths[path]?.[method]
 
-          return `<div class="OASidebarItem group/oaSidebarItem" style="display: grid; grid-template-columns: 1fr auto;">
+          return `<div class="OASidebarItem group/oaOperationLink" style="display: grid; grid-template-columns: 1fr auto;">
         <span class="text" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${operation ? operation.summary : path}</span>
         <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
       </div>`

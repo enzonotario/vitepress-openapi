@@ -23,7 +23,7 @@ describe('operationsLinkPlugin', () => {
     const input = '[Get Users](/operations/getUsers)'
     const output = md.render(input)
 
-    expect(output).toContain(`<p><a href="/operations/getUsers" class="OAOperationLink group/oaSidebarItem"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>Get Users</span></a></p>
+    expect(output).toContain(`<p><a href="/operations/getUsers" class="OAOperationLink group/oaOperationLink"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>Get Users</span></a></p>
 `)
   })
 
@@ -31,14 +31,14 @@ describe('operationsLinkPlugin', () => {
     const input = '[](/operations/getUserPets)'
     const output = md.render(input)
 
-    expect(output).toContain(`<p><a href="/operations/getUserPets" class="OAOperationLink group/oaSidebarItem"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>Get a list of pets for a user</span></a></p>`)
+    expect(output).toContain(`<p><a href="/operations/getUserPets" class="OAOperationLink group/oaOperationLink"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>Get a list of pets for a user</span></a></p>`)
   })
 
   it('uses operationId when no link text or summary is provided', () => {
     const input = '[](/operations/getUser)'
     const output = md.render(input)
 
-    expect(output).toContain(`<p><a href="/operations/getUser" class="OAOperationLink group/oaSidebarItem"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>GET /users/{id}</span></a></p>
+    expect(output).toContain(`<p><a href="/operations/getUser" class="OAOperationLink group/oaOperationLink"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>GET /users/{id}</span></a></p>
 `)
   })
 
@@ -68,7 +68,7 @@ describe('operationsLinkPlugin', () => {
     const input = '[Get Users](/api/getUsers)'
     const output = customMd.render(input)
 
-    expect(output).toContain(`<p><a href="/api/getUsers" class="OAOperationLink group/oaSidebarItem"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>Get Users</span></a></p>
+    expect(output).toContain(`<p><a href="/api/getUsers" class="OAOperationLink group/oaOperationLink"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>Get Users</span></a></p>
 `)
   })
 
@@ -83,7 +83,7 @@ describe('operationsLinkPlugin', () => {
     const input = '[Get Users](/operations/getUsers)'
     const output = customMd.render(input)
 
-    expect(output).toContain(`<p><a href="/api/getUsers" class="OAOperationLink group/oaSidebarItem"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>Get Users</span></a></p>
+    expect(output).toContain(`<p><a href="/api/getUsers" class="OAOperationLink group/oaOperationLink"><span class="OAOperationLink-badge OAMethodBadge--get">GET</span><span>Get Users</span></a></p>
 `)
   })
 

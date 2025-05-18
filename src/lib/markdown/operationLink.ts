@@ -66,7 +66,7 @@ function createOperationLinkHtml(
   method: string,
   title: string,
 ): string {
-  return `<a href="${href}" class="OAOperationLink group/oaSidebarItem">`
+  return `<a href="${href}" class="OAOperationLink group/oaOperationLink">`
     + `<span class="OAOperationLink-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>`
     + `<span>${title}</span>`
     + `</a>`
