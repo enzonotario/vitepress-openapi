@@ -218,17 +218,11 @@ function hasSlot(name: OperationSlot): boolean {
       v-else
       #request-body="requestBody"
     >
-      <OAHeading
-        level="h2"
-        :prefix="headingPrefix"
-      >
-        {{ $t('Request Body') }}
-      </OAHeading>
-
       <OARequestBody
         :operation-id="requestBody.operationId"
         :request-body="requestBody.requestBody"
         :content-type="requestBody.contentType"
+        :heading-prefix="headingPrefix"
       />
     </template>
 
