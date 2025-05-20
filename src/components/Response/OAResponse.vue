@@ -1,9 +1,9 @@
 <script setup>
 import { computed, defineProps, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
+import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
 import OASchemaTabs from '../Schema/OASchemaTabs.vue'
 import { Label } from '../ui/label'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 
 const props = defineProps({
   operationId: {
@@ -48,30 +48,12 @@ const defaultView = useTheme().getResponseBodyDefaultView()
         {{ $t('Content-Type') }}
       </Label>
       <div class="flex-shrink-0">
-        <Select
-          v-if="contentTypes.length > 1"
+        <OAContentTypeSelect
           :id="contentTypeId"
           v-model="contentType"
-        >
-          <SelectTrigger
-            aria-label="Content-Type"
-            class="h-6 text-xs"
-          >
-            <SelectValue>{{ contentType }}</SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem
-                v-for="(type, idx) in contentTypes"
-                :key="idx"
-                :value="type"
-              >
-                {{ type }}
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <span v-else class="h-6 text-xs rounded-md bg-muted px-3 py-1">{{ contentType }}</span>
+          :content-type="contentType"
+          :content-types="contentTypes"
+        />
       </div>
     </div>
 
