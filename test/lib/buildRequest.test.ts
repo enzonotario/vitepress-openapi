@@ -248,6 +248,43 @@ describe('cookies', () => {
   })
 })
 
+describe('contentType', () => {
+  it('uses specified contentType when provided', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body: { name: 'Charly Garcia' },
+      contentType: 'application/x-www-form-urlencoded',
+    })
+    expect(request.contentType).toBe('application/x-www-form-urlencoded')
+    expect(request.headers['content-type']).toBe('application/x-www-form-urlencoded')
+  })
+
+  it('falls back to content-type header when contentType is not provided', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body: { name: 'Charly Garcia' },
+      headers: { 'content-type': 'application/xml' },
+    })
+    expect(request.contentType).toBe('application/xml')
+    expect(request.headers['content-type']).toBe('application/xml')
+  })
+
+  it('falls back to application/json when neither contentType nor content-type header is provided', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body: { name: 'Charly Garcia' },
+    })
+    expect(request.contentType).toBe('application/json')
+    expect(request.headers['content-type']).toBe('application/json')
+  })
+})
+
 describe('update request', () => {
   it('updates request with new headers', () => {
     const request = buildRequest({

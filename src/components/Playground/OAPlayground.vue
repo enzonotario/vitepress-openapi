@@ -118,6 +118,8 @@ onBeforeUnmount(() => {
       :parameters="props.parameters ?? []"
       :security-ui="props.securityUi ?? {}"
       :examples="props.requestBody?.content?.[props.contentType]?.examples"
+      :content-type="props.contentType"
+      :request-body="props.requestBody"
       @update:request="($event: any) => emits('update:request', $event)"
       @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
       @submit="onSubmit"

@@ -339,4 +339,36 @@ describe('buildHarRequest', () => {
       bodySize: -1,
     })
   })
+
+  it('generates HAR request with application/x-www-form-urlencoded content type', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/form',
+      method: 'POST',
+      body: {
+        username: 'user123',
+        password: 'securepassword',
+        remember: true,
+      },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    })
+    const result = buildHarRequest(request)
+
+    expect(result).toEqual({
+      method: 'POST',
+      url: 'https://api.example.com/form',
+      httpVersion: 'HTTP/1.1',
+      headers: [
+        { name: 'Content-Type', value: 'application/x-www-form-urlencoded' },
+      ],
+      queryString: [],
+      cookies: [],
+      headersSize: -1,
+      bodySize: -1,
+      postData: {
+        mimeType: 'application/x-www-form-urlencoded',
+        text: 'username=user123&password=securepassword&remember=true',
+      },
+    })
+  })
 })

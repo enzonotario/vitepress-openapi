@@ -1,5 +1,6 @@
 <script setup>
 import { useTheme } from '../../composables/useTheme'
+import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
 import OAHeading from '../Common/OAHeading.vue'
 import OASchemaTabs from '../Schema/OASchemaTabs.vue'
 
@@ -23,6 +24,8 @@ const props = defineProps({
 })
 
 const defaultView = useTheme().getRequestBodyDefaultView()
+
+const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
 </script>
 
 <template>
@@ -36,6 +39,15 @@ const defaultView = useTheme().getRequestBodyDefaultView()
       >
         {{ $t('Request Body') }}
       </OAHeading>
+      <div class="relative flex-1">
+        <div class="absolute inset-x-0 top-[-14px] w-full flex justify-end">
+          <OAContentTypeSelect
+            :id="contentTypeId"
+            :content-type="props.contentType"
+            :content-types="Object.keys(props.requestBody?.content ?? {})"
+          />
+        </div>
+      </div>
     </div>
 
     <OASchemaTabs
