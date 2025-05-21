@@ -38,9 +38,9 @@ const bodyValue = computed({
   set: value => emits('update:body', value),
 })
 
-const isJson = computed(() => props.contentType === 'application/json' || props.contentType.includes('+json'))
+const isJson = computed(() => props.contentType.toLowerCase().match(/^application\/json($|;|\+)/) !== null || props.contentType.toLowerCase().includes('+json'))
 
-const isFormUrlEncoded = computed(() => props.contentType === 'application/x-www-form-urlencoded')
+const isFormUrlEncoded = computed(() => props.contentType.toLowerCase().match(/^application\/x-www-form-urlencoded($|;|\+)/) !== null)
 
 const bodyParameters = computed(() => {
   if (!props.requestBody?.content?.[props.contentType]?.schema?.properties) {

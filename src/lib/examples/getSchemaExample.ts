@@ -55,5 +55,5 @@ function isXml(contentType: string): boolean {
 }
 
 function isFormUrlEncoded(contentType: string): boolean {
-  return contentType.toLowerCase() === 'application/x-www-form-urlencoded'
+  return contentType.toLowerCase().match(/^application\/x-www-form-urlencoded($|;|\\+)/) !== null
 }
