@@ -21,8 +21,8 @@ function getContentTypeSchemaExample(contentType: string): ContentTypeSchemaExam
 
   if (isFormUrlEncoded(contentType)) {
     return {
-      key: 'Form Data',
-      summary: 'Form Data',
+      key: 'Form URL-Encoded',
+      summary: 'Form URL-Encoded',
       valueGenerator: getSchemaUiFormUrlEncoded,
     }
   }
