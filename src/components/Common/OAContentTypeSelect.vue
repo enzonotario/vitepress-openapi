@@ -37,7 +37,7 @@ watch(() => props.modelValue, (newValue) => {
 </script>
 
 <template>
-  <div class="max-w-40 hover:max-w-none truncate">
+  <div>
     <Select
       v-if="contentTypes.length > 1"
       v-model="contentType"
@@ -60,6 +60,8 @@ watch(() => props.modelValue, (newValue) => {
         </SelectGroup>
       </SelectContent>
     </Select>
-    <span v-else class="h-6 text-xs rounded-md bg-muted px-3 py-1">{{ contentType }}</span>
+    <div v-else class="ml-auto max-w-40 hover:max-w-full truncate transition-all duration-200 ease-in-out">
+      <span class="h-6 text-xs rounded-md bg-muted px-3 py-1">{{ contentType }}</span>
+    </div>
   </div>
 </template>
