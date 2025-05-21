@@ -108,6 +108,7 @@ const request = ref(
         authorizations: securityUi.length ? Object.entries(securityUi)[0]?.schemes : {},
         body: (operationRequestBody?.content?.[bodyRequestContentType]?.examples ?? { value: '' })[0]?.value,
         variables: {},
+        contentType: bodyRequestContentType,
       })
     : {},
 )
