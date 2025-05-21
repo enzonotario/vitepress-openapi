@@ -25,7 +25,7 @@ const props = defineProps({
 
 const defaultView = useTheme().getRequestBodyDefaultView()
 
-const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
+const contentTypeId = `request-body-content-type-${props.operationId}`
 </script>
 
 <template>
