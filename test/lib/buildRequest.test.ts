@@ -283,6 +283,54 @@ describe('contentType', () => {
     expect(request.contentType).toBe('application/json')
     expect(request.headers['content-type']).toBe('application/json')
   })
+
+  it('processes body as JSON when content type is application/json', () => {
+    const body = { name: 'Charly Garcia', age: 30 }
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body,
+      contentType: 'application/json',
+    })
+    expect(request.body).toEqual(body)
+    expect(typeof request.body).toBe('object')
+  })
+
+  it('processes body as URL-encoded when content type is application/x-www-form-urlencoded', () => {
+    const body = { name: 'Charly Garcia', age: 30 }
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body,
+      contentType: 'application/x-www-form-urlencoded',
+    })
+    expect(typeof request.body).toBe('object')
+    expect(request.body).toEqual({
+      name: 'Charly Garcia',
+      age: 30,
+    })
+  })
+
+  it('processes body as FormData when content type is multipart/form-data', () => {
+    const body = new FormData()
+    body.append('name', 'Charly Garcia')
+    body.append('age', '30')
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body,
+      contentType: 'multipart/form-data',
+    })
+    expect(request.body instanceof FormData).toBe(true)
+
+    // Check that the FormData contains the expected values
+    const formData = request.body as FormData
+    expect(formData.get('name')).toBe('Charly Garcia')
+    expect(formData.get('age')).toBe('30')
+  })
 })
 
 describe('update request', () => {
