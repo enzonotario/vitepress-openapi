@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { computed, defineEmits, defineProps, ref, watch } from 'vue'
-import { isFormUrlEncoded as _isFormUrlEncoded, isJson as _isJson, isMultipartFormData as _isMultipartFormData } from '../../lib/contentTypeUtils'
+import {
+  isFormUrlEncoded as _isFormUrlEncoded,
+  isJson as _isJson,
+  isMultipartFormData as _isMultipartFormData,
+  isXml as _isXml,
+} from '../../lib/contentTypeUtils'
 import { createCompositeKey } from '../../lib/playground/createCompositeKey'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
+import { Textarea } from '../ui/textarea'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
 
 const props = defineProps({
@@ -45,6 +51,8 @@ const isFormUrlEncoded = computed(() => _isFormUrlEncoded(props.contentType))
 
 const isMultipartFormData = computed(() => _isMultipartFormData(props.contentType))
 
+const isXml = computed(() => _isXml(props.contentType))
+
 const bodyParameters = computed(() => {
   if (!props.requestBody?.content?.[props.contentType]?.schema?.properties) {
     return [{ name: 'body', in: 'body', schema: { type: 'string' } }]
@@ -59,6 +67,14 @@ const bodyParameters = computed(() => {
 })
 
 const paramValues = ref<Record<string, string>>({})
+
+const shouldUseTextarea = computed(() => {
+  if (isXml.value) {
+    return true
+  }
+
+  return false
+})
 
 function updateParameterValue(parameter: any, value: string) {
   paramValues.value[parameter.name] = value
@@ -153,6 +169,20 @@ watch(() => props.body, (newBody: any) => {
         <OAJSONEditor v-model="bodyValue" class="w-full" />
       </div>
     </div>
+
+    <Textarea
+      v-else-if="shouldUseTextarea"
+      :id="`body-textarea-${props.operationId}`"
+      v-model="bodyValue"
+      :name="`body-textarea-${props.operationId}`"
+      :disabled="!props.enabledParameters.body"
+      :rows="isXml ? 7 : 1"
+      :autocorrect="false"
+      :autocomplete="false"
+      :autocapitalize="false"
+      :spellcheck="false"
+      class="bg-muted"
+    />
 
     <div v-else class="flex flex-col gap-1">
       <OAPlaygroundParameterInput
