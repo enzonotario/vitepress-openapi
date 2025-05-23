@@ -54,11 +54,6 @@ const props = defineProps({
     type: Object,
     required: false,
   },
-  contentType: {
-    type: String,
-    required: false,
-    default: 'application/json',
-  },
   requestBody: {
     type: Object,
     required: false,
@@ -169,7 +164,7 @@ watch([variables, authorizations, body, selectedServer, enabledParameters], () =
     authorizations: authorizations.value,
     body: enabledParameters.value.body ? body.value : undefined,
     parameters: filteredParameters,
-    contentType: props.contentType,
+    contentType: operationData.request.selectedContentType.value,
   }))
 }, { deep: true })
 
@@ -325,7 +320,7 @@ watch(operationData.security.selectedSchemeId, () => {
       <OAPlaygroundBodyInput
         :operation-id="props.operationId"
         :body="body"
-        :content-type="props.contentType"
+        :content-type="operationData.request.selectedContentType.value"
         :request-body="props.requestBody"
         :enabled-parameters="enabledParameters"
         @update:body="body = $event"

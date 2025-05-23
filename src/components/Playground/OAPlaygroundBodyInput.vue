@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, defineEmits, defineProps, ref, watch } from 'vue'
+import { isFormUrlEncoded as _isFormUrlEncoded, isJson as _isJson, isMultipartFormData as _isMultipartFormData } from '../../lib/contentTypeUtils'
 import { createCompositeKey } from '../../lib/playground/createCompositeKey'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
@@ -38,9 +39,11 @@ const bodyValue = computed({
   set: value => emits('update:body', value),
 })
 
-const isJson = computed(() => props.contentType.toLowerCase().match(/^application\/json($|;|\+)/) !== null || props.contentType.toLowerCase().includes('+json'))
+const isJson = computed(() => _isJson(props.contentType))
 
-const isFormUrlEncoded = computed(() => props.contentType.toLowerCase().match(/^application\/x-www-form-urlencoded($|;|\+)/) !== null)
+const isFormUrlEncoded = computed(() => _isFormUrlEncoded(props.contentType))
+
+const isMultipartFormData = computed(() => _isMultipartFormData(props.contentType))
 
 const bodyParameters = computed(() => {
   if (!props.requestBody?.content?.[props.contentType]?.schema?.properties) {
@@ -60,18 +63,27 @@ const paramValues = ref<Record<string, string>>({})
 function updateParameterValue(parameter: any, value: string) {
   paramValues.value[parameter.name] = value
 
-  if (isFormUrlEncoded.value) {
-    // For form-urlencoded, combine all parameter values into a single urlencoded string.
+  if (isFormUrlEncoded.value || isMultipartFormData.value) {
     const enabledParams = Object.keys(paramValues.value).filter((key) => {
       const param = bodyParameters.value.find(p => p.name === key)
       return param && (props.enabledParameters[createCompositeKey({ parameter: param, operationId: props.operationId })] ?? props.enabledParameters.body)
     })
 
-    const formData = enabledParams.map((key) => {
-      return `${encodeURIComponent(key)}=${encodeURIComponent(paramValues.value[key] || '')}`
-    }).join('&')
+    if (isFormUrlEncoded.value) {
+      bodyValue.value = Object.fromEntries(
+        enabledParams.map((key) => {
+          return [key, paramValues.value[key]]
+        }),
+      )
+    } else if (isMultipartFormData.value) {
+      const formData = new FormData()
 
-    bodyValue.value = formData
+      enabledParams.forEach((key) => {
+        formData.append(key, paramValues.value[key] || '')
+      })
+
+      bodyValue.value = formData
+    }
   } else {
     // For other content types, pass the value directly.
     bodyValue.value = value
@@ -81,29 +93,46 @@ function updateParameterValue(parameter: any, value: string) {
 function updateParameterEnabled(parameter: any, enabled: boolean) {
   emits('update:enabled', createCompositeKey({ parameter, operationId: props.operationId }), enabled)
 
-  if (isFormUrlEncoded.value) {
+  if (isFormUrlEncoded.value || isMultipartFormData.value) {
     // Recalculate the form data when a parameter is enabled/disabled.
     const enabledParams = Object.keys(paramValues.value).filter((key) => {
       const param = bodyParameters.value.find(p => p.name === key)
       return param && (props.enabledParameters[createCompositeKey({ parameter: param, operationId: props.operationId })] ?? props.enabledParameters.body)
     })
 
-    const formData = enabledParams.map((key) => {
-      return `${encodeURIComponent(key)}=${encodeURIComponent(paramValues.value[key] || '')}`
-    }).join('&')
+    if (isFormUrlEncoded.value) {
+      bodyValue.value = Object.fromEntries(
+        enabledParams.map((key) => {
+          return [key, paramValues.value[key]]
+        }),
+      )
+    } else if (isMultipartFormData.value) {
+      const formData = new FormData()
 
-    bodyValue.value = formData
+      enabledParams.forEach((key) => {
+        formData.append(key, paramValues.value[key] || '')
+      })
+
+      bodyValue.value = formData
+    }
   }
 }
 
-// Initialize paramValues from bodyValue if it's a form-urlencoded string.
-watch(() => props.body, (newBody) => {
+watch(() => props.body, (newBody: any) => {
   if (isFormUrlEncoded.value && typeof newBody === 'string') {
     const params = new URLSearchParams(newBody)
     const newParamValues: Record<string, string> = {}
 
     params.forEach((value, key) => {
       newParamValues[key] = value
+    })
+
+    paramValues.value = newParamValues
+  } else if (isMultipartFormData.value && newBody instanceof FormData) {
+    const newParamValues: Record<string, string> = {}
+
+    newBody.forEach((value, key) => {
+      newParamValues[key] = value as string
     })
 
     paramValues.value = newParamValues
@@ -129,7 +158,7 @@ watch(() => props.body, (newBody) => {
       <OAPlaygroundParameterInput
         v-for="parameter in bodyParameters"
         :key="createCompositeKey({ parameter, operationId: props.operationId })"
-        :model-value="isFormUrlEncoded ? paramValues[parameter.name] || '' : String(bodyValue)"
+        :model-value="isFormUrlEncoded || isMultipartFormData ? paramValues[parameter.name] || '' : String(bodyValue)"
         :parameter="parameter"
         :composite-key="createCompositeKey({ parameter, operationId: props.operationId })"
         :enabled="props.enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })] ?? props.enabledParameters.body"

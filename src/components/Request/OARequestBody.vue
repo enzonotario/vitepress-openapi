@@ -1,6 +1,8 @@
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import type { OARequestBody } from '../../types'
+import { computed, inject } from 'vue'
 import { useTheme } from '../../composables/useTheme'
+import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
 import OAHeading from '../Common/OAHeading.vue'
 import OASchemaTabs from '../Schema/OASchemaTabs.vue'
@@ -11,11 +13,7 @@ const props = defineProps({
     required: true,
   },
   requestBody: {
-    type: Object,
-    required: true,
-  },
-  contentType: {
-    type: String,
+    type: Object as () => OARequestBody,
     required: true,
   },
   headingPrefix: {
@@ -28,7 +26,29 @@ const defaultView = useTheme().getRequestBodyDefaultView()
 
 const contentTypeId = `request-body-content-type-${props.operationId}`
 
-const contentType = ref(props.contentType)
+const operationData = inject(OPERATION_DATA_KEY)
+
+const contentType = computed({
+  get: () => operationData.request.selectedContentType.value,
+  set: (value) => {
+    operationData.request.selectedContentType.value = value
+  },
+})
+
+const schema = computed(() => {
+  return props.requestBody?.content?.[contentType.value]?.ui ?? {}
+})
+
+const examples = computed(() => {
+  return Object.entries(props.requestBody?.content?.[contentType.value]?.examples ?? {})
+    .reduce((acc, [key, example]) => {
+      if (example?.hideOnSchemaTabs) {
+        return acc
+      }
+      acc[key] = example
+      return acc
+    }, {} as Record<string, any>)
+})
 </script>
 
 <template>
@@ -55,8 +75,8 @@ const contentType = ref(props.contentType)
     </div>
 
     <OASchemaTabs
-      :schema="props.requestBody?.content?.[contentType]?.ui"
-      :examples="props.requestBody?.content?.[contentType]?.examples"
+      :schema="schema"
+      :examples="examples"
       :content-type="contentType"
       :default-view="defaultView"
     />
