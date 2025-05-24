@@ -19,6 +19,10 @@ describe('contentTypeUtils', () => {
       expect(isJson('application/vnd.api+json')).toBe(true)
     })
 
+    it('should return true for application/json+custom', () => {
+      expect(isJson('application/json+custom')).toBe(true)
+    })
+
     it('should return false for application/xml', () => {
       expect(isJson('application/xml')).toBe(false)
     })
@@ -49,6 +53,10 @@ describe('contentTypeUtils', () => {
       expect(isXml('application/vnd.api+xml')).toBe(true)
     })
 
+    it('should return true for application/xml+custom', () => {
+      expect(isXml('application/xml+custom')).toBe(true)
+    })
+
     it('should return false for application/json', () => {
       expect(isXml('application/json')).toBe(false)
     })
@@ -71,6 +79,10 @@ describe('contentTypeUtils', () => {
       expect(isFormUrlEncoded('application/x-www-form-urlencoded; charset=utf-8')).toBe(true)
     })
 
+    it('should return true for application/x-www-form-urlencoded+custom', () => {
+      expect(isFormUrlEncoded('application/x-www-form-urlencoded+custom')).toBe(true)
+    })
+
     it('should return false for application/json', () => {
       expect(isFormUrlEncoded('application/json')).toBe(false)
     })
@@ -91,6 +103,10 @@ describe('contentTypeUtils', () => {
 
     it('should return true for multipart/form-data with boundary', () => {
       expect(isMultipartFormData('multipart/form-data; boundary=something')).toBe(true)
+    })
+
+    it('should return true for multipart/form-data+custom', () => {
+      expect(isMultipartFormData('multipart/form-data+custom')).toBe(true)
     })
 
     it('should return false for application/json', () => {
