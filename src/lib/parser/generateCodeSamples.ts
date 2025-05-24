@@ -49,6 +49,7 @@ export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOp
           ...(useTheme().getCodeSamplesDefaultHeaders() || {}),
         },
         variables: {},
+        contentType: requestBodyContentTypes.length > 0 ? requestBodyContentTypes[0] : undefined,
       })
 
       operation.codeSamples = await Promise.all(
