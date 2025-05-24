@@ -129,7 +129,7 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
 
 const authorizations = ref<PlaygroundSecurityScheme[]>([])
 
-const body = ref(Object.keys(props.examples ?? {}).length ? Object.values(props.examples ?? {})[0].value : null)
+const body = ref(null)
 
 function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   if (!schemes || !Object.keys(schemes).length) {
@@ -312,7 +312,7 @@ watch(operationData.security.selectedSchemeId, () => {
       </div>
     </details>
 
-    <details v-if="body" open>
+    <details v-if="props.requestBody" open>
       <summary>
         {{ $t('Body') }}
       </summary>
@@ -323,6 +323,7 @@ watch(operationData.security.selectedSchemeId, () => {
         :content-type="operationData.request.selectedContentType.value"
         :request-body="props.requestBody"
         :enabled-parameters="enabledParameters"
+        :examples="props.examples"
         @update:body="body = $event"
         @update:enabled="(key, value) => enabledParameters[key] = value"
         @submit="emits('submit')"

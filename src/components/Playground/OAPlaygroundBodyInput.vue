@@ -32,6 +32,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  examples: {
+    type: Object,
+    required: false,
+  },
 })
 
 const emits = defineEmits([
@@ -153,6 +157,12 @@ watch(() => props.body, (newBody: any) => {
 
     paramValues.value = newParamValues
   }
+}, { immediate: true })
+
+watch(() => props.contentType, () => {
+  bodyValue.value = props.examples
+    ? Object.values(props.examples)[0]?.value
+    : null
 }, { immediate: true })
 </script>
 
