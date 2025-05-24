@@ -23,7 +23,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const contentType = ref(props.modelValue || props.contentType || props.contentTypes[0] || undefined)
+const contentType = ref(props.modelValue || props.contentType || (props.contentTypes.length > 0 ? props.contentTypes[0] : undefined))
 
 watch(contentType, (newValue) => {
   emit('update:modelValue', newValue)
