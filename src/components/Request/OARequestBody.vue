@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { OperationData } from '../../lib/operationData'
 import type { OARequestBody } from '../../types'
 import { computed, inject } from 'vue'
 import { useTheme } from '../../composables/useTheme'
@@ -26,7 +27,7 @@ const defaultView = useTheme().getRequestBodyDefaultView()
 
 const contentTypeId = `request-body-content-type-${props.operationId}`
 
-const operationData = inject(OPERATION_DATA_KEY)
+const operationData = inject(OPERATION_DATA_KEY) as OperationData
 
 const contentType = computed({
   get: () => operationData.request.selectedContentType.value,

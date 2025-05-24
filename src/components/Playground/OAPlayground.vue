@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { OperationData } from '../../lib/operationData'
 import { computed, defineEmits, defineProps, inject, onBeforeUnmount } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
@@ -62,7 +63,7 @@ const emits = defineEmits([
 
 const { loading, response, submitRequest, cleanupImageUrls } = usePlayground()
 
-const operationData = inject(OPERATION_DATA_KEY)
+const operationData = inject(OPERATION_DATA_KEY) as OperationData
 
 const hasBody = computed(() =>
   Boolean(props.requestBody),

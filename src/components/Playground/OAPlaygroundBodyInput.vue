@@ -173,7 +173,7 @@ watch(() => props.body, (newBody: any) => {
     <Textarea
       v-else-if="shouldUseTextarea"
       :id="`body-textarea-${props.operationId}`"
-      v-model="bodyValue"
+      v-model="bodyValue as string"
       :name="`body-textarea-${props.operationId}`"
       :disabled="!props.enabledParameters.body"
       :rows="isXml ? 7 : 1"
