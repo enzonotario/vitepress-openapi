@@ -494,6 +494,7 @@ describe('update request', () => {
       variables: {
         search: 'query',
       },
+      contentType: 'application/json',
     },
     )
 

@@ -18,7 +18,7 @@ const emit = defineEmits(['update:modelValue'])
 
 const value = computed({
   get: () => props.modelValue,
-  set: val => emit('update:modelValue', JSON.parse(val)),
+  set: val => emit('update:modelValue', val),
 })
 
 const themeConfig = useTheme()

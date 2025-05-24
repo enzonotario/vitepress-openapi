@@ -8,6 +8,9 @@ export interface OperationData {
   security: {
     selectedSchemeId: Ref<string>
   }
+  request: {
+    selectedContentType: Ref<string>
+  }
 }
 
 export const OPERATION_DATA_KEY = Symbol('operationData')
@@ -17,10 +20,16 @@ export function initOperationData({ operation }: { operation: ParsedOperation })
 
   const defaultSecurityScheme = useTheme().getSecurityDefaultScheme() || firstSecurityScheme
 
+  const requestBodyContentTypes = operation.requestBody ? Object.keys(operation.requestBody.content) : []
+  const defaultContentType = requestBodyContentTypes.length ? requestBodyContentTypes[0] : ''
+
   return {
     operationId: operation.operationId,
     security: {
       selectedSchemeId: ref(operation.securityUi?.some(s => s.id === defaultSecurityScheme) ? defaultSecurityScheme : firstSecurityScheme),
+    },
+    request: {
+      selectedContentType: ref(defaultContentType),
     },
   }
 }

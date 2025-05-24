@@ -59,9 +59,22 @@ export function buildHarRequest(
         text: JSON.stringify(formDataObject),
       }
     } else if (typeof oaRequest.body === 'object') {
-      harRequest.postData = {
-        mimeType: oaRequest.contentType || 'application/json',
-        text: JSON.stringify(oaRequest.body),
+      if (oaRequest.contentType === 'application/x-www-form-urlencoded') {
+        // Format as URL-encoded string for application/x-www-form-urlencoded.
+        const params = new URLSearchParams()
+        Object.entries(oaRequest.body).forEach(([key, value]) => {
+          params.append(key, String(value))
+        })
+        harRequest.postData = {
+          mimeType: 'application/x-www-form-urlencoded',
+          text: params.toString(),
+        }
+      } else {
+        // Default to JSON for other content types.
+        harRequest.postData = {
+          mimeType: oaRequest.contentType || 'application/json',
+          text: JSON.stringify(oaRequest.body),
+        }
       }
     }
   }

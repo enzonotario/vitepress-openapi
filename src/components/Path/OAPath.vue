@@ -54,10 +54,6 @@ const operationSlots = computed(() => themeConfig.getOperationSlots().filter(slo
 
 const operationCols = computed(() => themeConfig.getOperationCols())
 
-const bodyRequestContentTypes = computed(() => operationRequestBody ? Object.keys(operationRequestBody.content) : [])
-
-const bodyRequestContentType = computed(() => bodyRequestContentTypes.value.length ? bodyRequestContentTypes.value[0] : undefined)
-
 const customGetServers = themeConfig.getOperationServers()
 
 const servers = customGetServers
@@ -106,8 +102,9 @@ const request = ref(
         baseUrl: baseUrl.value,
         parameters: operationParameters ?? [],
         authorizations: securityUi.length ? Object.entries(securityUi)[0]?.schemes : {},
-        body: (operationRequestBody?.content?.[bodyRequestContentType]?.examples ?? { value: '' })[0]?.value,
+        body: (operationRequestBody?.content?.[operationData.request.selectedContentType.value]?.examples ?? { value: '' })[0]?.value,
         variables: {},
+        contentType: operationData.request.selectedContentType.value,
       })
     : {},
 )
@@ -218,7 +215,6 @@ function updateSelectedServer(server) {
               name="request-body"
               :operation-id="props.id"
               :request-body="operationRequestBody"
-              :content-type="bodyRequestContentType"
             />
           </template>
 
@@ -269,7 +265,6 @@ function updateSelectedServer(server) {
                 :parameters="operationParameters"
                 :request-body="operationRequestBody"
                 :security-ui="securityUi"
-                :content-type="bodyRequestContentType"
                 :request="request"
                 :update-request="updateRequest"
                 :servers="servers"

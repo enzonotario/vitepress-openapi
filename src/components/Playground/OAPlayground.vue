@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { computed, defineEmits, defineProps, onBeforeUnmount } from 'vue'
+import type { OperationData } from '../../lib/operationData'
+import { computed, defineEmits, defineProps, inject, onBeforeUnmount } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
+import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import OAHeading from '../Common/OAHeading.vue'
 import { Button } from '../ui/button'
 import OAPlaygroundParameters from './OAPlaygroundParameters.vue'
@@ -44,11 +46,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  contentType: {
-    type: String,
-    required: false,
-    default: 'application/json',
-  },
   request: {
     type: Object,
   },
@@ -66,6 +63,8 @@ const emits = defineEmits([
 
 const { loading, response, submitRequest, cleanupImageUrls } = usePlayground()
 
+const operationData = inject(OPERATION_DATA_KEY) as OperationData
+
 const hasBody = computed(() =>
   Boolean(props.requestBody),
 )
@@ -77,6 +76,10 @@ const hasSecuritySchemes = computed(() =>
 const hasParameters = computed(() =>
   Boolean(props.parameters?.length || hasBody.value || hasSecuritySchemes.value),
 )
+
+const examples = computed(() => {
+  return props.requestBody?.content?.[operationData.request.selectedContentType.value]?.examples
+})
 
 async function onSubmit() {
   if (!props.request) {
@@ -117,7 +120,8 @@ onBeforeUnmount(() => {
       :servers="props.servers"
       :parameters="props.parameters ?? []"
       :security-ui="props.securityUi ?? {}"
-      :examples="props.requestBody?.content?.[props.contentType]?.examples"
+      :examples="examples"
+      :request-body="props.requestBody"
       @update:request="($event: any) => emits('update:request', $event)"
       @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
       @submit="onSubmit"

@@ -35,6 +35,12 @@ export const testsPages = [
     specPath: './public/openapi-playground-examples.json',
     themeConfig: {},
   },
+  {
+    slug: 'content-types',
+    label: 'Content Types',
+    specPath: './public/openapi-content-types.json',
+    themeConfig: {},
+  },
 ]
 
 export const examplesPages = [

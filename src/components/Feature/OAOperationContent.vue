@@ -83,7 +83,7 @@ function hasSlot(name: OperationSlot): boolean {
 
 <template>
   <OAPath
-    v-if="props.operationId"
+    v-if="props.operationId && operation"
     :id="props.operationId"
     :path="operationPath"
     :method="operationMethod"
@@ -218,17 +218,10 @@ function hasSlot(name: OperationSlot): boolean {
       v-else
       #request-body="requestBody"
     >
-      <OAHeading
-        level="h2"
-        :prefix="headingPrefix"
-      >
-        {{ $t('Request Body') }}
-      </OAHeading>
-
       <OARequestBody
         :operation-id="requestBody.operationId"
         :request-body="requestBody.requestBody"
-        :content-type="requestBody.contentType"
+        :heading-prefix="headingPrefix"
       />
     </template>
 
@@ -308,7 +301,6 @@ function hasSlot(name: OperationSlot): boolean {
         :parameters="playground.parameters"
         :request-body="playground.requestBody"
         :security-ui="playground.securityUi"
-        :content-type="playground.contentType"
         :servers="playground.servers"
         :heading-prefix="headingPrefix"
         @update:selected-server="playground.updateSelectedServer"

@@ -41,6 +41,7 @@ const defaultValue = computed(() => {
 
 <template>
   <Tabs
+    :key="defaultValue"
     :default-value="defaultValue"
   >
     <TabsList class="relative flex flex-row justify-start">
