@@ -174,7 +174,7 @@ watch(() => props.contentType, () => {
       @input="bodyValue = $event.target.value"
     />
 
-    <div v-else-if="isFormUrlEncodedContent || isMultipartFormDataContent" class="flex flex-col gap-1">
+    <div v-else class="flex flex-col gap-1">
       <OAPlaygroundParameterInput
         v-for="parameter in bodyParameters"
         :key="createCompositeKey({
