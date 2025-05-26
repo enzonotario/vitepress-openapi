@@ -61,6 +61,13 @@ const bodyParameters = computed<BodyParameter[]>(() => {
   }))
 })
 
+const getParameterValue = computed(() => (parameter: BodyParameter) => {
+  if (isFormUrlEncodedContent.value || isMultipartFormDataContent.value) {
+    return paramValues.value[parameter.name] || ''
+  }
+  return bodyValue.value
+})
+
 const paramValues = ref<Record<string, string>>({})
 
 function getEnabledParams(): string[] {
@@ -181,7 +188,7 @@ watch(() => props.contentType, () => {
           parameter: parameter as OpenAPIV3.ParameterObject,
           operationId: props.operationId,
         })"
-        :model-value="isFormUrlEncodedContent || isMultipartFormDataContent ? paramValues[parameter.name] || '' : String(bodyValue)"
+        :model-value="getParameterValue(parameter)"
         :parameter="parameter"
         :composite-key="createCompositeKey({
           parameter: parameter as OpenAPIV3.ParameterObject,
