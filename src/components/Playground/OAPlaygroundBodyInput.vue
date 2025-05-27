@@ -167,7 +167,7 @@ watch(() => props.contentType, () => {
     </div>
 
     <Textarea
-      v-else-if="shouldUseTextarea && bodyValue !== null"
+      v-else-if="shouldUseTextarea && bodyValue !== null && typeof bodyValue === 'string'"
       :id="`body-textarea-${props.operationId}`"
       :model-value="bodyValue"
       :name="`body-textarea-${props.operationId}`"
