@@ -9,7 +9,6 @@ import {
 } from '../../lib/contentTypeUtils'
 import { createCompositeKey } from '../../lib/playground/createCompositeKey'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
-import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
 
@@ -57,7 +56,7 @@ const bodyParameters = computed<BodyParameter[]>(() => {
       {
         name: 'body',
         in: 'body',
-        schema: { type: 'string' },
+        schema: props.requestBody?.content?.[props.contentType]?.schema,
         example: props.examples ? Object.values(props.examples)[0]?.value : null,
       },
     ]
@@ -200,16 +199,6 @@ watch(() => props.contentType, () => {
       :autocomplete="false"
       :autocapitalize="false"
       :spellcheck="false"
-      class="bg-muted"
-      @input="bodyValue = $event.target.value"
-    />
-
-    <Input
-      v-else-if="shouldUseInput && bodyValue !== null && typeof bodyValue === 'string'"
-      :id="`body-input-${props.operationId}`"
-      :model-value="bodyValue"
-      :name="`body-input-${props.operationId}`"
-      :disabled="!props.enabledParameters.body"
       class="bg-muted"
       @input="bodyValue = $event.target.value"
     />

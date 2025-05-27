@@ -46,6 +46,9 @@ function inputType(parameter: any) {
   if (parameter.schema?.type === 'number') {
     return 'number'
   }
+  if (parameter.schema?.format === 'binary') {
+    return 'file'
+  }
   return 'text'
 }
 
