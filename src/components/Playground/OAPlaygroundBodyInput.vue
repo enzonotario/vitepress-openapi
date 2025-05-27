@@ -92,6 +92,19 @@ const getEnabledParams = computed(() => {
   })
 })
 
+const parametersWithKeys = computed(() =>
+  bodyParameters.value.map((parameter) => {
+    const compositeKey = createCompositeKey({
+      parameter: parameter as OpenAPIV3.ParameterObject,
+      operationId: props.operationId,
+    })
+    return {
+      parameter,
+      compositeKey,
+      enabled: props.enabledParameters[compositeKey] ?? props.enabledParameters.body,
+    }
+  }))
+
 function createFormData(enabledParams: string[]): Record<string, string> | FormData {
   if (isFormUrlEncodedContent.value) {
     return Object.fromEntries(
@@ -203,23 +216,14 @@ watch(() => props.contentType, () => {
 
     <div v-else class="flex flex-col gap-1">
       <OAPlaygroundParameterInput
-        v-for="parameter in bodyParameters"
-        :key="createCompositeKey({
-          parameter: parameter as OpenAPIV3.ParameterObject,
-          operationId: props.operationId,
-        })"
-        :model-value="getParameterValue(parameter)"
-        :parameter="parameter"
-        :composite-key="createCompositeKey({
-          parameter: parameter as OpenAPIV3.ParameterObject,
-          operationId: props.operationId,
-        })"
-        :enabled="props.enabledParameters[createCompositeKey({
-          parameter: parameter as OpenAPIV3.ParameterObject,
-          operationId: props.operationId,
-        })] ?? props.enabledParameters.body"
-        @update:model-value="updateParameterValue(parameter, $event)"
-        @update:enabled="updateParameterEnabled(parameter, $event)"
+        v-for="item in parametersWithKeys"
+        :key="item.compositeKey"
+        :model-value="getParameterValue(item.parameter)"
+        :parameter="item.parameter"
+        :composite-key="item.compositeKey"
+        :enabled="item.enabled"
+        @update:model-value="updateParameterValue(item.parameter, $event)"
+        @update:enabled="updateParameterEnabled(item.parameter, $event)"
         @submit="emits('submit')"
       />
     </div>
