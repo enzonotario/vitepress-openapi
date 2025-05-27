@@ -9,6 +9,7 @@ import {
 } from '../../lib/contentTypeUtils'
 import { createCompositeKey } from '../../lib/playground/createCompositeKey'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
+import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
 
@@ -48,9 +49,18 @@ const isXmlContent = computed(() => isXml(props.contentType))
 
 const shouldUseTextarea = computed(() => isXmlContent.value)
 
+const shouldUseInput = computed(() => !props.requestBody?.content?.[props.contentType]?.schema?.properties)
+
 const bodyParameters = computed<BodyParameter[]>(() => {
-  if (!props.requestBody?.content?.[props.contentType]?.schema?.properties) {
-    return [{ name: 'body', in: 'body', schema: { type: 'string' } }]
+  if (shouldUseInput.value) {
+    return [
+      {
+        name: 'body',
+        in: 'body',
+        schema: { type: 'string' },
+        example: props.examples ? Object.values(props.examples)[0]?.value : null,
+      },
+    ]
   }
 
   return Object.keys(props.requestBody?.content?.[props.contentType]?.schema?.properties ?? {}).map(key => ({
@@ -177,6 +187,16 @@ watch(() => props.contentType, () => {
       :autocomplete="false"
       :autocapitalize="false"
       :spellcheck="false"
+      class="bg-muted"
+      @input="bodyValue = $event.target.value"
+    />
+
+    <Input
+      v-else-if="shouldUseInput && bodyValue !== null && typeof bodyValue === 'string'"
+      :id="`body-input-${props.operationId}`"
+      :model-value="bodyValue"
+      :name="`body-input-${props.operationId}`"
+      :disabled="!props.enabledParameters.body"
       class="bg-muted"
       @input="bodyValue = $event.target.value"
     />
