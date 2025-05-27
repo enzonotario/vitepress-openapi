@@ -58,7 +58,7 @@ const bodyParameters = computed<BodyParameter[]>(() => {
         in: 'body',
         schema: props.requestBody?.content?.[props.contentType]?.schema,
         example: props.examples ? Object.values(props.examples)[0]?.value : null,
-      },
+      } as BodyParameter,
     ]
   }
 
