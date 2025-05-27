@@ -211,6 +211,7 @@ watch(() => props.contentType, () => {
         :parameter="item.parameter"
         :composite-key="item.compositeKey"
         :enabled="item.enabled"
+        :hide-label="parametersWithKeys.length === 1"
         @update:model-value="updateParameterValue(item.parameter, $event)"
         @update:enabled="updateParameterEnabled(item.parameter, $event)"
         @submit="emits('submit')"

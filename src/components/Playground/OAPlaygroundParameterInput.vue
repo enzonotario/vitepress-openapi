@@ -23,6 +23,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  hideLabel: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emits = defineEmits([
@@ -62,8 +66,8 @@ const parameterExample = getPropertyExample(props.parameter)
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-2 items-center">
-    <div class="flex items-center gap-2">
+  <div class="grid gap-2 items-center" :class="{ 'grid-cols-2': !hideLabel, 'grid-cols-1': hideLabel }">
+    <div v-if="!hideLabel" class="flex items-center gap-2">
       <Checkbox
         :id="`enable-${compositeKey}`"
         :name="`enable-${compositeKey}`"
