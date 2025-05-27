@@ -70,7 +70,7 @@ const getParameterValue = computed(() => (parameter: BodyParameter) => {
 
 const paramValues = ref<Record<string, string>>({})
 
-function getEnabledParams(): string[] {
+const getEnabledParams = computed(() => {
   return Object.keys(paramValues.value).filter((key) => {
     const param = bodyParameters.value.find(p => p.name === key)
     return param && (
@@ -80,7 +80,7 @@ function getEnabledParams(): string[] {
       })] ?? props.enabledParameters.body
     )
   })
-}
+})
 
 function createFormData(enabledParams: string[]): Record<string, string> | FormData {
   if (isFormUrlEncodedContent.value) {
@@ -102,7 +102,7 @@ function updateParameterValue(parameter: BodyParameter, value: string): void {
   paramValues.value[parameter.name] = value
 
   if (isFormUrlEncodedContent.value || isMultipartFormDataContent.value) {
-    const enabledParams = getEnabledParams()
+    const enabledParams = getEnabledParams.value
     bodyValue.value = createFormData(enabledParams)
   } else {
     // For other content types, pass the value directly.
@@ -117,7 +117,7 @@ function updateParameterEnabled(parameter: BodyParameter, enabled: boolean): voi
   }), enabled)
 
   if (isFormUrlEncodedContent.value || isMultipartFormDataContent.value) {
-    const enabledParams = getEnabledParams()
+    const enabledParams = getEnabledParams.value
     bodyValue.value = createFormData(enabledParams)
   }
 }
