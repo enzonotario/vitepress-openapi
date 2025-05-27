@@ -15,7 +15,7 @@ import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
 interface BodyParameter extends Partial<OpenAPIV3.ParameterObject> {
   name: string
   in: string
-  schema: any
+  schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject
   required?: boolean
 }
 
