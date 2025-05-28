@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { isFormUrlEncoded, isJson, isMultipartFormData, isXml } from '../../src/lib/contentTypeUtils'
+import {
+  isFile,
+  isFormUrlEncoded,
+  isJson,
+  isMultipartFormData,
+  isPlainText,
+  isXml,
+} from '../../src/lib/contentTypeUtils'
 
 describe('contentTypeUtils', () => {
   describe('isJson', () => {
@@ -119,6 +126,62 @@ describe('contentTypeUtils', () => {
 
     it('should return false for empty string', () => {
       expect(isMultipartFormData('')).toBe(false)
+    })
+  })
+
+  describe('isPlainText', () => {
+    it('should return true for text/plain', () => {
+      expect(isPlainText('text/plain')).toBe(true)
+    })
+
+    it('should return true for text/plain with charset', () => {
+      expect(isPlainText('text/plain; charset=utf-8')).toBe(true)
+    })
+
+    it('should return true for text/plain+custom', () => {
+      expect(isPlainText('text/plain+custom')).toBe(true)
+    })
+
+    it('should return false for application/json', () => {
+      expect(isPlainText('application/json')).toBe(false)
+    })
+
+    it('should return false for text/html', () => {
+      expect(isPlainText('text/html')).toBe(false)
+    })
+
+    it('should return false for empty string', () => {
+      expect(isPlainText('')).toBe(false)
+    })
+  })
+
+  describe('isFile', () => {
+    it('should return true for application/pdf', () => {
+      expect(isFile('application/pdf')).toBe(true)
+    })
+
+    it('should return true for image/png', () => {
+      expect(isFile('image/png')).toBe(true)
+    })
+
+    it('should return true for video/mp4', () => {
+      expect(isFile('video/mp4')).toBe(true)
+    })
+
+    it('should return true for audio/mpeg', () => {
+      expect(isFile('audio/mpeg')).toBe(true)
+    })
+
+    it('should return false for text/plain', () => {
+      expect(isFile('text/plain')).toBe(false)
+    })
+
+    it('should return false for application/json', () => {
+      expect(isFile('application/json')).toBe(false)
+    })
+
+    it('should return false for empty string', () => {
+      expect(isFile('')).toBe(false)
     })
   })
 })

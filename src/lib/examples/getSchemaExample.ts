@@ -1,6 +1,6 @@
 import type { OAExampleObject } from '../../types'
 import type { OAProperty } from '../parser/getSchemaUi'
-import { isFormUrlEncoded, isMultipartFormData, isXml } from '../contentTypeUtils'
+import { isFile, isFormUrlEncoded, isMultipartFormData, isXml } from '../contentTypeUtils'
 import { getSchemaUiJson } from './getSchemaUiJson'
 import { getSchemaUiXml } from './getSchemaUiXml'
 
@@ -27,7 +27,7 @@ function getContentTypeSchemaExample(contentType: string): ContentTypeSchemaExam
     summary: 'JSON',
     valueGenerator: getSchemaUiJson,
     lang: 'json',
-    hideOnSchemaTabs: isFormUrlEncoded(contentType) || isMultipartFormData(contentType),
+    hideOnSchemaTabs: isFormUrlEncoded(contentType) || isMultipartFormData(contentType) || isFile(contentType),
   }
 }
 
