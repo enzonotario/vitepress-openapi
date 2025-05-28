@@ -181,18 +181,6 @@ describe('buildHarRequest', () => {
 
     const result = buildHarRequest(request)
 
-    const expectedFormDataObject = {
-      text: 'text value',
-      number: '123',
-      file: {
-        type: 'file',
-        text: 'BINARY',
-        name: 'test.txt',
-        size: file.size,
-        mimeType: 'text/plain',
-      },
-    }
-
     expect(result).toEqual({
       method: 'POST',
       url: 'https://api.example.com/upload',
@@ -206,7 +194,16 @@ describe('buildHarRequest', () => {
       bodySize: -1,
       postData: {
         mimeType: 'multipart/form-data',
-        text: JSON.stringify(expectedFormDataObject),
+        params: [
+          { name: 'text', value: 'text value' },
+          { name: 'number', value: '123' },
+          {
+            name: 'file',
+            value: 'BINARY',
+            fileName: 'test.txt',
+            contentType: 'text/plain',
+          },
+        ],
       },
     })
   })
@@ -233,11 +230,6 @@ describe('buildHarRequest', () => {
 
     const result = buildHarRequest(request)
 
-    const expectedFormDataObject = {
-      tags: ['tag1', 'tag2', 'tag3'],
-      single: 'value',
-    }
-
     expect(result).toEqual({
       method: 'POST',
       url: 'https://api.example.com/upload',
@@ -251,7 +243,10 @@ describe('buildHarRequest', () => {
       bodySize: -1,
       postData: {
         mimeType: 'multipart/form-data',
-        text: JSON.stringify(expectedFormDataObject),
+        params: [
+          { name: 'tags', value: 'tag1,tag2,tag3' },
+          { name: 'single', value: 'value' },
+        ],
       },
     })
   })
