@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { OAExampleObject } from '../../types'
 import { computed, ref, watch } from 'vue'
 import {
   isFormUrlEncoded,
@@ -25,7 +26,9 @@ interface Props {
   contentType: string
   requestBody?: OpenAPIV3.RequestBodyObject
   enabledParameters: Record<string, boolean>
-  examples?: Record<string, { value: any }>
+  examples?: {
+    [key: string]: OAExampleObject
+  }
 }
 
 const props = defineProps<Props>()
@@ -168,9 +171,7 @@ watch(() => props.body, (newBody: any) => {
 
 // Watch for changes in content type to update body value.
 watch(() => props.contentType, () => {
-  bodyValue.value = props.examples
-    ? Object.values(props.examples)[0]?.value
-    : null
+  bodyValue.value = Object.values(props.examples ?? {})[0]?.value
 }, { immediate: true })
 </script>
 
