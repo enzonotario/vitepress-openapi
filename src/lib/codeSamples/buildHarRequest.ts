@@ -1,6 +1,6 @@
 import type { HarRequest } from '@scalar/snippetz'
 import type { OARequest } from './request'
-import { isFormUrlEncoded } from '../contentTypeUtils'
+import { isFormUrlEncoded, isMultipartFormData } from '../contentTypeUtils'
 
 export function buildHarRequest(
   oaRequest: OARequest,
@@ -74,9 +74,9 @@ export function buildHarRequest(
         }),
       }
     } else if (typeof oaRequest.body === 'object') {
-      if (oaRequest.contentType && isFormUrlEncoded(oaRequest.contentType)) {
+      if (oaRequest.contentType && (isFormUrlEncoded(oaRequest.contentType) || isMultipartFormData(oaRequest.contentType))) {
         harRequest.postData = {
-          mimeType: 'application/x-www-form-urlencoded',
+          mimeType: oaRequest.contentType,
           params: Object.entries(oaRequest.body).map(([name, value]) => {
             return {
               name,
