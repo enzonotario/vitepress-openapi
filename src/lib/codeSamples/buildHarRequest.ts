@@ -75,14 +75,14 @@ export function buildHarRequest(
       }
     } else if (typeof oaRequest.body === 'object') {
       if (oaRequest.contentType && isFormUrlEncoded(oaRequest.contentType)) {
-        // Format as URL-encoded string for application/x-www-form-urlencoded.
-        const params = new URLSearchParams()
-        Object.entries(oaRequest.body).forEach(([key, value]) => {
-          params.append(key, String(value))
-        })
         harRequest.postData = {
           mimeType: 'application/x-www-form-urlencoded',
-          text: params.toString(),
+          params: Object.entries(oaRequest.body).map(([name, value]) => {
+            return {
+              name,
+              value: String(value),
+            }
+          }),
         }
       } else {
         // Default to JSON for other content types.

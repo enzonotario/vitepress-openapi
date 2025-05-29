@@ -362,7 +362,11 @@ describe('buildHarRequest', () => {
       bodySize: -1,
       postData: {
         mimeType: 'application/x-www-form-urlencoded',
-        text: 'username=user123&password=securepassword&remember=true',
+        params: [
+          { name: 'username', value: 'user123' },
+          { name: 'password', value: 'securepassword' },
+          { name: 'remember', value: 'true' },
+        ],
       },
     })
   })
