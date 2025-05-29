@@ -33,9 +33,6 @@ function getContentTypeSchemaExample(contentType: string): ContentTypeSchemaExam
 
 export function getSchemaExample(contentType: string, uiProperties: OAProperty[] | OAProperty, useExample = false): Record<string, OAExampleObject> {
   const contentTypeSchemaExample = getContentTypeSchemaExample(contentType)
-  if (!contentTypeSchemaExample) {
-    return {}
-  }
   return {
     [contentTypeSchemaExample.key]: getSchemaExampleValue(contentTypeSchemaExample, uiProperties, useExample),
   }
