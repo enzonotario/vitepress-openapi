@@ -1,0 +1,414 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Content Types API",
+    "description": "Example of an OpenAPI document with different content types for requests and responses.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Enzo Notario",
+      "url": "https://enzonotario.me",
+      "email": "hi@enzonotario.me"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com"
+    }
+  ],
+  "paths": {
+    "/json": {
+      "post": {
+        "summary": "JSON Content Type",
+        "description": "Example of a request and response with JSON content type.",
+        "operationId": "postJson",
+        "requestBody": {
+          "description": "JSON data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                  },
+                  "age": {
+                    "type": "integer",
+                    "example": 30
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "john@example.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 123
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2023-06-07T14:30:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/xml": {
+      "post": {
+        "summary": "XML Content Type",
+        "description": "Example of a request and response with XML content type.",
+        "operationId": "postXml",
+        "requestBody": {
+          "description": "XML data",
+          "required": true,
+          "content": {
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "example": "Jane Smith"
+                      },
+                      "age": {
+                        "type": "integer",
+                        "example": 28
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "jane@example.com"
+                      }
+                    }
+                  }
+                }
+              },
+              "example": "<user><name>Jane Smith</name><age>28</age><email>jane@example.com</email></user>"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 456
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "success"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "XML data processed successfully"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": "<response><id>456</id><status>success</status><message>XML data processed successfully</message></response>"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/form": {
+      "post": {
+        "summary": "Form URL Encoded Content Type",
+        "description": "Example of a request with form URL encoded content type.",
+        "operationId": "postForm",
+        "requestBody": {
+          "description": "Form data",
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "user123"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "securepassword"
+                  },
+                  "remember": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "user123"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "securepassword"
+                  },
+                  "remember": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "profile_picture": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "User profile picture"
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "user123"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "securepassword"
+                  },
+                  "remember": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "expires_in": {
+                      "type": "integer",
+                      "example": 3600
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/multipart": {
+      "post": {
+        "summary": "Multipart Form Data Content Type",
+        "description": "Example of a request with multipart form data content type for file uploads.",
+        "operationId": "postMultipart",
+        "requestBody": {
+          "description": "Multipart form data",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "File to upload"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Profile picture"
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": ["avatar", "document", "other"],
+                    "example": "avatar"
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "file_id": {
+                      "type": "string",
+                      "example": "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+                    },
+                    "file_name": {
+                      "type": "string",
+                      "example": "profile.jpg"
+                    },
+                    "file_size": {
+                      "type": "integer",
+                      "example": 1024000
+                    },
+                    "file_url": {
+                      "type": "string",
+                      "format": "uri",
+                      "example": "https://example.com/files/f47ac10b-58cc-4372-a567-0e02b2c3d479"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/text": {
+      "post": {
+        "summary": "Plain Text Content Type",
+        "description": "Example of a request and response with plain text content type.",
+        "operationId": "postText",
+        "requestBody": {
+          "description": "Plain text data",
+          "required": true,
+          "content": {
+            "text/plain": {
+              "schema": {
+                "type": "string",
+                "example": "This is a plain text message sent to the server."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Server received your message: This is a plain text message sent to the server."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/image": {
+      "post": {
+        "summary": "Upload Image",
+        "description": "Example of a request with image content type.",
+        "operationId": "postImage",
+        "requestBody": {
+          "description": "Image data",
+          "required": true,
+          "content": {
+            "image/png": {
+              "schema": {
+                "type": "string",
+                "format": "binary",
+                "description": "A PNG image"
+              }
+            },
+            "image/jpeg": {
+              "schema": {
+                "type": "string",
+                "format": "binary",
+                "description": "A JPEG image"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Image uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "image_id": {
+                      "type": "string",
+                      "example": "img_12345"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "example": "https://example.com/images/img_12345"
+                    },
+                    "width": {
+                      "type": "integer",
+                      "example": 800
+                    },
+                    "height": {
+                      "type": "integer",
+                      "example": 600
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

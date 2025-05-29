@@ -12,7 +12,7 @@ const props = defineProps({
     required: true,
   },
   modelValue: {
-    type: [String, Number, Boolean],
+    type: [String, Number, Boolean, null],
     required: true,
   },
   compositeKey: {
@@ -22,6 +22,10 @@ const props = defineProps({
   enabled: {
     type: Boolean,
     default: true,
+  },
+  hideLabel: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -46,6 +50,9 @@ function inputType(parameter: any) {
   if (parameter.schema?.type === 'number') {
     return 'number'
   }
+  if (parameter.schema?.format === 'binary') {
+    return 'file'
+  }
   return 'text'
 }
 
@@ -59,8 +66,8 @@ const parameterExample = getPropertyExample(props.parameter)
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-2 items-center">
-    <div class="flex items-center gap-2">
+  <div class="grid gap-2 items-center" :class="{ 'grid-cols-2': !hideLabel, 'grid-cols-1': hideLabel }">
+    <div v-if="!hideLabel" class="flex items-center gap-2">
       <Checkbox
         :id="`enable-${compositeKey}`"
         :name="`enable-${compositeKey}`"

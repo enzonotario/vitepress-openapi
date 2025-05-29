@@ -81,7 +81,7 @@ const hasExpandableProperties = computed(() => {
 
             <div class="flex items-center">
               <TooltipProvider>
-                <Tooltip delay-duration="200">
+                <Tooltip :delay-duration="200">
                   <TooltipTrigger as-child>
                     <Button
                       v-if="isObjectOrArray && props.property.properties"
@@ -131,7 +131,7 @@ const hasExpandableProperties = computed(() => {
               class="flex items-center"
             >
               <TooltipProvider>
-                <Tooltip delay-duration="200">
+                <Tooltip :delay-duration="200">
                   <TooltipTrigger as-child>
                     <Button
                       size="icon"

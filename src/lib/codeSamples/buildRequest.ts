@@ -135,6 +135,7 @@ export function buildRequest({
   headers = undefined,
   variables = {},
   cookies = {},
+  contentType = undefined,
 }: Partial<OARequest>): OARequest {
   const resolvedVariables = setExamplesAsVariables(parameters, variables)
 
@@ -172,7 +173,9 @@ export function buildRequest({
 
   const urlInstance = url ? new URL(url) : (baseUrl ? new URL(`${baseUrl}${resolvedPath}`) : new URL(resolvedPath, 'http://localhost'))
 
-  if (body && !resolvedHeaders['content-type']) {
+  if (contentType) {
+    resolvedHeaders['content-type'] = contentType
+  } else if (body && !resolvedHeaders['content-type']) {
     resolvedHeaders['content-type'] = 'application/json'
   }
 

@@ -248,6 +248,91 @@ describe('cookies', () => {
   })
 })
 
+describe('contentType', () => {
+  it('uses specified contentType when provided', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body: { name: 'Charly Garcia' },
+      contentType: 'application/x-www-form-urlencoded',
+    })
+    expect(request.contentType).toBe('application/x-www-form-urlencoded')
+    expect(request.headers['content-type']).toBe('application/x-www-form-urlencoded')
+  })
+
+  it('falls back to content-type header when contentType is not provided', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body: { name: 'Charly Garcia' },
+      headers: { 'content-type': 'application/xml' },
+    })
+    expect(request.contentType).toBe('application/xml')
+    expect(request.headers['content-type']).toBe('application/xml')
+  })
+
+  it('falls back to application/json when neither contentType nor content-type header is provided', () => {
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body: { name: 'Charly Garcia' },
+    })
+    expect(request.contentType).toBe('application/json')
+    expect(request.headers['content-type']).toBe('application/json')
+  })
+
+  it('processes body as JSON when content type is application/json', () => {
+    const body = { name: 'Charly Garcia', age: 30 }
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body,
+      contentType: 'application/json',
+    })
+    expect(request.body).toEqual(body)
+    expect(typeof request.body).toBe('object')
+  })
+
+  it('processes body as URL-encoded when content type is application/x-www-form-urlencoded', () => {
+    const body = { name: 'Charly Garcia', age: 30 }
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body,
+      contentType: 'application/x-www-form-urlencoded',
+    })
+    expect(typeof request.body).toBe('object')
+    expect(request.body).toEqual({
+      name: 'Charly Garcia',
+      age: 30,
+    })
+  })
+
+  it('processes body as FormData when content type is multipart/form-data', () => {
+    const body = new FormData()
+    body.append('name', 'Charly Garcia')
+    body.append('age', '30')
+    const request = buildRequest({
+      path: '/users',
+      method: 'POST',
+      baseUrl: 'https://api.example.com',
+      body,
+      contentType: 'multipart/form-data',
+    })
+    expect(request.body instanceof FormData).toBe(true)
+
+    // Check that the FormData contains the expected values
+    const formData = request.body as FormData
+    expect(formData.get('name')).toBe('Charly Garcia')
+    expect(formData.get('age')).toBe('30')
+  })
+})
+
 describe('update request', () => {
   it('updates request with new headers', () => {
     const request = buildRequest({

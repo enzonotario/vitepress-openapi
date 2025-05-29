@@ -93,6 +93,10 @@ function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any
     }
   }
 
+  if (property.constraints?.format === 'binary') {
+    return ''
+  }
+
   return getDefaultValueForType(property.types[0] ?? 'string', property.defaultValue)
 }
 

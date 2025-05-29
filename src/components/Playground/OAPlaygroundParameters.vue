@@ -10,7 +10,8 @@ import { useTheme } from '../../composables/useTheme'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
-import OAJSONEditor from '../Common/OAJSONEditor.vue'
+import { createCompositeKey } from '../../lib/playground/createCompositeKey'
+import OAPlaygroundBodyInput from '../Playground/OAPlaygroundBodyInput.vue'
 import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
 import { Label } from '../ui/label'
@@ -53,6 +54,10 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  requestBody: {
+    type: Object,
+    required: false,
+  },
 })
 
 const emits = defineEmits([
@@ -92,13 +97,6 @@ const customServer = typeof localStorage !== 'undefined'
   ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
   : ref(selectedServer.value)
 
-function createCompositeKey(parameter: OpenAPIV3.ParameterObject): string {
-  if (!parameter.name || !parameter.in) {
-    return ''
-  }
-  return `${props.operationId}:${parameter.in}:${parameter.name}`
-}
-
 const variables = ref({
   ...initializeVariables(headerParameters),
   ...initializeVariables(pathParameters),
@@ -108,7 +106,7 @@ const variables = ref({
 const enabledParameters = ref(
   [...headerParameters, ...pathParameters, ...queryParameters].reduce((acc, parameter) => {
     if (parameter.name) {
-      const key = createCompositeKey(parameter)
+      const key = createCompositeKey({ parameter, operationId: props.operationId })
       acc[key] = parameter.required === true
     }
     return acc
@@ -131,9 +129,7 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
 
 const authorizations = ref<PlaygroundSecurityScheme[]>([])
 
-const body = ref(Object.keys(props.examples ?? {}).length ? Object.values(props.examples ?? {})[0].value : null)
-
-const bodyType = computed(() => typeof body.value === 'object' ? 'json' : 'text')
+const body = ref(null)
 
 function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
   if (!schemes || !Object.keys(schemes).length) {
@@ -157,7 +153,7 @@ function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
 
 watch([variables, authorizations, body, selectedServer, enabledParameters], () => {
   const filteredParameters = props.parameters.filter(parameter =>
-    parameter.name && enabledParameters.value[createCompositeKey(parameter)],
+    parameter.name && enabledParameters.value[createCompositeKey({ parameter, operationId: props.operationId })],
   )
 
   emits('update:request', buildRequest({
@@ -168,6 +164,7 @@ watch([variables, authorizations, body, selectedServer, enabledParameters], () =
     authorizations: authorizations.value,
     body: enabledParameters.value.body ? body.value : undefined,
     parameters: filteredParameters,
+    contentType: operationData.request.selectedContentType.value,
   }))
 }, { deep: true })
 
@@ -269,15 +266,15 @@ watch(operationData.security.selectedSchemeId, () => {
       <div class="flex flex-col gap-2">
         <div
           v-for="parameter in headerParameters"
-          :key="createCompositeKey(parameter)"
+          :key="createCompositeKey({ parameter, operationId: props.operationId })"
           class="flex flex-col gap-2"
         >
           <OAPlaygroundParameterInput
             v-model="variables[parameter.name ?? '']"
             :parameter="parameter"
-            :composite-key="createCompositeKey(parameter)"
-            :enabled="enabledParameters[createCompositeKey(parameter)]"
-            @update:enabled="enabledParameters[createCompositeKey(parameter)] = $event"
+            :composite-key="createCompositeKey({ parameter, operationId: props.operationId })"
+            :enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })]"
+            @update:enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })] = $event"
             @submit="emits('submit')"
           />
         </div>
@@ -304,41 +301,31 @@ watch(operationData.security.selectedSchemeId, () => {
 
         <OAPlaygroundParameterInput
           v-for="parameter in [...pathParameters, ...queryParameters]"
-          :key="createCompositeKey(parameter)"
+          :key="createCompositeKey({ parameter, operationId: props.operationId })"
           v-model="variables[parameter.name ?? '']"
           :parameter="parameter"
-          :composite-key="createCompositeKey(parameter)"
-          :enabled="enabledParameters[createCompositeKey(parameter)]"
-          @update:enabled="enabledParameters[createCompositeKey(parameter)] = $event"
+          :composite-key="createCompositeKey({ parameter, operationId: props.operationId })"
+          :enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })]"
+          @update:enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })] = $event"
           @submit="emits('submit')"
         />
       </div>
     </details>
 
-    <details v-if="body" open>
+    <details v-if="props.requestBody" open>
       <summary>
         {{ $t('Body') }}
       </summary>
 
-      <div v-if="bodyType === 'json'" class="bg-muted p-1 rounded">
-        <div class="!m-0 vp-adaptive-theme min-h-16 language-json">
-          <button
-            title="Copy Code"
-            class="copy"
-          />
-          <span class="lang">JSON</span>
-
-          <OAJSONEditor v-model="body" class="w-full" />
-        </div>
-      </div>
-
-      <OAPlaygroundParameterInput
-        v-else
-        v-model="body"
-        :parameter="{ name: 'body', schema: { type: 'string' } }"
-        :composite-key="`${props.operationId}:body:body`"
-        :enabled="enabledParameters.body"
-        @update:enabled="enabledParameters.body = $event"
+      <OAPlaygroundBodyInput
+        :operation-id="props.operationId"
+        :body="body"
+        :content-type="operationData.request.selectedContentType.value"
+        :request-body="props.requestBody"
+        :enabled-parameters="enabledParameters"
+        :examples="props.examples"
+        @update:body="body = $event"
+        @update:enabled="(key, value) => enabledParameters[key] = value"
         @submit="emits('submit')"
       />
     </details>

@@ -18,11 +18,6 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  timeout: 60 * 1000,
-  expect: {
-    timeout: 30 * 1000,
-  },
-
   projects: [
     {
       name: 'chromium',

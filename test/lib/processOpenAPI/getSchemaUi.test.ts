@@ -1457,6 +1457,34 @@ const fixtures: Record<string, FixtureTest> = {
       },
     ],
   },
+
+  'file upload schema': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        {
+          name: 'file',
+          required: false,
+          types: ['string'],
+          constraints: { format: 'binary' },
+        },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      file: '',
+    },
+  },
 }
 
 describe('getSchemaUi and getSchemaUiJson from fixtures', () => {
