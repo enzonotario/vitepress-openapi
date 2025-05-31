@@ -5,13 +5,28 @@ outline: false
 
 # Custom Slots
 
-The `OAOperation` component provides several slots for customizing the operation layout.
+The `OAOperation` component provides several slots for customizing the operation layout. These slots allow you to override the default components with your own custom content.
 
-## Description
+## Available Slots
 
-The `description` slot allows you to customize the operation description.
+The following slots are available for customization:
 
-<ExampleBlock>
+- `header`
+- `tags`
+- `path`
+- `description`
+- `security`
+- `parameters`
+- `request-body`
+- `responses`
+- `playground`
+- `code-samples`
+- `branding`
+- `footer`
+
+In the following example, we demonstrate how to use all available slots in the `OAOperation` component. Each slot is populated with a `SlotDebugger` component that displays the slot properties for debugging purposes.
+
+<ExampleBlock :code-section-title="null" :example-section-title="null">
 
 <template #code>
 
@@ -34,6 +49,3 @@ title: vitepress-openapi
 </template>
 
 </ExampleBlock>
-
-## WIP
-

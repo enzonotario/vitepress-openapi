@@ -10,6 +10,9 @@ const props = defineProps({
     type: [String, Object, Array, Number, Boolean],
     required: true,
   },
+  deep: {
+    type: Number,
+  },
 })
 
 const themeConfig = useTheme()
@@ -20,8 +23,8 @@ const json = computed(() => {
   return typeof props.code === 'string' ? destr(props.code) : props.code
 })
 
-const jsonViewerDeep = computed(() => {
-  return themeConfig.getJsonViewerDeep() ?? Number.POSITIVE_INFINITY
+const deep = computed(() => {
+  return props.deep ?? themeConfig.getJsonViewerDeep() ?? 3
 })
 
 const theme = computed(() => {
@@ -33,7 +36,7 @@ const theme = computed(() => {
   <VueJsonPretty
     :data="json"
     :theme="theme"
-    :deep="jsonViewerDeep"
+    :deep="deep"
     show-icon
     class="p-2"
   />
