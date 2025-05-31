@@ -1,3 +1,4 @@
+import OAVueJsonPretty from './Common/Highlight/OAVueJsonPretty.vue'
 import OAMarkdown from './Common/OAMarkdown.vue'
 import OAInfo from './Feature/OAInfo.vue'
 import OAIntroduction from './Feature/OAIntroduction.vue'
@@ -18,4 +19,5 @@ export {
   OAServers,
   OASpec,
   OASpecSkeleton,
+  OAVueJsonPretty,
 }
