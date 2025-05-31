@@ -1,21 +1,51 @@
-<script setup lang="ts">
-async function confetti() {
-  (await import('https://esm.sh/canvas-confetti')).default()
-}
-</script>
+<OAOperation operationId="createArtist">
 
-<OAOperation operationId="getAllArtists">
+<template #header="header">
+<SlotDebugger :slotProps="header" title="header" />
+</template>
+
+<template #tags="tags">
+<SlotDebugger :slotProps="tags" title="tags" />
+</template>
+
+<template #path="path">
+<SlotDebugger :slotProps="path" title="path" />
+</template>
 
 <template #description="description">
+<SlotDebugger :slotProps="description" title="description" />
+</template>
 
-#### Custom description slot
+<template #security="security">
+<SlotDebugger :slotProps="security" title="security" />
+</template>
 
-All slots *can* contain ~~tons of text~~ **Markdown**. [If GitHub supports the syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax), chances are we’re supporting it, too. You can even create [internal links to reference endpoints](#responses).
+<template #parameters="parameters">
+<SlotDebugger :slotProps="parameters" title="parameters" />
+</template>
 
-You can also include custom Vue components or HTML elements:
+<template #request-body="requestBody">
+<SlotDebugger :slotProps="requestBody" title="request-body" />
+</template>
 
-<button @click="confetti()" class="p-2 bg-muted rounded" aria-label="Trigger celebration confetti">:tada: Celebrate :tada:</button>
+<template #responses="responses">
+<SlotDebugger :slotProps="responses" title="responses" />
+</template>
 
+<template #playground="playground">
+<SlotDebugger :slotProps="playground" title="playground" />
+</template>
+
+<template #code-samples="codeSamples">
+<SlotDebugger :slotProps="codeSamples" title="code-samples" />
+</template>
+
+<template #branding="branding">
+<SlotDebugger :slotProps="branding" title="branding" />
+</template>
+
+<template #footer="footer">
+<SlotDebugger :slotProps="footer" title="footer" />
 </template>
 
 </OAOperation>
