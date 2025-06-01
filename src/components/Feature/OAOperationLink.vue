@@ -15,12 +15,16 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <a :href="href" class="OAOperationLink group/oaOperationLink">
+  <component
+    :is="href ? 'a' : 'span'"
+    :href="href"
+    class="OAOperationLink group/oaOperationLink"
+  >
     <span class="OAOperationLink-badge" :class="[`OAMethodBadge--${method.toLowerCase()}`]">
       {{ method.toUpperCase() }}
     </span>
     <span>{{ title }}</span>
-  </a>
+  </component>
 </template>
 
 <style>
