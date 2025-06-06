@@ -13,6 +13,18 @@ const props = defineProps({
 const info = props.openapi.spec.info ?? {}
 
 const externalDocs = props.openapi.spec.externalDocs ?? {}
+
+const downloadSpec = () => {
+  const specJson = JSON.stringify(props.openapi.spec, null, 2)
+  const blob = new Blob([specJson], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  const filename = info.title ? `${info.title.toLowerCase().replace(/\s+/g, '-')}-spec.json` : 'openapi-spec.json'
+  link.href = url
+  link.download = filename
+  link.click()
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
@@ -25,6 +37,14 @@ const externalDocs = props.openapi.spec.externalDocs ?? {}
         >
           v{{ info.version }}
         </Badge>
+        <button
+          type="button"
+          class="text-sm text-muted-foreground hover:text-foreground underline"
+          :aria-label="$t('Download spec')"
+          @click="downloadSpec"
+        >
+          {{ $t('Download spec') }}
+        </button>
       </div>
 
       <OAHeading level="h1">
