@@ -12,7 +12,7 @@ const props = defineProps({
     required: true,
   },
   modelValue: {
-    type: [String, Number, Boolean, null],
+    type: [String, Number, Boolean, null, Array, Object],
     required: true,
   },
   compositeKey: {
