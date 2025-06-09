@@ -24,12 +24,14 @@ export type OperationSlot =
 
 export type OpenAPIDocument = OpenAPIV3.Document & OpenAPIV3_1.Document
 
-export type ParsedOpenAPI = OpenAPIDocument & {
-  paths: OpenAPIV3.PathsObject & OpenAPIV3_1.PathsObject & {
-    [key: string]: OpenAPIV3.PathItemObject & OpenAPIV3_1.PathItemObject & {
-      [key: string]: ParsedOperation
-    }
+export type ParsedPaths = OpenAPIV3.PathsObject & OpenAPIV3_1.PathsObject & {
+  [key: string]: OpenAPIV3.PathItemObject & OpenAPIV3_1.PathItemObject & {
+    [key: string]: ParsedOperation
   }
+}
+
+export type ParsedOpenAPI = OpenAPIDocument & {
+  paths: ParsedPaths
 }
 
 export type OARequestBody = OpenAPIV3.RequestBodyObject & OpenAPIV3_1.RequestBodyObject & {
