@@ -1,5 +1,5 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
+import type { OpenAPIDocument, ParsedOpenAPI, ParsedPaths } from '../types'
 import { httpVerbs } from '../index'
 
 export function OpenApi({
@@ -92,10 +92,8 @@ export function OpenApi({
     return operation.parameters || []
   }
 
-  function getPaths(): OpenAPIV3.PathsObject {
-    const paths = getSpec().paths as OpenAPIV3.PathsObject
-
-    return paths ?? {}
+  function getPaths(): ParsedPaths {
+    return (getSpec().paths ?? {}) as ParsedPaths
   }
 
   function getPathsByVerbs() {
