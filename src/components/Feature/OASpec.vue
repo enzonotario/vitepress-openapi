@@ -69,9 +69,15 @@ const slots = defineSlots<Record<string, OperationSlot>>()
     <template #default="{ openapi }">
       <OASpecContent
         v-bind="{
-          ...$props,
           ...$attrs,
           openapi,
+          hideInfo: props.hideInfo,
+          hideServers: props.hideServers,
+          groupByTags: props.groupByTags,
+          tags: props.tags,
+          hideDefaultFooter: props.hideDefaultFooter,
+          hideBranding: props.hideBranding,
+          hidePathsSummary: props.hidePathsSummary,
         }"
       >
         <!-- Expose all slots upwards -->
