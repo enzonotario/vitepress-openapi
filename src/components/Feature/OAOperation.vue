@@ -57,10 +57,12 @@ const slots = defineSlots<Record<string, OperationSlot>>()
     <template #default="{ openapi }">
       <OAOperationContent
         v-bind="{
-          ...$props,
           ...$attrs,
           operationId: props.operationId,
           openapi,
+          prefixHeadings: props.prefixHeadings,
+          hideBranding: props.hideBranding,
+          hideDefaultFooter: props.hideDefaultFooter,
         }"
       >
         <!-- Expose all slots upwards -->
