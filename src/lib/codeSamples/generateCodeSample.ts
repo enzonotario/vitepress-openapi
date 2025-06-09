@@ -1,8 +1,8 @@
 import type { ClientId, TargetId } from '@scalar/types/snippetz'
-import type { OARequest } from './request'
 import { snippetz } from '@scalar/snippetz'
 import { buildHarRequest } from './buildHarRequest'
 import { buildRequest } from './buildRequest'
+import { OARequest } from './request'
 
 const languagesMap: Record<string, TargetId> = {
   curl: 'shell',
@@ -18,8 +18,12 @@ const clientsMap: Record<string, ClientId<TargetId>> = {
   python: 'requests',
 }
 
-export async function generateCodeSample(lang: string, request: OARequest): Promise<string> {
-  const harRequest = buildHarRequest(buildRequest(request))
+export async function generateCodeSample(lang: string, request: OARequest | any): Promise<string> {
+  if (!(request instanceof OARequest)) {
+    request = buildRequest(request)
+  }
+
+  const harRequest = buildHarRequest(request)
 
   try {
     return snippetz().print(languagesMap[lang], clientsMap[lang], harRequest) ?? ''
