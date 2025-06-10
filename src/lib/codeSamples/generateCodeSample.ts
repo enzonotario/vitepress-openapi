@@ -19,11 +19,11 @@ const clientsMap: Record<string, ClientId<TargetId>> = {
 }
 
 export async function generateCodeSample(lang: string, request: OARequest | any): Promise<string> {
-  if (!(request instanceof OARequest)) {
-    request = buildRequest(request)
-  }
+  const oaRequest = request instanceof OARequest
+    ? request
+    : buildRequest(request)
 
-  const harRequest = buildHarRequest(request)
+  const harRequest = buildHarRequest(oaRequest)
 
   try {
     return snippetz().print(languagesMap[lang], clientsMap[lang], harRequest) ?? ''
