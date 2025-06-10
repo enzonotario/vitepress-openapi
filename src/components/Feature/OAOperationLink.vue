@@ -8,7 +8,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  href: '',
+  href: undefined,
   method: '',
   title: '',
 })
