@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationData } from '../../lib/operationData'
-import { computed, defineEmits, defineProps, inject, onBeforeUnmount } from 'vue'
+import { computed, defineProps, inject, onBeforeUnmount } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import OAHeading from '../Common/OAHeading.vue'
@@ -11,10 +11,6 @@ import OAPlaygroundResponse from './OAPlaygroundResponse.vue'
 
 const props = defineProps({
   operationId: {
-    type: String,
-    required: true,
-  },
-  baseUrl: {
     type: String,
     required: true,
   },
@@ -46,20 +42,12 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  request: {
-    type: Object,
-  },
   headingPrefix: {
     type: String,
     required: false,
     default: '',
   },
 })
-
-const emits = defineEmits([
-  'update:request',
-  'update:selectedServer',
-])
 
 const { loading, response, submitRequest, cleanupImageUrls } = usePlayground()
 
@@ -78,18 +66,22 @@ const hasParameters = computed(() =>
 )
 
 const examples = computed(() => {
-  return props.requestBody?.content?.[operationData.request.selectedContentType.value]?.examples
+  if (!operationData.requestBody.selectedContentType.value || !props.requestBody?.content?.[operationData.requestBody.selectedContentType.value]) {
+    return {}
+  }
+
+  return props.requestBody?.content?.[operationData.requestBody.selectedContentType.value]?.examples
 })
 
 async function onSubmit() {
-  if (!props.request) {
+  if (!operationData.playground.request.value) {
     return
   }
 
   await submitRequest({
-    request: props.request,
+    request: operationData.playground.request.value,
     method: props.method,
-    baseUrl: props.baseUrl,
+    baseUrl: operationData.playground.selectedServer.value,
     path: props.path,
     operationId: props.operationId,
   })
@@ -112,18 +104,14 @@ onBeforeUnmount(() => {
 
     <OAPlaygroundParameters
       v-if="hasParameters"
-      :request="props.request"
       :operation-id="props.operationId"
       :path="props.path"
       :method="props.method"
-      :base-url="props.baseUrl"
       :servers="props.servers"
-      :parameters="props.parameters ?? []"
-      :security-ui="props.securityUi ?? {}"
+      :parameters="props.parameters"
+      :security-ui="props.securityUi"
       :examples="examples"
       :request-body="props.requestBody"
-      @update:request="($event: any) => emits('update:request', $event)"
-      @update:selected-server="($event: any) => emits('update:selectedServer', $event)"
       @submit="onSubmit"
     />
 
