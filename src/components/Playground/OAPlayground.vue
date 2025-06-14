@@ -66,11 +66,13 @@ const hasParameters = computed(() =>
 )
 
 const examples = computed(() => {
-  if (!operationData.requestBody.selectedContentType.value || !props.requestBody?.content?.[operationData.requestBody.selectedContentType.value]) {
+  const selectedContentTypeValue = operationData.requestBody.selectedContentType.value
+
+  if (!selectedContentTypeValue || !props.requestBody?.content?.[selectedContentTypeValue]) {
     return {}
   }
 
-  return props.requestBody?.content?.[operationData.requestBody.selectedContentType.value]?.examples
+  return props.requestBody?.content?.[selectedContentTypeValue]?.examples
 })
 
 async function onSubmit() {
