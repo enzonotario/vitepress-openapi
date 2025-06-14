@@ -104,7 +104,7 @@ const shouldBuildRequest = computed(
 
             <template v-if="operationSlots.includes('security')">
               <slot
-                v-if="Object.keys(operationContext.securityUi).length"
+                v-if="operationContext.securityUi.length"
                 name="security"
                 :operation="operation"
                 :method="operationContext.method"
