@@ -14,7 +14,7 @@ const props = defineProps({
   },
   openapi: {
     type: Object,
-    required: false,
+    required: true,
   },
 })
 
