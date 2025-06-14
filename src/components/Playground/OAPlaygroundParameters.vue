@@ -43,7 +43,7 @@ const props = defineProps({
   securityUi: {
     type: Object,
     required: false,
-    default: () => ({}),
+    default: () => ([] as SecurityUiItem[]),
   },
   examples: {
     type: Object,
