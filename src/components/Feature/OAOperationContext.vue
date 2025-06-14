@@ -85,7 +85,7 @@ const request = props.shouldBuildRequest
         } as PlaygroundSecurityScheme
       }),
       body: defaultRequestContentType
-        ? (requestBody.value?.content?.[defaultRequestContentType]?.examples ?? { value: '' })[0]?.value
+        ? (requestBody.value?.content?.[defaultRequestContentType]?.examples ?? [{ value: '' }])[0]?.value
         : undefined,
       variables: {},
       contentType: defaultRequestContentType,
