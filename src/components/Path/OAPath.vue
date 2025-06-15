@@ -41,26 +41,26 @@ const shouldBuildRequest = computed(
   >
     <template #default="operationContext">
       <div
-        v-if="operation"
+        v-if="props.operation"
         class="OAPath flex flex-col space-y-4"
       >
         <template v-if="operationSlots.includes('header')">
           <slot
             name="header"
-            :operation="operation"
+            :operation="props.operation"
             :method="operationContext.method"
             :path="operationContext.path"
-            :deprecated="operation.deprecated"
+            :deprecated="props.operation.deprecated"
           />
         </template>
 
         <template v-if="operationSlots.includes('tags')">
           <slot
             name="tags"
-            :operation="operation"
+            :operation="props.operation"
             :method="operationContext.method"
             :path="operationContext.path"
-            :tags="operation.tags"
+            :tags="props.operation.tags"
           />
         </template>
 
@@ -82,11 +82,11 @@ const shouldBuildRequest = computed(
                 <slot
                   name="path"
                   :operation-id="props.id"
-                  :operation="operation"
+                  :operation="props.operation"
                   :method="operationContext.method"
                   :path="operationContext.path"
                   :hide-base-url="!themeConfig.getShowBaseURL()"
-                  :deprecated="operation.deprecated"
+                  :deprecated="props.operation.deprecated"
                   :servers="operationContext.servers"
                   :base-url="operationContext.operationData.playground.selectedServer.value"
                 />
@@ -95,7 +95,7 @@ const shouldBuildRequest = computed(
               <template v-if="operationSlots.includes('description')">
                 <slot
                   name="description"
-                  :operation="operation"
+                  :operation="props.operation"
                   :method="operationContext.method"
                   :path="operationContext.path"
                 />
@@ -106,7 +106,7 @@ const shouldBuildRequest = computed(
               <slot
                 v-if="operationContext.securityUi.length"
                 name="security"
-                :operation="operation"
+                :operation="props.operation"
                 :method="operationContext.method"
                 :path="operationContext.path"
                 :security-ui="operationContext.securityUi"
@@ -158,11 +158,11 @@ const shouldBuildRequest = computed(
                 <slot
                   name="path"
                   :operation-id="props.id"
-                  :operation="operation"
+                  :operation="props.operation"
                   :method="operationContext.method"
                   :path="operationContext.path"
                   :hide-base-url="!themeConfig.getShowBaseURL()"
-                  :deprecated="operation.deprecated"
+                  :deprecated="props.operation.deprecated"
                   :servers="operationContext.servers"
                   :base-url="operationContext.operationData.playground.selectedServer.value"
                 />
@@ -185,7 +185,7 @@ const shouldBuildRequest = computed(
                 <slot
                   name="code-samples"
                   :operation-id="props.id"
-                  :operation="operation"
+                  :operation="props.operation"
                   :method="operationContext.method"
                   :path="operationContext.path"
                   :code-samples="operationContext.codeSamples"
@@ -199,7 +199,7 @@ const shouldBuildRequest = computed(
           <slot
             name="branding"
             :operation-id="props.id"
-            :operation="operation"
+            :operation="props.operation"
             :method="operationContext.method"
             :path="operationContext.path"
           />
@@ -209,7 +209,7 @@ const shouldBuildRequest = computed(
           <slot
             name="footer"
             :operation-id="props.id"
-            :operation="operation"
+            :operation="props.operation"
             :method="operationContext.method"
             :path="operationContext.path"
           />
