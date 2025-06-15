@@ -4,6 +4,7 @@ import OAInfo from './Feature/OAInfo.vue'
 import OAIntroduction from './Feature/OAIntroduction.vue'
 import OALocaleSelect from './Feature/OALocaleSelect.vue'
 import OAOperation from './Feature/OAOperation.vue'
+import OAOperationContext from './Feature/OAOperationContext.vue'
 import OAOperationLink from './Feature/OAOperationLink.vue'
 import OAServers from './Feature/OAServers.vue'
 import OASpec from './Feature/OASpec.vue'
@@ -15,6 +16,7 @@ export {
   OALocaleSelect,
   OAMarkdown,
   OAOperation,
+  OAOperationContext,
   OAOperationLink,
   OAServers,
   OASpec,

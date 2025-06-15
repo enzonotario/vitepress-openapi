@@ -1,6 +1,8 @@
-<script setup>
-import { computed, ref, watch } from 'vue'
+<script setup lang="ts">
+import type { OperationData } from '../../lib/operationData'
+import { computed, inject, ref, watch } from 'vue'
 import { useTheme } from '../../composables/useTheme'
+import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
 const props = defineProps({
@@ -8,14 +10,13 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  request: {
-    type: Object,
-  },
   codeSamples: {
     type: Object,
     default: () => ({}),
   },
 })
+
+const operationData = inject(OPERATION_DATA_KEY) as OperationData
 
 const themeConfig = useTheme()
 
@@ -44,19 +45,17 @@ const defaultLang = computed(() => {
 
 const activeSample = ref(samples.value?.find(sample => sample.lang === defaultLang.value)?.lang)
 
-watch(() => props.request, async () => {
+watch(operationData.playground.request, async (request) => {
+  if (!availableLanguages || !configuredLanguages || !generator) {
+    return
+  }
+
   samples.value = await Promise.all(
     availableLanguages
       .filter(availableLanguage => configuredLanguages.includes(availableLanguage.lang))
       .map(async availableLanguage => ({
         ...availableLanguage,
-        source: await generator(availableLanguage.lang, {
-          ...props.request,
-          headers: {
-            ...(themeConfig.getCodeSamplesDefaultHeaders() || {}),
-            ...props.request.headers,
-          },
-        }),
+        source: await generator(availableLanguage.lang, request),
       })),
   )
 }, {

@@ -19,9 +19,6 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import SelectWithCustomOption from '../ui/select-with-custom-option/SelectWithCustomOption.vue'
 
 const props = defineProps({
-  request: { // v-model
-    type: Object,
-  },
   operationId: {
     type: String,
     required: true,
@@ -34,21 +31,19 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  baseUrl: {
-    type: String,
-    required: true,
-  },
   servers: {
     type: Array,
     default: () => [],
   },
   parameters: {
     type: Array<OpenAPIV3.ParameterObject>,
-    required: true,
+    required: false,
+    default: () => [],
   },
   securityUi: {
     type: Object,
-    required: true,
+    required: false,
+    default: () => ([] as SecurityUiItem[]),
   },
   examples: {
     type: Object,
@@ -61,10 +56,38 @@ const props = defineProps({
 })
 
 const emits = defineEmits([
-  'update:request',
-  'update:selectedServer',
   'submit',
 ])
+
+const operationData = inject(OPERATION_DATA_KEY) as OperationData
+
+const selectedServer = computed({
+  get: () => operationData.playground.selectedServer.value,
+  set: (value) => {
+    operationData.playground.selectedServer.value = value
+  },
+})
+
+const selectedSchemeId = computed({
+  get: () => operationData.security.selectedSchemeId.value,
+  set: (value) => {
+    operationData.security.selectedSchemeId.value = value
+  },
+})
+
+const selectedContentType = computed({
+  get: () => operationData.requestBody.selectedContentType.value,
+  set: (value) => {
+    operationData.requestBody.selectedContentType.value = value
+  },
+})
+
+const request = computed({
+  get: () => operationData.playground.request.value,
+  set: (value) => {
+    operationData.playground.request.value = value
+  },
+})
 
 const allowCustomServer = computed(() => useTheme().getServerAllowCustomServer())
 
@@ -87,11 +110,6 @@ const serversUrls: ComputedRef<string[]> = computed(() =>
     .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates.
     .filter(value => value !== undefined),
 )
-
-const selectedServer = computed({
-  get: () => props.baseUrl ?? servers.value[0]?.url,
-  set: value => emits('update:selectedServer', value),
-})
 
 const customServer = typeof localStorage !== 'undefined'
   ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
@@ -125,13 +143,35 @@ function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
     }, {})
 }
 
-const operationData = inject(OPERATION_DATA_KEY) as OperationData
-
 const authorizations = ref<PlaygroundSecurityScheme[]>([])
 
 const body = ref(null)
 
-function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
+watch([variables, authorizations, body, selectedServer, enabledParameters], () => {
+  const filteredParameters = props.parameters.filter(parameter =>
+    parameter.name && enabledParameters.value[createCompositeKey({ parameter, operationId: props.operationId })],
+  )
+
+  request.value = buildRequest({
+    baseUrl: selectedServer.value,
+    method: props.method as OpenAPIV3.HttpMethods,
+    path: props.path,
+    variables: variables.value,
+    authorizations: authorizations.value,
+    body: enabledParameters.value.body ? body.value : undefined,
+    parameters: filteredParameters,
+    contentType: selectedContentType.value,
+    headers: {
+      ...(useTheme().getCodeSamplesDefaultHeaders() || {}),
+    },
+  })
+}, { deep: true })
+
+watch(selectedSchemeId, (schemeId) => {
+  const selectedScheme = props.securityUi.find((scheme: SecurityUiItem) => scheme.id === schemeId)
+
+  const schemes = selectedScheme?.schemes || props.securityUi?.[0]?.schemes || {}
+
   if (!schemes || !Object.keys(schemes).length) {
     authorizations.value = []
     return
@@ -149,35 +189,6 @@ function setAuthorizations(schemes: Record<string, PlaygroundSecurityScheme>) {
       label: name,
     }
   })
-}
-
-watch([variables, authorizations, body, selectedServer, enabledParameters], () => {
-  const filteredParameters = props.parameters.filter(parameter =>
-    parameter.name && enabledParameters.value[createCompositeKey({ parameter, operationId: props.operationId })],
-  )
-
-  emits('update:request', buildRequest({
-    baseUrl: String(selectedServer.value),
-    method: props.method as OpenAPIV3.HttpMethods,
-    path: props.path,
-    variables: variables.value,
-    authorizations: authorizations.value,
-    body: enabledParameters.value.body ? body.value : undefined,
-    parameters: filteredParameters,
-    contentType: operationData.request.selectedContentType.value,
-  }))
-}, { deep: true })
-
-watch(selectedServer, () => {
-  emits('update:selectedServer', selectedServer.value)
-})
-
-watch(operationData.security.selectedSchemeId, () => {
-  setAuthorizations(
-    props.securityUi?.find((scheme: SecurityUiItem) => scheme.id === operationData.security.selectedSchemeId.value)?.schemes
-    ?? props.securityUi?.[0]?.schemes
-    ?? {},
-  )
 }, { immediate: true })
 </script>
 
@@ -190,18 +201,15 @@ watch(operationData.security.selectedSchemeId, () => {
 
       <div class="flex flex-col gap-2">
         <SelectWithCustomOption
-          :model-value="selectedServer"
-          :is-custom="useCustomServer"
-          :custom-value="customServer"
+          v-model="selectedServer"
+          v-model:custom-value="customServer"
+          v-model:is-custom="useCustomServer"
           :default-custom-value="customServer"
           :options="serversUrls"
           :allow-custom-option="allowCustomServer"
           :custom-option-label="$t('Custom Server')"
           :custom-placeholder="$t('Enter a custom server URL')"
           :placeholder="$t('Select a server')"
-          @update:model-value="selectedServer = $event"
-          @update:custom-value="customServer = $event"
-          @update:is-custom="useCustomServer = $event"
           @submit="emits('submit')"
         />
       </div>
@@ -211,15 +219,12 @@ watch(operationData.security.selectedSchemeId, () => {
       <summary>
         {{ $t('Authorization') }}
         <div v-if="props.securityUi.length > 1" class="w-full max-w-[33%] md:max-w-[50%] ml-auto -mt-8">
-          <Select
-            :model-value="operationData.security.selectedSchemeId.value"
-            @update:model-value="operationData.security.selectedSchemeId.value = String($event)"
-          >
+          <Select v-model="selectedSchemeId">
             <SelectTrigger
               aria-label="Security Scheme"
               class="h-9 px-3 py-1.5 text-foreground font-normal"
             >
-              <SelectValue :placeholder="operationData.security.selectedSchemeId.value ?? $t('Select')" />
+              <SelectValue :placeholder="selectedSchemeId ?? $t('Select')" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -312,7 +317,7 @@ watch(operationData.security.selectedSchemeId, () => {
       </div>
     </details>
 
-    <details v-if="props.requestBody" open>
+    <details v-if="props.requestBody && selectedContentType" open>
       <summary>
         {{ $t('Body') }}
       </summary>
@@ -320,7 +325,7 @@ watch(operationData.security.selectedSchemeId, () => {
       <OAPlaygroundBodyInput
         :operation-id="props.operationId"
         :body="body"
-        :content-type="operationData.request.selectedContentType.value"
+        :content-type="selectedContentType"
         :request-body="props.requestBody"
         :enabled-parameters="enabledParameters"
         :examples="props.examples"
