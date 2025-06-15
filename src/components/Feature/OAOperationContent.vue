@@ -56,12 +56,6 @@ const slots = defineSlots<Record<string, OperationSlot>>()
 
 const operation = props.openapi.getOperation(props.operationId)
 
-const operationPath = props.openapi.getOperationPath(props.operationId)
-
-const operationMethod = props.openapi.getOperationMethod(props.operationId)
-
-const operationServers = props.openapi.getOperationServers(props.operationId)
-
 const headingPrefix = computed(() => {
   if (!props.prefixHeadings) {
     return undefined
@@ -85,10 +79,8 @@ function hasSlot(name: OperationSlot): boolean {
   <OAPath
     v-if="props.operationId && operation"
     :id="props.operationId"
-    :path="operationPath"
-    :method="operationMethod"
-    :servers="operationServers"
     :operation="operation"
+    :openapi="props.openapi"
   >
     <template
       v-if="hasSlot('header')"
@@ -176,6 +168,7 @@ function hasSlot(name: OperationSlot): boolean {
         v-if="Object.keys(security.securityUi).length"
         :security-ui="security.securityUi"
         :heading-prefix="headingPrefix"
+        :selected-scheme-id="security.selectedSchemeId"
       />
     </template>
 
@@ -266,7 +259,6 @@ function hasSlot(name: OperationSlot): boolean {
         :hide-base-url="path.hideBaseUrl"
         :deprecated="path.deprecated"
         :servers="path.servers"
-        @update:selected-server="path.updateSelectedServer"
       />
     </template>
 
@@ -293,18 +285,14 @@ function hasSlot(name: OperationSlot): boolean {
       #playground="playground"
     >
       <OAPlayground
-        :request="playground.request"
         :operation-id="playground.operationId"
         :path="playground.path"
         :method="playground.method"
-        :base-url="playground.baseUrl"
         :parameters="playground.parameters"
         :request-body="playground.requestBody"
         :security-ui="playground.securityUi"
         :servers="playground.servers"
         :heading-prefix="headingPrefix"
-        @update:selected-server="playground.updateSelectedServer"
-        @update:request="playground.updateRequest"
       />
     </template>
 
@@ -330,7 +318,6 @@ function hasSlot(name: OperationSlot): boolean {
 
       <OACodeSamples
         :operation-id="codeSamples.operationId"
-        :request="codeSamples.request"
         :code-samples="codeSamples.codeSamples"
       />
     </template>

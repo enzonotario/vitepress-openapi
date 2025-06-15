@@ -30,17 +30,25 @@ const contentTypeId = `request-body-content-type-${props.operationId}`
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
 
 const contentType = computed({
-  get: () => operationData.request.selectedContentType.value,
+  get: () => operationData.requestBody.selectedContentType.value,
   set: (value) => {
-    operationData.request.selectedContentType.value = value
+    operationData.requestBody.selectedContentType.value = value
   },
 })
 
 const schema = computed(() => {
+  if (!contentType.value || !props.requestBody?.content?.[contentType.value]) {
+    return {}
+  }
+
   return props.requestBody?.content?.[contentType.value]?.ui ?? {}
 })
 
 const examples = computed(() => {
+  if (!contentType.value || !props.requestBody?.content?.[contentType.value]) {
+    return {}
+  }
+
   return Object.entries(props.requestBody?.content?.[contentType.value]?.examples ?? {})
     .reduce((acc, [key, example]) => {
       if (example?.hideOnSchemaTabs) {

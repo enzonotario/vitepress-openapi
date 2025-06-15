@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import type { OperationData } from '../../lib/operationData'
-import { defineProps, inject } from 'vue'
-import { OPERATION_DATA_KEY } from '../../lib/operationData'
+import { defineProps } from 'vue'
 import OAHeading from '../Common/OAHeading.vue'
 import OASecurityContent from '../Security/OASecurityContent.vue'
 
-const { securityUi, headingPrefix } = defineProps({
+const props = defineProps({
   securityUi: {
     type: Object,
     required: true,
@@ -15,9 +13,12 @@ const { securityUi, headingPrefix } = defineProps({
     required: false,
     default: '',
   },
+  selectedSchemeId: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
-
-const operationData = inject(OPERATION_DATA_KEY) as OperationData
 </script>
 
 <template>
@@ -26,7 +27,7 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
       <div class="flex flex-row items-center">
         <OAHeading
           level="h2"
-          :prefix="headingPrefix"
+          :prefix="props.headingPrefix"
           class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0"
           header-anchor-class="!top-0"
         >
@@ -38,12 +39,12 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
     </div>
 
     <div class="flex flex-col gap-3">
-      <div v-for="(item, key) in securityUi" :key="key" class="flex flex-col gap-3">
+      <div v-for="(item, key) in props.securityUi" :key="key" class="flex flex-col gap-3">
         <div class="flex flex-col gap-1">
           <span
-            v-if="Object.keys(securityUi).length > 1 && Object.keys(item.schemes).length > 1"
+            v-if="Object.keys(props.securityUi).length > 1 && Object.keys(item.schemes).length > 1"
             :class="{
-              'font-bold': operationData.security.selectedSchemeId.value === item.id,
+              'font-bold': props.selectedSchemeId === item.id,
             }"
           >
             {{ item.id }}
@@ -52,7 +53,7 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
           <div
             :class="{
               'pl-2 border-l': Object.keys(item.schemes).length > 1,
-              'border-gray-600 dark:border-gray-400': Object.keys(securityUi).length > 1 && operationData.security.selectedSchemeId.value === item.id,
+              'border-gray-600 dark:border-gray-400': Object.keys(props.securityUi).length > 1 && props.selectedSchemeId === item.id,
             }"
           >
             <div
@@ -71,7 +72,7 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
           </div>
         </div>
 
-        <div v-if="Number(key) < Object.keys(securityUi).length - 1" class="flex flex-row items-center space-x-2">
+        <div v-if="Number(key) < Object.keys(props.securityUi).length - 1" class="flex flex-row items-center space-x-2">
           <span class="text-sm font-bold">{{ $t('or') }}</span>
           <span class="flex-grow border-t border-[var(--vp-c-divider)]" />
         </div>
