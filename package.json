@@ -45,9 +45,10 @@
     "test": "vitest",
     "test:run": "vitest --run",
     "typecheck": "vue-tsc --noEmit",
-    "e2e:dev": "cd e2e/local/dev && vitepress dev docs --port 4173",
-    "e2e:test": "playwright test",
-    "e2e:update-snapshots": "node scripts/update-snapshots.js"
+    "e2e:local:dev": "cd e2e/local/dev && vitepress dev docs --port 4173",
+    "e2e:local:test": "playwright test local",
+    "e2e:update-snapshots": "node scripts/update-snapshots.js",
+    "e2e:staging:test": "playwright test staging"
   },
   "peerDependencies": {
     "vitepress": ">=1.0.0",
