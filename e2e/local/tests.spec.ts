@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { testsPages } from '../docs/pages'
+import { testsPages } from '../../docs/pages'
 
 const tests = testsPages.map(page => page.slug)
 

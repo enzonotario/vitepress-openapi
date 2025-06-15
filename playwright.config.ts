@@ -55,9 +55,11 @@ export default defineConfig({
     // },
   ],
 
-  webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {
-    command: 'pnpm e2e:dev',
-    port,
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: process.env.PLAYWRIGHT_BASE_URL
+    ? undefined
+    : {
+        command: 'pnpm e2e:dev',
+        port,
+        reuseExistingServer: !process.env.CI,
+      },
 })

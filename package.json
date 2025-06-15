@@ -45,7 +45,7 @@
     "test": "vitest",
     "test:run": "vitest --run",
     "typecheck": "vue-tsc --noEmit",
-    "e2e:dev": "cd e2e/dev && vitepress dev docs --port 4173",
+    "e2e:dev": "cd e2e/local/dev && vitepress dev docs --port 4173",
     "e2e:test": "playwright test",
     "e2e:update-snapshots": "node scripts/update-snapshots.js"
   },
