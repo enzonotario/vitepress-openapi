@@ -1,14 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-const TEST_RESULTS_DIR = path.resolve('./e2e/test-results')
-const SNAPSHOTS_DIR = path.resolve('./e2e')
+function main(snapshotsDir, resultsDir) {
+  console.log('🔍 Searching for actual.png files in:', resultsDir)
 
-function main() {
-  console.log('🔍 Searching for actual.png files in:', TEST_RESULTS_DIR)
-
-  if (!fs.existsSync(TEST_RESULTS_DIR)) {
-    console.error('❌ Results directory does not exist:', TEST_RESULTS_DIR)
+  if (!fs.existsSync(resultsDir)) {
+    console.error('❌ Results directory does not exist:', resultsDir)
     return
   }
 
@@ -33,7 +30,7 @@ function main() {
         const browser = testDir.includes('chromium') ? 'chromium' : 'firefox'
 
         const targetDirBase = `${testName}.spec.ts-snapshots`
-        const targetDir = path.join(SNAPSHOTS_DIR, targetDirBase)
+        const targetDir = path.join(snapshotsDir, targetDirBase)
         const targetFile = `${testCase}-1-${browser}-linux.png`
         const targetPath = path.join(targetDir, targetFile)
 
@@ -50,7 +47,7 @@ function main() {
   }
 
   try {
-    processDirectory(TEST_RESULTS_DIR)
+    processDirectory(resultsDir)
 
     console.log(`✅ ${updatedFiles} snapshot files were updated.`)
 
@@ -64,4 +61,12 @@ function main() {
   }
 }
 
-main()
+main(
+  path.resolve('./e2e/local'),
+  path.resolve('./e2e/local/test-results'),
+)
+
+main(
+  path.resolve('./e2e/staging'),
+  path.resolve('./e2e/staging/test-results'),
+)

@@ -1,4 +1,4 @@
-import { testsPages } from '../../../../docs/pages.js'
+import { testsPages } from '../../../../../docs/pages.js'
 
 export default {
   paths() {

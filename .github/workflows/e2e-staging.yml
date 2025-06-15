@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: E2E Staging Tests
 
 on:
   push:
@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   test:
+    name: Run E2E Tests on Vercel Preview
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -24,14 +25,25 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build vitepress-openapi
-        run: pnpm build
-
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
 
-      - name: Run Playwright tests
-        run: pnpm exec playwright test
+      - name: Get Vercel Preview URL
+        id: get-vercel-preview-url
+        uses: ViktorJT/Get-vercel-preview-url@1.2.2
+        with:
+          vercel_access_token: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+          vercel_team_id: ${{ secrets.VERCEL_TEAM_ID }}
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Display Vercel Preview URL
+        run: |
+          echo "Vercel Preview URL: ${{ steps.get-vercel-preview-url.outputs.preview_url }}"
+
+      - name: Run Playwright tests against Vercel Preview
+        run: pnpm exec playwright test staging
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ steps.get-vercel-preview-url.outputs.preview_url }}
 
       - uses: actions/upload-artifact@v4
         if: always()
