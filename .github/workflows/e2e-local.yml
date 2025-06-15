@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   test:
+    name: Run E2E Tests Locally
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:

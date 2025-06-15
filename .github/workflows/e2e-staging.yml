@@ -1,6 +1,8 @@
 name: E2E Staging Tests
 
 on:
+  push:
+    branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
 
@@ -9,10 +11,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  e2e-tests:
+  test:
     name: Run E2E Tests on Vercel Preview
-    runs-on: ubuntu-latest
     timeout-minutes: 60
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
