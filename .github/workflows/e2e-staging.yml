@@ -41,7 +41,7 @@ jobs:
           echo "Vercel Preview URL: ${{ steps.get-vercel-preview-url.outputs.preview_url }}"
 
       - name: Run Playwright tests against Vercel Preview
-        run: pnpm exec playwright test
+        run: pnpm exec playwright test staging
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.get-vercel-preview-url.outputs.preview_url }}
 
