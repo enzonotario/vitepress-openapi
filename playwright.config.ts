@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 const port = 4173
 
-const url = `http://localhost:${port}`
+const url = process.env.PLAYWRIGHT_BASE_URL || `http://localhost:${port}`
 
 export default defineConfig({
   testDir: './e2e',
@@ -55,7 +55,7 @@ export default defineConfig({
     // },
   ],
 
-  webServer: {
+  webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined : {
     command: 'pnpm e2e:dev',
     port,
     reuseExistingServer: !process.env.CI,
