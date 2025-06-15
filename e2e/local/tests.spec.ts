@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test'
 import { testsPages } from '../../docs/pages'
 
-const tests = testsPages.map(page => page.slug)
+const pageSlugs = testsPages.map(page => page.slug)
 
-for (const testSlug of tests) {
-  test(testSlug, async ({ page }) => {
-    await page.goto(`/tests/${testSlug}`)
+for (const pageSlug of pageSlugs) {
+  test(pageSlug, async ({ page }) => {
+    await page.goto(`/tests/${pageSlug}`)
 
     await page.waitForSelector('h1')
 
