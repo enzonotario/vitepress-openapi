@@ -1,8 +1,6 @@
-name: Vercel Preview E2E Tests
+name: E2E Staging Tests
 
 on:
-  push:
-
   pull_request:
     branches: [ main, develop ]
 
