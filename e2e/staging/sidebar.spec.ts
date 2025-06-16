@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { examples } from '../../docs/sidebars.ts'
+import { examples } from '../../docs/sidebar-examples.ts'
 
 const exampleSlugs = examples.map(example => example.slug)
 

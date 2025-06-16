@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 const port = 4173
 
-const url = process.env.PLAYWRIGHT_BASE_URL || `http://localhost:${port}`
+const url = process.env.PLAYWRIGHT_BASE_URL || `https://vitepress-openapi-dlghtbja2-enzo-notarios-projects.vercel.app`
 
 export default defineConfig({
   testDir: './e2e',
