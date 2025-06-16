@@ -107,7 +107,7 @@ export default defineConfig({
   }
 })
 
-export const sidebars = {
+export const sidebarExamplesConfigs = {
   ...examples.reduce((acc, example) => {
     acc[`/sidebar-examples/${example.slug}`] = [
       {

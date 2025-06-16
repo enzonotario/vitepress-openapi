@@ -1,4 +1,4 @@
-import { examples } from '../sidebars.ts'
+import { examples } from '../sidebar-examples-configs.ts'
 
 export default {
   paths() {

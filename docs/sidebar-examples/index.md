@@ -6,7 +6,7 @@ next: false
 ---
 
 <script setup>
-import { examples } from '../sidebars'
+import { examples } from '../sidebar-examples-configs.ts'
 
 const list = examples.map(example => {
 return `<ul><li><a href="/sidebar-examples/${example.slug}">${example.label}</a></li></ul>`
