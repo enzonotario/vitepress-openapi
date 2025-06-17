@@ -3,14 +3,16 @@ import { examples } from '../../docs/sidebar-examples.ts'
 
 const exampleSlugs = examples.map(example => example.slug)
 
-for (const exampleSlug of exampleSlugs) {
-  test(`sidebar example: ${exampleSlug}`, async ({ page }) => {
-    await page.goto(`/sidebar-examples/${exampleSlug}`)
+test.describe('sidebar', () => {
+  for (const exampleSlug of exampleSlugs) {
+    test(`sidebar example: ${exampleSlug}`, async ({ page }) => {
+      await page.goto(`/sidebar-examples/${exampleSlug}`)
 
-    await page.waitForSelector('h1')
+      await page.waitForSelector('h1')
 
-    await expect(page).toHaveScreenshot({
-      fullPage: true,
+      await expect(page).toHaveScreenshot({
+        fullPage: true,
+      })
     })
-  })
-}
+  }
+})
