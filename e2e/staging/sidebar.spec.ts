@@ -5,7 +5,7 @@ const exampleSlugs = examples.map(example => example.slug)
 
 test.describe('sidebar', () => {
   for (const exampleSlug of exampleSlugs) {
-    test(`sidebar example: ${exampleSlug}`, async ({ page }) => {
+    test(exampleSlug, async ({ page }) => {
       await page.goto(`/sidebar-examples/${exampleSlug}`)
 
       await page.waitForSelector('h1')
