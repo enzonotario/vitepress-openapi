@@ -51,7 +51,7 @@ export function generateSidebarItemsByPaths({
               }
 
               return {
-                text: sidebarItemTemplate ? sidebarItemTemplate(method as OpenAPIV3.HttpMethods, fullPath) : `[${method.toUpperCase()}] ${operation.summary}`,
+                text: sidebarItemTemplate ? sidebarItemTemplate({ method: method as OpenAPIV3.HttpMethods, path: fullPath, title: operation.summary }) : `[${method.toUpperCase()}] ${operation.summary}`,
                 link: `${itemLinkPrefix}${operation.operationId}`,
                 method,
                 path: fullPath,
@@ -120,7 +120,7 @@ function applySidebarGroupTemplate(
 ): OASidebarItem[] {
   return sidebarItems.map((item) => {
     if (item.text && item.path && item.items && item.items.length) {
-      item.text = sidebarGroupTemplate(item.path, currentDepth)
+      item.text = sidebarGroupTemplate({ path: item.path, depth: currentDepth })
     }
 
     if (item.items) {
