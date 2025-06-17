@@ -703,7 +703,7 @@ describe('useSidebar itemsByPaths', () => {
 
   it('generate items with sidebarGroupTemplate', () => {
     const result = sidebar.itemsByPaths({
-      sidebarGroupTemplate: (path: string, depth: number = 1) => `${depth} - ${path}`,
+      sidebarGroupTemplate: ({ path, depth }) => `${depth} - ${path}`,
       collapsible: false,
     })
 

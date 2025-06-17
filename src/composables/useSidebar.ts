@@ -9,15 +9,30 @@ import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItems
 
 type MethodAliases = Record<string, string>
 
-export type SidebarItemTemplateFn = (
-  method: OpenAPIV3.HttpMethods,
+export interface SidebarItemTemplateParams {
+  method: OpenAPIV3.HttpMethods
   path: string
+  title?: string
+}
+
+export type SidebarItemTemplateFn = (
+  params: SidebarItemTemplateParams
 ) => string
 
-export type SidebarGroupTemplateFn = (
-  path: string,
+export interface SidebarGroupTemplateParams {
+  path: string
   depth: number
+}
+
+export type SidebarGroupTemplateFn = (
+  params: SidebarGroupTemplateParams
 ) => string
+
+export interface SidebarItemTemplateForMethodPathParams {
+  method: OpenAPIV3.HttpMethods
+  path: string
+  sidebarItemTemplate?: SidebarItemTemplateFn
+}
 
 export interface SidebarConfig {
   spec?: OpenAPIDocument | null
@@ -62,7 +77,7 @@ const DEFAULT_CONFIG: Required<Omit<SidebarConfig, 'methodAliases' | 'spec' | 's
   defaultTag: 'Default',
 } as const
 
-function defaultGroupTemplate(path: string, _: number = 1): string {
+function defaultGroupTemplate({ path }: SidebarGroupTemplateParams): string {
   return path
 }
 
@@ -94,21 +109,22 @@ export function useSidebar({
     return openApiInstance
   }
 
-  const _globalItemTemplate: SidebarItemTemplateFn = sidebarItemTemplate || ((method, title) => {
+  const _globalItemTemplate: SidebarItemTemplateFn = sidebarItemTemplate || (({ method, path, title }) => {
     const resolvedMethod = methodAliases[method] || method.toUpperCase()
+    const displayText = title || path
     return `<span class="OASidebarItem group/oaOperationLink">
         <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${resolvedMethod}</span>
-        <span class="OASidebarItem-text text">${title}</span>
+        <span class="OASidebarItem-text text">${displayText}</span>
       </span>`
   })
 
   const _globalGroupTemplate: SidebarGroupTemplateFn = sidebarGroupTemplate || defaultGroupTemplate
 
-  function sidebarItemTemplateForMethodPath(
-    method: OpenAPIV3.HttpMethods,
-    path: string,
-    localItemTemplate?: SidebarItemTemplateFn,
-  ): string {
+  function sidebarItemTemplateForMethodPath({
+    method,
+    path,
+    sidebarItemTemplate,
+  }: SidebarItemTemplateForMethodPathParams): string {
     const operation = getOpenApi().getPaths()?.[path]?.[method] as OpenAPIOperation | undefined
     if (!operation) {
       return `[${method.toUpperCase()}] ${path}`
@@ -118,9 +134,9 @@ export function useSidebar({
 
     const sidebarTitle = operation['x-sidebar-title'] || summary || `${method.toUpperCase()} ${path}`
 
-    const finalTemplate = localItemTemplate || _globalItemTemplate
+    const finalTemplate = sidebarItemTemplate || _globalItemTemplate
 
-    return finalTemplate(method, sidebarTitle)
+    return finalTemplate({ method, path, title: sidebarTitle })
   }
 
   function generateSidebarItem(
@@ -138,7 +154,7 @@ export function useSidebar({
     const operationId = operation.operationId
 
     return {
-      text: sidebarItemTemplateForMethodPath(method, path, localItemTemplate),
+      text: sidebarItemTemplateForMethodPath({ method, path, sidebarItemTemplate: localItemTemplate }),
       link: `${itemLinkPrefix}${operationId}`,
     }
   }
@@ -189,7 +205,7 @@ export function useSidebar({
     const finalGroupTemplate = localGroupTemplate || _globalGroupTemplate
 
     return {
-      text: finalGroupTemplate(text, 0),
+      text: finalGroupTemplate({ path: text, depth: 0 }),
       items,
     }
   }
@@ -270,10 +286,14 @@ export function useSidebar({
   } = {}): DefaultTheme.SidebarItem[] {
     const paths = getOpenApi().getPaths()
 
-    const itemTemplateForMethodPath = (
-      method: OpenAPIV3.HttpMethods,
-      path: string,
-    ) => sidebarItemTemplateForMethodPath(method, path, sidebarItemTemplate)
+    const itemTemplateForMethodPath = ({
+      method,
+      path,
+    }: SidebarItemTemplateForMethodPathParams) => sidebarItemTemplateForMethodPath({
+      method,
+      path,
+      sidebarItemTemplate,
+    })
 
     const sidebarItems = generateSidebarItemsByPaths({
       paths,

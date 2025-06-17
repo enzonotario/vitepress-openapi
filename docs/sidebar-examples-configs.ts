@@ -54,11 +54,12 @@ export const examples = ([
     config: () => {
       return sidebar.generateSidebarGroups({
         linkPrefix: '#',
-        sidebarItemTemplate: (method, path) => {
+        sidebarItemTemplate: ({ method, path, title }) => {
           const operation = spec.paths[path]?.[method]
+          const displayText = title || (operation ? operation.summary : path)
 
           return `<div class="OASidebarItem group/oaOperationLink" style="display: grid; grid-template-columns: 1fr auto;">
-        <span class="text" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${operation ? operation.summary : path}</span>
+        <span class="text" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${displayText}</span>
         <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
       </div>`
         },
@@ -71,7 +72,7 @@ export const examples = ([
     config: () => {
       return sidebar.itemsByPaths({
         linkPrefix: '#',
-        sidebarGroupTemplate: (path, _) => {
+        sidebarGroupTemplate: ({ path, depth }) => {
           return `<span>${path}</span>`
         },
       })

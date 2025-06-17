@@ -6,7 +6,7 @@ describe('useSidebar', () => {
   const sidebar = useSidebar({ spec })
 
   it('creates a sidebar item template', () => {
-    const result = useSidebar().sidebarItemTemplate('get', 'GET /users With a Long Title')
+    const result = useSidebar().sidebarItemTemplate({ method: 'get', path: '/users', title: 'GET /users With a Long Title' })
     expect(result).toBe(`<span class="OASidebarItem group/oaOperationLink">
         <span class="OASidebarItem-badge OAMethodBadge--get">GET</span>
         <span class="OASidebarItem-text text">GET /users With a Long Title</span>
@@ -20,11 +20,11 @@ describe('useSidebar', () => {
         items: [
           {
             link: '/operations/getUsers',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users', title: 'GET /users' }),
           },
           {
             link: '/operations/getUser',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}', title: 'GET /users/{id}' }),
           },
         ],
         text: 'users',
@@ -33,7 +33,7 @@ describe('useSidebar', () => {
         items: [
           {
             link: '/operations/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}/pets', title: 'Get a list of pets for a user' }),
           },
         ],
         text: 'pets',
@@ -51,15 +51,15 @@ describe('useSidebar', () => {
       items: [
         {
           link: '/ref/getUsers',
-          text: sidebar.sidebarItemTemplate('get', 'GET /users'),
+          text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users', title: 'GET /users' }),
         },
         {
           link: '/ref/getUser',
-          text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
+          text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}', title: 'GET /users/{id}' }),
         },
         {
           link: '/ref/getUserPets',
-          text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+          text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}/pets', title: 'Get a list of pets for a user' }),
         },
       ],
       text: 'users',
@@ -77,11 +77,11 @@ describe('useSidebar with linkPrefix', () => {
         items: [
           {
             link: '/foo/getUsers',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users', title: 'GET /users' }),
           },
           {
             link: '/foo/getUser',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}', title: 'GET /users/{id}' }),
           },
         ],
         text: 'users',
@@ -90,7 +90,7 @@ describe('useSidebar with linkPrefix', () => {
         items: [
           {
             link: '/foo/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}/pets', title: 'Get a list of pets for a user' }),
           },
         ],
         text: 'pets',
@@ -105,11 +105,11 @@ describe('useSidebar with linkPrefix', () => {
         items: [
           {
             link: '/foo/getUsers',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users', title: 'GET /users' }),
           },
           {
             link: '/foo/getUser',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}', title: 'GET /users/{id}' }),
           },
         ],
         text: 'users',
@@ -118,7 +118,7 @@ describe('useSidebar with linkPrefix', () => {
         items: [
           {
             link: '/foo/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}/pets', title: 'Get a list of pets for a user' }),
           },
         ],
         text: 'pets',
@@ -131,11 +131,11 @@ describe('useSidebar with linkPrefix', () => {
         items: [
           {
             link: '/bar/getUsers',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users', title: 'GET /users' }),
           },
           {
             link: '/bar/getUser',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}', title: 'GET /users/{id}' }),
           },
         ],
         text: 'users',
@@ -144,7 +144,7 @@ describe('useSidebar with linkPrefix', () => {
         items: [
           {
             link: '/bar/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}/pets', title: 'Get a list of pets for a user' }),
           },
         ],
         text: 'pets',
@@ -156,7 +156,7 @@ describe('useSidebar with linkPrefix', () => {
 describe('useSidebar with sidebarItemTemplate', () => {
   const sidebar = useSidebar({
     spec,
-    sidebarItemTemplate: (method, title) => `<div class="test">${method} ${title}</div>`,
+    sidebarItemTemplate: ({ method, path, title }) => `<div class="test">${method} ${title || path}</div>`,
   })
 
   it('can configure sidebarItemTemplate globally', () => {
@@ -215,7 +215,7 @@ describe('useSidebar with sidebarItemTemplate', () => {
     ])
 
     const result2 = sidebar.generateSidebarGroups({
-      sidebarItemTemplate: (method, title) => `<div class="test2">${method} ${title}</div>`,
+      sidebarItemTemplate: ({ method, path, title }) => `<div class="test2">${method} ${title || path}</div>`,
     })
     expect(result2).toEqual([
       {
@@ -247,7 +247,7 @@ describe('useSidebar with sidebarItemTemplate', () => {
 describe('useSidebar with sidebarGroupTemplate', () => {
   const sidebar = useSidebar({
     spec,
-    sidebarGroupTemplate: tag => `<div class="test">${tag}</div>`,
+    sidebarGroupTemplate: params => `<div class="test">${params.path}</div>`,
   })
 
   it('can configure sidebarGroupTemplate globally', () => {
@@ -257,11 +257,11 @@ describe('useSidebar with sidebarGroupTemplate', () => {
         items: [
           {
             link: '/operations/getUsers',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users', title: 'GET /users' }),
           },
           {
             link: '/operations/getUser',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}', title: 'GET /users/{id}' }),
           },
         ],
         text: '<div class="test">users</div>',
@@ -270,7 +270,7 @@ describe('useSidebar with sidebarGroupTemplate', () => {
         items: [
           {
             link: '/operations/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}/pets', title: 'Get a list of pets for a user' }),
           },
         ],
         text: '<div class="test">pets</div>',
@@ -285,11 +285,11 @@ describe('useSidebar with sidebarGroupTemplate', () => {
         items: [
           {
             link: '/operations/getUsers',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users', title: 'GET /users' }),
           },
           {
             link: '/operations/getUser',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}', title: 'GET /users/{id}' }),
           },
         ],
         text: '<div class="test">users</div>',
@@ -298,7 +298,7 @@ describe('useSidebar with sidebarGroupTemplate', () => {
         items: [
           {
             link: '/operations/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}/pets', title: 'Get a list of pets for a user' }),
           },
         ],
         text: '<div class="test">pets</div>',
@@ -306,18 +306,18 @@ describe('useSidebar with sidebarGroupTemplate', () => {
     ])
 
     const result2 = sidebar.generateSidebarGroups({
-      sidebarGroupTemplate: tag => `<div class="test2">${tag}</div>`,
+      sidebarGroupTemplate: params => `<div class="test2">${params.path}</div>`,
     })
     expect(result2).toEqual([
       {
         items: [
           {
             link: '/operations/getUsers',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users', title: 'GET /users' }),
           },
           {
             link: '/operations/getUser',
-            text: sidebar.sidebarItemTemplate('get', 'GET /users/{id}'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}', title: 'GET /users/{id}' }),
           },
         ],
         text: '<div class="test2">users</div>',
@@ -326,7 +326,7 @@ describe('useSidebar with sidebarGroupTemplate', () => {
         items: [
           {
             link: '/operations/getUserPets',
-            text: sidebar.sidebarItemTemplate('get', 'Get a list of pets for a user'),
+            text: sidebar.sidebarItemTemplate({ method: 'get', path: '/users/{id}/pets', title: 'Get a list of pets for a user' }),
           },
         ],
         text: '<div class="test2">pets</div>',
