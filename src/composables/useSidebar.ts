@@ -77,7 +77,7 @@ const DEFAULT_CONFIG: Required<Omit<SidebarConfig, 'methodAliases' | 'spec' | 's
   defaultTag: 'Default',
 } as const
 
-function defaultGroupTemplate({ path, depth }: SidebarGroupTemplateParams): string {
+function defaultGroupTemplate({ path }: SidebarGroupTemplateParams): string {
   return path
 }
 
