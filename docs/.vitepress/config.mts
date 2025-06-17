@@ -3,7 +3,7 @@ import { defineConfigWithTheme } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import { examplesPages, testsPages } from '../pages'
 import spec from '../public/openapi.json' with {type: 'json'}
-import { sidebars } from '../sidebars'
+import { sidebarExamplesConfigs } from '../sidebar-examples-configs'
 
 const sidebar = useSidebar({
   spec,
@@ -30,7 +30,7 @@ export default defineConfigWithTheme({
     ],
 
     sidebar: {
-      ...sidebars,
+      ...sidebarExamplesConfigs,
       '/': [
         {
           text: 'Getting Started',
