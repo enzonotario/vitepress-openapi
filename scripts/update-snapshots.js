@@ -25,6 +25,7 @@ function main(snapshotsDir, resultsDir) {
         console.log(`📄 Found: ${itemPath}`)
 
         const testDir = path.basename(path.dirname(itemPath))
+          .replace(/^(staging|local)-/, '')
         const testName = testDir.split('-')[0]
         const testCase = testDir.split('-').slice(1, -1).join('-')
         const browser = testDir.includes('chromium') ? 'chromium' : 'firefox'
