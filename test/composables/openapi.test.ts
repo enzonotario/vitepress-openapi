@@ -240,6 +240,16 @@ describe('openapi with spec', () => {
       ...spec.servers,
     ])
   })
+
+  it('getOperationByMethodAndPath returns the correct operation', () => {
+    const result = openapi.getOperationByMethodAndPath('get', '/users')
+    expect(result).toEqual(spec.paths['/users'].get)
+  })
+
+  it('getOperationByMethodAndPath returns null for non-existing operation', () => {
+    const result = openapi.getOperationByMethodAndPath('get', '/non-existing')
+    expect(result).toBeNull()
+  })
 })
 
 describe('spec with different servers for specific path', () => {
