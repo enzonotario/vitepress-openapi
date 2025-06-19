@@ -252,6 +252,33 @@ describe('openapi with spec', () => {
   })
 })
 
+describe('getOperations', () => {
+  it('returns all operations from the spec', () => {
+    const openapi = OpenApi({ spec })
+    const operations = openapi.getOperations()
+
+    expect(operations).toHaveLength(3)
+
+    expect(operations).toContain(spec.paths['/users'].get)
+    expect(operations).toContain(spec.paths['/users/{id}'].get)
+    expect(operations).toContain(spec.paths['/users/{id}/pets'].get)
+  })
+
+  it('returns empty array for spec with no paths', () => {
+    const openapi = OpenApi({ spec: { openapi: '3.0.0' } })
+    const operations = openapi.getOperations()
+
+    expect(operations).toEqual([])
+  })
+
+  it('returns empty array for empty spec', () => {
+    const openapi = OpenApi({ spec: {} })
+    const operations = openapi.getOperations()
+
+    expect(operations).toEqual([])
+  })
+})
+
 describe('spec with different servers for specific path', () => {
   const spec = {
     openapi: '3.0.0',
