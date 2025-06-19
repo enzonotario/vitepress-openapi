@@ -1,0 +1,113 @@
+.OAContent.has-sidebar {
+  padding-right: calc((100vw - var(--vp-layout-max-width)) / 2);
+  padding-left: calc((100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width));
+}
+
+.OADoc {
+  padding: 32px 24px 96px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .OADoc {
+    padding: 48px 32px 128px;
+  }
+}
+
+@media (min-width: 960px) {
+  .OADoc {
+    padding: 48px 32px 0;
+  }
+
+  .OADoc:not(.has-sidebar) .content {
+    max-width: 752px;
+  }
+}
+
+.OAContent {
+  flex-grow: 1;
+  flex-shrink: 0;
+  margin: var(--vp-layout-top-height, 0px) auto 0;
+  width: 100%;
+}
+
+@media (min-width: 960px) {
+  .OAContent.has-sidebar {
+    margin: var(--vp-layout-top-height, 0px) 0 0;
+    padding-left: var(--vp-sidebar-width);
+  }
+}
+
+@media (min-width: 1440px) {
+  .OAContent.has-sidebar {
+    padding-right: calc((100vw - var(--vp-layout-max-width)) / 2);
+    padding-left: calc((100vw - var(--vp-layout-max-width)) / 2 + var(--vp-sidebar-width));
+  }
+}
+
+.OASidebar {
+  position: fixed;
+  top: var(--vp-layout-top-height, 0px);
+  bottom: 0;
+  left: 0;
+  z-index: var(--vp-z-index-sidebar);
+  padding: 32px 32px 96px;
+  width: calc(100vw - 64px);
+  max-width: 320px;
+  background-color: var(--vp-sidebar-bg-color);
+  opacity: 0;
+  box-shadow: var(--vp-c-shadow-3);
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition:
+    opacity 0.5s,
+    transform 0.25s ease;
+  overscroll-behavior: contain;
+}
+
+.OASidebar.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transition:
+    opacity 0.25s,
+    transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.dark .OASidebar {
+  box-shadow: var(--vp-shadow-1);
+}
+
+@media (min-width: 960px) {
+  .OASidebar {
+    padding-top: var(--vp-nav-height);
+    width: var(--vp-sidebar-width);
+    max-width: 100%;
+    background-color: var(--vp-sidebar-bg-color);
+    opacity: 1;
+    visibility: visible;
+    box-shadow: none;
+    transform: translateX(0);
+  }
+}
+
+@media (min-width: 1440px) {
+  .OASidebar {
+    padding-left: max(32px, calc((100% - (var(--vp-layout-max-width) - 64px)) / 2));
+    width: calc((100% - (var(--vp-layout-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px);
+  }
+}
+
+@media (min-width: 960px) {
+  .OACurtain {
+    position: sticky;
+    top: -64px;
+    left: 0;
+    z-index: 1;
+    margin-right: -32px;
+    margin-left: -32px;
+    height: var(--vp-nav-height);
+    background-color: var(--vp-sidebar-bg-color);
+  }
+}

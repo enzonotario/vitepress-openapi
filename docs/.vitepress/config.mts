@@ -196,6 +196,10 @@ export default defineConfigWithTheme({
               text: 'One Page',
               link: '/example/one-page',
             },
+            {
+              text: 'Playground',
+              link: '/example/playground',
+            },
           ],
         },
         {
