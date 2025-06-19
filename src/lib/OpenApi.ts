@@ -230,6 +230,16 @@ export function OpenApi({
       ])
   }
 
+  function getOperationByMethodAndPath(method: string, path: string) {
+    const paths = getSpec().paths as OpenAPIV3.PathsObject
+
+    if (!paths || !paths[path]) {
+      return null
+    }
+
+    return paths[path][method] || null
+  }
+
   return {
     spec: getSpec(),
     setSpec,
@@ -249,5 +259,6 @@ export function OpenApi({
     getPathsWithoutTags,
     getTags,
     getFilteredTags,
+    getOperationByMethodAndPath,
   }
 }
