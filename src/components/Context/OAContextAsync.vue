@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { OpenAPIDocument } from '../../types'
+import { parseYAML } from 'confbox'
 import { OpenApi } from '../../lib/OpenApi'
 import { parseOpenapi } from '../../lib/parser/parseOpenapi'
 import OAContext from './OAContext.vue'
@@ -22,7 +24,7 @@ emit('update:spec', spec)
 
 const openapiInstance = OpenApi({
   spec: await parseOpenapi().parseAsync({ spec }),
-  originalSpec: spec,
+  originalSpec: parseSpecToDocument(spec),
 })
 
 async function fetchSpec(url?: string): Promise<any> {
@@ -41,6 +43,13 @@ async function fetchSpec(url?: string): Promise<any> {
   }
 
   return res.json()
+}
+
+function parseSpecToDocument(spec: object | string): OpenAPIDocument {
+  if (typeof spec === 'string') {
+    return parseYAML(spec) as OpenAPIDocument
+  }
+  return spec as OpenAPIDocument
 }
 </script>
 
