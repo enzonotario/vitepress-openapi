@@ -105,7 +105,7 @@ function downloadSpec(format: 'json' | 'yaml'): void {
 }
 
 .download-button:hover:before {
-  background-color: var(--vp-c-bg);
+  background-color: var(--vp-c-bg-alt);
   @apply rounded;
 }
 
