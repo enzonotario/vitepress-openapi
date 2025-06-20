@@ -25,11 +25,14 @@ export function useOpenapi({
 
   function setInstance({
     spec,
+    originalSpec,
   }: {
     spec: ParsedOpenAPI | OpenAPIDocument
+    originalSpec?: OpenAPIDocument
   }) {
     openapi = OpenApi({
       spec,
+      originalSpec,
     })
   }
 
@@ -39,15 +42,16 @@ export function useOpenapi({
     spec?: OpenAPIDocument | string
   } = {}) {
     if (spec) {
-      setInstance(
-        OpenApi({
-          spec: parseOpenapi().parseSync({
-            spec,
-            defaultTag: config?.spec?.defaultTag,
-            defaultTagDescription: config?.spec?.defaultTagDescription,
-          }),
+      const originalSpec = typeof spec === 'string' ? JSON.parse(spec) : spec
+
+      setInstance({
+        spec: parseOpenapi().parseSync({
+          spec,
+          defaultTag: config?.spec?.defaultTag,
+          defaultTagDescription: config?.spec?.defaultTagDescription,
         }),
-      )
+        originalSpec,
+      })
     } else {
       throw new Error('No spec provided')
     }
@@ -61,15 +65,16 @@ export function useOpenapi({
     spec?: OpenAPIDocument | string
   } = {}) {
     if (spec) {
-      setInstance(
-        OpenApi({
-          spec: await parseOpenapi().parseAsync({
-            spec,
-            defaultTag: config?.spec?.defaultTag,
-            defaultTagDescription: config?.spec?.defaultTagDescription,
-          }),
+      const originalSpec = typeof spec === 'string' ? JSON.parse(spec) : spec
+
+      setInstance({
+        spec: await parseOpenapi().parseAsync({
+          spec,
+          defaultTag: config?.spec?.defaultTag,
+          defaultTagDescription: config?.spec?.defaultTagDescription,
         }),
-      )
+        originalSpec,
+      })
     } else {
       throw new Error('No spec provided')
     }

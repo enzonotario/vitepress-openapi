@@ -4,15 +4,27 @@ import { httpVerbs } from '../index'
 
 export function OpenApi({
   spec,
+  originalSpec,
 }: {
   spec: ParsedOpenAPI | OpenAPIDocument | null
+  originalSpec?: OpenAPIDocument | null
 } = {
   spec: null,
+  originalSpec: null,
 }) {
   let innerSpec: OpenAPIDocument | null = null
+  let innerOriginalSpec: OpenAPIDocument | null = originalSpec ?? null
 
   function setSpec(spec: any) {
     innerSpec = spec
+  }
+
+  function getOriginalSpec(): OpenAPIDocument | null {
+    return innerOriginalSpec
+  }
+
+  function setOriginalSpec(spec: OpenAPIDocument | null) {
+    innerOriginalSpec = spec
   }
 
   function getSpec(): OpenAPIDocument {
@@ -232,8 +244,11 @@ export function OpenApi({
 
   return {
     spec: getSpec(),
+    originalSpec: getOriginalSpec(),
     setSpec,
     getSpec,
+    getOriginalSpec,
+    setOriginalSpec,
     getOperation,
     getOperationPath,
     getOperationMethod,

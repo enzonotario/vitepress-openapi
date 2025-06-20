@@ -19,6 +19,23 @@ describe('openapi with spec', () => {
     expect(customOpenapi.getSpec()).toEqual(newSpec)
   })
 
+  it('stores and retrieves originalSpec correctly', () => {
+    const originalSpec = { openapi: '3.0.0', info: { title: 'Original API', version: '1.0.0' } }
+    const parsedSpec = { openapi: '3.0.0', info: { title: 'Parsed API', version: '1.0.0' } }
+
+    const customOpenapi = OpenApi({
+      spec: parsedSpec,
+      originalSpec,
+    })
+
+    expect(customOpenapi.getSpec()).toEqual(parsedSpec)
+    expect(customOpenapi.getOriginalSpec()).toEqual(originalSpec)
+
+    const newOriginalSpec = { openapi: '3.0.0', info: { title: 'New Original API', version: '2.0.0' } }
+    customOpenapi.setOriginalSpec(newOriginalSpec)
+    expect(customOpenapi.getOriginalSpec()).toEqual(newOriginalSpec)
+  })
+
   it('returns the correct operation for getOperation', () => {
     const result = openapi.getOperation('getUsers')
     expect(result).toEqual(spec.paths['/users'].get)

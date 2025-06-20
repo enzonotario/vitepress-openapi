@@ -22,6 +22,7 @@ emit('update:spec', spec)
 
 const openapiInstance = OpenApi({
   spec: await parseOpenapi().parseAsync({ spec }),
+  originalSpec: spec,
 })
 
 async function fetchSpec(url?: string): Promise<any> {
