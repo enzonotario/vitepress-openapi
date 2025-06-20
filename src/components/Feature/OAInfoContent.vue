@@ -2,6 +2,7 @@
 import OAHeading from '../Common/OAHeading.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Badge } from '../ui/badge/index'
+import OADownloadSpec from './OADownloadSpec.vue'
 
 const props = defineProps({
   openapi: {
@@ -30,6 +31,11 @@ const externalDocs = props.openapi.spec.externalDocs ?? {}
       <OAHeading level="h1">
         {{ info.title ?? $t('API Documentation') }}
       </OAHeading>
+
+      <OADownloadSpec
+        class="mt-1"
+        :openapi="openapi"
+      />
     </div>
 
     <span v-if="info.summary" class="text-muted-foreground">
