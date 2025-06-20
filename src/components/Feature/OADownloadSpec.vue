@@ -83,8 +83,9 @@ function downloadSpec(format: 'json' | 'yaml'): void {
   left: -0.5rem;
   z-index: 1;
   background-color: var(--vp-c-bg);
+  border-color: var(--vp-c-border);
 
-  @apply rounded dark:shadow-none border border-[var(--vp-c-border)];
+  @apply rounded dark:shadow-none border;
 }
 
 .download-button {
@@ -104,7 +105,8 @@ function downloadSpec(format: 'json' | 'yaml'): void {
 }
 
 .download-button:hover:before {
-  @apply bg-muted rounded;
+  background-color: var(--vp-c-bg);
+  @apply rounded;
 }
 
 .yaml-button {
