@@ -9,7 +9,7 @@ const sidebar = useSidebar({
   spec,
 })
 
-const gaId = process.env.NODE_ENV === 'production' ? 'G-ELG8ZW19X4' : 'G-TEST'
+const gaId = process.env.GA_ID || 'G-TEST'
 
 export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
