@@ -100,7 +100,9 @@ describe('composition API', () => {
     expect(theme.getSpecConfig().defaultTag).toBe('Default')
     expect(theme.getSpecConfig().defaultTagDescription).toBe('')
     expect(theme.getSpecConfig().wrapExamples).toBe(true)
+    expect(theme.getSpecConfig().disableDownload.value).toBe(false)
     expect(theme.getWrapExamples()).toBe(true)
+    expect(theme.getSpecDisableDownload()).toBe(false)
   })
 
   it('can reset', () => {
@@ -370,6 +372,7 @@ describe('useTheme', () => {
     expect(result.defaultTag).toBe('Default')
     expect(result.defaultTagDescription).toBe('')
     expect(result.wrapExamples).toBe(true)
+    expect(result.disableDownload.value).toBe(false)
   })
 
   it('sets spec config', () => {
@@ -380,6 +383,7 @@ describe('useTheme', () => {
       avoidCirculars: true,
       lazyRendering: true,
       wrapExamples: false,
+      disableDownload: true,
     })
     const result = themeConfig.getSpecConfig()
     result.groupByTags.value = false
@@ -388,7 +392,9 @@ describe('useTheme', () => {
     result.avoidCirculars.value = true
     result.lazyRendering.value = true
     result.wrapExamples = false
+    result.disableDownload.value = true
     expect(themeConfig.getWrapExamples()).toBe(false)
+    expect(themeConfig.getSpecDisableDownload()).toBe(true)
   })
 
   it('returns the default links prefixes config', () => {
