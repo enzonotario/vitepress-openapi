@@ -1,4 +1,5 @@
 <script setup>
+import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Badge } from '../ui/badge/index'
@@ -11,6 +12,7 @@ const props = defineProps({
   },
 })
 
+const themeConfig = useTheme()
 const info = props.openapi.spec.info ?? {}
 
 const externalDocs = props.openapi.spec.externalDocs ?? {}
@@ -33,6 +35,7 @@ const externalDocs = props.openapi.spec.externalDocs ?? {}
       </OAHeading>
 
       <OADownloadSpec
+        v-if="!themeConfig.getSpecDisableDownload()"
         class="mt-1"
         :openapi="openapi"
       />

@@ -116,6 +116,7 @@ export default {
                 lazyRendering: false, // Lazy render Paths and Tags components.
                 defaultTag: 'Default', // Default tag to use when a path has no tags.
                 wrapExamples: true, // Wrap examples in a row or show them in a column.
+                disableDownload: false, // Disable the download button in the info section.
             },
             server: {
                 // Set a custom function to get servers.
@@ -203,7 +204,7 @@ export default {
 
 | Function        | Description                  | Default Value                                                                                                                             | Allowed Values                                                                                                                                     |
 |-----------------|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true, avoidCirculars: false, lazyRendering: false, defaultTag: 'Default', wrapExamples: true }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean, avoidCirculars: boolean, lazyRendering: boolean, defaultTag: string, wrapExamples: boolean }` |
+| `setSpecConfig` | Sets the spec configuration. | `{ groupByTags: true, collapsePaths: false, showPathsSummary: true, avoidCirculars: false, lazyRendering: false, defaultTag: 'Default', wrapExamples: true, disableDownload: false }` | `{ groupByTags: boolean, collapsePaths: boolean, showPathsSummary: boolean, avoidCirculars: boolean, lazyRendering: boolean, defaultTag: string, wrapExamples: boolean, disableDownload: boolean }` |
 
 ## Server Configuration
 

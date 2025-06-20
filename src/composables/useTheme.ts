@@ -102,6 +102,7 @@ export interface SpecConfig {
   defaultTag?: string
   defaultTagDescription?: string
   wrapExamples?: boolean
+  disableDownload?: Ref<boolean>
 }
 
 export interface ServerConfig {
@@ -294,6 +295,7 @@ const themeConfig: UseThemeConfig = {
     defaultTag: 'Default',
     defaultTagDescription: '',
     wrapExamples: true,
+    disableDownload: ref(false),
   },
   codeSamples: {
     langs: [
@@ -722,6 +724,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     return themeConfig?.spec?.wrapExamples
   }
 
+  function getSpecDisableDownload(): boolean | undefined {
+    return themeConfig?.spec?.disableDownload?.value
+  }
+
   function setSpecConfig(config: Partial<UnwrapNestedRefs<SpecConfig>>) {
     if (!themeConfig.spec) {
       themeConfig.spec = {}
@@ -762,6 +768,11 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
     if (config.wrapExamples !== undefined) {
       themeConfig.spec.wrapExamples = config.wrapExamples
+    }
+
+    if (config.disableDownload !== undefined) {
+      // @ts-expect-error: This is a valid expression.
+      themeConfig.spec.disableDownload.value = config.disableDownload
     }
   }
 
@@ -959,6 +970,7 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setI18nConfig,
     getSpecConfig,
     getWrapExamples,
+    getSpecDisableDownload,
     setSpecConfig,
     getCodeSamplesLangs,
     getCodeSamplesDefaultLang,
