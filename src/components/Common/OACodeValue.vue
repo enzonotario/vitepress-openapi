@@ -15,7 +15,7 @@ const { value } = defineProps({
     </code>
   </template>
   <code
-    v-else class="!text-xs"
+    v-else class="!text-xs text-wrap break-all"
   >
     {{ value }}
   </code>

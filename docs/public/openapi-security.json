@@ -173,11 +173,13 @@
       "apiKey": {
         "type": "apiKey",
         "name": "api_key",
-        "in": "header"
+        "in": "header",
+        "example": "your-api-key"
       },
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
       },
       "basicAuth": {
         "type": "http",
