@@ -112,7 +112,7 @@ export function useSidebar({
   const _globalItemTemplate: SidebarItemTemplateFn = sidebarItemTemplate || (({ method, path, title }) => {
     const resolvedMethod = methodAliases[method] || method.toUpperCase()
     const displayText = title || path
-    return `<span class="OASidebarItem group/oaOperationLink">
+    return `<span class="OASidebarItem group/oaOperationLink" data-method="${method}" data-path="${path}">
         <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${resolvedMethod}</span>
         <span class="OASidebarItem-text text">${displayText}</span>
       </span>`
