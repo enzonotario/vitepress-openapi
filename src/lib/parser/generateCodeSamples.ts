@@ -3,7 +3,6 @@ import type { OAExampleObject, ParsedOpenAPI, ParsedOperation, PlaygroundSecurit
 import { availableLanguages, useTheme } from '../../composables/useTheme'
 import { buildRequest } from '../codeSamples/buildRequest'
 import { generateCodeSample } from '../codeSamples/generateCodeSample'
-import { getPropertyExample } from '../examples/getPropertyExample'
 import { resolveBaseUrl } from '../resolveBaseUrl'
 
 export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOpenAPI> {

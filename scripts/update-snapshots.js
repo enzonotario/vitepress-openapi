@@ -45,6 +45,7 @@ function main(snapshotsDir, resultsDir) {
         updatedFiles++
       }
     }
+    // delete test results directory:
   }
 
   try {
@@ -59,6 +60,13 @@ function main(snapshotsDir, resultsDir) {
     }
   } catch (error) {
     console.error('❌ Error processing files:', error)
+  }
+
+  try {
+    fs.rmSync(resultsDir, { recursive: true, force: true })
+    console.log(`🗑️ Deleted results directory: ${resultsDir}`)
+  } catch (error) {
+    console.error('❌ Error deleting results directory:', error)
   }
 }
 
