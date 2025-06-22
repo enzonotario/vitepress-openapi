@@ -44,7 +44,7 @@ const defaultValue = computed(() => {
     :key="defaultValue"
     :default-value="defaultValue"
   >
-    <TabsList class="relative flex flex-row justify-start">
+    <TabsList class="relative flex flex-row justify-start overflow-x-auto">
       <TabsTrigger
         value="schema"
         variant="schemaTabs"
