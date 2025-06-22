@@ -179,14 +179,16 @@ watch(selectedSchemeId, (schemeId) => {
 
   authorizations.value = Object.keys(schemes).map((name) => {
     const scheme = schemes[name] as PlaygroundSecurityScheme
+    const example = getPropertyExample(scheme) ?? usePlayground().getSecuritySchemeDefaultValue(scheme)
     return {
       type: scheme.type,
       scheme: scheme.scheme,
       name: scheme.name ?? name,
       value: typeof localStorage !== 'undefined'
-        ? useStorage(`--oa-authorization-${name}`, usePlayground().getSecuritySchemeDefaultValue(scheme), localStorage)
-        : usePlayground().getSecuritySchemeDefaultValue(scheme),
+        ? useStorage(`--oa-authorization-${name}`, example, localStorage)
+        : example,
       label: name,
+      example,
     }
   })
 }, { immediate: true })

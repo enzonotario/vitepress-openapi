@@ -72,6 +72,7 @@ export type PlaygroundSecurityScheme = AllSecuritySchemes & {
   value: string | RemovableRef<any>
   label: string
   name: string
+  example?: string
 }
 
 export interface SecurityUi extends Array<SecurityUiItem> {}
