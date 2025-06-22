@@ -28,8 +28,8 @@ const placeholder = computed(() => {
     return props.modelValue
   }
 
-  if (!props.scheme || !props.scheme.type) {
-    return ''
+  if (props.scheme?.example) {
+    return props.scheme.example
   }
 
   return usePlayground().getSecuritySchemeDefaultValue(props.scheme)

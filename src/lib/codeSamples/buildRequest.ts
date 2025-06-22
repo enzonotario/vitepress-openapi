@@ -58,36 +58,51 @@ function getHeaders(
   return Object.fromEntries(resolvedHeaders)
 }
 
-function getAuthorizationsHeaders(authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[]) {
+export function getAuthorizationsHeaders(authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[]) {
   const headers = new Headers()
 
-  if (authorizations && !Array.isArray(authorizations)) {
-    authorizations = [authorizations]
-  }
-
-  if (!authorizations?.length) {
+  if (!authorizations) {
     return headers
   }
 
-  Object.entries(authorizations).forEach(([_, authorization]) => {
+  const authArray = Array.isArray(authorizations) ? authorizations : [authorizations]
+
+  if (authArray.length === 0) {
+    return headers
+  }
+
+  for (const authorization of authArray) {
     if (!authorization?.type) {
-      return
+      continue
     }
 
     const value = unref(authorization.value ?? authorization.name ?? '')
 
-    if (authorization.type === 'http') {
-      headers.set('Authorization', `${authorization.scheme === 'basic' ? 'Basic' : 'Bearer'} ${value}`)
-    } else if (authorization.type === 'apiKey') {
-      headers.set(authorization.name ?? '', value)
-    } else if (authorization.type === 'openIdConnect') {
-      headers.set('Authorization', `Bearer ${value}`)
-    } else if (authorization.type === 'oauth2') {
-      headers.set('Authorization', `Bearer ${value}`)
-    } else {
-      console.warn('Unknown auth scheme:', authorization)
+    if (!value) {
+      console.warn('Empty value for authorization scheme:', authorization.type)
+      continue
     }
-  })
+
+    switch (authorization.type) {
+      case 'http':
+        headers.set('Authorization', value)
+        break
+
+      case 'apiKey':
+        if (!authorization.in || authorization.in === 'header') {
+          headers.set(authorization.name ?? '', value)
+        }
+        break
+
+      case 'openIdConnect':
+      case 'oauth2':
+        headers.set('Authorization', `Bearer ${value}`)
+        break
+
+      default:
+        console.warn('Unknown authorization type:', authorization.type)
+    }
+  }
 
   return headers
 }
