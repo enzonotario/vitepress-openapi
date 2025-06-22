@@ -45,7 +45,6 @@ function main(snapshotsDir, resultsDir) {
         updatedFiles++
       }
     }
-    // delete test results directory:
   }
 
   try {
