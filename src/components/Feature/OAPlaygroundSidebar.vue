@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { OASidebarItem } from '../../composables/useSidebar'
 import type { ParsedOperation } from '../../types'
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useSidebar } from '../../composables/useSidebar'
 import { usePlaygroundData } from '../../lib/playgroundData'
 // @ts-expect-error: vitepress does not have types.
@@ -34,6 +34,8 @@ function handleSidebarLinkClick(event: MouseEvent, method: string, path: string)
   }
 }
 
+const sidebarLinkEventHandlers = new Map<HTMLElement, (event: MouseEvent) => void>()
+
 function addSidebarLinkEventListeners() {
   document
     .querySelectorAll<HTMLElement>('.OASidebarItem')
@@ -45,8 +47,17 @@ function addSidebarLinkEventListeners() {
         return
       }
 
-      link.addEventListener('click', $event => handleSidebarLinkClick($event, method, path))
+      const handler = ($event: MouseEvent) => handleSidebarLinkClick($event, method, path)
+      sidebarLinkEventHandlers.set(link, handler)
+      link.addEventListener('click', handler)
     })
+}
+
+function removeSidebarLinkEventListeners() {
+  sidebarLinkEventHandlers.forEach((handler, link) => {
+    link.removeEventListener('click', handler)
+  })
+  sidebarLinkEventHandlers.clear()
 }
 
 function selectOperation(operation: ParsedOperation) {
@@ -55,6 +66,10 @@ function selectOperation(operation: ParsedOperation) {
 
 onMounted(() => {
   addSidebarLinkEventListeners()
+})
+
+onUnmounted(() => {
+  removeSidebarLinkEventListeners()
 })
 </script>
 
