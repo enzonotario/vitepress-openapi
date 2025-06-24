@@ -14,6 +14,12 @@ The `OAOperationLink` component can be used anywhere in your Vue templates to ge
 | `method` | `string` | `''` | The HTTP method (GET, POST, etc.) |
 | `title` | `string` | `''` | The text to display for the link |
 
+### Slots
+
+| Slot    | Description                                                                                                                                                                                                                      |
+|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| default | Optional content to replace the title. The content will be processed by the `OAMarkdown` component, allowing you to use Markdown syntax within the slot. If no slot is provided, the `title` prop will be used as the link text. |
+
 ### Usage
 
 To add an operation link in your Vue template, use the component as shown below:
@@ -23,6 +29,17 @@ To add an operation link in your Vue template, use the component as shown below:
 ```
 
 This will render a clickable link with a method badge: <OAOperationLink href="/example/operations/getAllArtists" method="get" title="Get all artists" />
+
+You can also use a slot to customize the content:
+
+```vue
+<OAOperationLink href="/example/operations/getAllArtists" method="get">
+[Get all artists]() `/api/v1/artists`
+</OAOperationLink>
+```
+
+This will render:
+<OAOperationLink href="/example/operations/getAllArtists" method="get">[Get all artists]() `/api/v1/artists`</OAOperationLink>
 
 ## `markdown-it` plugin
 
