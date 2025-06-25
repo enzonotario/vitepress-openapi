@@ -3,10 +3,12 @@ import en from './en.json'
 import es from './es.json'
 import ja from './ja.json'
 import ptBR from './pt-BR.json'
+import zh from './zh.json'
 
 export const locales: Messages = {
   en,
   es,
   ja,
   'pt-BR': ptBR,
+  zh,
 }
