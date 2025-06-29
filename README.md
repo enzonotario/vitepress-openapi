@@ -2,16 +2,9 @@
 
 Generate VitePress API Documentation from OpenAPI Specification.
 
-## Demo
-
-- [DolarApi.com](https://dolarapi.com/)
-- [ArgentinaDatos](https://argentinadatos.com/)
-- [CriptoYa API](https://docs.criptoya.com/)
-
 ## Documentation
 
 To get started, check out the [documentation](https://vitepress-openapi.vercel.app/).
-
 
 ## Contributors
 
@@ -20,7 +13,6 @@ To get started, check out the [documentation](https://vitepress-openapi.vercel.a
 </a>
 
 Made with [contrib.rocks](https://contrib.rocks).
-
 
 ## License
 
