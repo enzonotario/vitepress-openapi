@@ -872,18 +872,21 @@ describe('codeSamples configuration', () => {
   })
 
   it('can setup icons', () => {
+    themeConfig.reset()
+
+    const defaultLanguages = themeConfig.getCodeSamplesAvailableLanguages()
+
     themeConfig.setCodeSamplesConfig({
-      availableLanguages: [
-        ...themeConfig.getCodeSamplesAvailableLanguages().map((lang) => {
-          if (lang.lang === 'javascript') {
-            return { ...lang, icon: 'custom-js-icon' }
-          }
-          return lang
-        }),
-      ],
+      availableLanguages: defaultLanguages.map((lang) => {
+        if (lang.lang === 'javascript') {
+          return { ...lang, icon: 'custom-js-icon' }
+        }
+        return lang
+      }),
     })
 
     const result = themeConfig.getCodeSamplesAvailableLanguages()
+
     expect(result).toEqual([
       {
         lang: 'curl',

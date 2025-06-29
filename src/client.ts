@@ -24,8 +24,8 @@ export const theme = {
     const i18nConfig = themeConfig.getI18nConfig()
 
     const i18n = createI18n({
-      defaultLocale: i18nConfig.locale.value,
-      messages: i18nConfig.messages,
+      defaultLocale: i18nConfig.locale?.value || 'en',
+      messages: i18nConfig.messages || {},
     })
 
     app.use(i18n)
