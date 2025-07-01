@@ -242,6 +242,32 @@ export function OpenApi({
       ])
   }
 
+  function getOperationByMethodAndPath(method: string, path: string) {
+    const paths = getSpec().paths as OpenAPIV3.PathsObject
+
+    if (!paths || !paths[path]) {
+      return null
+    }
+
+    return paths[path][method] || null
+  }
+
+  function getOperations() {
+    const paths = getSpec().paths as OpenAPIV3.PathsObject
+
+    if (!paths) {
+      return []
+    }
+
+    return Object.entries(paths).flatMap(([_, methods]) => {
+      return httpVerbs
+        .filter(verb => methods && methods[verb])
+        .map((verb) => {
+          return methods ? methods[verb] : null
+        })
+    })
+  }
+
   return {
     spec: getSpec(),
     originalSpec: getOriginalSpec(),
@@ -264,5 +290,7 @@ export function OpenApi({
     getPathsWithoutTags,
     getTags,
     getFilteredTags,
+    getOperationByMethodAndPath,
+    getOperations,
   }
 }
