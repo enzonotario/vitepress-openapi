@@ -178,10 +178,10 @@ const hasExpandableProperties = computed(() => {
       </CollapsibleTrigger>
       <CollapsibleContent v-if="isObjectOrArray" class="ml-2 pl-2 border-l border-l-solid">
         <Badge
-          v-if="props.property.meta?.isOneOf === true"
+          v-if="props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true"
           variant="outline"
         >
-          {{ $t('One of') }}
+          {{ props.property.meta?.isAnyOf === true ? $t('Any of') : $t('One of') }}
         </Badge>
 
         <div class="flex flex-col space-y-2">
@@ -192,7 +192,7 @@ const hasExpandableProperties = computed(() => {
             :schema="props.schema"
             :deep="props.deep - 1"
             :level="props.level + 1"
-            :open="childrenExpandState !== undefined ? childrenExpandState : subProperty?.meta?.isOneOf === true"
+            :open="childrenExpandState !== undefined ? childrenExpandState : (subProperty?.meta?.isOneOf === true || subProperty?.meta?.isAnyOf === true)"
             :expand-all="childrenExpandState"
           />
         </div>

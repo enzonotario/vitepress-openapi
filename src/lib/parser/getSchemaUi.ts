@@ -11,6 +11,8 @@ interface Metadata {
   isAdditionalProperties?: boolean
   isOneOf?: boolean
   isOneOfItem?: boolean
+  isAnyOf?: boolean
+  isAnyOfItem?: boolean
   isConstant?: boolean
   isPrefixItem?: boolean
   prefixItemIndex?: number
@@ -95,18 +97,74 @@ class UiPropertyFactory {
     }
   }
 
-  static createOneOfProperty(oneOfProperties: Partial<OpenAPI.SchemaObject>[], name: string = ''): OAProperty {
-    return {
+  static createOneOfProperty(
+    oneOfProperties: Partial<OpenAPI.SchemaObject>[],
+    name: string = '',
+    baseSchema: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
+  ): OAProperty {
+    const baseProperty = UiPropertyFactory.createBaseProperty(
       name,
-      types: ['object'],
-      required: false,
-      properties: oneOfProperties.map((prop) => {
-        const property = UiPropertyFactory.schemaToUiProperty('', prop)
-        property.meta = { ...(property.meta || {}), isOneOfItem: true }
-        return property
-      }),
-      meta: { isOneOf: true },
+      baseSchema,
+      required,
+    )
+
+    const unionTypes = Array.from(
+      new Set(
+        oneOfProperties
+          .map(prop => determineSchemaType(prop as OpenAPI.SchemaObject))
+          .filter(Boolean),
+      ),
+    ) as JSONSchemaType[]
+
+    if (unionTypes.length > 0) {
+      baseProperty.types = unionTypes
     }
+
+    baseProperty.properties = oneOfProperties.map((prop) => {
+      const property = UiPropertyFactory.schemaToUiProperty('', prop)
+      property.meta = { ...(property.meta || {}), isOneOfItem: true }
+      return property
+    })
+
+    baseProperty.meta = { ...(baseProperty.meta || {}), isOneOf: true }
+
+    return baseProperty
+  }
+
+  static createAnyOfProperty(
+    anyOfProperties: Partial<OpenAPI.SchemaObject>[],
+    name: string = '',
+    baseSchema: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
+  ): OAProperty {
+    const baseProperty = UiPropertyFactory.createBaseProperty(
+      name,
+      baseSchema,
+      required,
+    )
+
+    const unionTypes = Array.from(
+      new Set(
+        anyOfProperties
+          .map(prop => determineSchemaType(prop as OpenAPI.SchemaObject))
+          .filter(Boolean),
+      ),
+    ) as JSONSchemaType[]
+
+    if (unionTypes.length > 0) {
+      baseProperty.types = unionTypes
+    }
+
+    baseProperty.properties = anyOfProperties.map((prop) => {
+      const property = UiPropertyFactory.schemaToUiProperty('', prop)
+      property.meta = { ...(property.meta || {}), isAnyOfItem: true }
+      return property
+    })
+
+    baseProperty.meta = { ...(baseProperty.meta || {}), isAnyOf: true }
+
+    return baseProperty
   }
 
   static schemaToUiProperty(
@@ -127,7 +185,11 @@ class UiPropertyFactory {
     }
 
     if (schema.oneOf) {
-      return UiPropertyFactory.createOneOfProperty(schema.oneOf, name)
+      return UiPropertyFactory.createOneOfProperty(schema.oneOf, name, schema, required)
+    }
+
+    if (schema.anyOf) {
+      return UiPropertyFactory.createAnyOfProperty(schema.anyOf, name, schema, required)
     }
 
     if (schema.const !== undefined) {
@@ -185,6 +247,15 @@ class UiPropertyFactory {
             return {
               ...UiPropertyFactory.schemaToUiProperty('', propSchema),
               meta: { ...(prop.meta || {}), isOneOfItem: true },
+            }
+          })
+        } else if (schema.items.anyOf) {
+          property.meta = { ...(property.meta || {}), isAnyOf: true }
+          property.properties = schema.items.anyOf.map((prop: any) => {
+            const propSchema = { ...prop, type: schema.items.type }
+            return {
+              ...UiPropertyFactory.schemaToUiProperty('', propSchema),
+              meta: { ...(prop.meta || {}), isAnyOfItem: true },
             }
           })
         }
