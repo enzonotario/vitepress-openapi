@@ -1,7 +1,7 @@
 import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../../types'
+import { httpVerbs } from '../../index'
 import { getSchemaExample } from '../examples/getSchemaExample'
 import { getSchemaUi } from './getSchemaUi'
-import { httpVerbs } from '../../index'
 
 export function generateResponseUi(spec: ParsedOpenAPI): ParsedOpenAPI {
   if (!spec.paths) {

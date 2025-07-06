@@ -1,7 +1,6 @@
-import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { ParsedOpenAPI, ParsedOperation } from '../../types'
-import { getSecurityUi } from './getSecurityUi'
 import { httpVerbs } from '../../index'
+import { getSecurityUi } from './getSecurityUi'
 
 export function generateSecurityUi(spec: ParsedOpenAPI): ParsedOpenAPI {
   if (!spec?.paths) {

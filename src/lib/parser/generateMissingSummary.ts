@@ -1,4 +1,3 @@
-import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OpenAPIDocument, OperationObject } from '../../types'
 import { httpVerbs } from '../../index'
 
