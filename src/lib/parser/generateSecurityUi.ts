@@ -14,6 +14,7 @@ export function generateSecurityUi(spec: ParsedOpenAPI): ParsedOpenAPI {
       if (!operation) {
         continue
       }
+
       operation.securityUi = getSecurityUi(operation.security ?? spec.security ?? [], spec.components?.securitySchemes || {})
     }
   }

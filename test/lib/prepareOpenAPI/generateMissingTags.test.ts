@@ -92,6 +92,7 @@ describe('generateMissingTags', () => {
       description: 'Custom Description',
     }])
   })
+
   it('ignores non-verb fields in path objects', () => {
     const spec = {
       paths: {

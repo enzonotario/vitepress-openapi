@@ -15,6 +15,7 @@ export function generateRequestBodyUi(spec: ParsedOpenAPI): ParsedOpenAPI {
       if (!operation) {
         continue
       }
+
       if (!operation.requestBody) {
         continue
       }

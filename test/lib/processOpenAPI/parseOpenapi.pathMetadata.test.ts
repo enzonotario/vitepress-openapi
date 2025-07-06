@@ -10,7 +10,7 @@ const spec = {
       description: 'Example description',
       get: {
         responses: {
-          '200': { description: 'OK' },
+          200: { description: 'OK' },
         },
       },
     },

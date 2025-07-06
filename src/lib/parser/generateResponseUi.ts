@@ -15,6 +15,7 @@ export function generateResponseUi(spec: ParsedOpenAPI): ParsedOpenAPI {
       if (!operation) {
         continue
       }
+
       if (!operation.responses) {
         continue
       }
