@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { ChevronDown, ChevronRight, Maximize2, Minimize2 } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
@@ -35,6 +36,8 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+
 const isOpen = ref(props.open !== undefined ? props.open : props.deep > 0 && props.level <= 10)
 
 const childrenExpandState = ref(undefined)
@@ -54,12 +57,22 @@ const toggleAllChildren = (expand) => {
 const isObject = props.property.types?.includes('object')
 const isArray = props.property.types?.includes('array')
 const isObjectOrArray = isObject || isArray || props.property.type === 'object' || props.property.type === 'array'
+const isUnion = props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true
 
 const hasExpandableProperties = computed(() => {
   return isObjectOrArray
     && props.property.properties
     && props.property.properties.length > 0
     && props.property.properties.some(p => (p.types?.includes('object') || p.types?.includes('array') || p.type === 'object' || p.type === 'array') && p.properties)
+})
+
+const unionBadge = computed(() => {
+  if (props.property.meta?.isOneOf === true) {
+    return t('One of')
+  } else if (props.property.meta?.isAnyOf === true) {
+    return t('Any of')
+  }
+  return ''
 })
 </script>
 
@@ -178,10 +191,10 @@ const hasExpandableProperties = computed(() => {
       </CollapsibleTrigger>
       <CollapsibleContent v-if="isObjectOrArray" class="ml-2 pl-2 border-l border-l-solid">
         <Badge
-          v-if="props.property.meta?.isOneOf === true"
+          v-if="isUnion"
           variant="outline"
         >
-          {{ $t('One of') }}
+          {{ unionBadge }}
         </Badge>
 
         <div class="flex flex-col space-y-2">
@@ -192,7 +205,7 @@ const hasExpandableProperties = computed(() => {
             :schema="props.schema"
             :deep="props.deep - 1"
             :level="props.level + 1"
-            :open="childrenExpandState !== undefined ? childrenExpandState : subProperty?.meta?.isOneOf === true"
+            :open="childrenExpandState !== undefined ? childrenExpandState : isUnion"
             :expand-all="childrenExpandState"
           />
         </div>

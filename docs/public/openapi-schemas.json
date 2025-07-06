@@ -159,6 +159,45 @@
           }
         }
       }
+    },
+    "/complex-schema": {
+      "post": {
+        "summary": "Test complex schema with oneOf and anyOf",
+        "operationId": "testComplexSchema",
+        "description": "Example of a complex request and response schema using oneOf and anyOf.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComplexRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Complex response with oneOf and anyOf schemas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComplexResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request with validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -529,6 +568,608 @@
             "tags": ["pending"]
           }
         ]
+      },
+      "ComplexRequest": {
+        "type": "object",
+        "required": ["id", "data"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the request",
+            "example": "req-12345"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the request was created",
+            "example": "2023-05-20T15:30:45Z"
+          },
+          "data": {
+            "description": "The main data payload that can be one of several types",
+            "oneOf": [
+              {
+                "type": "object",
+                "description": "User data",
+                "required": ["type", "user"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["user"],
+                    "example": "user"
+                  },
+                  "user": {
+                    "type": "object",
+                    "required": ["id", "name"],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "user-789"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Jane Smith"
+                      },
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "jane@example.com"
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "description": "Product data",
+                "required": ["type", "product"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["product"],
+                    "example": "product"
+                  },
+                  "product": {
+                    "type": "object",
+                    "required": ["id", "name", "price"],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "prod-456"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Smartphone X"
+                      },
+                      "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 599.99
+                      },
+                      "inStock": {
+                        "type": "boolean",
+                        "example": true
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "description": "Order data",
+                "required": ["type", "order"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["order"],
+                    "example": "order"
+                  },
+                  "order": {
+                    "type": "object",
+                    "required": ["id", "items"],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "order-123"
+                      },
+                      "customer": {
+                        "$ref": "#/components/schemas/NullableObject"
+                      },
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["productId", "quantity"],
+                          "properties": {
+                            "productId": {
+                              "type": "string",
+                              "example": "prod-456"
+                            },
+                            "quantity": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "example": 2
+                            },
+                            "unitPrice": {
+                              "type": "number",
+                              "example": 599.99
+                            }
+                          }
+                        }
+                      },
+                      "totalAmount": {
+                        "type": "number",
+                        "example": 1199.98
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata that can include any combination of these fields",
+            "anyOf": [
+              {
+                "type": "object",
+                "required": ["source"],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "description": "Source of the request",
+                    "example": "web"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": ["priority"],
+                "properties": {
+                  "priority": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high"],
+                    "description": "Priority level",
+                    "example": "high"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": ["tags"],
+                "properties": {
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tags for categorization",
+                    "example": ["important", "sales", "follow-up"]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "example": {
+          "id": "req-12345",
+          "timestamp": "2023-05-20T15:30:45Z",
+          "data": {
+            "type": "order",
+            "order": {
+              "id": "order-123",
+              "customer": {
+                "id": "cust-456",
+                "name": "John Doe",
+                "description": "Loyal customer"
+              },
+              "items": [
+                {
+                  "productId": "prod-456",
+                  "quantity": 2,
+                  "unitPrice": 599.99
+                }
+              ],
+              "totalAmount": 1199.98
+            }
+          },
+          "metadata": {
+            "source": "web",
+            "priority": "high",
+            "tags": ["important", "sales"]
+          }
+        }
+      },
+      "ComplexResponse": {
+        "type": "object",
+        "required": ["id", "status", "result"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the response",
+            "example": "resp-67890"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["success", "partial", "error"],
+            "description": "Status of the response",
+            "example": "success"
+          },
+          "result": {
+            "description": "The result data with nested oneOf and anyOf",
+            "oneOf": [
+              {
+                "type": "object",
+                "description": "Success result",
+                "required": ["type", "data"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["success"],
+                    "example": "success"
+                  },
+                  "data": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "required": ["user"],
+                        "properties": {
+                          "user": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "user-789"
+                              },
+                              "profile": {
+                                "oneOf": [
+                                  {
+                                    "type": "object",
+                                    "required": ["type", "personal"],
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": ["personal"],
+                                        "example": "personal"
+                                      },
+                                      "personal": {
+                                        "type": "object",
+                                        "properties": {
+                                          "firstName": {
+                                            "type": "string",
+                                            "example": "Jane"
+                                          },
+                                          "lastName": {
+                                            "type": "string",
+                                            "example": "Smith"
+                                          },
+                                          "age": {
+                                            "type": "integer",
+                                            "example": 28
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "object",
+                                    "required": ["type", "business"],
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": ["business"],
+                                        "example": "business"
+                                      },
+                                      "business": {
+                                        "type": "object",
+                                        "properties": {
+                                          "companyName": {
+                                            "type": "string",
+                                            "example": "Acme Inc."
+                                          },
+                                          "position": {
+                                            "type": "string",
+                                            "example": "CEO"
+                                          },
+                                          "employeeCount": {
+                                            "type": "integer",
+                                            "example": 250
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "required": ["transaction"],
+                        "properties": {
+                          "transaction": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "txn-123456"
+                              },
+                              "amount": {
+                                "type": "number",
+                                "example": 1299.99
+                              },
+                              "currency": {
+                                "type": "string",
+                                "example": "USD"
+                              },
+                              "paymentMethod": {
+                                "oneOf": [
+                                  {
+                                    "type": "object",
+                                    "required": ["type", "card"],
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": ["card"],
+                                        "example": "card"
+                                      },
+                                      "card": {
+                                        "type": "object",
+                                        "properties": {
+                                          "last4": {
+                                            "type": "string",
+                                            "example": "4242"
+                                          },
+                                          "brand": {
+                                            "type": "string",
+                                            "example": "visa"
+                                          },
+                                          "expiryMonth": {
+                                            "type": "integer",
+                                            "example": 12
+                                          },
+                                          "expiryYear": {
+                                            "type": "integer",
+                                            "example": 2025
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "object",
+                                    "required": ["type", "bankTransfer"],
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": ["bankTransfer"],
+                                        "example": "bankTransfer"
+                                      },
+                                      "bankTransfer": {
+                                        "type": "object",
+                                        "properties": {
+                                          "accountLast4": {
+                                            "type": "string",
+                                            "example": "6789"
+                                          },
+                                          "bankName": {
+                                            "type": "string",
+                                            "example": "National Bank"
+                                          },
+                                          "transferDate": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2023-05-21"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "object",
+                                    "required": ["type", "digitalWallet"],
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "enum": ["digitalWallet"],
+                                        "example": "digitalWallet"
+                                      },
+                                      "digitalWallet": {
+                                        "type": "object",
+                                        "properties": {
+                                          "provider": {
+                                            "type": "string",
+                                            "example": "PayPal"
+                                          },
+                                          "email": {
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "user@example.com"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "description": "Error result",
+                "required": ["type", "error"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["error"],
+                    "example": "error"
+                  },
+                  "error": {
+                    "type": "object",
+                    "required": ["code", "message"],
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "example": "INVALID_REQUEST"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "The request contains invalid data"
+                      },
+                      "details": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "example": "data.user.email"
+                            },
+                            "issue": {
+                              "type": "string",
+                              "example": "Invalid email format"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata with anyOf",
+            "anyOf": [
+              {
+                "type": "object",
+                "required": ["processingTime"],
+                "properties": {
+                  "processingTime": {
+                    "type": "number",
+                    "description": "Time taken to process the request in ms",
+                    "example": 235.45
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": ["region"],
+                "properties": {
+                  "region": {
+                    "type": "string",
+                    "description": "Server region that processed the request",
+                    "example": "us-west-1"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": ["version"],
+                "properties": {
+                  "version": {
+                    "type": "string",
+                    "description": "API version",
+                    "example": "v2.3.1"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "example": {
+          "id": "resp-67890",
+          "status": "success",
+          "result": {
+            "type": "success",
+            "data": {
+              "transaction": {
+                "id": "txn-123456",
+                "amount": 1299.99,
+                "currency": "USD",
+                "paymentMethod": {
+                  "type": "card",
+                  "card": {
+                    "last4": "4242",
+                    "brand": "visa",
+                    "expiryMonth": 12,
+                    "expiryYear": 2025
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "processingTime": 235.45,
+            "region": "us-west-1",
+            "version": "v2.3.1"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code",
+                "example": "VALIDATION_ERROR"
+              },
+              "message": {
+                "type": "string",
+                "description": "Human-readable error message",
+                "example": "The request contains validation errors"
+              },
+              "details": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["field", "message"],
+                  "properties": {
+                    "field": {
+                      "type": "string",
+                      "description": "Field with the error",
+                      "example": "data.user.email"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message for this field",
+                      "example": "Must be a valid email address"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "error": {
+            "code": "VALIDATION_ERROR",
+            "message": "The request contains validation errors",
+            "details": [
+              {
+                "field": "data.user.email",
+                "message": "Must be a valid email address"
+              },
+              {
+                "field": "metadata.priority",
+                "message": "Must be one of: low, medium, high"
+              }
+            ]
+          }
+        }
       }
     }
   }

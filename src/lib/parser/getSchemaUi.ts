@@ -11,6 +11,8 @@ interface Metadata {
   isAdditionalProperties?: boolean
   isOneOf?: boolean
   isOneOfItem?: boolean
+  isAnyOf?: boolean
+  isAnyOfItem?: boolean
   isConstant?: boolean
   isPrefixItem?: boolean
   prefixItemIndex?: number
@@ -95,18 +97,62 @@ class UiPropertyFactory {
     }
   }
 
-  static createOneOfProperty(oneOfProperties: Partial<OpenAPI.SchemaObject>[], name: string = ''): OAProperty {
-    return {
+  static createUnionProperty(
+    unionProperties: Partial<OpenAPI.SchemaObject>[],
+    unionType: 'oneOf' | 'anyOf',
+    name: string = '',
+    baseSchema: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
+  ): OAProperty {
+    const baseProperty = UiPropertyFactory.createBaseProperty(
       name,
-      types: ['object'],
-      required: false,
-      properties: oneOfProperties.map((prop) => {
-        const property = UiPropertyFactory.schemaToUiProperty('', prop)
-        property.meta = { ...(property.meta || {}), isOneOfItem: true }
-        return property
-      }),
-      meta: { isOneOf: true },
+      baseSchema,
+      required,
+    )
+
+    const unionTypes = Array.from(
+      new Set(
+        unionProperties
+          .map(prop => determineSchemaType(prop as OpenAPI.SchemaObject))
+          .filter(Boolean),
+      ),
+    ) as JSONSchemaType[]
+
+    if (unionTypes.length > 0) {
+      baseProperty.types = unionTypes
     }
+
+    const isOneOf = unionType === 'oneOf'
+    const metaItemKey = isOneOf ? 'isOneOfItem' : 'isAnyOfItem'
+    const metaKey = isOneOf ? 'isOneOf' : 'isAnyOf'
+
+    baseProperty.properties = unionProperties.map((prop) => {
+      const property = UiPropertyFactory.schemaToUiProperty('', prop)
+      property.meta = { ...(property.meta || {}), [metaItemKey]: true }
+      return property
+    })
+
+    baseProperty.meta = { ...(baseProperty.meta || {}), [metaKey]: true }
+
+    return baseProperty
+  }
+
+  static createOneOfProperty(
+    oneOfProperties: Partial<OpenAPI.SchemaObject>[],
+    name: string = '',
+    baseSchema: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
+  ): OAProperty {
+    return UiPropertyFactory.createUnionProperty(oneOfProperties, 'oneOf', name, baseSchema, required)
+  }
+
+  static createAnyOfProperty(
+    anyOfProperties: Partial<OpenAPI.SchemaObject>[],
+    name: string = '',
+    baseSchema: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
+  ): OAProperty {
+    return UiPropertyFactory.createUnionProperty(anyOfProperties, 'anyOf', name, baseSchema, required)
   }
 
   static schemaToUiProperty(
@@ -127,7 +173,11 @@ class UiPropertyFactory {
     }
 
     if (schema.oneOf) {
-      return UiPropertyFactory.createOneOfProperty(schema.oneOf, name)
+      return UiPropertyFactory.createOneOfProperty(schema.oneOf, name, schema, required)
+    }
+
+    if (schema.anyOf) {
+      return UiPropertyFactory.createAnyOfProperty(schema.anyOf, name, schema, required)
     }
 
     if (schema.const !== undefined) {
@@ -178,13 +228,18 @@ class UiPropertyFactory {
           property.meta = { ...(property.meta || {}), isConstant: true }
         }
 
-        if (schema.items.oneOf) {
-          property.meta = { ...(property.meta || {}), isOneOf: true }
-          property.properties = schema.items.oneOf.map((prop: any) => {
+        if (schema.items.oneOf || schema.items.anyOf) {
+          const isOneOf = !!schema.items.oneOf
+          const unionProperties = isOneOf ? schema.items.oneOf : schema.items.anyOf
+          const metaKey = isOneOf ? 'isOneOf' : 'isAnyOf'
+          const metaItemKey = isOneOf ? 'isOneOfItem' : 'isAnyOfItem'
+
+          property.meta = { ...(property.meta || {}), [metaKey]: true }
+          property.properties = unionProperties.map((prop: any) => {
             const propSchema = { ...prop, type: schema.items.type }
             return {
               ...UiPropertyFactory.schemaToUiProperty('', propSchema),
-              meta: { ...(prop.meta || {}), isOneOfItem: true },
+              meta: { ...(prop.meta || {}), [metaItemKey]: true },
             }
           })
         }
