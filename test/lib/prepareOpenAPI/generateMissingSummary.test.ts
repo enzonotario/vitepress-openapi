@@ -53,4 +53,22 @@ describe('generateMissingSummary', () => {
     const result = generateMissingSummary(value)
     expect(result.paths).toEqual({})
   })
+
+  it('ignores non-verb fields in path objects', () => {
+    const value = {
+      paths: {
+        '/item': {
+          summary: 'Item summary',
+          description: 'desc',
+          get: {},
+        },
+      },
+    }
+
+    const result = generateMissingSummary(value)
+
+    expect(result.paths['/item'].summary).toBe('Item summary')
+    expect(result.paths['/item'].description).toBe('desc')
+    expect(result.paths['/item'].get.summary).toBe('GET /item')
+  })
 })

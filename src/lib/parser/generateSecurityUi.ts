@@ -1,5 +1,5 @@
-import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { ParsedOpenAPI, ParsedOperation } from '../../types'
+import { httpVerbs } from '../../index'
 import { getSecurityUi } from './getSecurityUi'
 
 export function generateSecurityUi(spec: ParsedOpenAPI): ParsedOpenAPI {
@@ -8,8 +8,8 @@ export function generateSecurityUi(spec: ParsedOpenAPI): ParsedOpenAPI {
   }
 
   for (const path of Object.values(spec.paths)) {
-    for (const verb of Object.keys(path) as OpenAPIV3.HttpMethods[]) {
-      const operation = path[verb] as ParsedOperation
+    for (const verb of httpVerbs) {
+      const operation = (path as Record<string, any>)[verb] as ParsedOperation
 
       if (!operation) {
         continue

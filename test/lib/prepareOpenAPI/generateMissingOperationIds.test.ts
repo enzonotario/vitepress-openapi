@@ -67,4 +67,22 @@ describe('generateMissingOperationIds', () => {
     const result = generateMissingOperationIds(input)
     expect(result).toEqual(input)
   })
+
+  it('ignores non-verb fields in path objects', () => {
+    const input = {
+      paths: {
+        '/example': {
+          summary: 'Example endpoint',
+          description: 'More info',
+          get: {},
+        },
+      },
+    }
+
+    const result = generateMissingOperationIds(input)
+
+    expect(result.paths['/example'].summary).toBe('Example endpoint')
+    expect(result.paths['/example'].description).toBe('More info')
+    expect(result.paths['/example'].get.operationId).toBe('get-example')
+  })
 })
