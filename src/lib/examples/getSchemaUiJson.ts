@@ -38,11 +38,7 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
     }, useExample)
   }
 
-  if (isOneOfProperty(property)) {
-    return resolveUnionProperty(property, useExample)
-  }
-
-  if (isAnyOfProperty(property)) {
+  if (isUnionProperty(property)) {
     return resolveUnionProperty(property, useExample)
   }
 
@@ -54,10 +50,7 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
 }
 
 function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
-  if (isOneOfProperty(property)) {
-    return [resolveUnionProperty(property, useExample)]
-  }
-  if (isAnyOfProperty(property)) {
+  if (isUnionProperty(property)) {
     return [resolveUnionProperty(property, useExample)]
   }
 
@@ -169,6 +162,10 @@ function isOneOfProperty(property: OAProperty): boolean {
 
 function isAnyOfProperty(property: OAProperty): boolean {
   return !!property.meta?.isAnyOf && Array.isArray(property.properties)
+}
+
+function isUnionProperty(property: OAProperty): boolean {
+  return isOneOfProperty(property) || isAnyOfProperty(property)
 }
 
 function resolveUnionProperty(property: OAProperty, useExample: boolean): any {
