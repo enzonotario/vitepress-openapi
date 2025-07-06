@@ -92,4 +92,17 @@ describe('generateMissingTags', () => {
       description: 'Custom Description',
     }])
   })
+  it('ignores non-verb fields in path objects', () => {
+    const spec = {
+      paths: {
+        '/example': {
+          summary: 'Some summary',
+          get: {},
+        },
+      },
+    }
+    const result = generateMissingTags({ spec })
+    expect(result.paths['/example'].summary).toBe('Some summary')
+    expect(result.paths['/example'].get.tags).toEqual(['Default'])
+  })
 })

@@ -1,6 +1,7 @@
 import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../../types'
 import { getSchemaExample } from '../examples/getSchemaExample'
 import { getSchemaUi } from './getSchemaUi'
+import { httpVerbs } from '../../index'
 
 export function generateRequestBodyUi(spec: ParsedOpenAPI): ParsedOpenAPI {
   if (!spec.paths) {
@@ -8,9 +9,12 @@ export function generateRequestBodyUi(spec: ParsedOpenAPI): ParsedOpenAPI {
   }
 
   for (const path of Object.values(spec.paths)) {
-    for (const verb of Object.keys(path)) {
-      const operation = path[verb] as ParsedOperation
+    for (const verb of httpVerbs) {
+      const operation = (path as Record<string, any>)[verb] as ParsedOperation
 
+      if (!operation) {
+        continue
+      }
       if (!operation.requestBody) {
         continue
       }

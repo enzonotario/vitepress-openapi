@@ -1,5 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OpenAPIDocument } from '../../types'
+import { httpVerbs } from '../../index'
 
 export function generateMissingTags({
   spec,
@@ -14,8 +15,8 @@ export function generateMissingTags({
 
   spec.paths = spec.paths || {}
 
-  for (const [_, pathObject] of Object.entries(spec.paths)) {
-    for (const verb of Object.keys(pathObject as any) as OpenAPIV3.HttpMethods[]) {
+  for (const [, pathObject] of Object.entries(spec.paths)) {
+    for (const verb of httpVerbs) {
       if (!pathObject || !pathObject[verb]) {
         continue
       }
