@@ -51,7 +51,13 @@ export function generateSidebarItemsByPaths({
               }
 
               return {
-                text: sidebarItemTemplate ? sidebarItemTemplate({ method: method as OpenAPIV3.HttpMethods, path: fullPath, title: operation.summary }) : `[${method.toUpperCase()}] ${operation.summary}`,
+                text: sidebarItemTemplate
+                  ? sidebarItemTemplate({
+                      method: method as OpenAPIV3.HttpMethods,
+                      path: fullPath,
+                      title: operation.summary,
+                    })
+                  : `[${method.toUpperCase()}] ${operation.summary || operation.path}`,
                 link: `${itemLinkPrefix}${operation.operationId}`,
                 method,
                 path: fullPath,

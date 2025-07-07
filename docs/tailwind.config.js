@@ -12,6 +12,7 @@ module.exports = {
     './sidebar/*.md',
     './showcase/*.md',
     './customizations/*.md',
+    './example/playground.md',
   ],
   theme: base.theme,
   plugins: [animate],
