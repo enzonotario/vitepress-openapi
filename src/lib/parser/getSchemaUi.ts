@@ -191,10 +191,24 @@ class UiPropertyFactory {
       }
     }
 
-    if (literalTypes.includes(String(schema.type)) && schema.enum) {
+    if (schema.enum) {
+      let types: JSONSchemaType[] = []
+
+      if (schema.type) {
+        types = Array.isArray(schema.type)
+          ? schema.type as JSONSchemaType[]
+          : [schema.type as JSONSchemaType]
+      } else {
+        types = inferTypesFromEnum(schema.enum)
+      }
+
+      if (types.length === 0) {
+        types = ['string']
+      }
+
       return {
         name,
-        types: [schema.type as JSONSchemaType],
+        types,
         required: false,
         enum: schema.enum,
         description: schema.description,
@@ -348,6 +362,28 @@ export function getSchemaUi(jsonSchema: OpenAPI.SchemaObject): OAProperty | OAPr
   const resolvedSchema = resolveCircularRef(jsonSchema)
 
   return UiPropertyFactory.schemaToUiProperty('', resolvedSchema)
+}
+
+function inferTypesFromEnum(values: unknown[]): JSONSchemaType[] {
+  const types = new Set<JSONSchemaType>()
+
+  values.forEach((value) => {
+    if (value === null) {
+      types.add('null')
+    } else if (Array.isArray(value)) {
+      types.add('array')
+    } else if (typeof value === 'object') {
+      types.add('object')
+    } else if (typeof value === 'string') {
+      types.add('string')
+    } else if (typeof value === 'boolean') {
+      types.add('boolean')
+    } else if (typeof value === 'number') {
+      types.add(Number.isInteger(value) ? 'integer' : 'number')
+    }
+  })
+
+  return Array.from(types)
 }
 
 function determineSchemaType(schema: OpenAPI.SchemaObject): JSONSchemaType {

@@ -127,6 +127,46 @@ const fixtures: Record<string, FixtureTest> = {
     schemaUiJson: 'string',
   },
 
+  'schema with enum without explicit type': {
+    jsonSchema: {
+      enum: ['red', 'amber', 'green'],
+    },
+    schemaUi: {
+      name: '',
+      types: ['string'],
+      required: false,
+      enum: ['red', 'amber', 'green'],
+    },
+    schemaUiJson: 'string',
+  },
+
+  'schema with enum mixed types': {
+    jsonSchema: {
+      enum: ['red', 'amber', 'green', false, null, 42],
+    },
+    schemaUi: {
+      name: '',
+      types: ['string', 'boolean', 'null', 'integer'],
+      required: false,
+      enum: ['red', 'amber', 'green', false, null, 42],
+    },
+    schemaUiJson: 'string',
+  },
+
+  'schema with enum and defined types': {
+    jsonSchema: {
+      type: ['string', 'number'],
+      enum: ['red', 42],
+    },
+    schemaUi: {
+      name: '',
+      types: ['string', 'number'],
+      required: false,
+      enum: ['red', 42],
+    },
+    schemaUiJson: 'string',
+  },
+
   'deep array schema': {
     jsonSchema: {
       type: 'array',
