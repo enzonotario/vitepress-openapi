@@ -14,9 +14,12 @@ const { value } = defineProps({
       {{ item }}
     </code>
   </template>
+
   <code
     v-else class="!text-xs text-wrap break-all"
   >
-    {{ value }}
+    <!-- We stringify everything except objects (which Vue does better)
+     to be able to distinguish `"null"` from `null`, `"1"` from `1`, etc -->
+    {{ value && typeof value === 'object' ? value : JSON.stringify(value) }}
   </code>
 </template>

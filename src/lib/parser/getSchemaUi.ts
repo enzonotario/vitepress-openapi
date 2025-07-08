@@ -192,13 +192,9 @@ class UiPropertyFactory {
     }
 
     if (literalTypes.includes(String(schema.type)) && schema.enum) {
-      return {
-        name,
-        types: [schema.type as JSONSchemaType],
-        required: false,
-        enum: schema.enum,
-        description: schema.description,
-      }
+      const property = UiPropertyFactory.createBaseProperty(name, schema, required)
+      property.enum = schema.enum
+      return property
     }
 
     const property = UiPropertyFactory.createBaseProperty(name, schema, required)
