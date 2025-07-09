@@ -380,6 +380,10 @@ function inferTypesFromEnum(values: unknown[]): JSONSchemaType[] {
     }
   })
 
+  if (types.has('number')) {
+    types.delete('integer')
+  }
+
   return Array.from(types)
 }
 

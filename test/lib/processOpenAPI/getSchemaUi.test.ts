@@ -163,7 +163,7 @@ const fixtures: Record<string, FixtureTest> = {
       required: false,
       enum: [42, 42.1],
     },
-    schemaUiJson: 'string',
+    schemaUiJson: 0,
   },
 
   'schema with enum and defined types': {
