@@ -47,7 +47,7 @@ const nestedSpec = {
         },
       },
       furBoolean: {
-        description: 'Whether the animal has fur (true), doesn\'t (false), or it\'s unknown or varies (null)',
+        description: `Whether the animal has fur (true), doesn't (false), or it's unknown or varies (null)`,
         type: ['boolean', 'null'],
         default: false,
       },
@@ -74,7 +74,7 @@ describe('dereference with local annotations', () => {
     expect(cat.properties.hasFur.default).toBe(true)
 
     expect(pet.properties.hasFur.description).toBe(
-      'Whether the animal has fur (true), doesn\'t (false), or it\'s unknown or varies (null)',
+      `Whether the animal has fur (true), doesn't (false), or it's unknown or varies (null)`,
     )
     expect(pet.properties.hasFur.default).toBe(false)
   })

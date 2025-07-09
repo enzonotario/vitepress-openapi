@@ -99,6 +99,7 @@ export function dereferenceWithAnnotationsSync(schema: JSONSchema): JSONSchema {
             ref = resolveRefSync(cloned, ref.$ref)
           } while (ref?.$ref)
           ref = klona(ref)
+          ref = resolve(ref)
           for (const key in current) {
             if (key !== '$ref' && annotationKeys.has(key)) {
               ref[key] = current[key]
