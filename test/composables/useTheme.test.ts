@@ -741,6 +741,7 @@ describe('markdown configuration', () => {
     const result = themeConfig.getMarkdownConfig()
     expect(result.operationLink).toBeDefined()
     expect(result.operationLink?.linkPrefix).toBe('/operations/')
+    expect(result.externalLinksNewTab).toBe(false)
   })
 
   it('sets and gets the markdown config', () => {
@@ -749,15 +750,23 @@ describe('markdown configuration', () => {
         linkPrefix: '/custom-operations/',
         transformHref: href => `/transformed${href}`,
       },
+      externalLinksNewTab: true,
     })
     const result = themeConfig.getMarkdownConfig()
     expect(result.operationLink?.linkPrefix).toBe('/custom-operations/')
     expect(result.operationLink?.transformHref).toBeTypeOf('function')
+    expect(result.externalLinksNewTab).toBe(true)
   })
 
   it('returns the operation link config', () => {
     const result = themeConfig.getOperationLinkConfig()
     expect(result?.linkPrefix).toBe('/operations/')
+  })
+
+  it('returns the externalLinksNewTab value', () => {
+    themeConfig.setMarkdownConfig({ externalLinksNewTab: true })
+    const result = themeConfig.getExternalLinksNewTab()
+    expect(result).toBe(true)
   })
 })
 
