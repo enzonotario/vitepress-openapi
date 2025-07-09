@@ -140,15 +140,28 @@ const fixtures: Record<string, FixtureTest> = {
     schemaUiJson: 'string',
   },
 
-  'schema with enum mixed types': {
+  'schema with mixed enum without explicit type': {
     jsonSchema: {
-      enum: ['red', 'amber', 'green', false, null, 42],
+      enum: ['red', 'amber', 'green', false, null, 42, 42.0],
     },
     schemaUi: {
       name: '',
       types: ['string', 'boolean', 'null', 'integer'],
       required: false,
-      enum: ['red', 'amber', 'green', false, null, 42],
+      enum: ['red', 'amber', 'green', false, null, 42, 42.0],
+    },
+    schemaUiJson: 'string',
+  },
+
+  'schema with mixed integer+number enum without explicit type': {
+    jsonSchema: {
+      enum: [42, 42.1],
+    },
+    schemaUi: {
+      name: '',
+      types: ['number'],
+      required: false,
+      enum: [42, 42.1],
     },
     schemaUiJson: 'string',
   },
