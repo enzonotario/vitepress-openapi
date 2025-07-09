@@ -1,5 +1,6 @@
 import type { JSONSchema } from '@trojs/openapi-dereference'
 import type { OpenAPIDocument, ParsedOpenAPI } from '../../types'
+
 import { $trycatch } from '@tszen/trycatch'
 import { merge } from 'allof-merge'
 import { parseYAML } from 'confbox'
