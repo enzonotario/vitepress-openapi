@@ -1533,6 +1533,49 @@ const fixtures: Record<string, FixtureTest> = {
     },
   },
 
+  'enum with default value': {
+    jsonSchema: {
+      type: 'string',
+      enum: ['cat', 'dog'],
+      default: 'cat',
+    },
+    schemaUi: {
+      name: '',
+      types: ['string'],
+      required: false,
+      enum: ['cat', 'dog'],
+      constraints: { default: 'cat' },
+      defaultValue: 'cat',
+    },
+    schemaUiJson: 'cat',
+  },
+
+  'object with null default': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        hasFur: { type: ['boolean', 'null'], default: null },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        {
+          name: 'hasFur',
+          required: false,
+          types: ['boolean', 'null'],
+          constraints: { default: null },
+          defaultValue: null,
+        },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      hasFur: null,
+    },
+  },
+
   'object nullable': {
     jsonSchema: {
       type: ['object', 'null'],

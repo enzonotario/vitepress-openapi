@@ -206,13 +206,10 @@ class UiPropertyFactory {
         types = ['string']
       }
 
-      return {
-        name,
-        types,
-        required: false,
-        enum: schema.enum,
-        description: schema.description,
-      }
+      const property = UiPropertyFactory.createBaseProperty(name, schema, required)
+      property.enum = schema.enum
+      property.types = types
+      return property
     }
 
     const property = UiPropertyFactory.createBaseProperty(name, schema, required)
