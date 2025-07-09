@@ -3,6 +3,7 @@ import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationData } from '../../lib/operationData'
 import { computed, defineProps, inject, onBeforeUnmount } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
+import { useTheme } from '../../composables/useTheme'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import OAHeading from '../Common/OAHeading.vue'
 import { Button } from '../ui/button'
@@ -65,6 +66,10 @@ const hasParameters = computed(() =>
   Boolean(props.parameters?.length || hasBody.value || hasSecuritySchemes.value),
 )
 
+const themeConfig = useTheme()
+
+const operationCols = computed(() => themeConfig.getOperationCols())
+
 const examples = computed(() => {
   const selectedContentTypeValue = operationData.requestBody.selectedContentType.value
 
@@ -99,7 +104,10 @@ onBeforeUnmount(() => {
     <OAHeading
       level="h2"
       :prefix="headingPrefix"
-      class="block sm:hidden"
+      class="block"
+      :class="{
+        'sm:hidden': operationCols === 2,
+      }"
     >
       {{ $t('Playground') }}
     </OAHeading>
