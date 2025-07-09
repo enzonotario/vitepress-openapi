@@ -70,7 +70,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findCat',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findCat',
+              path: '/api/cats',
               title: 'Find a cat',
             }),
           },
@@ -78,7 +78,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findSphynx',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findSphynx',
+              path: '/api/sphynxs',
               title: 'Find a sphynx cat',
             }),
           },
@@ -86,7 +86,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findFancyRat',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findFancyRat',
+              path: '/api/fancyrats',
               title: 'Find a fancy rat',
             }),
           },
@@ -99,7 +99,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findCat',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findCat',
+              path: '/api/cats',
               title: 'Find a cat',
             }),
           },
@@ -107,7 +107,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findSphynx',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findSphynx',
+              path: '/api/sphynxs',
               title: 'Find a sphynx cat',
             }),
           },
@@ -120,7 +120,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findCat',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findCat',
+              path: '/api/cats',
               title: 'Find a cat',
             }),
           },
@@ -128,7 +128,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findFancyRat',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findFancyRat',
+              path: '/api/fancyrats',
               title: 'Find a fancy rat',
             }),
           },
@@ -141,7 +141,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findSphynx',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findSphynx',
+              path: '/api/sphynxs',
               title: 'Find a sphynx cat',
             }),
           },
@@ -154,7 +154,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findFancyRat',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findFancyRat',
+              path: '/api/fancyrats',
               title: 'Find a fancy rat',
             }),
           },
@@ -162,7 +162,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findLizard',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findLizard',
+              path: '/api/lizards',
               title: 'Find a lizard',
             }),
           },
@@ -175,7 +175,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findFancyRat',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findFancyRat',
+              path: '/api/fancyrats',
               title: 'Find a fancy rat',
             }),
           },
@@ -188,7 +188,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findLizard',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findLizard',
+              path: '/api/lizards',
               title: 'Find a lizard',
             }),
           },
@@ -201,7 +201,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/findLizard',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/findLizard',
+              path: '/api/lizards',
               title: 'Find a lizard',
             }),
           },
@@ -214,7 +214,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/accountStats',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/accountStats',
+              path: '/account/stats',
               title: 'Get user stats',
             }),
           },
@@ -222,7 +222,7 @@ describe('generateSidebarGroups with operations having multiple tags', () => {
             link: '/operations/checkStatus',
             text: sidebar.sidebarItemTemplate({
               method: 'get',
-              path: '/checkStatus',
+              path: '/status',
               title: 'Check status',
             }),
           },
