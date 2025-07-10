@@ -55,5 +55,7 @@
   "Expand all": "すべて展開",
   "Collapse": "折りたたむ",
   "Expand": "展開",
-  "Download OpenAPI Document": "OpenAPI ドキュメントをダウンロード"
+  "Download OpenAPI Document": "OpenAPI ドキュメントをダウンロード",
+  "Any of": "いずれか",
+  "valid values": "有効な値"
 }
