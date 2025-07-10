@@ -83,7 +83,7 @@ const unionBadge = computed(() => {
       :disabled="!isObjectOrArray"
     >
       <CollapsibleTrigger class="w-full">
-        <div class="flex flex-col text-start space-y-1 group select-text cursor-auto">
+        <div class="flex flex-col text-start space-y-1 group select-text cursor-pointer">
           <div class="flex flex-row items-center gap-2 text-sm">
             <span
               v-if="props.property.name && props.property.name.trim() !== ''"
@@ -174,21 +174,22 @@ const unionBadge = computed(() => {
               props.property.required === true ? $t('Required') : ''
             }}</span>
           </div>
-
-          <OAMarkdown
-            v-if="props.property?.description"
-            :content="props.property.description"
-            class="text-sm"
-            :class="{
-              'pl-2': isObjectOrArray,
-            }"
-          />
-
-          <OASchemaPropertyAttributes v-if="props.property.enum" :property="{ [$t('valid values')]: props.property.enum }" />
-
-          <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
         </div>
       </CollapsibleTrigger>
+
+      <OAMarkdown
+        v-if="props.property?.description"
+        :content="props.property.description"
+        class="text-sm"
+        :class="{
+          'pl-2': isObjectOrArray,
+        }"
+      />
+
+      <OASchemaPropertyAttributes v-if="props.property.enum" :property="{ [$t('valid values')]: props.property.enum }" />
+
+      <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
+
       <CollapsibleContent v-if="isObjectOrArray" class="ml-2 pl-2 border-l border-l-solid">
         <Badge
           v-if="isUnion"
