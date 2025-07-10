@@ -55,7 +55,12 @@ const tabsSelector = computed(() => {
         >
           {{ $t('Responses') }}
         </OAHeading>
-        <div class="relative overflow-x-auto">
+        <div
+          class="relative"
+          :class="{
+            'overflow-x-auto': responsesCodes.length > 1,
+          }"
+        >
           <div class="w-full flex">
             <TabsList class="bg-transparent text-muted-foreground p-0">
               <div class="relative flex flex-row">
