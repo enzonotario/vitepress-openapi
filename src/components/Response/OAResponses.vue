@@ -56,7 +56,6 @@ const tabsSelector = computed(() => {
           {{ $t('Responses') }}
         </OAHeading>
         <div
-          class="relative"
           :class="{
             'overflow-x-auto': responsesCodes.length > 1,
           }"
