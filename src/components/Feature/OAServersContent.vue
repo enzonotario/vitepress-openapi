@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import OAHeading from '../Common/OAHeading.vue'
 
 const props = defineProps({
@@ -9,12 +10,13 @@ const props = defineProps({
 })
 
 const servers = props.openapi.spec.servers ?? []
+const { t } = useI18n()
 </script>
 
 <template>
   <div>
     <OAHeading level="h2">
-      {{ $t('Servers') }}
+      {{ t('Servers') }}
     </OAHeading>
 
     <div class="flex flex-col space-y-4">

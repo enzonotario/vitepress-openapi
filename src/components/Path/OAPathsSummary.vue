@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { defineProps } from 'vue'
 import OAHeading from '../Common/OAHeading.vue'
 
@@ -12,13 +13,15 @@ const { paths } = defineProps({
 const emit = defineEmits([
   'pathClick',
 ])
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="bg-muted rounded border divide-y divide-[var(--vp-c-divider)]">
     <div class="p-2 pl-4">
       <OAHeading level="h3" class="!mt-0 !text-sm">
-        {{ $t('Operations') }}
+        {{ t('Operations') }}
       </OAHeading>
     </div>
 

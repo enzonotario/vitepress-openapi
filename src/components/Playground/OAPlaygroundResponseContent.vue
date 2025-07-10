@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, onBeforeUnmount, ref, watch } from 'vue'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
@@ -11,6 +12,8 @@ interface ResponseType {
 const props = defineProps<{
   response: ResponseType
 }>()
+
+const { t } = useI18n()
 
 const isType = (regex: RegExp) => computed(() => regex.test(props.response.type))
 
@@ -118,17 +121,17 @@ const downloadBlob = (blob: Blob, fileName: string) => {
     <img
       v-else-if="isImage"
       :src="props.response.body"
-      :alt="$t('Response Image')"
+      :alt="t('Response Image')"
       style="max-width: 100%;"
     >
     <audio
       v-else-if="isAudio"
       controls
       class="w-full mt-2"
-      :aria-label="$t('Audio response')"
+      :aria-label="t('Audio response')"
     >
       <source :src="audioUrl" :type="props.response.type">
-      {{ $t('Your browser does not support the audio element.') }}
+      {{ t('Your browser does not support the audio element.') }}
     </audio>
     <div v-else-if="isDownloadable">
       <button
@@ -136,11 +139,11 @@ const downloadBlob = (blob: Blob, fileName: string) => {
         aria-label="Download file"
         @click="downloadBlob(props.response.body, 'response_file')"
       >
-        {{ $t('Download file') }}
+        {{ t('Download file') }}
       </button>
     </div>
     <div v-else>
-      <p>{{ $t('Unrecognized response type. Raw content:') }}</p>
+      <p>{{ t('Unrecognized response type. Raw content:') }}</p>
       <pre class="whitespace-pre-wrap">{{ props.response.body }}</pre>
     </div>
   </div>

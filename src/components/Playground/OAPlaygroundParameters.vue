@@ -3,6 +3,7 @@ import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { ComputedRef } from 'vue'
 import type { OperationData } from '../../lib/operationData'
 import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
+import { useI18n } from '@byjohann/vue-i18n'
 import { useStorage } from '@vueuse/core'
 import { computed, defineEmits, defineProps, inject, ref, watch } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
@@ -60,6 +61,7 @@ const emits = defineEmits([
 ])
 
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
+const { t } = useI18n()
 
 const selectedServer = computed({
   get: () => operationData.playground.selectedServer.value,
@@ -198,7 +200,7 @@ watch(selectedSchemeId, (schemeId) => {
   <div class="OAPlaygroundParameters">
     <details v-if="serversUrls.length > 1 || allowCustomServer" open>
       <summary>
-        {{ $t('Server') }}
+        {{ t('Server') }}
       </summary>
 
       <div class="flex flex-col gap-2">
@@ -209,9 +211,9 @@ watch(selectedSchemeId, (schemeId) => {
           :default-custom-value="customServer"
           :options="serversUrls"
           :allow-custom-option="allowCustomServer"
-          :custom-option-label="$t('Custom Server')"
-          :custom-placeholder="$t('Enter a custom server URL')"
-          :placeholder="$t('Select a server')"
+          :custom-option-label="t('Custom Server')"
+          :custom-placeholder="t('Enter a custom server URL')"
+          :placeholder="t('Select a server')"
           @submit="emits('submit')"
         />
       </div>
@@ -219,14 +221,14 @@ watch(selectedSchemeId, (schemeId) => {
 
     <details v-if="authorizations?.length" open>
       <summary>
-        {{ $t('Authorization') }}
+        {{ t('Authorization') }}
         <div v-if="props.securityUi.length > 1" class="w-full max-w-[33%] md:max-w-[50%] ml-auto -mt-8">
           <Select v-model="selectedSchemeId">
             <SelectTrigger
               aria-label="Security Scheme"
               class="h-9 px-3 py-1.5 text-foreground font-normal"
             >
-              <SelectValue :placeholder="selectedSchemeId ?? $t('Select')" />
+              <SelectValue :placeholder="selectedSchemeId ?? t('Select')" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -267,7 +269,7 @@ watch(selectedSchemeId, (schemeId) => {
 
     <details v-if="headerParameters.length" open>
       <summary>
-        {{ $t('Headers') }}
+        {{ t('Headers') }}
       </summary>
 
       <div class="flex flex-col gap-2">
@@ -290,7 +292,7 @@ watch(selectedSchemeId, (schemeId) => {
 
     <details v-if="Object.keys(queryParameters).length || Object.keys(pathParameters).length" open>
       <summary>
-        {{ $t('Variables') }}
+        {{ t('Variables') }}
       </summary>
 
       <div class="flex flex-col gap-1">
@@ -298,10 +300,10 @@ watch(selectedSchemeId, (schemeId) => {
           <div class="w-[16px]" />
           <div class="flex flex-row flex-grow gap-2">
             <div class="w-1/2 flex justify-start">
-              <span class="text-xs text-muted-foreground uppercase">{{ $t('Key') }}</span>
+              <span class="text-xs text-muted-foreground uppercase">{{ t('Key') }}</span>
             </div>
             <div class="w-1/2 flex justify-start">
-              <span class="text-xs text-muted-foreground uppercase">{{ $t('Value') }}</span>
+              <span class="text-xs text-muted-foreground uppercase">{{ t('Value') }}</span>
             </div>
           </div>
         </div>
@@ -321,7 +323,7 @@ watch(selectedSchemeId, (schemeId) => {
 
     <details v-if="props.requestBody && selectedContentType" open>
       <summary>
-        {{ $t('Body') }}
+        {{ t('Body') }}
       </summary>
 
       <OAPlaygroundBodyInput

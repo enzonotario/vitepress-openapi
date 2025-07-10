@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationData } from '../../lib/operationData'
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, inject, onBeforeUnmount } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
@@ -52,6 +53,7 @@ const props = defineProps({
 const { loading, response, submitRequest, cleanupImageUrls } = usePlayground()
 
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
+const { t } = useI18n()
 
 const hasBody = computed(() =>
   Boolean(props.requestBody),
@@ -101,7 +103,7 @@ onBeforeUnmount(() => {
       :prefix="headingPrefix"
       class="block sm:hidden"
     >
-      {{ $t('Playground') }}
+      {{ t('Playground') }}
     </OAHeading>
 
     <OAPlaygroundParameters
@@ -119,7 +121,7 @@ onBeforeUnmount(() => {
 
     <div class="flex flex-col gap-2">
       <Button variant="primary" @click="onSubmit">
-        {{ $t('Try it out') }}
+        {{ t('Try it out') }}
       </Button>
 
       <OAPlaygroundResponse

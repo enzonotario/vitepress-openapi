@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { TabsIndicator } from 'reka-ui'
 import { computed, defineProps, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
@@ -23,6 +24,7 @@ const props = defineProps({
 })
 
 const themeConfig = useTheme()
+const { t } = useI18n()
 
 const responsesCodes = Object.keys(props.responses)
 
@@ -53,7 +55,7 @@ const tabsSelector = computed(() => {
           class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0 inline-block"
           header-anchor-class="!top-0"
         >
-          {{ $t('Responses') }}
+          {{ t('Responses') }}
         </OAHeading>
         <div class="relative flex-1">
           <div class="absolute inset-x-0 top-[-20px] w-full flex justify-end">

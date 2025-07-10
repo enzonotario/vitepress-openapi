@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OperationSlot, PathsGroupView } from '../../types'
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed, nextTick, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { scrollToHash } from '../../lib/utils'
@@ -20,6 +21,7 @@ const props = defineProps<Props>()
 const slots = defineSlots<Record<string, OperationSlot>>()
 
 const themeConfig = useTheme()
+const { t } = useI18n()
 
 const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
 
@@ -69,7 +71,7 @@ function onPathClick(hash: string) {
       >
         <CollapsibleTrigger>
           <Button>
-            {{ isOpen ? $t('Hide operations') : $t('Show operations') }}
+            {{ isOpen ? t('Hide operations') : t('Show operations') }}
           </Button>
         </CollapsibleTrigger>
       </div>

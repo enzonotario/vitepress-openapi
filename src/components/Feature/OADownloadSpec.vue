@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from '@byjohann/vue-i18n'
 import yaml from 'js-yaml'
 import { Badge } from '../ui/badge/index'
 
@@ -8,6 +9,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 
 function downloadSpec(format: 'json' | 'yaml'): void {
   try {
@@ -55,7 +58,7 @@ function downloadSpec(format: 'json' | 'yaml'): void {
       aria-label="Download OpenAPI Document as JSON"
       @click.prevent="downloadSpec('json')"
     >
-      <span class="underline mr-2">{{ $t('Download OpenAPI Document') }}</span>
+      <span class="underline mr-2">{{ t('Download OpenAPI Document') }}</span>
       <Badge variant="outline" class="hidden group-hover:inline-block">JSON</Badge>
     </a>
 
@@ -65,7 +68,7 @@ function downloadSpec(format: 'json' | 'yaml'): void {
       aria-label="Download OpenAPI Document as YAML"
       @click.prevent="downloadSpec('yaml')"
     >
-      <span class="underline mr-2">{{ $t('Download OpenAPI Document') }}</span>
+      <span class="underline mr-2">{{ t('Download OpenAPI Document') }}</span>
       <Badge variant="outline">YAML</Badge>
     </a>
   </div>

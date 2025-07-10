@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
@@ -31,6 +32,7 @@ const examples = computed(() => props.response.content?.[contentType.value]?.exa
 const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
 
 const defaultView = useTheme().getResponseBodyDefaultView()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -45,7 +47,7 @@ const defaultView = useTheme().getResponseBodyDefaultView()
         :for="contentTypeId"
         class="flex-shrink-0 text-muted-foreground"
       >
-        {{ $t('Content-Type') }}
+        {{ t('Content-Type') }}
       </Label>
       <div class="flex-shrink-0">
         <OAContentTypeSelect

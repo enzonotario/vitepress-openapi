@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { OperationData } from '../../lib/operationData'
 import type { OARequestBody } from '../../types'
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed, inject } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
@@ -28,6 +29,7 @@ const defaultView = useTheme().getRequestBodyDefaultView()
 const contentTypeId = `request-body-content-type-${props.operationId}`
 
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
+const { t } = useI18n()
 
 const contentType = computed({
   get: () => operationData.requestBody.selectedContentType.value,
@@ -69,7 +71,7 @@ const examples = computed(() => {
         class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0 inline-block"
         header-anchor-class="!top-0"
       >
-        {{ $t('Request Body') }}
+        {{ t('Request Body') }}
       </OAHeading>
       <div class="relative flex-1">
         <div class="absolute inset-x-0 top-[-14px] w-full flex justify-end">

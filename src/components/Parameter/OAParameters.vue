@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { defineProps } from 'vue'
 import OAParameter from './OAParameter.vue'
 
@@ -18,6 +19,8 @@ const headerParameters = props.parameters.filter(parameter => parameter && param
 const pathParameters = props.parameters.filter(parameter => parameter && parameter.in === 'path')
 
 const queryParameters = props.parameters.filter(parameter => parameter && parameter.in === 'query')
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -27,7 +30,7 @@ const queryParameters = props.parameters.filter(parameter => parameter && parame
       class="space-y-4"
     >
       <h3>
-        {{ $t('Header Parameters') }}
+        {{ t('Header Parameters') }}
       </h3>
 
       <OAParameter
@@ -42,7 +45,7 @@ const queryParameters = props.parameters.filter(parameter => parameter && parame
       class="space-y-4"
     >
       <h3>
-        {{ $t('Path Parameters') }}
+        {{ t('Path Parameters') }}
       </h3>
 
       <OAParameter
@@ -57,7 +60,7 @@ const queryParameters = props.parameters.filter(parameter => parameter && parame
       class="space-y-4"
     >
       <h3>
-        {{ $t('Query Parameters') }}
+        {{ t('Query Parameters') }}
       </h3>
 
       <OAParameter

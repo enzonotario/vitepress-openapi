@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { useTheme } from '../../composables/useTheme'
 import { getPropertyExamples } from '../../lib/examples/getPropertyExamples'
 import OACodeValue from '../Common/OACodeValue.vue'
@@ -14,6 +15,7 @@ const props = defineProps({
 const examples = getPropertyExamples(props.property)
 
 const wrapExamples = useTheme().getWrapExamples()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -21,7 +23,7 @@ const wrapExamples = useTheme().getWrapExamples()
     v-if="examples?.length === 1"
     class="flex flex-row space-x-2"
   >
-    <span class="text-sm">{{ $t('Example') }}</span>
+    <span class="text-sm">{{ t('Example') }}</span>
     <OACodeValue :value="examples[0]" />
   </div>
   <div
@@ -31,7 +33,7 @@ const wrapExamples = useTheme().getWrapExamples()
       'items-center': wrapExamples,
     }"
   >
-    <OAParameterAttribute :name="$t('Examples')">
+    <OAParameterAttribute :name="t('Examples')">
       <template #value>
         <div
           class="flex gap-2"

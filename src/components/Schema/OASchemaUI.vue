@@ -100,7 +100,7 @@ const unionBadge = computed(() => {
                       v-if="isObjectOrArray && props.property.properties"
                       size="icon"
                       variant="icon"
-                      :aria-label="isOpen ? $t('Collapse') : $t('Expand')"
+                      :aria-label="isOpen ? t('Collapse') : t('Expand')"
                       class="flex-shrink-0 w-4 h-4 cursor-pointer"
                     >
                       <ChevronDown v-if="isOpen" />
@@ -108,7 +108,7 @@ const unionBadge = computed(() => {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{{ isOpen ? $t('Collapse') : $t('Expand') }}</p>
+                    <p>{{ isOpen ? t('Collapse') : t('Expand') }}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -119,7 +119,7 @@ const unionBadge = computed(() => {
                 v-if="props.property.meta?.isCircularReference === true"
                 variant="outline"
               >
-                {{ $t('Circular Reference') }}
+                {{ t('Circular Reference') }}
               </Badge>
               <template v-else-if="props.property.types.length === 1 && ['array'].includes(props.property.types[0]) && props.property.subtype">
                 <span>{{ props.property.subtype }}[]</span>
@@ -128,7 +128,7 @@ const unionBadge = computed(() => {
                 <span>{{ props.property.subtype }}</span>
               </template>
               <template v-else-if="props.property.meta?.isConstant === true">
-                <span>{{ $t('const:') }}</span>
+                <span>{{ t('const:') }}</span>
                 <span v-if="props.property.examples?.length > 0" class="select-all">{{ props.property.examples[0] }}</span>
               </template>
               <template v-else>
@@ -149,7 +149,7 @@ const unionBadge = computed(() => {
                     <Button
                       size="icon"
                       variant="icon"
-                      :aria-label="isOpen ? $t('Collapse all') : $t('Expand all')"
+                      :aria-label="isOpen ? t('Collapse all') : t('Expand all')"
                       @click.stop.prevent="toggleAllChildren(!isOpen)"
                     >
                       <Minimize2 v-if="isOpen" />
@@ -157,7 +157,7 @@ const unionBadge = computed(() => {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{{ isOpen ? $t('Collapse all') : $t('Expand all') }}</p>
+                    <p>{{ isOpen ? t('Collapse all') : t('Expand all') }}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -171,7 +171,7 @@ const unionBadge = computed(() => {
             </div>
 
             <span class="text-red-800 dark:text-red-200 text-xs">{{
-              props.property.required === true ? $t('Required') : ''
+              props.property.required === true ? t('Required') : ''
             }}</span>
           </div>
 
@@ -184,7 +184,7 @@ const unionBadge = computed(() => {
             }"
           />
 
-          <OASchemaPropertyAttributes v-if="props.property.enum" :property="{ [$t('valid values')]: props.property.enum }" />
+          <OASchemaPropertyAttributes v-if="props.property.enum" :property="{ [t('valid values')]: props.property.enum }" />
 
           <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
         </div>
