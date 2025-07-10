@@ -21,10 +21,20 @@ const availableSidebarItemsTypes = [
 ] as const
 
 const requestBodyViews = ['schema', 'contentType']
+const responseBodyViews = requestBodyViews
 const jsonViewerRenderers = ['vue-json-pretty', 'shiki']
 const responseCodeSelectors = ['select', 'tabs']
 const playgroundModes = ['text', 'tree', 'table']
 const operationBadges = ['deprecated', 'operationId']
+
+const toggleBadge = (badge: string) => {
+  const badges = themeConfig.getOperationBadges()
+  if (themeConfig.getOperationBadges().includes(badge)) {
+    themeConfig.setOperationBadges(badges.filter(b => b !== badge))
+  } else {
+    themeConfig.setOperationBadges([...badges, badge])
+  }
+}
 </script>
 
 <template>
@@ -40,7 +50,7 @@ const operationBadges = ['deprecated', 'operationId']
               id="showSidebar"
               type="checkbox"
               :checked="sandboxData.showSidebar.value"
-              @change="sandboxData.showSidebar.value = ($event.target as any).checked"
+              @change="sandboxData.showSidebar.value = ($event.target as HTMLInputElement).checked"
             >
             Show sidebar
           </label>
@@ -50,7 +60,7 @@ const operationBadges = ['deprecated', 'operationId']
               id="showAside"
               type="checkbox"
               :checked="sandboxData.showAside.value"
-              @change="sandboxData.showAside.value = ($event.target as any).checked"
+              @change="sandboxData.showAside.value = ($event.target as HTMLInputElement).checked"
             >
             Show aside
           </label>
@@ -88,11 +98,11 @@ const operationBadges = ['deprecated', 'operationId']
           <input
             id="depth"
             type="number"
-            class="bg-[--vp-input-bg-color] rounded p-2"
+            class="theme-input"
             min="1"
             max="6"
             :value="sandboxData.sidebarItemsDepth.value"
-            @input="sandboxData.sidebarItemsDepth.value = ($event.target as any).value"
+            @input="sandboxData.sidebarItemsDepth.value = Number(($event.target as HTMLInputElement).value)"
           >
         </label>
         <label v-if="sandboxData.sidebarItemsType.value === 'itemsByPaths'" for="collapsible" class="flex items-center gap-2">
@@ -100,7 +110,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="collapsible"
             type="checkbox"
             :checked="sandboxData.sidebarItemsCollapsible.value"
-            @change="sandboxData.sidebarItemsCollapsible.value = ($event.target as any).checked"
+            @change="sandboxData.sidebarItemsCollapsible.value = ($event.target as HTMLInputElement).checked"
           >
           Collapsible
         </label>
@@ -136,7 +146,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="groupByTags"
             type="checkbox"
             :checked="themeConfig.getSpecConfig().groupByTags.value"
-            @change="themeConfig.setSpecConfig({ groupByTags: ($event.target as any).checked })"
+            @change="themeConfig.setSpecConfig({ groupByTags: ($event.target as HTMLInputElement).checked })"
           >
           Group by tags
         </label>
@@ -147,7 +157,7 @@ const operationBadges = ['deprecated', 'operationId']
               id="collapsePaths"
               type="checkbox"
               :checked="themeConfig.getSpecConfig().collapsePaths.value"
-              @change="themeConfig.setSpecConfig({ collapsePaths: ($event.target as any).checked })"
+              @change="themeConfig.setSpecConfig({ collapsePaths: ($event.target as HTMLInputElement).checked })"
             >
             Collapse paths
           </label>
@@ -161,7 +171,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="showPathsSummary"
             type="checkbox"
             :checked="themeConfig.getSpecConfig().showPathsSummary.value"
-            @change="themeConfig.setSpecConfig({ showPathsSummary: ($event.target as any).checked })"
+            @change="themeConfig.setSpecConfig({ showPathsSummary: ($event.target as HTMLInputElement).checked })"
           >
           Show paths summary
         </label>
@@ -171,7 +181,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="avoidCirculars"
             type="checkbox"
             :checked="themeConfig.getSpecConfig().avoidCirculars.value"
-            @change="themeConfig.setSpecConfig({ avoidCirculars: ($event.target as any).checked })"
+            @change="themeConfig.setSpecConfig({ avoidCirculars: ($event.target as HTMLInputElement).checked })"
           >
           Avoid circulars
         </label>
@@ -181,7 +191,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="lazyRendering"
             type="checkbox"
             :checked="themeConfig.getSpecConfig().lazyRendering.value"
-            @change="themeConfig.setSpecConfig({ lazyRendering: ($event.target as any).checked })"
+            @change="themeConfig.setSpecConfig({ lazyRendering: ($event.target as HTMLInputElement).checked })"
           >
           Lazy rendering
         </label>
@@ -191,7 +201,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="wrapExamples"
             type="checkbox"
             :checked="themeConfig.getWrapExamples()"
-            @change="themeConfig.setSpecConfig({ wrapExamples: ($event.target as any).checked })"
+            @change="themeConfig.setSpecConfig({ wrapExamples: ($event.target as HTMLInputElement).checked })"
           >
           Wrap examples
         </label>
@@ -201,7 +211,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="disableDownload"
             type="checkbox"
             :checked="themeConfig.getSpecDisableDownload()"
-            @change="themeConfig.setSpecConfig({ disableDownload: ($event.target as any).checked })"
+            @change="themeConfig.setSpecConfig({ disableDownload: ($event.target as HTMLInputElement).checked })"
           >
           Disable download
         </label>
@@ -240,10 +250,10 @@ const operationBadges = ['deprecated', 'operationId']
           <input
             id="jsonViewerDeep"
             type="number"
-            class="bg-[--vp-input-bg-color] rounded p-2"
+            class="theme-input"
             min="1"
             :value="themeConfig.getJsonViewerDeep()"
-            @input="themeConfig.setJsonViewerDeep(Number(($event.target as any).value))"
+            @input="themeConfig.setJsonViewerDeep(Number(($event.target as HTMLInputElement).value))"
           >
         </label>
       </div>
@@ -257,10 +267,10 @@ const operationBadges = ['deprecated', 'operationId']
           <input
             id="schemaViewerDeep"
             type="number"
-            class="bg-[--vp-input-bg-color] rounded p-2"
+            class="theme-input"
             min="1"
             :value="themeConfig.getSchemaViewerDeep()"
-            @input="themeConfig.setSchemaViewerDeep(Number(($event.target as any).value))"
+            @input="themeConfig.setSchemaViewerDeep(Number(($event.target as HTMLInputElement).value))"
           >
         </label>
       </div>
@@ -282,10 +292,10 @@ const operationBadges = ['deprecated', 'operationId']
           <input
             id="responseMaxTabs"
             type="number"
-            class="bg-[--vp-input-bg-color] rounded p-2"
+            class="theme-input"
             min="1"
             :value="themeConfig.getResponseCodeMaxTabs()"
-            @input="themeConfig.setResponseCodeMaxTabs(Number(($event.target as any).value))"
+            @input="themeConfig.setResponseCodeMaxTabs(Number(($event.target as HTMLInputElement).value))"
           >
         </label>
       </div>
@@ -293,7 +303,7 @@ const operationBadges = ['deprecated', 'operationId']
       <div class="flex flex-col gap-1">
         <span>Body view</span>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4">
-          <label v-for="view in requestBodyViews" :key="`resp-${view}`" class="flex items-center gap-2">
+          <label v-for="view in responseBodyViews" :key="`resp-${view}`" class="flex items-center gap-2">
             <input
               type="radio"
               :checked="themeConfig.getResponseBodyDefaultView() === view"
@@ -323,7 +333,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="playgroundMainMenuBar"
             type="checkbox"
             :checked="themeConfig.getPlaygroundJsonEditorMainMenuBar()"
-            @change="themeConfig.setPlaygroundJsonEditorMainMenuBar(($event.target as any).checked)"
+            @change="themeConfig.setPlaygroundJsonEditorMainMenuBar(($event.target as HTMLInputElement).checked)"
           >
           Main menu bar
         </label>
@@ -332,7 +342,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="playgroundNavigationBar"
             type="checkbox"
             :checked="themeConfig.getPlaygroundJsonEditorNavigationBar()"
-            @change="themeConfig.setPlaygroundJsonEditorNavigationBar(($event.target as any).checked)"
+            @change="themeConfig.setPlaygroundJsonEditorNavigationBar(($event.target as HTMLInputElement).checked)"
           >
           Navigation bar
         </label>
@@ -341,7 +351,7 @@ const operationBadges = ['deprecated', 'operationId']
             id="playgroundStatusBar"
             type="checkbox"
             :checked="themeConfig.getPlaygroundJsonEditorStatusBar()"
-            @change="themeConfig.setPlaygroundJsonEditorStatusBar(($event.target as any).checked)"
+            @change="themeConfig.setPlaygroundJsonEditorStatusBar(($event.target as HTMLInputElement).checked)"
           >
           Status bar
         </label>
@@ -355,9 +365,9 @@ const operationBadges = ['deprecated', 'operationId']
           <span>Default scheme</span>
           <input
             type="text"
-            class="bg-[--vp-input-bg-color] rounded p-2"
+            class="theme-input"
             :value="themeConfig.getSecurityDefaultScheme() || ''"
-            @input="themeConfig.setSecurityDefaultScheme(($event.target as any).value || null)"
+            @input="themeConfig.setSecurityDefaultScheme(($event.target as HTMLInputElement).value || null)"
           >
         </label>
       </div>
@@ -370,7 +380,7 @@ const operationBadges = ['deprecated', 'operationId']
           <input
             type="checkbox"
             :checked="themeConfig.getServerAllowCustomServer()"
-            @change="themeConfig.setServerConfig({ allowCustomServer: ($event.target as any).checked })"
+            @change="themeConfig.setServerConfig({ allowCustomServer: ($event.target as HTMLInputElement).checked })"
           >
           Allow custom server
         </label>
@@ -415,7 +425,7 @@ const operationBadges = ['deprecated', 'operationId']
               <input
                 type="checkbox"
                 :checked="themeConfig.getOperationBadges().includes(badge)"
-                @change="themeConfig.getOperationBadges().includes(badge) ? themeConfig.setOperationBadges(themeConfig.getOperationBadges().filter(b => b !== badge)) : themeConfig.setOperationBadges([...themeConfig.getOperationBadges(), badge])"
+                @change="toggleBadge(badge)"
               >
               {{ badge }}
             </label>
@@ -430,7 +440,7 @@ const operationBadges = ['deprecated', 'operationId']
                 id="showBaseUrl"
                 type="checkbox"
                 :checked="themeConfig.getShowBaseURL()"
-                @change="themeConfig.setShowBaseURL(($event.target as any).checked)"
+                @change="themeConfig.setShowBaseURL(($event.target as HTMLInputElement).checked)"
               >
               Show base URL
             </label>
@@ -439,9 +449,9 @@ const operationBadges = ['deprecated', 'operationId']
               <input
                 id="defaultBaseUrl"
                 type="text"
-                class="bg-[--vp-input-bg-color] rounded p-2"
+                class="theme-input"
                 :value="themeConfig.getOperationDefaultBaseUrl()"
-                @input="themeConfig.setOperationDefaultBaseUrl(($event.target as any).value)"
+                @input="themeConfig.setOperationDefaultBaseUrl(($event.target as HTMLInputElement).value)"
               >
             </label>
           </div>
@@ -454,5 +464,8 @@ const operationBadges = ['deprecated', 'operationId']
 <style scoped>
 h3 {
   @apply mt-0 font-semibold;
+}
+.theme-input {
+  @apply bg-[--vp-input-bg-color] rounded p-2;
 }
 </style>
