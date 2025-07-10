@@ -56,7 +56,7 @@ const tabsSelector = computed(() => {
           {{ $t('Responses') }}
         </OAHeading>
         <div class="relative overflow-x-auto">
-          <div class="inset-x-0 top-[-20px] w-full flex">
+          <div class="w-full flex">
             <TabsList class="bg-transparent text-muted-foreground p-0">
               <div class="relative flex flex-row">
                 <template v-if="tabsSelector === 'tabs'">
