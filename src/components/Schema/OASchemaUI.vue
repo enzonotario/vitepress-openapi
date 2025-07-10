@@ -57,6 +57,7 @@ const toggleAllChildren = (expand) => {
 const isObject = props.property.types?.includes('object')
 const isArray = props.property.types?.includes('array')
 const isObjectOrArray = isObject || isArray || props.property.type === 'object' || props.property.type === 'array'
+const isCollapsible = computed(() => isObjectOrArray && props.property.properties)
 const isUnion = props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true
 
 const hasExpandableProperties = computed(() => {
@@ -83,7 +84,12 @@ const unionBadge = computed(() => {
       :disabled="!isObjectOrArray"
     >
       <CollapsibleTrigger class="w-full">
-        <div class="flex flex-col text-start space-y-1 group select-text cursor-pointer">
+        <div
+          class="flex flex-col text-start space-y-1 group select-text"
+          :class="{
+            'cursor-pointer': isCollapsible,
+          }"
+        >
           <div class="flex flex-row items-center gap-2 text-sm">
             <span
               v-if="props.property.name && props.property.name.trim() !== ''"
@@ -97,7 +103,7 @@ const unionBadge = computed(() => {
                 <Tooltip :delay-duration="200">
                   <TooltipTrigger as-child>
                     <Button
-                      v-if="isObjectOrArray && props.property.properties"
+                      v-if="isCollapsible"
                       size="icon"
                       variant="icon"
                       :aria-label="isOpen ? $t('Collapse') : $t('Expand')"
