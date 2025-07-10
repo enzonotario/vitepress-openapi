@@ -158,11 +158,15 @@ export function OpenApi({
 
     const pathServers = paths[(operationPath ?? '')]?.servers
 
-    return [
-      ...(operation?.servers ?? []),
-      ...(pathServers ?? []),
-      ...(getSpec().servers ?? []),
-    ]
+    if (operation?.servers !== undefined) {
+      return operation.servers as OpenAPIV3.ServerObject[]
+    }
+
+    if (pathServers !== undefined) {
+      return pathServers as OpenAPIV3.ServerObject[]
+    }
+
+    return getSpec().servers ?? []
   }
 
   function getOperationsTags(): string[] {
