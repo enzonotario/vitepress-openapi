@@ -57,5 +57,19 @@
   "Expand": "展开",
   "Download OpenAPI Document": "下载 OpenAPI 文档",
   "Any of": "任意一个",
-  "valid values": "有效值"
+  "valid values": "有效值",
+  "Exclusive Maximum": "独占最大值",
+  "Exclusive Minimum": "独占最小值",
+  "Format": "格式",
+  "Maximum": "最大值",
+  "Max Items": "最大项数",
+  "Max Length": "最大长度",
+  "Max Properties": "最大属性数",
+  "Minimum": "最小值",
+  "Min Items": "最小项数",
+  "Min Length": "最小长度",
+  "Min Properties": "最小属性数",
+  "Multiple of": "倍数",
+  "Pattern": "模式",
+  "Unique Items": "唯一项"
 }

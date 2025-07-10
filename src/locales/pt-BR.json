@@ -57,5 +57,19 @@
   "Expand": "Expandir",
   "Download OpenAPI Document": "Baixar Documento OpenAPI",
   "Any of": "Qualquer um dos",
-  "valid values": "valores válidos"
+  "valid values": "valores válidos",
+  "Exclusive Maximum": "Máximo exclusivo",
+  "Exclusive Minimum": "Mínimo exclusivo",
+  "Format": "Formato",
+  "Maximum": "Máximo",
+  "Max Items": "Máx. itens",
+  "Max Length": "Comp. máx.",
+  "Max Properties": "Máx. propriedades",
+  "Minimum": "Mínimo",
+  "Min Items": "Mín. itens",
+  "Min Length": "Comp. mín.",
+  "Min Properties": "Mín. propriedades",
+  "Multiple of": "Múltiplo de",
+  "Pattern": "Padrão",
+  "Unique Items": "Itens únicos"
 }

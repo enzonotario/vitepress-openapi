@@ -57,5 +57,19 @@
   "Expand": "展開",
   "Download OpenAPI Document": "OpenAPI ドキュメントをダウンロード",
   "Any of": "いずれか",
-  "valid values": "有効な値"
+  "valid values": "有効な値",
+  "Exclusive Maximum": "排他的最大値",
+  "Exclusive Minimum": "排他的最小値",
+  "Format": "フォーマット",
+  "Maximum": "最大値",
+  "Max Items": "最大項目数",
+  "Max Length": "最大長",
+  "Max Properties": "最大プロパティ数",
+  "Minimum": "最小値",
+  "Min Items": "最小項目数",
+  "Min Length": "最小長",
+  "Min Properties": "最小プロパティ数",
+  "Multiple of": "の倍数",
+  "Pattern": "パターン",
+  "Unique Items": "ユニーク項目"
 }
