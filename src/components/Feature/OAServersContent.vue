@@ -18,7 +18,7 @@ const servers = props.openapi.spec.servers ?? []
     </OAHeading>
 
     <div class="flex flex-col space-y-4">
-      <div v-for="server in servers" :key="server.url" class="flex flex-col p-3 gap-2 rounded bg-muted">
+      <div v-for="server in servers" :key="server.url" class="flex flex-col p-3 gap-2 rounded bg-muted overflow-x-auto">
         <span class="font-semibold select-all">
           {{ server.url }}
         </span>
