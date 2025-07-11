@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from '@byjohann/vue-i18n'
 import { defineEmits, defineProps, onMounted } from 'vue'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import { Checkbox } from '../ui/checkbox'
@@ -63,6 +64,7 @@ onMounted(() => {
 })
 
 const parameterExample = getPropertyExample(props.parameter)
+const { t } = useI18n()
 </script>
 
 <template>
@@ -104,8 +106,8 @@ const parameterExample = getPropertyExample(props.parameter)
         :name="compositeKey"
         @update:model-value="handleInputChange($event)"
       >
-        <SelectTrigger :aria-label="String(parameterExample ?? $t('Select'))">
-          <SelectValue :placeholder="String(parameterExample ?? $t('Select'))" />
+        <SelectTrigger :aria-label="String(parameterExample ?? t('Select'))">
+          <SelectValue :placeholder="String(parameterExample ?? t('Select'))" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>

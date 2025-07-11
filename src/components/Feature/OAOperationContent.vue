@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed } from 'vue'
 import OAFooter from '../Common/OAFooter.vue'
 import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
@@ -53,6 +54,8 @@ const props = defineProps({
 })
 
 const slots = defineSlots<Record<string, OperationSlot>>()
+
+const { t } = useI18n()
 
 const operation = props.openapi.getOperation(props.operationId)
 
@@ -189,7 +192,7 @@ function hasSlot(name: OperationSlot): boolean {
         level="h2"
         :prefix="headingPrefix"
       >
-        {{ $t('Parameters') }}
+        {{ t('Parameters') }}
       </OAHeading>
 
       <OAParameters
@@ -313,7 +316,7 @@ function hasSlot(name: OperationSlot): boolean {
         level="h2"
         :prefix="headingPrefix"
       >
-        {{ $t('Samples') }}
+        {{ t('Samples') }}
       </OAHeading>
 
       <OACodeSamples

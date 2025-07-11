@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { WritableComputedRef } from 'vue'
 import type { SelectWithCustomOptionEmits, SelectWithCustomOptionProps } from './index'
+import { useI18n } from '@byjohann/vue-i18n'
 import { useVModel } from '@vueuse/core'
 import { computed, watch } from 'vue'
 import { Input } from '../input'
@@ -24,6 +25,8 @@ const CUSTOM_VALUE = 'custom'
 const value: WritableComputedRef<string> = useVModel(props, 'modelValue', emit)
 const isCustom: WritableComputedRef<boolean> = useVModel(props, 'isCustom', emit)
 const customValue: WritableComputedRef<string | undefined> = useVModel(props, 'customValue', emit)
+
+const { t } = useI18n()
 
 watch(customValue, (newValue) => {
   if (newValue === undefined) {
@@ -75,7 +78,7 @@ const handleSelectChange = (selectedValue: string) => {
       class="absolute inset-0"
       @update:model-value="handleSelectChange(String($event))"
     >
-      <SelectTrigger :aria-label="$t('Select')">
+      <SelectTrigger :aria-label="t('Select')">
         <SelectValue :placeholder="placeholder" class="text-start" />
       </SelectTrigger>
       <SelectContent>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from '@byjohann/vue-i18n'
 import { defineProps } from 'vue'
 import OAHeading from '../Common/OAHeading.vue'
 import OASecurityContent from '../Security/OASecurityContent.vue'
@@ -19,6 +20,8 @@ const props = defineProps({
     default: '',
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -31,7 +34,7 @@ const props = defineProps({
           class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0"
           header-anchor-class="!top-0"
         >
-          {{ $t('Authorizations') }}
+          {{ t('Authorizations') }}
         </OAHeading>
 
         <span class="flex-grow min-w-2" />
@@ -73,7 +76,7 @@ const props = defineProps({
         </div>
 
         <div v-if="Number(key) < Object.keys(props.securityUi).length - 1" class="flex flex-row items-center space-x-2">
-          <span class="text-sm font-bold">{{ $t('or') }}</span>
+          <span class="text-sm font-bold">{{ t('or') }}</span>
           <span class="flex-grow border-t border-[var(--vp-c-divider)]" />
         </div>
       </div>
