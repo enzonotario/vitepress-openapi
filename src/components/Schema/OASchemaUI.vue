@@ -74,6 +74,10 @@ const unionBadge = computed(() => {
   }
   return ''
 })
+
+const toggleLabel = computed(() => isOpen.value ? t('Collapse') : t('Expand'))
+
+const toggleAllLabel = computed(() => isOpen.value ? t('Collapse all') : t('Expand all'))
 </script>
 
 <template>
@@ -100,7 +104,7 @@ const unionBadge = computed(() => {
                       v-if="isObjectOrArray && props.property.properties"
                       size="icon"
                       variant="icon"
-                      :aria-label="isOpen ? t('Collapse') : t('Expand')"
+                      :aria-label="toggleLabel"
                       class="flex-shrink-0 w-4 h-4 cursor-pointer"
                     >
                       <ChevronDown v-if="isOpen" />
@@ -108,7 +112,7 @@ const unionBadge = computed(() => {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{{ isOpen ? t('Collapse') : t('Expand') }}</p>
+                    <p>{{ toggleLabel }}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -149,7 +153,7 @@ const unionBadge = computed(() => {
                     <Button
                       size="icon"
                       variant="icon"
-                      :aria-label="isOpen ? t('Collapse all') : t('Expand all')"
+                      :aria-label="toggleAllLabel"
                       @click.stop.prevent="toggleAllChildren(!isOpen)"
                     >
                       <Minimize2 v-if="isOpen" />
@@ -157,7 +161,7 @@ const unionBadge = computed(() => {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{{ isOpen ? t('Collapse all') : t('Expand all') }}</p>
+                    <p>{{ toggleAllLabel }}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
