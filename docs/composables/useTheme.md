@@ -41,9 +41,9 @@ export default {
             },
             response: {
                 // Set the response code selector.
-                codeSelector: 'tabs', // tabs or select
+                responseCodeSelector: 'tabs', // tabs or select
                 // Set the maximum number of tabs, after which a Select will be shown.
-                codeMaxTabs: 5,
+                maxTabs: 5,
                 body: {
                     // Set the default view.
                     defaultView: 'schema', // schema or contentType
@@ -105,6 +105,7 @@ export default {
                     { code: 'es', label: 'Español' },
                     { code: 'ja', label: 'Japanese' },
                     { code: 'pt-BR', label: 'Português (Brasil)' },
+                    { code: 'zh', label: '中文' },
                 ],
             },
             // Set spec configuration.
@@ -115,6 +116,7 @@ export default {
                 avoidCirculars: false, // Avoid circular references when parsing schemas.
                 lazyRendering: false, // Lazy render Paths and Tags components.
                 defaultTag: 'Default', // Default tag to use when a path has no tags.
+                defaultTagDescription: '', // Description for the default tag.
                 wrapExamples: true, // Wrap examples in a row or show them in a column.
                 disableDownload: false, // Disable the download button in the info section.
             },
@@ -143,13 +145,13 @@ export default {
 
 | Function               | Description                         | Default Value | Allowed Values              |
 |------------------------|-------------------------------------|---------------|-----------------------------|
-| `setShowBaseURL`       | Sets whether the base URL is shown. | `true`        | `true`, `false`             |
+| `setShowBaseURL`       | Sets whether the base URL is shown. | `false`       | `true`, `false`             |
 
 ## Request Body Configuration
 
 | Function                    | Description                   | Default Value | Allowed Values              |
 |-----------------------------|-------------------------------|---------------|-----------------------------|
-| `setRequestBodyDefaultView` | Sets the default schema view. | `'schema'`    | `'schema'`, `'contentType'` |
+| `setRequestBodyDefaultView` | Sets the default schema view. | `'contentType'` | `'schema'`, `'contentType'` |
 
 ## JSON Viewer Configuration
 
@@ -176,7 +178,7 @@ export default {
 |------------------------------|----------------------------------------------------------------------|---------------|-----------------------------|
 | `setResponseCodeSelector`    | Sets the response code selector.                                     | `'tabs'`      | `'tabs'`, `'select'`        |
 | `setResponseCodeMaxTabs`     | Sets the maximum number of tabs, after which a Select will be shown. | `5`           | `number`                    |
-| `setResponseBodyDefaultView` | Sets the default view of the response body.                          | `'schema'`    | `'schema'`, `'contentType'` |
+| `setResponseBodyDefaultView` | Sets the default view of the response body.                          | `'contentType'`    | `'schema'`, `'contentType'` |
 
 ## Playground JSON Editor Configuration
 
@@ -208,11 +210,11 @@ export default {
 
 ## Server Configuration
 
-| Function                      | Description                              | Default Value                                                                         | Allowed Values                                                                           |
-|-------------------------------|------------------------------------------|---------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| `setServerConfig`             | Sets the server configuration.           | `{ getServers: ({ method, path, operation }) => Array<string>, allowCustomServer: true }` | `{ getServers: ({ method, path, operation }) => Array<string>, allowCustomServer: boolean }` |
-| `getServers`                  | Gets the servers for an operation.       | `({ method, path, operation }) => Array<string>`                                           | `({ method, path, operation }) => Array<string>`                                              |
-| `getServerAllowCustomServer` | Gets whether custom servers are allowed. | `true`                                                                                | `true`, `false`                                                                          |
+| Function                      | Description                              | Default Value                               | Allowed Values                                                         |
+|-------------------------------|------------------------------------------|---------------------------------------------|------------------------------------------------------------------------|
+| `setServerConfig`             | Sets the server configuration.           | `{ getServers: null, allowCustomServer: false }` | `{ getServers: ({ method, path, operation }) => Array<string>, allowCustomServer: boolean }` |
+| `getServers`                  | Gets the servers for an operation.       | `({ method, path, operation }) => Array<string>` | `({ method, path, operation }) => Array<string>` |
+| `getServerAllowCustomServer`  | Gets whether custom servers are allowed. | `false`                                     | `true`, `false`                                                        |
 
 ## Markdown Configuration
 
