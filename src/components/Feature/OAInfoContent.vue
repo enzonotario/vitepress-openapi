@@ -19,6 +19,7 @@ const info = props.openapi.spec.info ?? {}
 
 const externalDocs = props.openapi.spec.externalDocs ?? {}
 const externalDocsLabel = t('External Documentation')
+const contactLabel = t('Contact')
 </script>
 
 <template>
@@ -56,13 +57,13 @@ const externalDocsLabel = t('External Documentation')
 
     <template v-if="info.contact">
       <OAHeading level="h2">
-        {{ t('Contact') }}
+        {{ contactLabel }}
       </OAHeading>
 
       <div class="flex flex-row items-center gap-2">
         <template v-if="info.contact.url">
-          <a :href="info.contact.url" :aria-label="info.contact.name ?? t('Contact')">
-            {{ info.contact.name ?? t('Contact') }}
+          <a :href="info.contact.url" :aria-label="info.contact.name ?? contactLabel">
+            {{ info.contact.name ?? contactLabel }}
           </a>
 
           <span v-if="info.contact.email" class="text-muted-foreground">/</span>
