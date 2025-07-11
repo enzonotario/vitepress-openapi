@@ -184,7 +184,7 @@ const unionBadge = computed(() => {
             }"
           />
 
-          <OASchemaPropertyAttributes v-if="props.property.enum" :property="{ 'valid values': props.property.enum }" />
+          <OASchemaPropertyAttributes v-if="props.property.enum" :property="{ 'Valid values': props.property.enum }" />
 
           <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
         </div>
