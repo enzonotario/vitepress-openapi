@@ -57,6 +57,7 @@ const toggleAllChildren = (expand) => {
 const isObject = props.property.types?.includes('object')
 const isArray = props.property.types?.includes('array')
 const isObjectOrArray = isObject || isArray || props.property.type === 'object' || props.property.type === 'array'
+const isCollapsible = computed(() => isObjectOrArray && props.property.properties)
 const isUnion = props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true
 
 const hasExpandableProperties = computed(() => {
@@ -89,7 +90,12 @@ const enumAttr = computed(() => ({ [t('valid values')]: props.property.enum }))
       :disabled="!isObjectOrArray"
     >
       <CollapsibleTrigger class="w-full">
-        <div class="flex flex-col text-start space-y-1 group select-text cursor-auto">
+        <div
+          class="flex flex-col text-start space-y-1 group select-text"
+          :class="{
+            'cursor-pointer': isCollapsible,
+          }"
+        >
           <div class="flex flex-row items-center gap-2 text-sm">
             <span
               v-if="props.property.name && props.property.name.trim() !== ''"
@@ -103,7 +109,7 @@ const enumAttr = computed(() => ({ [t('valid values')]: props.property.enum }))
                 <Tooltip :delay-duration="200">
                   <TooltipTrigger as-child>
                     <Button
-                      v-if="isObjectOrArray && props.property.properties"
+                      v-if="isCollapsible"
                       size="icon"
                       variant="icon"
                       :aria-label="toggleLabel"
@@ -180,21 +186,22 @@ const enumAttr = computed(() => ({ [t('valid values')]: props.property.enum }))
               props.property.required === true ? t('Required') : ''
             }}</span>
           </div>
-
-          <OAMarkdown
-            v-if="props.property?.description"
-            :content="props.property.description"
-            class="text-sm"
-            :class="{
-              'pl-2': isObjectOrArray,
-            }"
-          />
-
-          <OASchemaPropertyAttributes v-if="props.property.enum" :property="enumAttr" />
-
-          <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
         </div>
       </CollapsibleTrigger>
+
+      <OAMarkdown
+        v-if="props.property?.description"
+        :content="props.property.description"
+        class="text-sm"
+        :class="{
+          'pl-2': isObjectOrArray,
+        }"
+      />
+
+      <OASchemaPropertyAttributes v-if="props.property.enum" :property="enumAttr" />
+
+      <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
+
       <CollapsibleContent v-if="isObjectOrArray" class="ml-2 pl-2 border-l border-l-solid">
         <Badge
           v-if="isUnion"
