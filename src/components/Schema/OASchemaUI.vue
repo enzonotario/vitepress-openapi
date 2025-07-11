@@ -78,6 +78,8 @@ const unionBadge = computed(() => {
 const toggleLabel = computed(() => isOpen.value ? t('Collapse') : t('Expand'))
 
 const toggleAllLabel = computed(() => isOpen.value ? t('Collapse all') : t('Expand all'))
+
+const enumAttr = computed(() => ({ [t('valid values')]: props.property.enum }))
 </script>
 
 <template>
@@ -188,7 +190,7 @@ const toggleAllLabel = computed(() => isOpen.value ? t('Collapse all') : t('Expa
             }"
           />
 
-          <OASchemaPropertyAttributes v-if="props.property.enum" :property="{ [t('valid values')]: props.property.enum }" />
+          <OASchemaPropertyAttributes v-if="props.property.enum" :property="enumAttr" />
 
           <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
         </div>
