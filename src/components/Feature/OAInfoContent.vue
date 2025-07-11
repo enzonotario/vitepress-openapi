@@ -18,6 +18,7 @@ const { t } = useI18n()
 const info = props.openapi.spec.info ?? {}
 
 const externalDocs = props.openapi.spec.externalDocs ?? {}
+const externalDocsLabel = t('External Documentation')
 </script>
 
 <template>
@@ -97,11 +98,11 @@ const externalDocs = props.openapi.spec.externalDocs ?? {}
 
     <template v-if="Object.keys(externalDocs).length">
       <OAHeading level="h2">
-        {{ t('External Documentation') }}
+        {{ externalDocsLabel }}
       </OAHeading>
 
-      <a :href="externalDocs.url" :aria-label="externalDocs.description ?? t('External Documentation')">
-        {{ externalDocs.description ?? t('External Documentation') }}
+      <a :href="externalDocs.url" :aria-label="externalDocs.description ?? externalDocsLabel">
+        {{ externalDocs.description ?? externalDocsLabel }}
       </a>
     </template>
   </div>
