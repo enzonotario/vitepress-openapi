@@ -61,7 +61,10 @@ const emits = defineEmits([
 ])
 
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
+
 const { t } = useI18n()
+const keyLabel = t('Key')
+const valueLabel = t('Value')
 
 const selectedServer = computed({
   get: () => operationData.playground.selectedServer.value,
@@ -300,10 +303,10 @@ watch(selectedSchemeId, (schemeId) => {
           <div class="w-[16px]" />
           <div class="flex flex-row flex-grow gap-2">
             <div class="w-1/2 flex justify-start">
-              <span class="text-xs text-muted-foreground uppercase">{{ t('Key') }}</span>
+              <span class="text-xs text-muted-foreground uppercase">{{ keyLabel }}</span>
             </div>
             <div class="w-1/2 flex justify-start">
-              <span class="text-xs text-muted-foreground uppercase">{{ t('Value') }}</span>
+              <span class="text-xs text-muted-foreground uppercase">{{ valueLabel }}</span>
             </div>
           </div>
         </div>
