@@ -1,9 +1,10 @@
 import type { JSONSchema } from '@trojs/openapi-dereference'
 import type { OpenAPIDocument, ParsedOpenAPI } from '../../types'
-import { dereferenceSync } from '@trojs/openapi-dereference'
+
 import { $trycatch } from '@tszen/trycatch'
 import { merge } from 'allof-merge'
 import { parseYAML } from 'confbox'
+import { dereferenceWithAnnotationsSync } from './dereferenceWithAnnotations'
 import { generateCodeSamples } from './generateCodeSamples'
 import { generateMissingOperationIds } from './generateMissingOperationIds'
 import { generateMissingSummary } from './generateMissingSummary'
@@ -103,7 +104,7 @@ export function parseOpenapi() {
     ) as ParsedOpenAPI)
     parsedSpec = errMerge ? parsedSpec : mergedSpec
 
-    const [dereferencedSpec, errDereference] = $trycatch(() => dereferenceSync(parsedSpec as JSONSchema) as ParsedOpenAPI)
+    const [dereferencedSpec, errDereference] = $trycatch(() => dereferenceWithAnnotationsSync(parsedSpec as JSONSchema) as ParsedOpenAPI)
     parsedSpec = errDereference ? parsedSpec : dereferencedSpec
 
     const [securitySpec, errSecurity] = $trycatch(() => generateSecurityUi(parsedSpec))
