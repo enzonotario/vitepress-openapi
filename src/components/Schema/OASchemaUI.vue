@@ -80,7 +80,7 @@ const toggleLabel = computed(() => isOpen.value ? t('Collapse') : t('Expand'))
 
 const toggleAllLabel = computed(() => isOpen.value ? t('Collapse all') : t('Expand all'))
 
-const enumAttr = computed(() => ({ [t('valid values')]: props.property.enum }))
+const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
 </script>
 
 <template>
