@@ -103,7 +103,7 @@ export function dereferenceWithAnnotationsSync(schema: JSONSchema): JSONSchema {
           } while (ref?.$ref)
 
           // Create a new object with the resolved reference properties
-          const resolved = {}
+          const resolved: any = {}
           for (const key in ref) {
             resolved[key] = ref[key]
           }
