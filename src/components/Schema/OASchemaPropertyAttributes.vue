@@ -26,7 +26,7 @@ const isNonEmptyValue = (value) => {
 
 const properties = Object.keys(props.property)
   .filter(key => !keysToIgnore.includes(key)) // Exclude specified keys
-  .filter(key => isNonEmptyValue(props.property[key])) // Keep only non-empty values
+  .filter(key => isNonEmptyValue(props.property[key]) || (key === 'default' && props.property[key] !== undefined)) // Keep only non-empty values except for "default"
 </script>
 
 <template>

@@ -127,6 +127,59 @@ const fixtures: Record<string, FixtureTest> = {
     schemaUiJson: 'string',
   },
 
+  'schema with enum without explicit type': {
+    jsonSchema: {
+      enum: ['red', 'amber', 'green'],
+    },
+    schemaUi: {
+      name: '',
+      types: ['string'],
+      required: false,
+      enum: ['red', 'amber', 'green'],
+    },
+    schemaUiJson: 'string',
+  },
+
+  'schema with mixed enum without explicit type': {
+    jsonSchema: {
+      enum: ['red', 'amber', 'green', false, null, 42, 42.0],
+    },
+    schemaUi: {
+      name: '',
+      types: ['string', 'boolean', 'null', 'integer'],
+      required: false,
+      enum: ['red', 'amber', 'green', false, null, 42, 42.0],
+    },
+    schemaUiJson: 'string',
+  },
+
+  'schema with mixed integer+number enum without explicit type': {
+    jsonSchema: {
+      enum: [42, 42.1],
+    },
+    schemaUi: {
+      name: '',
+      types: ['number'],
+      required: false,
+      enum: [42, 42.1],
+    },
+    schemaUiJson: 0,
+  },
+
+  'schema with enum and defined types': {
+    jsonSchema: {
+      type: ['string', 'number'],
+      enum: ['red', 42],
+    },
+    schemaUi: {
+      name: '',
+      types: ['string', 'number'],
+      required: false,
+      enum: ['red', 42],
+    },
+    schemaUiJson: 'string',
+  },
+
   'deep array schema': {
     jsonSchema: {
       type: 'array',
@@ -1490,6 +1543,49 @@ const fixtures: Record<string, FixtureTest> = {
     schemaUiJson: {
       name: 'John',
       age: 42,
+    },
+  },
+
+  'enum with default value': {
+    jsonSchema: {
+      type: 'string',
+      enum: ['cat', 'dog'],
+      default: 'cat',
+    },
+    schemaUi: {
+      name: '',
+      types: ['string'],
+      required: false,
+      enum: ['cat', 'dog'],
+      constraints: { default: 'cat' },
+      defaultValue: 'cat',
+    },
+    schemaUiJson: 'cat',
+  },
+
+  'object with null default': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        hasFur: { type: ['boolean', 'null'], default: null },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        {
+          name: 'hasFur',
+          required: false,
+          types: ['boolean', 'null'],
+          constraints: { default: null },
+          defaultValue: null,
+        },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      hasFur: null,
     },
   },
 
