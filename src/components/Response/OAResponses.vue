@@ -48,7 +48,7 @@ const tabsSelector = computed(() => {
     <Tabs
       :default-value="vModel"
     >
-      <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)] flex flex-row items-center">
+      <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)] flex flex-wrap flex-row items-center justify-between gap-y-[16px]">
         <OAHeading
           level="h2"
           :prefix="headingPrefix"
@@ -57,8 +57,12 @@ const tabsSelector = computed(() => {
         >
           {{ t('Responses') }}
         </OAHeading>
-        <div class="relative flex-1">
-          <div class="absolute inset-x-0 top-[-20px] w-full flex justify-end">
+        <div
+          :class="{
+            'overflow-x-auto': responsesCodes.length > 1,
+          }"
+        >
+          <div class="w-full flex">
             <TabsList class="bg-transparent text-muted-foreground p-0">
               <div class="relative flex flex-row">
                 <template v-if="tabsSelector === 'tabs'">
