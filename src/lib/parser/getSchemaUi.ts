@@ -167,8 +167,8 @@ class UiPropertyFactory {
       }
     }
 
-    if (schema.circularReference) {
-      return UiPropertyFactory.createCircularReferenceProperty(name, schema.circularReference)
+    if (schema.properties?.meta?.isCircularReference) {
+      return UiPropertyFactory.createCircularReferenceProperty(name, schema.properties.meta.circularReference)
     }
 
     if (schema.oneOf) {

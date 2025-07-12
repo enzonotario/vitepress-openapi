@@ -81,41 +81,57 @@ export function dereferenceWithAnnotationsSync(schema: JSONSchema): JSONSchema {
   const visitedNodes = new Set<any>()
   const cloned = klona(schema)
 
-  const resolve = (current: any): any => {
+  const resolve = (current: any, path: string = '#'): any => {
     if (typeof current === 'object' && current !== null) {
+      // make sure we don't visit the same node twice
       if (visitedNodes.has(current)) {
         return current
       }
       visitedNodes.add(current)
 
       if (Array.isArray(current)) {
+        // array
         for (let index = 0; index < current.length; index++) {
-          current[index] = resolve(current[index])
+          current[index] = resolve(current[index], `${path}/${index}`)
         }
       } else {
+        // object
         if ('$ref' in current && typeof current.$ref === 'string') {
           let ref: any = current
           do {
             ref = resolveRefSync(cloned, ref.$ref)
           } while (ref?.$ref)
-          ref = klona(ref)
-          ref = resolve(ref)
+
+          // Create a new object with the resolved reference properties
+          const resolved = {}
+          for (const key in ref) {
+            resolved[key] = ref[key]
+          }
+
+          // Add annotation keys from the original reference
           for (const key in current) {
             if (key !== '$ref' && annotationKeys.has(key)) {
-              ref[key] = current[key]
+              resolved[key] = current[key]
             }
           }
-          return ref
+
+          // Resolve any nested references in the resolved object
+          for (const key in resolved) {
+            resolved[key] = resolve(resolved[key], `${path}/${key}`)
+          }
+
+          return resolved
         }
+
         for (const key in current) {
-          current[key] = resolve(current[key])
+          current[key] = resolve(current[key], `${path}/${key}`)
         }
       }
     }
     return current
   }
 
-  const result = resolve(cloned)
+  const result = resolve(cloned, '#')
   cache.set(schema, result)
   return result
 }

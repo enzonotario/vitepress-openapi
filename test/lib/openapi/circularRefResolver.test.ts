@@ -14,7 +14,7 @@ describe('resolveCircularRef', () => {
 
     const result = resolveCircularRef(schema)
 
-    expect(result.a.b.c.circularReference).toBe('/root/a')
+    expect(result.a.b.c.meta.circularReference).toBe('/root/a')
   })
 
   it('resolves circular references in a nested schema', () => {
@@ -31,7 +31,7 @@ describe('resolveCircularRef', () => {
 
     const result = resolveCircularRef(schema)
 
-    expect(result.a.b.c.d.circularReference).toBe('/root/a/b')
+    expect(result.a.b.c.d.meta.circularReference).toBe('/root/a/b')
   })
 
   it('handles schemas without circular references', () => {
@@ -89,6 +89,6 @@ describe('resolveCircularRef', () => {
 
     const result = resolveCircularRef(schema)
 
-    expect(result.a[0].circularReference).toBe('/root/a')
+    expect(result.a[0].meta.circularReference).toBe('/root/a')
   })
 })

@@ -32,7 +32,10 @@ function traverseNode(node: SchemaNode): void {
     // Replace the circular reference with a descriptor object.
     node.parent!.value[node.key] = {
       type: 'object',
-      circularReference,
+      meta: {
+        circularReference,
+        isCircularReference: true,
+      },
     }
   } else {
     // Recursively traverse child nodes.
