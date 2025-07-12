@@ -55,5 +55,7 @@
   "Expand all": "全部展开",
   "Collapse": "折叠",
   "Expand": "展开",
-  "Download OpenAPI Document": "下载 OpenAPI 文档"
+  "Download OpenAPI Document": "下载 OpenAPI 文档",
+  "Any of": "任意一个",
+  "valid values": "有效值"
 }
