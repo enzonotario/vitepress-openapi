@@ -150,6 +150,7 @@ export interface OperationLinkConfig {
 
 export interface MarkdownConfig {
   operationLink?: OperationLinkConfig
+  externalLinksNewTab?: boolean
 }
 
 export interface UseThemeConfig {
@@ -358,6 +359,7 @@ const defaultValues = {
     operationLink: {
       linkPrefix: DEFAULT_OPERATIONS_PREFIX,
     },
+    externalLinksNewTab: false,
   },
 }
 
@@ -446,6 +448,7 @@ const themeConfig: UseThemeConfig = {
     operationLink: {
       linkPrefix: defaultValues.markdown.operationLink.linkPrefix,
     },
+    externalLinksNewTab: defaultValues.markdown.externalLinksNewTab,
   },
 }
 
@@ -1009,6 +1012,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     return themeConfig.markdown as MarkdownConfig
   }
 
+  function getExternalLinksNewTab(): boolean {
+    return themeConfig.markdown?.externalLinksNewTab ?? false
+  }
+
   function setMarkdownConfig(config: Partial<UnwrapNestedRefs<MarkdownConfig>>) {
     const markdown = ensureNestedProperty(themeConfig, 'markdown')
 
@@ -1022,6 +1029,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
       if (config.operationLink.transformHref !== undefined) {
         operationLink.transformHref = config.operationLink.transformHref
       }
+    }
+
+    if (config.externalLinksNewTab !== undefined) {
+      markdown.externalLinksNewTab = config.externalLinksNewTab
     }
   }
 
@@ -1100,6 +1111,7 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setServerConfig,
     getServerAllowCustomServer,
     getMarkdownConfig,
+    getExternalLinksNewTab,
     setMarkdownConfig,
     getOperationLinkConfig,
   }

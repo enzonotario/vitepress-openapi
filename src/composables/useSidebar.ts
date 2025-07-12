@@ -48,7 +48,6 @@ export interface SidebarGroupConfig {
   tag: string | string[]
   text?: string
   linkPrefix?: string
-  addedOperations?: Set<string>
   sidebarItemTemplate?: SidebarItemTemplateFn
   sidebarGroupTemplate?: SidebarGroupTemplateFn
 }
@@ -163,7 +162,6 @@ export function useSidebar({
     tag,
     text = '',
     linkPrefix: groupLinkPrefix = linkPrefix,
-    addedOperations = new Set<string>(),
     sidebarItemTemplate: localItemTemplate,
     sidebarGroupTemplate: localGroupTemplate,
   }: SidebarGroupConfig): OASidebarItem {
@@ -184,7 +182,7 @@ export function useSidebar({
           .map((method) => {
             const operation = pathObject?.[method] as OpenAPIOperation | undefined
 
-            if (!operation || addedOperations.has(operation.operationId)) {
+            if (!operation) {
               return null
             }
 
@@ -193,7 +191,6 @@ export function useSidebar({
                     || includeTags.every(tagName => operation.tags?.includes(tagName))
 
             if (shouldInclude) {
-              addedOperations.add(operation.operationId)
               return generateSidebarItem(method as OpenAPIV3.HttpMethods, path, groupLinkPrefix, localItemTemplate)
             }
 
@@ -224,31 +221,32 @@ export function useSidebar({
       return []
     }
 
-    const addedOperations = new Set<string>()
-
     const taggedGroups = (tags ?? []).map(tag =>
       generateSidebarGroup({
         tag,
         text: tag,
         linkPrefix: groupsLinkPrefix || tagLinkPrefix,
-        addedOperations,
         sidebarItemTemplate: localItemTemplate,
         sidebarGroupTemplate: localGroupTemplate,
       }),
     )
 
-    const untaggedGroup = generateSidebarGroup({
-      tag: [],
-      text: '',
-      linkPrefix: groupsLinkPrefix || tagLinkPrefix,
-      addedOperations,
-      sidebarItemTemplate: localItemTemplate,
-      sidebarGroupTemplate: localGroupTemplate,
-    })
+    const pathsWithoutTags = getOpenApi().getPathsWithoutTags()
+    const hasUntagged = Object.keys(pathsWithoutTags).length > 0
 
-    return untaggedGroup.items?.length
-      ? [...taggedGroups, untaggedGroup]
-      : taggedGroups
+    if (hasUntagged) {
+      const untaggedGroup = generateSidebarGroup({
+        tag: [],
+        text: '',
+        linkPrefix: groupsLinkPrefix || tagLinkPrefix,
+        sidebarItemTemplate: localItemTemplate,
+        sidebarGroupTemplate: localGroupTemplate,
+      })
+
+      return [...taggedGroups, untaggedGroup]
+    }
+
+    return taggedGroups
   }
 
   function itemsByTags({

@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OACodeBlock from '../Common/OACodeBlock.vue'
@@ -22,6 +23,7 @@ const props = defineProps({
 })
 
 const schemaViewerDeep = useTheme().getSchemaViewerDeep()
+const { t } = useI18n()
 
 const defaultValue = computed(() => {
   const examplesKeys = Object.keys(props.examples ?? {})
@@ -50,7 +52,7 @@ const defaultValue = computed(() => {
         variant="schemaTabs"
         class="h-full"
       >
-        {{ $t('Schema') }}
+        {{ t('Schema') }}
       </TabsTrigger>
       <TabsTrigger
         v-for="(_, exampleKey) in props.examples ?? {}"

@@ -18,7 +18,7 @@ const [isOpen, toggleOpen] = useToggle(false)
     >
       <Icon icon="mdi:cog" />
     </PopoverTrigger>
-    <PopoverContent class="w-full max-w-lg h-[70vh] flex flex-col p-0" @interact-outside.prevent="">
+    <PopoverContent class="w-full md:max-w-3xl h-[85vh] flex flex-col p-0" @interact-outside.prevent="">
       <div class="flex flex-row items-center justify-between px-2 py-1 border-b border-[var(--vp-c-divider)]">
         <h2 class="font-bold">
           Theme Configuration
@@ -28,7 +28,7 @@ const [isOpen, toggleOpen] = useToggle(false)
         </button>
       </div>
 
-      <ThemeConfig />
+      <ThemeConfig class="max-w-[100vw]" />
     </PopoverContent>
   </Popover>
 </template>

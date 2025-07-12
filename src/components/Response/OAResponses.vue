@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { TabsIndicator } from 'reka-ui'
 import { computed, defineProps, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
@@ -23,6 +24,7 @@ const props = defineProps({
 })
 
 const themeConfig = useTheme()
+const { t } = useI18n()
 
 const responsesCodes = Object.keys(props.responses)
 
@@ -46,17 +48,21 @@ const tabsSelector = computed(() => {
     <Tabs
       :default-value="vModel"
     >
-      <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)] flex flex-row items-center">
+      <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)] flex flex-wrap flex-row items-center justify-between gap-y-[16px]">
         <OAHeading
           level="h2"
           :prefix="headingPrefix"
           class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0 inline-block"
           header-anchor-class="!top-0"
         >
-          {{ $t('Responses') }}
+          {{ t('Responses') }}
         </OAHeading>
-        <div class="relative flex-1">
-          <div class="absolute inset-x-0 top-[-20px] w-full flex justify-end">
+        <div
+          :class="{
+            'overflow-x-auto': responsesCodes.length > 1,
+          }"
+        >
+          <div class="w-full flex">
             <TabsList class="bg-transparent text-muted-foreground p-0">
               <div class="relative flex flex-row">
                 <template v-if="tabsSelector === 'tabs'">
