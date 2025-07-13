@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { getSchemaUi } from '../../../src/lib/parser/getSchemaUi'
-import { specWithCircularRef } from '../../testsConstants'
 import { parseOpenapi } from '../../../src/lib/parser/parseOpenapi'
+import { specWithCircularRef } from '../../testsConstants'
 
 describe('parseOpenapi circular references', () => {
   it('marks circular references in schema UI', () => {
