@@ -1,4 +1,5 @@
 import type { OpenAPI } from '@scalar/openapi-types'
+import { originSymbol } from './dereferenceWithAnnotations'
 
 interface SchemaNode {
   key: string
@@ -48,13 +49,26 @@ function traverseNode(node: SchemaNode): void {
   }
 }
 
-function detectCircularReference(ancestor: SchemaNode | null, value: any): string | null {
+function detectCircularReference(
+  ancestor: SchemaNode | null,
+  value: any
+): string | null {
+  const target =
+    value && (value as any)[originSymbol] ? (value as any)[originSymbol] : value
+  
   while (ancestor) {
-    if (ancestor.value === value) {
+    const ancestorValue = ancestor.value
+    const ancestorTarget =
+      ancestorValue && (ancestorValue as any)[originSymbol]
+        ? (ancestorValue as any)[originSymbol]
+        : ancestorValue
+        
+    if (ancestorTarget === target) {
       return buildReferencePath(ancestor)
     }
     ancestor = ancestor.parent
   }
+
   return null
 }
 
