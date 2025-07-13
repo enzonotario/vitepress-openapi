@@ -51,18 +51,20 @@ function traverseNode(node: SchemaNode): void {
 
 function detectCircularReference(
   ancestor: SchemaNode | null,
-  value: any
+  value: any,
 ): string | null {
-  const target =
-    value && (value as any)[originSymbol] ? (value as any)[originSymbol] : value
-  
+  const target
+    = value && (value as any)[originSymbol]
+      ? (value as any)[originSymbol]
+      : value
+
   while (ancestor) {
     const ancestorValue = ancestor.value
-    const ancestorTarget =
-      ancestorValue && (ancestorValue as any)[originSymbol]
+    const ancestorTarget
+      = ancestorValue && (ancestorValue as any)[originSymbol]
         ? (ancestorValue as any)[originSymbol]
         : ancestorValue
-        
+
     if (ancestorTarget === target) {
       return buildReferencePath(ancestor)
     }
