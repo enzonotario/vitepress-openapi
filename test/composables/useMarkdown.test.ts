@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
-import MarkdownIt from 'markdown-it'
+import type MarkdownIt from 'markdown-it'
 import { useMarkdown } from '../../src/composables/useMarkdown'
-import { useTheme } from '../../src/composables/useTheme'
 import { useOpenapi } from '../../src/composables/useOpenapi'
+import { useTheme } from '../../src/composables/useTheme'
 import { spec } from '../testsConstants'
 
 describe('useMarkdown', () => {
