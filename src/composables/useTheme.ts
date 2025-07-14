@@ -152,7 +152,7 @@ export interface OperationLinkConfig {
 export interface MarkdownConfig {
   operationLink?: OperationLinkConfig | false
   externalLinksNewTab?: boolean
-  config?: (md: MarkdownIt) => MarkdownIt | void
+  config?: (md: MarkdownIt) => MarkdownIt | undefined
 }
 
 export interface UseThemeConfig {
