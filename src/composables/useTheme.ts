@@ -1,3 +1,4 @@
+import type MarkdownIt from 'markdown-it'
 import type { Ref, UnwrapNestedRefs } from 'vue'
 import type { OARequest } from '../lib/codeSamples/request'
 import type { OperationSlot, ParsedOperation } from '../types'
@@ -9,11 +10,11 @@ import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
 import { deepUnref } from '../lib/deepUnref'
 import { locales } from '../locales'
 
-function ensureNestedProperty<T, K extends keyof T>(obj: T, key: K): NonNullable<T[K]> {
+function ensureNestedProperty<T, K extends keyof T>(obj: T, key: K): Exclude<NonNullable<T[K]>, false> {
   if (!obj[key]) {
     obj[key] = {} as T[K]
   }
-  return obj[key] as NonNullable<T[K]>
+  return obj[key] as Exclude<NonNullable<T[K]>, false>
 }
 
 function ensureRefProperty<T, K extends keyof T, V>(obj: T, key: K, propName: string, value: V): Ref<V> {
@@ -149,8 +150,9 @@ export interface OperationLinkConfig {
 }
 
 export interface MarkdownConfig {
-  operationLink?: OperationLinkConfig
+  operationLink?: OperationLinkConfig | false
   externalLinksNewTab?: boolean
+  config?: (md: MarkdownIt) => MarkdownIt | void
 }
 
 export interface UseThemeConfig {
@@ -360,6 +362,7 @@ const defaultValues = {
       linkPrefix: DEFAULT_OPERATIONS_PREFIX,
     },
     externalLinksNewTab: false,
+    config: undefined,
   },
 }
 
@@ -449,6 +452,7 @@ const themeConfig: UseThemeConfig = {
       linkPrefix: defaultValues.markdown.operationLink.linkPrefix,
     },
     externalLinksNewTab: defaultValues.markdown.externalLinksNewTab,
+    config: defaultValues.markdown.config,
   },
 }
 
@@ -1019,24 +1023,32 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   function setMarkdownConfig(config: Partial<UnwrapNestedRefs<MarkdownConfig>>) {
     const markdown = ensureNestedProperty(themeConfig, 'markdown')
 
-    if (config.operationLink) {
-      const operationLink = ensureNestedProperty(markdown, 'operationLink')
+    if (config.operationLink !== undefined) {
+      if (config.operationLink === false) {
+        markdown.operationLink = false
+      } else {
+        const operationLink = ensureNestedProperty(markdown, 'operationLink')
 
-      if (config.operationLink.linkPrefix !== undefined) {
-        operationLink.linkPrefix = config.operationLink.linkPrefix
-      }
+        if (config.operationLink.linkPrefix !== undefined) {
+          operationLink.linkPrefix = config.operationLink.linkPrefix
+        }
 
-      if (config.operationLink.transformHref !== undefined) {
-        operationLink.transformHref = config.operationLink.transformHref
+        if (config.operationLink.transformHref !== undefined) {
+          operationLink.transformHref = config.operationLink.transformHref
+        }
       }
     }
 
     if (config.externalLinksNewTab !== undefined) {
       markdown.externalLinksNewTab = config.externalLinksNewTab
     }
+
+    if (config.config !== undefined) {
+      markdown.config = config.config
+    }
   }
 
-  function getOperationLinkConfig(): OperationLinkConfig | undefined {
+  function getOperationLinkConfig(): OperationLinkConfig | false | undefined {
     return themeConfig.markdown?.operationLink
   }
 

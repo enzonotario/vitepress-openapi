@@ -136,6 +136,7 @@ export default {
                     },
                 },
                 externalLinksNewTab: true,
+                config: md => md,
             },
         })
     }
@@ -221,7 +222,28 @@ export default {
 
 | Function              | Description                       | Default Value                                                | Allowed Values                                                                                                                                                                    |
 |------------------------|-----------------------------------|------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
-| `setMarkdownConfig`    | Sets the markdown configuration.  | `{ operationLink: { linkPrefix: '/operations/' }, externalLinksNewTab: false }`        | `{ operationLink: { linkPrefix: string, transformHref: (href: string) => string, createOperationLinkHtml: (href: string, method: string, title: string) => string }, externalLinksNewTab: boolean }`            |
-| `getMarkdownConfig`    | Gets the markdown configuration.  | `{ operationLink: { linkPrefix: '/operations/' }, externalLinksNewTab: false }`        | `{ operationLink: { linkPrefix: string, transformHref: (href: string) => string, createOperationLinkHtml: (href: string, method: string, title: string) => string }, externalLinksNewTab: boolean }` |
+| `setMarkdownConfig`    | Sets the markdown configuration.  | `{ operationLink: { linkPrefix: '/operations/' }, externalLinksNewTab: false }`        | `{ operationLink: { linkPrefix: string, transformHref: (href: string) => string, createOperationLinkHtml: (href: string, method: string, title: string) => string } \| false, externalLinksNewTab: boolean, config: (md) => MarkdownIt }`            |
+| `getMarkdownConfig`    | Gets the markdown configuration.  | `{ operationLink: { linkPrefix: '/operations/' }, externalLinksNewTab: false }`        | `{ operationLink: { linkPrefix: string, transformHref: (href: string) => string, createOperationLinkHtml: (href: string, method: string, title: string) => string } \| false, externalLinksNewTab: boolean, config: (md) => MarkdownIt }` |
 | `getOperationLinkConfig` | Gets the operation link configuration. | `{ linkPrefix: '/operations/' }`                    | `{ linkPrefix: string, transformHref: (href: string) => string, createOperationLinkHtml: (href: string, method: string, title: string) => string }`                    |
 | `getExternalLinksNewTab` | Gets whether external links open in new tab. | `false` | `true`, `false` |
+
+
+You can also customize the markdown renderer with the `config` callback:
+
+```ts
+useTheme({
+  markdown: {
+    config: md => {
+      // add custom markdown-it plugins
+      md.use(myPlugin, myParams)
+      return;
+
+      // or return your own instance
+      const myMd = (/* ... */)
+      return myMd
+    },
+  },
+})
+```
+
+`md` is an instance of [markdown-it](https://github.com/markdown-it/markdown-it).

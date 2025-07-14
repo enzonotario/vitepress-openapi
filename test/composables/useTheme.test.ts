@@ -768,6 +768,19 @@ describe('markdown configuration', () => {
     const result = themeConfig.getExternalLinksNewTab()
     expect(result).toBe(true)
   })
+
+  it('allows disabling operation link processing', () => {
+    themeConfig.setMarkdownConfig({ operationLink: false })
+    const result = themeConfig.getOperationLinkConfig()
+    expect(result).toBe(false)
+  })
+
+  it('stores the markdown config callback', () => {
+    const configFn = () => {}
+    themeConfig.setMarkdownConfig({ config: configFn })
+    const result = themeConfig.getMarkdownConfig()
+    expect(result.config).toBe(configFn)
+  })
 })
 
 describe('codeSamples configuration', () => {
