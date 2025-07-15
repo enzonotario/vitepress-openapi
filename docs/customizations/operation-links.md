@@ -97,4 +97,23 @@ The plugin will transform it into:
 
 ### Usage in Markdown
 
-WIP.
+You can write links using the `/operations/` prefix directly in Markdown. The plugin
+converts them into `OAOperationLink` components with the correct HTTP method badge.
+
+```markdown
+The [Get Artists](/operations/getAllArtists) operation retrieves all artists.
+```
+
+### Disabling the plugin
+
+If you prefer to handle these links yourself, disable the plugin via `useTheme`:
+
+```ts
+import { useTheme } from 'vitepress-openapi/client'
+
+useTheme({
+  markdown: {
+    operationLink: false,
+  },
+})
+```

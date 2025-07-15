@@ -6,9 +6,9 @@ import { useTheme } from './useTheme'
 export function useMarkdown() {
   const theme = useTheme()
   const operationLinkConfig = theme.getOperationLinkConfig()
-  const { externalLinksNewTab } = theme.getMarkdownConfig()
+  const { externalLinksNewTab, config } = theme.getMarkdownConfig()
 
-  const md = markdownit({
+  let md = markdownit({
     html: true,
     breaks: true,
   })
@@ -27,7 +27,14 @@ export function useMarkdown() {
     ])
   }
 
-  md.use(operationLink, operationLinkConfig)
+  if (operationLinkConfig !== false) {
+    md.use(operationLink, operationLinkConfig)
+  }
+
+  if (config) {
+    // user can mutate existing md to add plugins or return completely different instance
+    md = config(md) || md
+  }
 
   function render(content: string) {
     // Ensure we always return a valid HTML string even for empty/undefined content.
