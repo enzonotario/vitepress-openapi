@@ -56,7 +56,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Success Response\n\nThe request was successful and returns a list of artists.\n\nResponse Format\n\nThe response includes:\n- A `data` array containing artist objects\n- Pagination information\n\n> **Note:** You can use the pagination parameters to navigate through large result sets.",
             "content": {
               "application/json": {
                 "schema": {
@@ -127,7 +127,7 @@
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "Artist Created Successfully\n\nThe artist has been successfully added to our database.\n\nResponse Details\n\nThe response includes the complete artist object with:\n- A newly assigned unique `id`\n- All the information you provided in the request\n\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -157,7 +157,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Bad Request\n\nThe server could not process your request due to invalid input.\n\nCommon Causes\n\n- Missing required fields\n- Invalid data format\n- Validation errors\n\n> **Tip:** Check the error message in the response for specific details about what went wrong.",
             "content": {
               "application/json": {
                 "schema": {
@@ -167,7 +167,7 @@
             }
           },
           "403": {
-            "description": "Forbidden",
+            "description": "Forbidden\n\nYou don't have permission to create this resource.\n\nPossible Reasons\n\n- Your API key doesn't have write permissions\n- You've reached your quota limit\n- The resource is protected",
             "content": {
               "application/json": {
                 "schema": {
@@ -197,7 +197,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Artist Found",
+            "description": "Artist Found\n\nThe requested artist was found and returned successfully.\n\nResponse Format\n\nThe response includes the complete artist object with all available details:\n\n- `id`: Unique identifier for the artist\n- `name`: Full name of the artist\n- `description`: Biographical information\n- `image`: URL to the artist's photo\n- `band`: Primary band association",
             "content": {
               "application/json": {
                 "schema": {
@@ -207,7 +207,7 @@
             }
           },
           "404": {
-            "description": "Artist Not Found",
+            "description": "Artist Not Found\n\nThe requested artist could not be found in our database.\n\nPossible Reasons\n\n- The artist ID doesn't exist\n- The artist has been removed\n- You've entered an incorrect ID\n\n> **Tip:** Double-check the artist ID and try again. You can get a list of all available artists using the [](/operations/getAllArtists) endpoint.",
             "content": {
               "application/json": {
                 "schema": {
@@ -242,7 +242,7 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Artist Updated Successfully\n\nThe artist information has been successfully updated in our database.\n\nResponse Details\n\nThe response includes the complete updated artist object with all the changes you made.\n\n> **Note:** All fields are returned in the response, even if you only updated some of them.",
             "content": {
               "application/json": {
                 "schema": {
@@ -252,7 +252,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Bad Request\n\nThe server could not process your update request due to invalid input.\n\nCommon Causes\n\n- Missing required fields\n- Invalid data format\n- Validation errors\n\n> **Tip:** Check the error message in the response for specific details about what went wrong.",
             "content": {
               "application/json": {
                 "schema": {
@@ -262,7 +262,7 @@
             }
           },
           "403": {
-            "description": "Forbidden",
+            "description": "Forbidden\n\nYou don't have permission to update this artist.\n\nPossible Reasons\n\n- Your API key doesn't have write permissions\n- You're trying to update a protected artist record\n- You've reached your quota limit",
             "content": {
               "application/json": {
                 "schema": {
@@ -288,7 +288,7 @@
         ],
         "responses": {
           "400": {
-            "description": "Bad Request",
+            "description": "Bad Request - Deprecated Endpoint",
             "content": {
               "application/json": {
                 "schema": {
@@ -298,7 +298,7 @@
             }
           },
           "403": {
-            "description": "Forbidden",
+            "description": "Forbidden - Deprecated Endpoint",
             "content": {
               "application/json": {
                 "schema": {
@@ -334,7 +334,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Albums Found\n\nThe request was successful and returns a list of albums for the specified artist.\n\nResponse Format\n\nThe response includes:\n- A `data` array containing album objects\n- Pagination information for navigating through large collections\n\n> **Note:** If the artist has no albums, the data array will be empty but the request will still return a 200 status code.",
             "content": {
               "application/json": {
                 "schema": {
@@ -384,7 +384,7 @@
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "Album Created Successfully\n\nThe album has been successfully added to the artist's discography.\n\nResponse Details\n\nThe response includes the complete album object with:\n- A newly assigned unique `id`\n- All the information you provided in the request\n- The association with the artist\n\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -394,7 +394,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Bad Request\n\nThe server could not process your request due to invalid album data.\n\nCommon Causes\n\n- Missing required fields (title, year)\n- Invalid year format (must be a number)\n- Year out of valid range\n\n> **Tip:** Make sure the album year is accurate and in the correct format.",
             "content": {
               "application/json": {
                 "schema": {
@@ -404,7 +404,7 @@
             }
           },
           "403": {
-            "description": "Forbidden",
+            "description": "Forbidden\n\nYou don't have permission to add albums to this artist.\n\nPossible Reasons\n\n- Your API key doesn't have write permissions\n- The artist's discography is locked or protected\n- You've reached your quota for album additions",
             "content": {
               "application/json": {
                 "schema": {
@@ -454,7 +454,7 @@
         },
         "responses": {
           "201": {
-            "description": "Created",
+            "description": "User Created Successfully\n\nYour account has been created and you can now access the Argentine Rock Legends API.\n\nResponse Details\n\nThe response includes your user information (excluding the password) and your API key for authentication.\n\n> **Important:** Save your API key securely as it will be needed for authenticated requests.",
             "content": {
               "application/json": {
                 "schema": {
@@ -464,7 +464,7 @@
             }
           },
           "400": {
-            "description": "Bad Request",
+            "description": "Registration Failed\n\nThe server could not process your registration request.\n\nCommon Causes\n\n- Email address already in use\n- Missing required fields\n- Password doesn't meet security requirements\n- Invalid email format\n\n> **Tip:** Make sure your email is valid and your password is at least 8 characters long.",
             "content": {
               "application/json": {
                 "schema": {
@@ -537,7 +537,7 @@
     },
     "responses": {
       "BadRequest": {
-        "description": "Bad Request",
+        "description": "Bad Request\n\nThe server could not process your request due to invalid input.\n\nCommon Causes\n\n- Missing required fields\n- Invalid data format\n- Validation errors\n\n> **Tip:** Check the error message in the response for specific details about what went wrong.",
         "content": {
           "application/json": {
             "schema": {
@@ -547,7 +547,7 @@
         }
       },
       "Forbidden": {
-        "description": "Forbidden",
+        "description": "Forbidden\n\nYou don't have permission to access this resource.\n\nPossible Reasons\n\n- Your API key doesn't have the required permissions\n- You've reached your quota limit\n- The resource is protected\n\n> **Note:** If you believe you should have access, please contact support.",
         "content": {
           "application/json": {
             "schema": {
@@ -557,7 +557,7 @@
         }
       },
       "NotFound": {
-        "description": "NotFound",
+        "description": "Resource Not Found\n\nThe requested resource could not be found.\n\nPossible Reasons\n\n- The ID doesn't exist\n- The resource has been removed\n- You've entered an incorrect path\n\n> **Tip:** Double-check the ID and try again.",
         "content": {
           "application/json": {
             "schema": {
