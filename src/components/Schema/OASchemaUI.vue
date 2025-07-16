@@ -57,7 +57,18 @@ const toggleAllChildren = (expand) => {
 const isObject = props.property.types?.includes('object')
 const isArray = props.property.types?.includes('array')
 const isObjectOrArray = isObject || isArray || props.property.type === 'object' || props.property.type === 'array'
-const isCollapsible = computed(() => isObjectOrArray && props.property.properties)
+const isCollapsible = computed(() =>
+  isObjectOrArray && (props.property.properties || props.property.items))
+
+const childProperties = computed(() => {
+  if (props.property.properties) {
+    return props.property.properties
+  }
+  if (props.property.items) {
+    return [props.property.items]
+  }
+  return []
+})
 const isUnion = props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true
 
 const hasExpandableProperties = computed(() => {
@@ -212,7 +223,7 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
 
         <div class="flex flex-col space-y-2">
           <OASchemaUI
-            v-for="(subProperty, idx) in props.property.properties"
+            v-for="(subProperty, idx) in childProperties"
             :key="idx"
             :property="subProperty"
             :schema="props.schema"

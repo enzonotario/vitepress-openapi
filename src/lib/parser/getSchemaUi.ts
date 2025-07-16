@@ -36,6 +36,7 @@ export interface OAProperty {
   docs?: DocumentationReference
   constraints?: Record<string, unknown>
   properties?: OAProperty[]
+  items?: OAProperty
   enum?: unknown[]
   subtype?: JSONSchemaType
   subexamples?: unknown[]
@@ -252,6 +253,24 @@ class UiPropertyFactory {
               meta: { ...(prop.meta || {}), [metaItemKey]: true },
             }
           })
+        }
+
+        // store primitive item details
+        if (
+          schemaType !== 'object'
+          && schemaType !== 'array'
+          && !schema.items.oneOf
+          && !schema.items.anyOf
+        ) {
+          const itemProperty = UiPropertyFactory.schemaToUiProperty('[item]', schema.items)
+          if (
+            itemProperty.description
+            || itemProperty.enum
+            || itemProperty.constraints
+            || itemProperty.docs
+          ) {
+            property.items = itemProperty
+          }
         }
       }
 
