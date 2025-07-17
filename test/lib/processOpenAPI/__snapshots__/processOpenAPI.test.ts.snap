@@ -86,7 +86,17 @@ exports[`processOpenAPI > processes the OpenAPI spec 1`] = `
             },
           },
         },
-        "description": "Bad Request",
+        "description": "Bad Request
+
+The server could not process your request due to invalid input.
+
+Common Causes
+
+- Missing required fields
+- Invalid data format
+- Validation errors
+
+> **Tip:** Check the error message in the response for specific details about what went wrong.",
       },
       "Forbidden": {
         "content": {
@@ -124,7 +134,17 @@ exports[`processOpenAPI > processes the OpenAPI spec 1`] = `
             },
           },
         },
-        "description": "Forbidden",
+        "description": "Forbidden
+
+You don't have permission to access this resource.
+
+Possible Reasons
+
+- Your API key doesn't have the required permissions
+- You've reached your quota limit
+- The resource is protected
+
+> **Note:** If you believe you should have access, please contact support.",
       },
       "NotFound": {
         "content": {
@@ -162,7 +182,17 @@ exports[`processOpenAPI > processes the OpenAPI spec 1`] = `
             },
           },
         },
-        "description": "NotFound",
+        "description": "Resource Not Found
+
+The requested resource could not be found.
+
+Possible Reasons
+
+- The ID doesn't exist
+- The resource has been removed
+- You've entered an incorrect path
+
+> **Tip:** Double-check the ID and try again.",
       },
     },
     "schemas": {
@@ -785,7 +815,17 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "OK",
+            "description": "Success Response
+
+The request was successful and returns a list of artists.
+
+Response Format
+
+The response includes:
+- A \`data\` array containing artist objects
+- Pagination information
+
+> **Note:** You can use the pagination parameters to navigate through large result sets.",
           },
         },
         "security": [
@@ -1195,7 +1235,17 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Created",
+            "description": "Artist Created Successfully
+
+The artist has been successfully added to our database.
+
+Response Details
+
+The response includes the complete artist object with:
+- A newly assigned unique \`id\`
+- All the information you provided in the request
+
+",
           },
           "400": {
             "content": {
@@ -1301,7 +1351,17 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Bad Request",
+            "description": "Bad Request
+
+The server could not process your request due to invalid input.
+
+Common Causes
+
+- Missing required fields
+- Invalid data format
+- Validation errors
+
+> **Tip:** Check the error message in the response for specific details about what went wrong.",
           },
           "403": {
             "content": {
@@ -1407,7 +1467,15 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Forbidden",
+            "description": "Forbidden
+
+You don't have permission to create this resource.
+
+Possible Reasons
+
+- Your API key doesn't have write permissions
+- You've reached your quota limit
+- The resource is protected",
           },
         },
         "securityUi": [
@@ -1609,7 +1677,7 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Bad Request",
+            "description": "Bad Request - Deprecated Endpoint",
           },
           "403": {
             "content": {
@@ -1715,7 +1783,7 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Forbidden",
+            "description": "Forbidden - Deprecated Endpoint",
           },
         },
         "securityUi": [
@@ -1933,7 +2001,19 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Artist Found",
+            "description": "Artist Found
+
+The requested artist was found and returned successfully.
+
+Response Format
+
+The response includes the complete artist object with all available details:
+
+- \`id\`: Unique identifier for the artist
+- \`name\`: Full name of the artist
+- \`description\`: Biographical information
+- \`image\`: URL to the artist's photo
+- \`band\`: Primary band association",
           },
           "404": {
             "content": {
@@ -2039,7 +2119,17 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Artist Not Found",
+            "description": "Artist Not Found
+
+The requested artist could not be found in our database.
+
+Possible Reasons
+
+- The artist ID doesn't exist
+- The artist has been removed
+- You've entered an incorrect ID
+
+> **Tip:** Double-check the artist ID and try again. You can get a list of all available artists using the [](/operations/getAllArtists) endpoint.",
           },
         },
         "security": [
@@ -2420,7 +2510,15 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "OK",
+            "description": "Artist Updated Successfully
+
+The artist information has been successfully updated in our database.
+
+Response Details
+
+The response includes the complete updated artist object with all the changes you made.
+
+> **Note:** All fields are returned in the response, even if you only updated some of them.",
           },
           "400": {
             "content": {
@@ -2526,7 +2624,17 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Bad Request",
+            "description": "Bad Request
+
+The server could not process your update request due to invalid input.
+
+Common Causes
+
+- Missing required fields
+- Invalid data format
+- Validation errors
+
+> **Tip:** Check the error message in the response for specific details about what went wrong.",
           },
           "403": {
             "content": {
@@ -2632,7 +2740,15 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Forbidden",
+            "description": "Forbidden
+
+You don't have permission to update this artist.
+
+Possible Reasons
+
+- Your API key doesn't have write permissions
+- You're trying to update a protected artist record
+- You've reached your quota limit",
           },
         },
         "securityUi": [
@@ -2987,7 +3103,17 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "OK",
+            "description": "Albums Found
+
+The request was successful and returns a list of albums for the specified artist.
+
+Response Format
+
+The response includes:
+- A \`data\` array containing album objects
+- Pagination information for navigating through large collections
+
+> **Note:** If the artist has no albums, the data array will be empty but the request will still return a 200 status code.",
           },
         },
         "security": [
@@ -3319,7 +3445,18 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Created",
+            "description": "Album Created Successfully
+
+The album has been successfully added to the artist's discography.
+
+Response Details
+
+The response includes the complete album object with:
+- A newly assigned unique \`id\`
+- All the information you provided in the request
+- The association with the artist
+
+",
           },
           "400": {
             "content": {
@@ -3425,7 +3562,17 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Bad Request",
+            "description": "Bad Request
+
+The server could not process your request due to invalid album data.
+
+Common Causes
+
+- Missing required fields (title, year)
+- Invalid year format (must be a number)
+- Year out of valid range
+
+> **Tip:** Make sure the album year is accurate and in the correct format.",
           },
           "403": {
             "content": {
@@ -3531,7 +3678,15 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Forbidden",
+            "description": "Forbidden
+
+You don't have permission to add albums to this artist.
+
+Possible Reasons
+
+- Your API key doesn't have write permissions
+- The artist's discography is locked or protected
+- You've reached your quota for album additions",
           },
         },
         "securityUi": [
@@ -3844,7 +3999,15 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Created",
+            "description": "User Created Successfully
+
+Your account has been created and you can now access the Argentine Rock Legends API.
+
+Response Details
+
+The response includes your user information (excluding the password) and your API key for authentication.
+
+> **Important:** Save your API key securely as it will be needed for authenticated requests.",
           },
           "400": {
             "content": {
@@ -3950,7 +4113,18 @@ curl_close($ch);",
                 },
               },
             },
-            "description": "Bad Request",
+            "description": "Registration Failed
+
+The server could not process your registration request.
+
+Common Causes
+
+- Email address already in use
+- Missing required fields
+- Password doesn't meet security requirements
+- Invalid email format
+
+> **Tip:** Make sure your email is valid and your password is at least 8 characters long.",
           },
         },
         "security": [

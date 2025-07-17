@@ -3,6 +3,7 @@ import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import OASchemaTabs from '../Schema/OASchemaTabs.vue'
 import { Label } from '../ui/label'
 
@@ -37,7 +38,10 @@ const { t } = useI18n()
 
 <template>
   <div class="flex flex-col space-y-4">
-    <span class="text-lg">{{ props.response.description }}</span>
+    <OAMarkdown
+      v-if="props.response.description"
+      :content="props.response.description"
+    />
 
     <div
       v-if="props.response?.content && contentTypes.length"
