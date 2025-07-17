@@ -5,6 +5,25 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/tags-array": {
+      "get": {
+        "summary": "Get a tags array",
+        "operationId": "getTagsArray",
+        "description": "Example of a JSON object with an array of tags using items schema.",
+        "responses": {
+          "200": {
+            "description": "An object containing an array of tags",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagsObject"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/circular-reference": {
       "get": {
         "summary": "Get a parent",
@@ -202,6 +221,45 @@
   },
   "components": {
     "schemas": {
+      "TagsObject": {
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "tag name",
+              "maxLength": 30
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "numbers": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "description": "A number associated with the tag"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "tags": [
+            "important",
+            "featured",
+            "new",
+            "sale"
+          ],
+          "metadata": {
+            "extraTags": [
+              "limited",
+              "exclusive"
+            ]
+          }
+        }
+      },
       "Parent": {
         "type": "object",
         "properties": {
@@ -445,7 +503,10 @@
         }
       },
       "NullableObject": {
-        "type": ["object", "null"],
+        "type": [
+          "object",
+          "null"
+        ],
         "properties": {
           "id": {
             "type": "string"
@@ -497,7 +558,11 @@
             "items": {
               "type": "string"
             },
-            "example": ["tag1", "tag2", "tag3"]
+            "example": [
+              "tag1",
+              "tag2",
+              "tag3"
+            ]
           }
         ],
         "minItems": 5,
@@ -522,7 +587,11 @@
               },
               "role": {
                 "type": "string",
-                "enum": ["admin", "user", "guest"],
+                "enum": [
+                  "admin",
+                  "user",
+                  "guest"
+                ],
                 "example": "admin"
               }
             }
@@ -546,7 +615,10 @@
               "items": {
                 "type": "string"
               },
-              "example": ["important", "reviewed"]
+              "example": [
+                "important",
+                "reviewed"
+              ]
             }
           }
         },
@@ -560,18 +632,26 @@
           {
             "timestamp": "2023-01-15T14:30:00Z",
             "value": 42.5,
-            "tags": ["important", "reviewed"]
+            "tags": [
+              "important",
+              "reviewed"
+            ]
           },
           {
             "timestamp": "2023-01-16T09:15:00Z",
             "value": 17.8,
-            "tags": ["pending"]
+            "tags": [
+              "pending"
+            ]
           }
         ]
       },
       "ComplexRequest": {
         "type": "object",
-        "required": ["id", "data"],
+        "required": [
+          "id",
+          "data"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -590,16 +670,24 @@
               {
                 "type": "object",
                 "description": "User data",
-                "required": ["type", "user"],
+                "required": [
+                  "type",
+                  "user"
+                ],
                 "properties": {
                   "type": {
                     "type": "string",
-                    "enum": ["user"],
+                    "enum": [
+                      "user"
+                    ],
                     "example": "user"
                   },
                   "user": {
                     "type": "object",
-                    "required": ["id", "name"],
+                    "required": [
+                      "id",
+                      "name"
+                    ],
                     "properties": {
                       "id": {
                         "type": "string",
@@ -621,16 +709,25 @@
               {
                 "type": "object",
                 "description": "Product data",
-                "required": ["type", "product"],
+                "required": [
+                  "type",
+                  "product"
+                ],
                 "properties": {
                   "type": {
                     "type": "string",
-                    "enum": ["product"],
+                    "enum": [
+                      "product"
+                    ],
                     "example": "product"
                   },
                   "product": {
                     "type": "object",
-                    "required": ["id", "name", "price"],
+                    "required": [
+                      "id",
+                      "name",
+                      "price"
+                    ],
                     "properties": {
                       "id": {
                         "type": "string",
@@ -656,16 +753,24 @@
               {
                 "type": "object",
                 "description": "Order data",
-                "required": ["type", "order"],
+                "required": [
+                  "type",
+                  "order"
+                ],
                 "properties": {
                   "type": {
                     "type": "string",
-                    "enum": ["order"],
+                    "enum": [
+                      "order"
+                    ],
                     "example": "order"
                   },
                   "order": {
                     "type": "object",
-                    "required": ["id", "items"],
+                    "required": [
+                      "id",
+                      "items"
+                    ],
                     "properties": {
                       "id": {
                         "type": "string",
@@ -678,7 +783,10 @@
                         "type": "array",
                         "items": {
                           "type": "object",
-                          "required": ["productId", "quantity"],
+                          "required": [
+                            "productId",
+                            "quantity"
+                          ],
                           "properties": {
                             "productId": {
                               "type": "string",
@@ -712,7 +820,9 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": ["source"],
+                "required": [
+                  "source"
+                ],
                 "properties": {
                   "source": {
                     "type": "string",
@@ -723,11 +833,17 @@
               },
               {
                 "type": "object",
-                "required": ["priority"],
+                "required": [
+                  "priority"
+                ],
                 "properties": {
                   "priority": {
                     "type": "string",
-                    "enum": ["low", "medium", "high"],
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high"
+                    ],
                     "description": "Priority level",
                     "example": "high"
                   }
@@ -735,7 +851,9 @@
               },
               {
                 "type": "object",
-                "required": ["tags"],
+                "required": [
+                  "tags"
+                ],
                 "properties": {
                   "tags": {
                     "type": "array",
@@ -743,7 +861,11 @@
                       "type": "string"
                     },
                     "description": "Tags for categorization",
-                    "example": ["important", "sales", "follow-up"]
+                    "example": [
+                      "important",
+                      "sales",
+                      "follow-up"
+                    ]
                   }
                 }
               }
@@ -775,13 +897,20 @@
           "metadata": {
             "source": "web",
             "priority": "high",
-            "tags": ["important", "sales"]
+            "tags": [
+              "important",
+              "sales"
+            ]
           }
         }
       },
       "ComplexResponse": {
         "type": "object",
-        "required": ["id", "status", "result"],
+        "required": [
+          "id",
+          "status",
+          "result"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -790,7 +919,11 @@
           },
           "status": {
             "type": "string",
-            "enum": ["success", "partial", "error"],
+            "enum": [
+              "success",
+              "partial",
+              "error"
+            ],
             "description": "Status of the response",
             "example": "success"
           },
@@ -800,18 +933,25 @@
               {
                 "type": "object",
                 "description": "Success result",
-                "required": ["type", "data"],
+                "required": [
+                  "type",
+                  "data"
+                ],
                 "properties": {
                   "type": {
                     "type": "string",
-                    "enum": ["success"],
+                    "enum": [
+                      "success"
+                    ],
                     "example": "success"
                   },
                   "data": {
                     "anyOf": [
                       {
                         "type": "object",
-                        "required": ["user"],
+                        "required": [
+                          "user"
+                        ],
                         "properties": {
                           "user": {
                             "type": "object",
@@ -824,11 +964,16 @@
                                 "oneOf": [
                                   {
                                     "type": "object",
-                                    "required": ["type", "personal"],
+                                    "required": [
+                                      "type",
+                                      "personal"
+                                    ],
                                     "properties": {
                                       "type": {
                                         "type": "string",
-                                        "enum": ["personal"],
+                                        "enum": [
+                                          "personal"
+                                        ],
                                         "example": "personal"
                                       },
                                       "personal": {
@@ -852,11 +997,16 @@
                                   },
                                   {
                                     "type": "object",
-                                    "required": ["type", "business"],
+                                    "required": [
+                                      "type",
+                                      "business"
+                                    ],
                                     "properties": {
                                       "type": {
                                         "type": "string",
-                                        "enum": ["business"],
+                                        "enum": [
+                                          "business"
+                                        ],
                                         "example": "business"
                                       },
                                       "business": {
@@ -886,7 +1036,9 @@
                       },
                       {
                         "type": "object",
-                        "required": ["transaction"],
+                        "required": [
+                          "transaction"
+                        ],
                         "properties": {
                           "transaction": {
                             "type": "object",
@@ -907,11 +1059,16 @@
                                 "oneOf": [
                                   {
                                     "type": "object",
-                                    "required": ["type", "card"],
+                                    "required": [
+                                      "type",
+                                      "card"
+                                    ],
                                     "properties": {
                                       "type": {
                                         "type": "string",
-                                        "enum": ["card"],
+                                        "enum": [
+                                          "card"
+                                        ],
                                         "example": "card"
                                       },
                                       "card": {
@@ -939,11 +1096,16 @@
                                   },
                                   {
                                     "type": "object",
-                                    "required": ["type", "bankTransfer"],
+                                    "required": [
+                                      "type",
+                                      "bankTransfer"
+                                    ],
                                     "properties": {
                                       "type": {
                                         "type": "string",
-                                        "enum": ["bankTransfer"],
+                                        "enum": [
+                                          "bankTransfer"
+                                        ],
                                         "example": "bankTransfer"
                                       },
                                       "bankTransfer": {
@@ -968,11 +1130,16 @@
                                   },
                                   {
                                     "type": "object",
-                                    "required": ["type", "digitalWallet"],
+                                    "required": [
+                                      "type",
+                                      "digitalWallet"
+                                    ],
                                     "properties": {
                                       "type": {
                                         "type": "string",
-                                        "enum": ["digitalWallet"],
+                                        "enum": [
+                                          "digitalWallet"
+                                        ],
                                         "example": "digitalWallet"
                                       },
                                       "digitalWallet": {
@@ -1004,16 +1171,24 @@
               {
                 "type": "object",
                 "description": "Error result",
-                "required": ["type", "error"],
+                "required": [
+                  "type",
+                  "error"
+                ],
                 "properties": {
                   "type": {
                     "type": "string",
-                    "enum": ["error"],
+                    "enum": [
+                      "error"
+                    ],
                     "example": "error"
                   },
                   "error": {
                     "type": "object",
-                    "required": ["code", "message"],
+                    "required": [
+                      "code",
+                      "message"
+                    ],
                     "properties": {
                       "code": {
                         "type": "string",
@@ -1051,7 +1226,9 @@
             "anyOf": [
               {
                 "type": "object",
-                "required": ["processingTime"],
+                "required": [
+                  "processingTime"
+                ],
                 "properties": {
                   "processingTime": {
                     "type": "number",
@@ -1062,7 +1239,9 @@
               },
               {
                 "type": "object",
-                "required": ["region"],
+                "required": [
+                  "region"
+                ],
                 "properties": {
                   "region": {
                     "type": "string",
@@ -1073,7 +1252,9 @@
               },
               {
                 "type": "object",
-                "required": ["version"],
+                "required": [
+                  "version"
+                ],
                 "properties": {
                   "version": {
                     "type": "string",
@@ -1116,11 +1297,16 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "required": ["error"],
+        "required": [
+          "error"
+        ],
         "properties": {
           "error": {
             "type": "object",
-            "required": ["code", "message"],
+            "required": [
+              "code",
+              "message"
+            ],
             "properties": {
               "code": {
                 "type": "string",
@@ -1136,7 +1322,10 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": ["field", "message"],
+                  "required": [
+                    "field",
+                    "message"
+                  ],
                   "properties": {
                     "field": {
                       "type": "string",
