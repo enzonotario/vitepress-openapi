@@ -1000,6 +1000,45 @@ const fixtures: Record<string, FixtureTest> = {
     },
   },
 
+  'array of strings with description and constraint': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        tags: {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'tag name',
+            maxLength: 30,
+          },
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'tags',
+          types: ['array'],
+          required: false,
+          subtype: 'string',
+          items: {
+            name: '[item]',
+            types: ['string'],
+            required: false,
+            description: 'tag name',
+            constraints: { maxLength: 30 },
+          },
+        },
+      ],
+    },
+    schemaUiJson: {
+      tags: ['string'],
+    },
+  },
+
   'nested object schema': {
     jsonSchema: {
       type: 'object',

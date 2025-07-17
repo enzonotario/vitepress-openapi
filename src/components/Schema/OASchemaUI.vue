@@ -57,14 +57,37 @@ const toggleAllChildren = (expand) => {
 const isObject = props.property.types?.includes('object')
 const isArray = props.property.types?.includes('array')
 const isObjectOrArray = isObject || isArray || props.property.type === 'object' || props.property.type === 'array'
-const isCollapsible = computed(() => isObjectOrArray && props.property.properties)
+const isCollapsible = computed(() =>
+  isObjectOrArray && (props.property.properties || props.property.items))
+
+const childProperties = computed(() => {
+  if (props.property.properties) {
+    return props.property.properties
+  }
+  if (props.property.items) {
+    return [props.property.items]
+  }
+  return []
+})
 const isUnion = props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true
 
-const hasExpandableProperties = computed(() => {
-  return isObjectOrArray
-    && props.property.properties
+const hasNestedObjectProperties = computed(() => {
+  return props.property.properties
     && props.property.properties.length > 0
     && props.property.properties.some(p => (p.types?.includes('object') || p.types?.includes('array') || p.type === 'object' || p.type === 'array') && p.properties)
+})
+
+const hasNestedArrayItems = computed(() => {
+  return props.property && props.property.properties
+    && props.property.properties.length > 0
+    && props.property.properties.some((p) => {
+      return p.items
+    })
+})
+
+const hasNestedExpandableContent = computed(() => {
+  return isObjectOrArray
+    && (hasNestedObjectProperties.value || hasNestedArrayItems.value)
 })
 
 const unionBadge = computed(() => {
@@ -152,7 +175,7 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
             </div>
 
             <div
-              v-if="hasExpandableProperties"
+              v-if="hasNestedExpandableContent"
               class="flex items-center"
             >
               <TooltipProvider>
@@ -212,7 +235,7 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
 
         <div class="flex flex-col space-y-2">
           <OASchemaUI
-            v-for="(subProperty, idx) in props.property.properties"
+            v-for="(subProperty, idx) in childProperties"
             :key="idx"
             :property="subProperty"
             :schema="props.schema"
