@@ -41,7 +41,6 @@ const { t } = useI18n()
     <OAMarkdown
       v-if="props.response.description"
       :content="props.response.description"
-      class="text-lg"
     />
 
     <div
