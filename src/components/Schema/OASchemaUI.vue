@@ -71,11 +71,23 @@ const childProperties = computed(() => {
 })
 const isUnion = props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true
 
-const hasExpandableProperties = computed(() => {
-  return isObjectOrArray
-    && props.property.properties
+const propertyHasNestedExpandableProperties = computed(() => {
+  return props.property.properties
     && props.property.properties.length > 0
     && props.property.properties.some(p => (p.types?.includes('object') || p.types?.includes('array') || p.type === 'object' || p.type === 'array') && p.properties)
+})
+
+const propertyHasNestedExpandableItems = computed(() => {
+  return props.property && props.property.properties
+    && props.property.properties.length > 0
+    && props.property.properties.some((p) => {
+      return p.items
+    })
+})
+
+const hasExpandableProperties = computed(() => {
+  return isObjectOrArray
+    && (propertyHasNestedExpandableProperties.value || propertyHasNestedExpandableItems.value)
 })
 
 const unionBadge = computed(() => {
