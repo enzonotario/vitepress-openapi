@@ -225,6 +225,28 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
 
       <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
 
+      <template v-if="isObjectOrArray && props.property?.description">
+        <CollapsibleTrigger>
+          <div class="flex items-center pl-2">
+            <div class="text-sm">
+              Show child properties
+            </div>
+
+            <Button
+              v-if="isCollapsible"
+              size="icon"
+              variant="icon"
+              :aria-label="toggleLabel"
+              class="flex-shrink-0 w-4 h-4 cursor-pointer"
+            >
+              <ChevronDown v-if="isOpen" />
+              <ChevronRight v-else />
+            </Button>
+          </div>
+        </CollapsibleTrigger>
+      </template>
+
+
       <CollapsibleContent v-if="isObjectOrArray" class="ml-2 pl-2 border-l border-l-solid">
         <Badge
           v-if="isUnion"
