@@ -71,13 +71,13 @@ const childProperties = computed(() => {
 })
 const isUnion = props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true
 
-const propertyHasNestedExpandableProperties = computed(() => {
+const hasNestedObjectProperties = computed(() => {
   return props.property.properties
     && props.property.properties.length > 0
     && props.property.properties.some(p => (p.types?.includes('object') || p.types?.includes('array') || p.type === 'object' || p.type === 'array') && p.properties)
 })
 
-const propertyHasNestedExpandableItems = computed(() => {
+const hasNestedArrayItems = computed(() => {
   return props.property && props.property.properties
     && props.property.properties.length > 0
     && props.property.properties.some((p) => {
@@ -85,9 +85,9 @@ const propertyHasNestedExpandableItems = computed(() => {
     })
 })
 
-const hasExpandableProperties = computed(() => {
+const hasNestedExpandableContent = computed(() => {
   return isObjectOrArray
-    && (propertyHasNestedExpandableProperties.value || propertyHasNestedExpandableItems.value)
+    && (hasNestedObjectProperties.value || hasNestedArrayItems.value)
 })
 
 const unionBadge = computed(() => {
@@ -175,7 +175,7 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
             </div>
 
             <div
-              v-if="hasExpandableProperties"
+              v-if="hasNestedExpandableContent"
               class="flex items-center"
             >
               <TooltipProvider>
