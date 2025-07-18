@@ -243,7 +243,6 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
         </CollapsibleTrigger>
       </template>
 
-
       <CollapsibleContent v-if="isObjectOrArray" class="ml-2 pl-2 border-l border-l-solid">
         <Badge
           v-if="isUnion"
