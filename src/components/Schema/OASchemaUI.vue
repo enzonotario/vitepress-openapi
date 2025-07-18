@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from '@byjohann/vue-i18n'
-import { ChevronDown, ChevronRight, Maximize2, Minimize2 } from 'lucide-vue-next'
+import { ChevronDown, ChevronRight, ChevronUp, Maximize2, Minimize2 } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Badge } from '../ui/badge'
@@ -227,22 +227,19 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
 
       <template v-if="isObjectOrArray && props.property?.description">
         <CollapsibleTrigger>
-          <div class="flex items-center pl-2">
-            <div class="text-sm">
-              Show child properties
-            </div>
+          <Button
+            as="div"
+            variant="outline"
+            size="xs"
+            class="flex items-center font-normal rounded-md h-auto pr-1 text-sm"
+          >
+            {{ toggleLabel }}
 
-            <Button
-              v-if="isCollapsible"
-              size="icon"
-              variant="icon"
-              :aria-label="toggleLabel"
-              class="flex-shrink-0 w-4 h-4 cursor-pointer"
-            >
-              <ChevronDown v-if="isOpen" />
+            <div class="flex size-4 cursor-pointer items-center justify-center p-[2px]">
+              <ChevronUp v-if="isOpen" />
               <ChevronRight v-else />
-            </Button>
-          </div>
+            </div>
+          </Button>
         </CollapsibleTrigger>
       </template>
 
