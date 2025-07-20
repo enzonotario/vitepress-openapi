@@ -570,6 +570,7 @@
     "schemas": {
       "NewUser": {
         "type": "object",
+        "description": "Represents a new user registration for the Argentine Rock Legends API",
         "required": [
           "name",
           "email",
@@ -578,6 +579,7 @@
         "properties": {
           "name": {
             "type": "string",
+            "description": "Full name of the user registering for an account",
             "examples": [
               "Carlos",
               "Maria"
@@ -585,6 +587,7 @@
           },
           "email": {
             "type": "string",
+            "description": "Email address that will be used for account identification and communication. Must be a valid email format.",
             "format": "email",
             "examples": [
               "carlos@rock-legends.com",
@@ -593,6 +596,7 @@
           },
           "password": {
             "type": "string",
+            "description": "User's secret password for authentication. *Must be at least 8 characters* and should include a mix of letters, numbers, and special characters for better security.",
             "minLength": 8,
             "examples": [
               "i-love-rock",
@@ -603,6 +607,7 @@
       },
       "User": {
         "type": "object",
+        "description": "Represents a registered user in the Argentine Rock Legends system with their profile information",
         "required": [
           "id",
           "name",
@@ -611,6 +616,7 @@
         "properties": {
           "id": {
             "type": "integer",
+            "description": "Unique identifier for the user account. This value is automatically generated upon registration and cannot be changed.",
             "format": "int64",
             "examples": [
               1
@@ -618,12 +624,14 @@
           },
           "name": {
             "type": "string",
+            "description": "User's full name as provided during registration",
             "examples": [
               "Carlos"
             ]
           },
           "email": {
             "type": "string",
+            "description": "User's verified email address used for account access and notifications. This serves as the primary contact method for important account updates.",
             "format": "email",
             "examples": [
               "carlos@rock-legends.com"
@@ -633,6 +641,7 @@
       },
       "Artist": {
         "type": "object",
+        "description": "Represents a legendary Argentine rock musician or performer with their biographical information and associated metadata",
         "required": [
           "id",
           "name"
@@ -640,6 +649,7 @@
         "properties": {
           "id": {
             "type": "integer",
+            "description": "Unique identifier for the artist in the database. Used in API requests to reference this specific artist.",
             "format": "int64",
             "examples": [
               1
@@ -648,6 +658,7 @@
           },
           "name": {
             "type": "string",
+            "description": "Full artistic name of the musician as they are known in the Argentine rock scene",
             "examples": [
               "Charly García"
             ]
@@ -657,12 +668,14 @@
               "string",
               "null"
             ],
+            "description": "Biographical information about the artist and their contribution to Argentine rock music. This field supports Markdown formatting for rich text presentation.\n\nExample markdown features:\n- *Italic text* for emphasis\n- **Bold text** for strong emphasis\n- Links to [external resources](https://example.com)\n- Bullet points for listing achievements",
             "examples": [
               "One of the most influential rock musicians in Argentine history."
             ]
           },
           "image": {
             "type": "string",
+            "description": "URL to the artist's profile photo or official image. Should be a high-quality image suitable for display in the UI.",
             "nullable": true,
             "examples": [
               "https://cdn.rock-legends.com/photos/charly.jpg"
@@ -670,6 +683,7 @@
           },
           "band": {
             "type": "string",
+            "description": "Primary musical group or band associated with this artist. Many artists have been part of multiple bands throughout their career, but this field typically contains their most notable affiliation.",
             "examples": [
               "Sui Generis"
             ]
@@ -678,6 +692,7 @@
       },
       "Album": {
         "type": "object",
+        "description": "Represents a music album released by an Argentine rock artist or band",
         "required": [
           "id",
           "name"
@@ -685,6 +700,7 @@
         "properties": {
           "id": {
             "type": "integer",
+            "description": "Unique identifier for the album",
             "format": "int64",
             "examples": [
               1
@@ -692,12 +708,14 @@
           },
           "name": {
             "type": "string",
+            "description": "Official title of the album as released in Argentina",
             "examples": [
               "La Máquina de Hacer Pájaros"
             ]
           },
           "year": {
             "type": "integer",
+            "description": "Year when the album was first released. For remastered or re-released albums, this refers to the original release date.",
             "format": "int64",
             "examples": [
               1976
@@ -705,6 +723,7 @@
           },
           "image": {
             "type": "string",
+            "description": "URL to the album cover artwork. The image should be a square format, typically showing the original album cover design.",
             "nullable": true,
             "examples": [
               "https://cdn.rock-legends.com/photos/la-maquina.jpg"
@@ -714,12 +733,15 @@
       },
       "PaginatedResource": {
         "type": "object",
+        "description": "A wrapper for paginated API responses that includes both the data and pagination metadata",
         "properties": {
           "meta": {
             "type": "object",
+            "description": "Metadata about the pagination state and available navigation options",
             "properties": {
               "limit": {
                 "type": "integer",
+                "description": "Maximum number of items returned in this response. This value matches the `limit` parameter in the request, or the default value if not specified.",
                 "format": "int64",
                 "examples": [
                   10
@@ -727,6 +749,7 @@
               },
               "offset": {
                 "type": "integer",
+                "description": "Starting position of the items returned, relative to the complete dataset. Used for pagination through large result sets.",
                 "format": "int64",
                 "examples": [
                   0
@@ -734,6 +757,7 @@
               },
               "total": {
                 "type": "integer",
+                "description": "Total number of items available in the complete dataset. Use this to calculate the total number of pages needed for pagination.",
                 "format": "int64",
                 "examples": [
                   100
@@ -744,6 +768,7 @@
                   "string",
                   "null"
                 ],
+                "description": "URL path for the next page of results. This is a relative path that can be appended to the API base URL.\n\n*This field will be `null` when there are no more pages available.*\n\nExample usage:\n```javascript\nif (response.meta.next) {\n  fetchNextPage(baseUrl + response.meta.next);\n}\n```",
                 "examples": [
                   "/artists?limit=10&offset=10"
                 ]
@@ -754,22 +779,25 @@
       },
       "Error": {
         "type": "object",
-        "description": "RFC 7807 (https://datatracker.ietf.org/doc/html/rfc7807)",
+        "description": "Standard error response following [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807) for Problem Details in HTTP APIs. This format provides a consistent way to communicate errors across all API endpoints.",
         "properties": {
           "type": {
             "type": "string",
+            "description": "A URI reference that identifies the problem type. When dereferenced, it should provide human-readable documentation for the problem.",
             "examples": [
               "https://example.com/errors/generic-error"
             ]
           },
           "title": {
             "type": "string",
+            "description": "Short, human-readable summary of the problem. This should not change from occurrence to occurrence of the same problem type.",
             "examples": [
               "Something went wrong here."
             ]
           },
           "status": {
             "type": "integer",
+            "description": "HTTP status code generated by the origin server for this occurrence of the problem. This will match the status code in the actual HTTP response.",
             "format": "int64",
             "examples": [
               403
@@ -777,6 +805,7 @@
           },
           "detail": {
             "type": "string",
+            "description": "Human-readable explanation specific to this occurrence of the problem. This field can contain:\n\n- Detailed error information\n- Suggestions for resolution\n- Links to support resources\n\nDevelopers should use this information to understand what went wrong and how to fix it.",
             "examples": [
               "Unfortunately, we can’t provide further information."
             ]

@@ -223,9 +223,11 @@
     "schemas": {
       "TagsObject": {
         "type": "object",
+        "description": "An object containing arrays of tags and related metadata for categorization and organization",
         "properties": {
           "tags": {
             "type": "array",
+            "description": "A collection of string tags used for categorizing content or items",
             "items": {
               "type": "string",
               "description": "tag name",
@@ -234,9 +236,11 @@
           },
           "metadata": {
             "type": "object",
+            "description": "Additional information related to the tags including supplementary data",
             "properties": {
               "numbers": {
                 "type": "array",
+                "description": "Numeric values associated with each tag for ranking or other quantitative purposes",
                 "items": {
                   "type": "number",
                   "description": "A number associated with the tag"
@@ -262,243 +266,309 @@
       },
       "Parent": {
         "type": "object",
+        "description": "A parent object that demonstrates circular references by containing a child that references back to its parent",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for the parent object"
           },
           "child": {
-            "$ref": "#/components/schemas/Child"
+            "$ref": "#/components/schemas/Child",
+            "description": "Reference to a child object that belongs to this parent"
           }
         }
       },
       "Child": {
         "type": "object",
+        "description": "A child object that references its parent, creating a circular reference structure",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for the child object"
           },
           "parent": {
-            "$ref": "#/components/schemas/Parent"
+            "$ref": "#/components/schemas/Parent",
+            "description": "Reference back to the parent object that owns this child"
           }
         }
       },
       "Level1": {
         "type": "object",
+        "description": "The top level of a deeply nested structure demonstrating how OpenAPI can handle complex hierarchical data",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 1 object"
           },
           "level2": {
-            "$ref": "#/components/schemas/Level2"
+            "$ref": "#/components/schemas/Level2",
+            "description": "Reference to the next level in the nested structure (level 2)"
           }
         }
       },
       "Level2": {
         "type": "object",
+        "description": "The second level in a deeply nested structure, continuing the hierarchy from Level1",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 2 object"
           },
           "level3": {
-            "$ref": "#/components/schemas/Level3"
+            "$ref": "#/components/schemas/Level3",
+            "description": "Reference to the next level in the nested structure (level 3)"
           }
         }
       },
       "Level3": {
         "type": "object",
+        "description": "The third level in the nested hierarchy, demonstrating *deep nesting* capabilities",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 3 object"
           },
           "level4": {
-            "$ref": "#/components/schemas/Level4"
+            "$ref": "#/components/schemas/Level4",
+            "description": "Reference to the next level in the nested structure (level 4)"
           }
         }
       },
       "Level4": {
         "type": "object",
+        "description": "The fourth level in the nested structure, continuing to demonstrate schema reference chaining",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 4 object"
           },
           "level5": {
-            "$ref": "#/components/schemas/Level5"
+            "$ref": "#/components/schemas/Level5",
+            "description": "Reference to the next level in the nested structure (level 5)"
           }
         }
       },
       "Level5": {
         "type": "object",
+        "description": "The fifth level in the nested structure, showing how **deeply nested** references can be handled",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 5 object"
           },
           "level6": {
-            "$ref": "#/components/schemas/Level6"
+            "$ref": "#/components/schemas/Level6",
+            "description": "Reference to the next level in the nested structure (level 6)"
           }
         }
       },
       "Level6": {
         "type": "object",
+        "description": "The sixth level in the nested structure, continuing the deep reference chain",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 6 object"
           },
           "level7": {
-            "$ref": "#/components/schemas/Level7"
+            "$ref": "#/components/schemas/Level7",
+            "description": "Reference to the next level in the nested structure (level 7)"
           }
         }
       },
       "Level7": {
         "type": "object",
+        "description": "The seventh level in the nested structure, demonstrating how OpenAPI can handle complex data hierarchies",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 7 object"
           },
           "level8": {
-            "$ref": "#/components/schemas/Level8"
+            "$ref": "#/components/schemas/Level8",
+            "description": "Reference to the next level in the nested structure (level 8)"
           }
         }
       },
       "Level8": {
         "type": "object",
+        "description": "The eighth level in the nested structure, showing the flexibility of schema references",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 8 object"
           },
           "level9": {
-            "$ref": "#/components/schemas/Level9"
+            "$ref": "#/components/schemas/Level9",
+            "description": "Reference to the next level in the nested structure (level 9)"
           }
         }
       },
       "Level9": {
         "type": "object",
+        "description": "The ninth level in the nested structure, continuing the *deep reference chain*",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 9 object"
           },
           "level10": {
-            "$ref": "#/components/schemas/Level10"
+            "$ref": "#/components/schemas/Level10",
+            "description": "Reference to the next level in the nested structure (level 10)"
           }
         }
       },
       "Level10": {
         "type": "object",
+        "description": "The tenth level in the nested structure, marking the halfway point in this **deeply nested** example",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 10 object"
           },
           "level11": {
-            "$ref": "#/components/schemas/Level11"
+            "$ref": "#/components/schemas/Level11",
+            "description": "Reference to the next level in the nested structure (level 11)"
           }
         }
       },
       "Level11": {
         "type": "object",
+        "description": "The eleventh level in the nested structure, continuing the deep reference pattern",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 11 object"
           },
           "level12": {
-            "$ref": "#/components/schemas/Level12"
+            "$ref": "#/components/schemas/Level12",
+            "description": "Reference to the next level in the nested structure (level 12)"
           }
         }
       },
       "Level12": {
         "type": "object",
+        "description": "The twelfth level in the nested structure, demonstrating how schemas can be linked in a long chain",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 12 object"
           },
           "level13": {
-            "$ref": "#/components/schemas/Level13"
+            "$ref": "#/components/schemas/Level13",
+            "description": "Reference to the next level in the nested structure (level 13)"
           }
         }
       },
       "Level13": {
         "type": "object",
+        "description": "The thirteenth level in the nested structure, showing how *reference chains* can extend to arbitrary depths",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 13 object"
           },
           "level14": {
-            "$ref": "#/components/schemas/Level14"
+            "$ref": "#/components/schemas/Level14",
+            "description": "Reference to the next level in the nested structure (level 14)"
           }
         }
       },
       "Level14": {
         "type": "object",
+        "description": "The fourteenth level in the nested structure, continuing the demonstration of deeply nested references",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 14 object"
           },
           "level15": {
-            "$ref": "#/components/schemas/Level15"
+            "$ref": "#/components/schemas/Level15",
+            "description": "Reference to the next level in the nested structure (level 15)"
           }
         }
       },
       "Level15": {
         "type": "object",
+        "description": "The fifteenth level in the nested structure, approaching the end of this **extremely deep** reference chain",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 15 object"
           },
           "level16": {
-            "$ref": "#/components/schemas/Level16"
+            "$ref": "#/components/schemas/Level16",
+            "description": "Reference to the next level in the nested structure (level 16)"
           }
         }
       },
       "Level16": {
         "type": "object",
+        "description": "The sixteenth level in the nested structure, continuing the demonstration of schema reference capabilities",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 16 object"
           },
           "level17": {
-            "$ref": "#/components/schemas/Level17"
+            "$ref": "#/components/schemas/Level17",
+            "description": "Reference to the next level in the nested structure (level 17)"
           }
         }
       },
       "Level17": {
         "type": "object",
+        "description": "The seventeenth level in the nested structure, showing how OpenAPI can handle *extremely deep* hierarchies",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 17 object"
           },
           "level18": {
-            "$ref": "#/components/schemas/Level18"
+            "$ref": "#/components/schemas/Level18",
+            "description": "Reference to the next level in the nested structure (level 18)"
           }
         }
       },
       "Level18": {
         "type": "object",
+        "description": "The eighteenth level in the nested structure, approaching the final levels of this deep reference chain",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 18 object"
           },
           "level19": {
-            "$ref": "#/components/schemas/Level19"
+            "$ref": "#/components/schemas/Level19",
+            "description": "Reference to the next level in the nested structure (level 19)"
           }
         }
       },
       "Level19": {
         "type": "object",
+        "description": "The nineteenth level in the nested structure, the penultimate level in this **deeply nested** example",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 19 object"
           },
           "level20": {
-            "$ref": "#/components/schemas/Level20"
+            "$ref": "#/components/schemas/Level20",
+            "description": "Reference to the final level in the nested structure (level 20)"
           }
         }
       },
       "Level20": {
         "type": "object",
+        "description": "The twentieth and final level in the nested structure, demonstrating the maximum depth of this example",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for this level 20 object"
           },
           "finalValue": {
-            "type": "string"
+            "type": "string",
+            "description": "The terminal value at the end of this deep reference chain, representing the actual data at the deepest level"
           }
         }
       },
@@ -507,56 +577,63 @@
           "object",
           "null"
         ],
+        "description": "An object that can be either a valid object with properties or `null`, demonstrating OpenAPI's support for nullable types",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique identifier for the object when it's not null"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Name or title associated with this object"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "Detailed text description providing additional information about the object. This field can contain *formatted text* for better readability."
           }
         }
       },
       "TupleArray": {
         "type": "array",
-        "description": "A tuple array with fixed position types using prefixItems",
+        "description": "A tuple array with fixed position types using prefixItems. This demonstrates how to create arrays with a **specific structure** where each position contains a predetermined type.",
         "prefixItems": [
           {
             "type": "string",
-            "description": "First element - always a string",
+            "description": "First element - always a string, typically used for identifiers or names",
             "example": "username"
           },
           {
             "type": "number",
-            "description": "Second element - always a number",
+            "description": "Second element - always a number, can represent quantities, measurements, or scores",
             "example": 42
           },
           {
             "type": "boolean",
-            "description": "Third element - always a boolean",
+            "description": "Third element - always a boolean, useful for flags or toggle states",
             "example": true
           },
           {
             "type": "object",
-            "description": "Fourth element - a complex object",
+            "description": "Fourth element - a complex object with its own structure and properties",
             "properties": {
               "id": {
                 "type": "string",
+                "description": "Unique identifier for the nested object",
                 "example": "abc123"
               },
               "value": {
                 "type": "number",
+                "description": "Numeric value associated with this object",
                 "example": 99.5
               }
             }
           },
           {
             "type": "array",
-            "description": "Fifth element - an array of strings",
+            "description": "Fifth element - an array of strings, useful for tags, categories, or other collections",
             "items": {
-              "type": "string"
+              "type": "string",
+              "description": "Individual string item within the nested array"
             },
             "example": [
               "tag1",
@@ -570,23 +647,25 @@
       },
       "MixedArray": {
         "type": "array",
-        "description": "An array with both prefixItems and items schemas",
+        "description": "An array with both prefixItems and items schemas, demonstrating a *hybrid approach* to array definition. This combines fixed position elements at the beginning with variable additional elements of the same type.",
         "prefixItems": [
           {
             "type": "string",
-            "description": "First element - always a string identifier",
+            "description": "First element - always a string identifier that uniquely identifies the entire array data structure",
             "example": "user-id-123"
           },
           {
             "type": "object",
-            "description": "Second element - user metadata",
+            "description": "Second element - user metadata containing basic information about the user associated with this data",
             "properties": {
               "name": {
                 "type": "string",
+                "description": "Full name of the user",
                 "example": "John Doe"
               },
               "role": {
                 "type": "string",
+                "description": "Access level or permission role assigned to this user, controlling what operations they can perform",
                 "enum": [
                   "admin",
                   "user",
@@ -599,21 +678,25 @@
         ],
         "items": {
           "type": "object",
-          "description": "Additional elements - data entries",
+          "description": "Additional elements - data entries that can appear in any quantity after the fixed prefix items. Each represents a **discrete data point** with timestamp and value.",
           "properties": {
             "timestamp": {
               "type": "string",
               "format": "date-time",
+              "description": "When this data point was recorded or created, in ISO 8601 format",
               "example": "2023-01-15T14:30:00Z"
             },
             "value": {
               "type": "number",
+              "description": "The numerical measurement or quantity associated with this data point",
               "example": 42.5
             },
             "tags": {
               "type": "array",
+              "description": "Categorization labels attached to this data point for filtering and organization",
               "items": {
-                "type": "string"
+                "type": "string",
+                "description": "Individual tag or label"
               },
               "example": [
                 "important",
@@ -648,6 +731,7 @@
       },
       "ComplexRequest": {
         "type": "object",
+        "description": "A complex request object demonstrating advanced OpenAPI features including `oneOf` and `anyOf` schemas. This represents a flexible API request that can handle multiple data types.",
         "required": [
           "id",
           "data"
@@ -655,21 +739,21 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Unique identifier for the request",
+            "description": "Unique identifier for the request, used for tracking and reference purposes",
             "example": "req-12345"
           },
           "timestamp": {
             "type": "string",
             "format": "date-time",
-            "description": "When the request was created",
+            "description": "When the request was created, in ISO 8601 format with timezone information",
             "example": "2023-05-20T15:30:45Z"
           },
           "data": {
-            "description": "The main data payload that can be one of several types",
+            "description": "The main data payload that can be one of several types, using the **oneOf** discriminator pattern to support multiple object structures",
             "oneOf": [
               {
                 "type": "object",
-                "description": "User data",
+                "description": "User data structure for operations related to user management and authentication. This option is used when the request is focused on user operations.",
                 "required": [
                   "type",
                   "user"
@@ -677,6 +761,7 @@
                 "properties": {
                   "type": {
                     "type": "string",
+                    "description": "Discriminator field that identifies this as a user data object",
                     "enum": [
                       "user"
                     ],
@@ -684,6 +769,7 @@
                   },
                   "user": {
                     "type": "object",
+                    "description": "User information containing personal details and account information",
                     "required": [
                       "id",
                       "name"
@@ -691,15 +777,18 @@
                     "properties": {
                       "id": {
                         "type": "string",
+                        "description": "Unique identifier for the user account",
                         "example": "user-789"
                       },
                       "name": {
                         "type": "string",
+                        "description": "Full name of the user as displayed in the interface",
                         "example": "Jane Smith"
                       },
                       "email": {
                         "type": "string",
                         "format": "email",
+                        "description": "Email address associated with the user account, used for communications and *account recovery*",
                         "example": "jane@example.com"
                       }
                     }
@@ -708,7 +797,7 @@
               },
               {
                 "type": "object",
-                "description": "Product data",
+                "description": "Product data structure for operations related to inventory management and product catalog. This option is used when the request is focused on product operations.",
                 "required": [
                   "type",
                   "product"
@@ -716,6 +805,7 @@
                 "properties": {
                   "type": {
                     "type": "string",
+                    "description": "Discriminator field that identifies this as a product data object",
                     "enum": [
                       "product"
                     ],
@@ -723,6 +813,7 @@
                   },
                   "product": {
                     "type": "object",
+                    "description": "Product information containing details about an item in the catalog",
                     "required": [
                       "id",
                       "name",
@@ -731,19 +822,23 @@
                     "properties": {
                       "id": {
                         "type": "string",
+                        "description": "Unique identifier for the product in the catalog",
                         "example": "prod-456"
                       },
                       "name": {
                         "type": "string",
+                        "description": "Display name of the product as shown to customers",
                         "example": "Smartphone X"
                       },
                       "price": {
                         "type": "number",
                         "format": "float",
+                        "description": "Current price of the product in the default currency (USD), with **tax excluded**",
                         "example": 599.99
                       },
                       "inStock": {
                         "type": "boolean",
+                        "description": "Indicates whether the product is currently available for purchase",
                         "example": true
                       }
                     }
@@ -752,7 +847,7 @@
               },
               {
                 "type": "object",
-                "description": "Order data",
+                "description": "Order data structure for operations related to purchase transactions and order management. This option is used when the request is focused on order processing.",
                 "required": [
                   "type",
                   "order"
@@ -760,6 +855,7 @@
                 "properties": {
                   "type": {
                     "type": "string",
+                    "description": "Discriminator field that identifies this as an order data object",
                     "enum": [
                       "order"
                     ],
@@ -767,6 +863,7 @@
                   },
                   "order": {
                     "type": "object",
+                    "description": "Order information containing details about a purchase transaction including line items and totals",
                     "required": [
                       "id",
                       "items"
@@ -774,15 +871,19 @@
                     "properties": {
                       "id": {
                         "type": "string",
+                        "description": "Unique identifier for the order in the system",
                         "example": "order-123"
                       },
                       "customer": {
-                        "$ref": "#/components/schemas/NullableObject"
+                        "$ref": "#/components/schemas/NullableObject",
+                        "description": "Information about the customer who placed the order. This field is nullable for guest checkout scenarios."
                       },
                       "items": {
                         "type": "array",
+                        "description": "List of products included in this order, with their quantities and pricing. Each item represents a **line item** in the order.",
                         "items": {
                           "type": "object",
+                          "description": "Individual line item in the order representing a specific product and quantity",
                           "required": [
                             "productId",
                             "quantity"
@@ -790,15 +891,18 @@
                           "properties": {
                             "productId": {
                               "type": "string",
+                              "description": "Reference to the product being ordered, linking to a product in the catalog",
                               "example": "prod-456"
                             },
                             "quantity": {
                               "type": "integer",
+                              "description": "Number of units of this product included in the order, must be at least 1",
                               "minimum": 1,
                               "example": 2
                             },
                             "unitPrice": {
                               "type": "number",
+                              "description": "Price per unit at the time of purchase, which may differ from the *current catalog price* if prices have changed",
                               "example": 599.99
                             }
                           }
@@ -806,6 +910,7 @@
                       },
                       "totalAmount": {
                         "type": "number",
+                        "description": "Total monetary value of the order, calculated as the sum of (quantity × unitPrice) for all items",
                         "example": 1199.98
                       }
                     }
@@ -816,23 +921,25 @@
           },
           "metadata": {
             "type": "object",
-            "description": "Additional metadata that can include any combination of these fields",
+            "description": "Additional metadata that can include any combination of these fields using the *anyOf* schema pattern. This allows for flexible metadata combinations where one or more of these objects can be included.",
             "anyOf": [
               {
                 "type": "object",
+                "description": "Source information indicating where the request originated from",
                 "required": [
                   "source"
                 ],
                 "properties": {
                   "source": {
                     "type": "string",
-                    "description": "Source of the request",
+                    "description": "Source of the request, such as the platform or channel that initiated it (e.g., web, mobile, API)",
                     "example": "web"
                   }
                 }
               },
               {
                 "type": "object",
+                "description": "Priority information indicating the importance level of this request",
                 "required": [
                   "priority"
                 ],
@@ -844,13 +951,14 @@
                       "medium",
                       "high"
                     ],
-                    "description": "Priority level",
+                    "description": "Priority level that determines how urgently this request should be processed. **High** priority requests should be handled before others.",
                     "example": "high"
                   }
                 }
               },
               {
                 "type": "object",
+                "description": "Categorization information using tags to classify the request",
                 "required": [
                   "tags"
                 ],
@@ -858,9 +966,10 @@
                   "tags": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Individual tag value used for filtering and categorization"
                     },
-                    "description": "Tags for categorization",
+                    "description": "Tags for categorization and filtering of requests. Multiple tags can be applied to enable complex filtering scenarios.",
                     "example": [
                       "important",
                       "sales",
@@ -906,6 +1015,7 @@
       },
       "ComplexResponse": {
         "type": "object",
+        "description": "A complex response object demonstrating advanced OpenAPI features including nested `oneOf` and `anyOf` schemas. This represents a flexible API response that can return different result types based on the operation outcome.",
         "required": [
           "id",
           "status",
@@ -914,7 +1024,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Unique identifier for the response",
+            "description": "Unique identifier for the response that can be used for tracking and debugging purposes. This correlates with the request ID.",
             "example": "resp-67890"
           },
           "status": {
@@ -924,15 +1034,15 @@
               "partial",
               "error"
             ],
-            "description": "Status of the response",
+            "description": "Overall status of the operation indicating whether it succeeded, partially succeeded, or failed. This field helps clients quickly determine the outcome without parsing the entire response.",
             "example": "success"
           },
           "result": {
-            "description": "The result data with nested oneOf and anyOf",
+            "description": "The result data with nested oneOf and anyOf patterns, providing a **flexible response structure** that can adapt to different scenarios and operation outcomes.",
             "oneOf": [
               {
                 "type": "object",
-                "description": "Success result",
+                "description": "Success result indicating that the operation completed successfully. This structure is returned when the request was processed without errors and contains the requested data.",
                 "required": [
                   "type",
                   "data"
@@ -940,12 +1050,14 @@
                 "properties": {
                   "type": {
                     "type": "string",
+                    "description": "Discriminator field that identifies this as a success result object",
                     "enum": [
                       "success"
                     ],
                     "example": "success"
                   },
                   "data": {
+                    "description": "The actual data returned by the successful operation, which can be one of several types using the *anyOf* pattern",
                     "anyOf": [
                       {
                         "type": "object",
@@ -1170,7 +1282,7 @@
               },
               {
                 "type": "object",
-                "description": "Error result",
+                "description": "Error result indicating that the operation failed. This structure is returned when the request could not be processed due to validation errors, business rule violations, or system issues.",
                 "required": [
                   "type",
                   "error"
@@ -1178,6 +1290,7 @@
                 "properties": {
                   "type": {
                     "type": "string",
+                    "description": "Discriminator field that identifies this as an error result object",
                     "enum": [
                       "error"
                     ],
@@ -1185,6 +1298,7 @@
                   },
                   "error": {
                     "type": "object",
+                    "description": "Detailed error information explaining what went wrong and why the request failed",
                     "required": [
                       "code",
                       "message"
@@ -1192,23 +1306,29 @@
                     "properties": {
                       "code": {
                         "type": "string",
+                        "description": "Machine-readable error code that uniquely identifies the type of error for programmatic handling",
                         "example": "INVALID_REQUEST"
                       },
                       "message": {
                         "type": "string",
+                        "description": "Human-readable error message explaining the issue in a way that can be displayed to users",
                         "example": "The request contains invalid data"
                       },
                       "details": {
                         "type": "array",
+                        "description": "List of specific validation errors or issues that caused the request to fail. This provides **actionable feedback** for correcting the request.",
                         "items": {
                           "type": "object",
+                          "description": "Individual error detail for a specific field or validation issue",
                           "properties": {
                             "field": {
                               "type": "string",
+                              "description": "Path to the field that has the error, using dot notation for nested objects",
                               "example": "data.user.email"
                             },
                             "issue": {
                               "type": "string",
+                              "description": "Description of what's wrong with this specific field's value and how to fix it",
                               "example": "Invalid email format"
                             }
                           }
@@ -1222,43 +1342,46 @@
           },
           "metadata": {
             "type": "object",
-            "description": "Additional metadata with anyOf",
+            "description": "Additional metadata with anyOf pattern, providing supplementary information about the response. This allows for *flexible combinations* of metadata fields to be included based on the context.",
             "anyOf": [
               {
                 "type": "object",
+                "description": "Performance information about how long the request took to process",
                 "required": [
                   "processingTime"
                 ],
                 "properties": {
                   "processingTime": {
                     "type": "number",
-                    "description": "Time taken to process the request in ms",
+                    "description": "Time taken to process the request in milliseconds, useful for performance monitoring and optimization",
                     "example": 235.45
                   }
                 }
               },
               {
                 "type": "object",
+                "description": "Infrastructure information about where the request was processed",
                 "required": [
                   "region"
                 ],
                 "properties": {
                   "region": {
                     "type": "string",
-                    "description": "Server region that processed the request",
+                    "description": "Server region that processed the request, indicating the geographic location of the data center",
                     "example": "us-west-1"
                   }
                 }
               },
               {
                 "type": "object",
+                "description": "Version information about the API that processed the request",
                 "required": [
                   "version"
                 ],
                 "properties": {
                   "version": {
                     "type": "string",
-                    "description": "API version",
+                    "description": "API version number that handled this request, following **semantic versioning** format (major.minor.patch)",
                     "example": "v2.3.1"
                   }
                 }
@@ -1297,12 +1420,14 @@
       },
       "ErrorResponse": {
         "type": "object",
+        "description": "A standardized error response structure that provides detailed information about what went wrong with a request. This follows best practices for API error handling.",
         "required": [
           "error"
         ],
         "properties": {
           "error": {
             "type": "object",
+            "description": "Container for all error-related information, keeping error details organized in a consistent structure",
             "required": [
               "code",
               "message"
@@ -1310,18 +1435,20 @@
             "properties": {
               "code": {
                 "type": "string",
-                "description": "Error code",
+                "description": "Machine-readable error code that uniquely identifies the type of error. Applications can use this for programmatic error handling and localization.",
                 "example": "VALIDATION_ERROR"
               },
               "message": {
                 "type": "string",
-                "description": "Human-readable error message",
+                "description": "Human-readable error message that explains what went wrong in a clear, concise manner. This is suitable for displaying to end users.",
                 "example": "The request contains validation errors"
               },
               "details": {
                 "type": "array",
+                "description": "Detailed breakdown of specific validation or processing errors, particularly useful for forms with multiple fields that need correction. This array may contain *multiple error items* for different fields.",
                 "items": {
                   "type": "object",
+                  "description": "Individual error detail for a specific field or validation issue",
                   "required": [
                     "field",
                     "message"
@@ -1329,12 +1456,12 @@
                   "properties": {
                     "field": {
                       "type": "string",
-                      "description": "Field with the error",
+                      "description": "Path to the field that has the error, using dot notation for nested objects (e.g., `data.user.email`)",
                       "example": "data.user.email"
                     },
                     "message": {
                       "type": "string",
-                      "description": "Error message for this field",
+                      "description": "Specific error message for this field explaining what's wrong and how to fix it. This should be **clear and actionable**.",
                       "example": "Must be a valid email address"
                     }
                   }

@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from '@byjohann/vue-i18n'
-import { ChevronDown, ChevronRight, Maximize2, Minimize2 } from 'lucide-vue-next'
+import { ChevronDown, ChevronRight, ChevronUp, Maximize2, Minimize2 } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Badge } from '../ui/badge'
@@ -224,6 +224,24 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
       <OASchemaPropertyAttributes v-if="props.property.enum" :property="enumAttr" />
 
       <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
+
+      <template v-if="isObjectOrArray && props.property?.description">
+        <CollapsibleTrigger>
+          <Button
+            as="div"
+            variant="outline"
+            size="xs"
+            class="flex items-center font-normal rounded-md h-auto pr-1 text-sm gap-1"
+          >
+            {{ toggleLabel }}
+
+            <div class="flex size-4 cursor-pointer items-center justify-center p-[2px]">
+              <ChevronUp v-if="isOpen" />
+              <ChevronRight v-else />
+            </div>
+          </Button>
+        </CollapsibleTrigger>
+      </template>
 
       <CollapsibleContent v-if="isObjectOrArray" class="ml-2 pl-2 border-l border-l-solid">
         <Badge
