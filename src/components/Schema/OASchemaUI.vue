@@ -231,7 +231,7 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
             as="div"
             variant="outline"
             size="xs"
-            class="flex items-center font-normal rounded-md h-auto pr-1 text-sm gap-1"
+            class="flex items-center font-normal rounded-md h-auto pr-1 text-sm gap-0.5"
           >
             {{ toggleLabel }}
 
