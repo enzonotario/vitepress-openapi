@@ -15,7 +15,16 @@ export const testsPages = [
     slug: 'schemas',
     label: 'Schemas',
     specPath: './public/openapi-schemas.json',
-    themeConfig: {},
+    themeConfig: {
+      requestBody: {
+        defaultView: 'schema',
+      },
+      response: {
+        body: {
+          defaultView: 'schema',
+        },
+      },
+    },
   },
   {
     slug: 'parameters',
