@@ -80,6 +80,27 @@ export default defineConfigWithTheme({
           ],
         },
         {
+          text: 'Components',
+          items: [
+            {
+              items: [
+                {
+                  text: 'Overview',
+                  link: '/components/',
+                },
+                {
+                  text: 'OASpec',
+                  link: '/components/oa-spec',
+                },
+                {
+                  text: 'OAOperation',
+                  link: '/components/oa-operation',
+                },
+              ],
+            },
+          ],
+        },
+        {
           text: 'Composables',
           items: [
             {
