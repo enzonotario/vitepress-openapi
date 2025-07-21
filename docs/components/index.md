@@ -4,7 +4,7 @@ outline: 2
 
 # Component API Reference
 
-This section provides comprehensive documentation for the main components provided by vitepress-openapi.
+This section provides comprehensive documentation for the main components provided by `vitepress-openapi`.
 
 ## Available Components
 
