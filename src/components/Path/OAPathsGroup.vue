@@ -5,6 +5,7 @@ import { computed, nextTick, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { scrollToHash } from '../../lib/utils'
 import OAHeading from '../Common/OAHeading.vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Button } from '../ui/button'
 import { Collapsible, CollapsibleTrigger } from '../ui/collapsible'
 import OAPaths from './OAPaths.vue'
@@ -54,9 +55,7 @@ function onPathClick(hash: string) {
         class="grid grid-cols-1 gap-10"
         :class="{ 'md:grid-cols-2': showPathsSummary && hasDescription }"
       >
-        <div v-if="hasDescription">
-          <p>{{ group.description }}</p>
-        </div>
+        <OAMarkdown v-if="hasDescription" :content="group.description" />
         <div v-if="showPathsSummary" class="flex-1 my-[16px]">
           <OAPathsSummary
             :paths="group.paths"
