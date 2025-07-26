@@ -31,7 +31,7 @@
     },
     {
       "name": "Artists",
-      "description": "Everything about Argentine Rock artists"
+      "description": "Everything about `Argentine Rock artists` and their contributions to music history.\n\n> **Note:** You will need to authenticate yourself to access some of these endpoints using the [](/operations/loginUser) endpoint."
     }
   ],
   "paths": {
@@ -465,6 +465,115 @@
           },
           "400": {
             "description": "Registration Failed\n\nThe server could not process your registration request.\n\nCommon Causes\n\n- Email address already in use\n- Missing required fields\n- Password doesn't meet security requirements\n- Invalid email format\n\n> **Tip:** Make sure your email is valid and your password is at least 8 characters long.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Authenticate a user",
+        "description": "Authenticate with your credentials to access protected endpoints in the Argentine Rock Legends API.",
+        "operationId": "loginUser",
+        "security": [
+          {}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "Email address used during registration"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User's password"
+                  }
+                }
+              },
+              "examples": {
+                "Carlos": {
+                  "value": {
+                    "email": "carlos@rock-legends.com",
+                    "password": "i-love-rock"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication Successful\n\nYou have been successfully authenticated.\n\nResponse Details\n\nThe response includes:\n- Your user information\n- Authentication tokens (JWT token and API key)\n- Token expiration information\n\n> **Important:** Store these credentials securely and include them in subsequent API requests.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "token": {
+                      "type": "string",
+                      "description": "JWT token for Bearer authentication"
+                    },
+                    "api_key": {
+                      "type": "string",
+                      "description": "API key for X-API-Key header authentication"
+                    },
+                    "expires_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Expiration timestamp for the JWT token"
+                    }
+                  }
+                },
+                "examples": {
+                  "Carlos": {
+                    "value": {
+                      "user": {
+                        "id": 1,
+                        "name": "Carlos",
+                        "email": "carlos@rock-legends.com"
+                      },
+                      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                      "api_key": "rock-legends-api-key-12345",
+                      "expires_at": "2025-08-26T19:28:00Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request\n\nThe server could not process your login request.\n\nCommon Causes\n\n- Missing required fields\n- Invalid email format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication Failed\n\nThe server could not authenticate you with the provided credentials.\n\nPossible Reasons\n\n- Incorrect email or password\n- Account has been locked due to too many failed attempts\n- Account has been deactivated\n\n> **Tip:** Double-check your credentials and try again. If you've forgotten your password, use the password reset endpoint.",
             "content": {
               "application/json": {
                 "schema": {
