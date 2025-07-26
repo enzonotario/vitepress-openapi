@@ -55,7 +55,7 @@ function onPathClick(hash: string) {
         class="grid grid-cols-1 gap-10"
         :class="{ 'md:grid-cols-2': showPathsSummary && hasDescription }"
       >
-        <OAMarkdown v-if="hasDescription" :content="group.description" class="my-[16px]" />
+        <OAMarkdown v-if="hasDescription" :content="group.description" class="my-[16px] [&>p]:!my-0" />
         <div v-if="showPathsSummary" class="flex-1 my-[16px]">
           <OAPathsSummary
             :paths="group.paths"
