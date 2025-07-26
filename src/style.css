@@ -153,6 +153,9 @@
 .oa-doc p {
   @apply my-1 !important;
 }
+.oa-doc pre {
+  @apply max-w-full overflow-x-auto
+}
 
 /**
   OAPath
