@@ -19,7 +19,7 @@ const { render } = useMarkdown()
 
 <template>
   <div
-    :class="cn('oa-doc', props.class)"
+    :class="cn('OAMarkdown oa-doc', props.class)"
     v-html="render(props.content)"
   />
 </template>
