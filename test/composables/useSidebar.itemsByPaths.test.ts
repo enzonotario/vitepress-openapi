@@ -785,9 +785,11 @@ describe('itemsByPaths with real spec', () => {
     ).toEqual([
       {
         collapsed: false,
+        text: '/api/v1',
         items: [
           {
             collapsed: false,
+            text: '/artists',
             items: [
               {
                 link: '/operations/getAllArtists',
@@ -797,6 +799,7 @@ describe('itemsByPaths with real spec', () => {
               },
               {
                 collapsed: false,
+                text: '/{artistId}',
                 items: [
                   {
                     link: '/operations/getArtist',
@@ -809,6 +812,7 @@ describe('itemsByPaths with real spec', () => {
                   },
                   {
                     collapsed: false,
+                    text: '/albums',
                     items: [
                       {
                         link: '/operations/getAllAlbums',
@@ -817,25 +821,36 @@ describe('itemsByPaths with real spec', () => {
                         link: '/operations/createAlbum',
                       },
                     ],
-                    text: '/albums',
                   },
                 ],
-                text: '/{artistId}',
               },
             ],
-            text: '/artists',
           },
           {
             collapsed: false,
+            text: '/user',
             items: [
               {
-                link: '/operations/createUser',
+                collapsed: false,
+                text: '/signup',
+                items: [
+                  {
+                    link: '/operations/createUser',
+                  },
+                ],
+              },
+              {
+                collapsed: false,
+                text: '/login',
+                items: [
+                  {
+                    link: '/operations/loginUser',
+                  },
+                ],
               },
             ],
-            text: '/user/signup',
           },
         ],
-        text: '/api/v1',
       },
     ])
   })
@@ -850,9 +865,11 @@ describe('itemsByPaths with real spec', () => {
     ).toEqual([
       {
         collapsed: false,
+        text: '/api/v1',
         items: [
           {
             collapsed: false,
+            text: '/artists',
             items: [
               {
                 link: '/operations/getAllArtists',
@@ -862,6 +879,7 @@ describe('itemsByPaths with real spec', () => {
               },
               {
                 collapsed: false,
+                text: '/{artistId}',
                 items: [
                   {
                     link: '/operations/getArtist',
@@ -873,10 +891,10 @@ describe('itemsByPaths with real spec', () => {
                     link: '/operations/deleteArtist',
                   },
                 ],
-                text: '/{artistId}',
               },
               {
                 collapsed: false,
+                text: '/{artistId}/albums',
                 items: [
                   {
                     link: '/operations/getAllAlbums',
@@ -885,22 +903,34 @@ describe('itemsByPaths with real spec', () => {
                     link: '/operations/createAlbum',
                   },
                 ],
-                text: '/{artistId}/albums',
               },
             ],
-            text: '/artists',
           },
           {
             collapsed: false,
+            text: '/user',
             items: [
               {
-                link: '/operations/createUser',
+                collapsed: false,
+                text: '/signup',
+                items: [
+                  {
+                    link: '/operations/createUser',
+                  },
+                ],
+              },
+              {
+                collapsed: false,
+                text: '/login',
+                items: [
+                  {
+                    link: '/operations/loginUser',
+                  },
+                ],
               },
             ],
-            text: '/user/signup',
           },
         ],
-        text: '/api/v1',
       },
     ])
   })
@@ -915,9 +945,11 @@ describe('itemsByPaths with real spec', () => {
     ).toEqual([
       {
         collapsed: false,
+        text: '/api/v1',
         items: [
           {
             collapsed: false,
+            text: '/artists',
             items: [
               {
                 link: '/operations/getAllArtists',
@@ -926,10 +958,10 @@ describe('itemsByPaths with real spec', () => {
                 link: '/operations/createArtist',
               },
             ],
-            text: '/artists',
           },
           {
             collapsed: false,
+            text: '/artists/{artistId}',
             items: [
               {
                 link: '/operations/getArtist',
@@ -941,10 +973,10 @@ describe('itemsByPaths with real spec', () => {
                 link: '/operations/deleteArtist',
               },
             ],
-            text: '/artists/{artistId}',
           },
           {
             collapsed: false,
+            text: '/artists/{artistId}/albums',
             items: [
               {
                 link: '/operations/getAllAlbums',
@@ -953,19 +985,26 @@ describe('itemsByPaths with real spec', () => {
                 link: '/operations/createAlbum',
               },
             ],
-            text: '/artists/{artistId}/albums',
           },
           {
             collapsed: false,
+            text: '/user/signup',
             items: [
               {
                 link: '/operations/createUser',
               },
             ],
-            text: '/user/signup',
+          },
+          {
+            collapsed: false,
+            text: '/user/login',
+            items: [
+              {
+                link: '/operations/loginUser',
+              },
+            ],
           },
         ],
-        text: '/api/v1',
       },
     ])
   })
@@ -980,6 +1019,7 @@ describe('itemsByPaths with real spec', () => {
     ).toEqual([
       {
         collapsed: false,
+        text: '/api/v1/artists',
         items: [
           {
             link: '/operations/getAllArtists',
@@ -988,10 +1028,10 @@ describe('itemsByPaths with real spec', () => {
             link: '/operations/createArtist',
           },
         ],
-        text: '/api/v1/artists',
       },
       {
         collapsed: false,
+        text: '/api/v1/artists/{artistId}',
         items: [
           {
             link: '/operations/getArtist',
@@ -1003,10 +1043,10 @@ describe('itemsByPaths with real spec', () => {
             link: '/operations/deleteArtist',
           },
         ],
-        text: '/api/v1/artists/{artistId}',
       },
       {
         collapsed: false,
+        text: '/api/v1/artists/{artistId}/albums',
         items: [
           {
             link: '/operations/getAllAlbums',
@@ -1015,16 +1055,24 @@ describe('itemsByPaths with real spec', () => {
             link: '/operations/createAlbum',
           },
         ],
-        text: '/api/v1/artists/{artistId}/albums',
       },
       {
         collapsed: false,
+        text: '/api/v1/user/signup',
         items: [
           {
             link: '/operations/createUser',
           },
         ],
-        text: '/api/v1/user/signup',
+      },
+      {
+        collapsed: false,
+        text: '/api/v1/user/login',
+        items: [
+          {
+            link: '/operations/loginUser',
+          },
+        ],
       },
     ])
   })
