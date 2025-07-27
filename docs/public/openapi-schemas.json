@@ -731,7 +731,7 @@
       },
       "ComplexRequest": {
         "type": "object",
-        "description": "A complex request object demonstrating advanced OpenAPI features including `oneOf` and `anyOf` schemas. This represents a flexible API request that can handle multiple data types.",
+        "description": "A complex request object demonstrating advanced OpenAPI features including `oneOf` and `anyOf` schemas. This represents a flexible API request that can handle multiple data types.\n\nExample:\n```jsonc\n{\n  \"id\": \"req-12345\",\n  \"timestamp\": \"2023-05-20T15:30:45Z\",\n  \"data\": {\n    \"type\": \"order\",\n    \"order\": {\n      \"id\": \"order-123\",\n      \"customer\": {\n        \"id\": \"cust-456\",\n        \"name\": \"John Doe\"\n      },\n      \"items\": [\n        {\n          \"productId\": \"prod-456\",\n          \"quantity\": 2,\n          \"unitPrice\": 599.99\n        }\n      ],\n      \"totalAmount\": 1199.98\n    }\n  },\n  \"metadata\": { \"source\": \"web\", \"priority\": \"high\", \"tags\": [\"important\", \"sales\"] } }\n```",
         "required": [
           "id",
           "data"
@@ -1015,7 +1015,7 @@
       },
       "ComplexResponse": {
         "type": "object",
-        "description": "A complex response object demonstrating advanced OpenAPI features including nested `oneOf` and `anyOf` schemas. This represents a flexible API response that can return different result types based on the operation outcome.",
+        "description": "A complex response object demonstrating advanced OpenAPI features including nested `oneOf` and `anyOf` schemas. This represents a flexible API response that can return different result types based on the operation outcome.\n\nExample:\n```jsonc\n{\n  \"id\": \"resp-67890\",\n  \"status\": \"success\",\n  \"result\": {\n    \"type\": \"success\",\n    \"data\": {\n      \"transaction\": {\n        \"id\": \"txn-123456\",\n        \"amount\": 1299.99,\n        \"currency\": \"USD\",\n        \"paymentMethod\": {\n          \"type\": \"card\",\n          \"card\": {\n            \"last4\": \"4242\",\n            \"brand\": \"visa\",\n            \"expiryMonth\": 12,\n            \"expiryYear\": 2025\n          }\n        }\n      }\n    }\n  },\n  \"metadata\": { \"processingTime\": 235.45, \"region\": \"us-west-1\", \"version\": \"v2.3.1\"  } }\n```",
         "required": [
           "id",
           "status",
@@ -1420,7 +1420,7 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "description": "A standardized error response structure that provides detailed information about what went wrong with a request. This follows best practices for API error handling.",
+        "description": "A standardized error response structure that provides detailed information about what went wrong with a request. This follows best practices for API error handling.\n\nExample:\n```jsonc\n{\n  \"error\": {\n    \"code\": \"VALIDATION_ERROR\",\n    \"message\": \"The request contains validation errors\",\n    \"details\": [\n      {\n        \"field\": \"data.user.email\",\n        \"message\": \"Must be a valid email address\"\n      },\n      {\n        \"field\": \"metadata.priority\",\n        \"message\": \"Must be one of: low, medium, high\"\n      }\n    ]\n  }\n}\n```",
         "required": [
           "error"
         ],
