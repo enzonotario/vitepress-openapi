@@ -150,11 +150,12 @@
 /**
   OAMarkdown
  */
-.oa-doc p {
+.OAMarkdown.oa-doc p {
   @apply my-1 !important;
 }
-.oa-doc pre {
-  @apply max-w-full overflow-x-auto;
+.OAMarkdown.oa-doc pre {
+  @apply max-w-full overflow-x-auto my-1 p-2 rounded;
+  background-color: var(--vp-code-block-bg);
 }
 
 /**
