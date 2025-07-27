@@ -57,8 +57,18 @@ const toggleAllChildren = (expand) => {
 const isObject = props.property.types?.includes('object')
 const isArray = props.property.types?.includes('array')
 const isObjectOrArray = isObject || isArray || props.property.type === 'object' || props.property.type === 'array'
-const isCollapsible = computed(() =>
-  isObjectOrArray && (props.property.properties || props.property.items))
+const isCollapsible = computed(() => {
+  if (!isObjectOrArray) {
+    return false
+  }
+  if (Array.isArray(props.property.properties) && props.property.properties.length > 0) {
+    return true
+  }
+  if (props.property.items) {
+    return true
+  }
+  return false
+})
 
 const childProperties = computed(() => {
   if (props.property.properties) {
@@ -110,7 +120,7 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
   <div>
     <Collapsible
       v-model:open="isOpen"
-      :disabled="!isObjectOrArray"
+      :disabled="!isCollapsible"
     >
       <CollapsibleTrigger class="w-full">
         <div
@@ -225,7 +235,7 @@ const enumAttr = computed(() => ({ [t('Valid values')]: props.property.enum }))
 
       <OASchemaPropertyAttributes v-if="props.property.constraints" :property="props.property.constraints" />
 
-      <template v-if="isObjectOrArray && props.property?.description">
+      <template v-if="isCollapsible && props.property?.description">
         <CollapsibleTrigger>
           <Button
             as="div"
