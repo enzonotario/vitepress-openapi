@@ -269,7 +269,7 @@ const enumAttr = computed(() => ({ 'Valid values': props.property.enum }))
             :schema="props.schema"
             :deep="props.deep - 1"
             :level="props.level + 1"
-            :open="childrenExpandState !== undefined ? childrenExpandState : isUnion"
+            :open="childrenExpandState !== undefined ? childrenExpandState : (isUnion ? true : undefined)"
             :expand-all="childrenExpandState"
           />
         </div>
