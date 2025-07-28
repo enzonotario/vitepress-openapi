@@ -129,7 +129,7 @@ const enumAttr = computed(() => ({ 'Valid values': props.property.enum }))
             'cursor-pointer': isCollapsible,
           }"
         >
-          <div class="flex flex-row items-center gap-2 text-sm">
+          <div class="flex flex-row flex-wrap items-center gap-2 text-sm">
             <span
               v-if="props.property.name && props.property.name.trim() !== ''"
               class="font-bold"
