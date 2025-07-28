@@ -1,5 +1,6 @@
 <script setup>
 import { useI18n } from '@byjohann/vue-i18n'
+import { titleCase } from 'scule'
 import { getConstraints } from '../../lib/parser/constraintsParser'
 import OACodeValue from '../Common/OACodeValue.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
@@ -53,7 +54,7 @@ const { t } = useI18n()
         >{{ t('Required') }}</span>
       </div>
 
-      <OAParameterAttribute v-if="props.parameter.schema.enum" :name="t('Enum')" :value="props.parameter.schema.enum.join(', ')">
+      <OAParameterAttribute v-if="props.parameter.schema.enum" :name="t('Valid values')" :value="props.parameter.schema.enum.join(', ')">
         <template #value>
           <div class="flex flex-wrap gap-2">
             <OACodeValue
@@ -71,7 +72,7 @@ const { t } = useI18n()
         <OAParameterAttribute
           v-for="(value, name) in constraints"
           :key="name"
-          :name="name"
+          :name="t(titleCase(name))"
         >
           <template #value>
             <OACodeValue :value="value" />
