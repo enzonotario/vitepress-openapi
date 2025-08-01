@@ -38,7 +38,7 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const isOpen = ref(props.open !== undefined ? props.open : props.deep > 0 && props.level <= 10)
+const isOpen = ref(props.open !== undefined ? props.open : props.deep > 0 && props.level <= props.deep)
 
 const childrenExpandState = ref(undefined)
 
