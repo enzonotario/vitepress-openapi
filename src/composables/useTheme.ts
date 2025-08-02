@@ -263,7 +263,7 @@ const defaultValues = {
     renderer: 'vue-json-pretty' as JsonRendererType,
   },
   schemaViewer: {
-    deep: Number.POSITIVE_INFINITY,
+    deep: 1,
   },
   headingLevels: {
     h1: 1,

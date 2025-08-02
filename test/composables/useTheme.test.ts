@@ -212,7 +212,7 @@ describe('initialization and reset', () => {
 
     expect(theme.getJsonViewerDeep()).toBe(Number.POSITIVE_INFINITY)
     expect(theme.getJsonViewerRenderer()).toBe('vue-json-pretty')
-    expect(theme.getSchemaViewerDeep()).toBe(Number.POSITIVE_INFINITY)
+    expect(theme.getSchemaViewerDeep()).toBe(1)
     expect(theme.getHeadingLevels()).toEqual({
       h1: 1,
       h2: 2,
@@ -386,7 +386,7 @@ describe('jSON and Schema viewers', () => {
 
   it('returns the default schemaViewer deep value', () => {
     const result = themeConfig.getSchemaViewerDeep()
-    expect(result).toBe(Number.POSITIVE_INFINITY)
+    expect(result).toBe(1)
   })
 
   it('sets and gets the schemaViewer deep value', () => {

@@ -38,7 +38,7 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const isOpen = ref(props.open !== undefined ? props.open : props.deep > 0 && props.level <= 10)
+const isOpen = ref(props.open !== undefined ? props.open : props.deep > 0 && props.level <= props.deep)
 
 const childrenExpandState = ref(undefined)
 
@@ -269,7 +269,7 @@ const enumAttr = computed(() => ({ 'Valid values': props.property.enum }))
             :schema="props.schema"
             :deep="props.deep - 1"
             :level="props.level + 1"
-            :open="childrenExpandState !== undefined ? childrenExpandState : isUnion"
+            :open="childrenExpandState !== undefined ? childrenExpandState : (isUnion ? true : undefined)"
             :expand-all="childrenExpandState"
           />
         </div>

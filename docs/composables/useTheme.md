@@ -21,14 +21,14 @@ export default {
                 defaultView: 'schema', // schema or contentType
             },
             jsonViewer: {
-                // Set the JSON viewer depth.
+                // How many levels are expanded on load.
                 deep: Infinity,
                 // Set the JSON viewer renderer.
                 renderer: 'vue-json-pretty', // vue-json-pretty or shiki
             },
             schemaViewer: {
-                // Set the schema viewer depth.
-                deep: Infinity,
+                // How many levels are expanded on load.
+                deep: 1,
             },
             // Set the heading levels.
             headingLevels: {
