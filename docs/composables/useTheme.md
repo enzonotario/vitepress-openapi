@@ -27,7 +27,7 @@ export default {
                 renderer: 'vue-json-pretty', // vue-json-pretty or shiki
             },
             schemaViewer: {
-                // How many levels are expanded on load. Maximum is 10.
+                // How many levels are expanded on load.
                 deep: 1,
             },
             // Set the heading levels.
