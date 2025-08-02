@@ -32,7 +32,8 @@ const isImage = isType(/^image\//i)
 const isAudio = isType(/^audio\//i)
 const isDownloadable = computed(() =>
   /^application\/octet-stream/i.test(props.response.type)
-  || isHeader('content-disposition', /attachment|download/i),
+  || isHeader('content-disposition', /attachment|download/i)
+  || (props.response.body instanceof Blob),
 )
 
 const lang = computed(() => {
@@ -97,7 +98,16 @@ const disableHtmlTransform = computed(
   () => props.response.body && JSON.stringify(props.response.body).length > 1000,
 )
 
-const downloadBlob = (blob: Blob, fileName: string) => {
+const downloadBlob = (data: any, fileName: string) => {
+  let blob: Blob
+  if (data instanceof Blob) {
+    blob = data
+  } else if (typeof data === 'string') {
+    blob = new Blob([data], { type: 'application/octet-stream' })
+  } else {
+    blob = new Blob([JSON.stringify(data)], { type: 'application/octet-stream' })
+  }
+
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
