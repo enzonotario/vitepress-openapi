@@ -188,9 +188,9 @@ export function buildRequest({
 
   const urlInstance = url ? new URL(url) : (baseUrl ? new URL(`${baseUrl}${resolvedPath}`) : new URL(resolvedPath, 'http://localhost'))
 
-  if (contentType) {
+  if (contentType && !(body instanceof FormData)) {
     resolvedHeaders['content-type'] = contentType
-  } else if (body && !resolvedHeaders['content-type']) {
+  } else if (body && !resolvedHeaders['content-type'] && !(body instanceof FormData)) {
     resolvedHeaders['content-type'] = 'application/json'
   }
 
