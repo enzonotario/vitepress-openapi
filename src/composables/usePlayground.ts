@@ -95,12 +95,15 @@ export function usePlayground() {
 
       const data = await fetch(url.toString(), {
         method: method.toUpperCase(),
-        headers: request.headers ?? {},
-        body: (typeof request.body === 'string' || request.body instanceof Blob) ? request.body : JSON.stringify(request.body),
+        headers: request.body instanceof FormData ? {} : (request.headers ?? {}),
+        body: request.body instanceof FormData
+          ? request.body
+          : ((typeof request.body === 'string' || request.body instanceof Blob) ? request.body : JSON.stringify(request.body)),
         signal: controller.signal,
       })
 
       const contentType = data.headers.get('Content-Type') || 'text/plain'
+      const contentDisposition = data.headers.get('Content-Disposition') || ''
       innerResponse.type = contentType
 
       if (/json/i.test(contentType)) {
@@ -113,6 +116,8 @@ export function usePlayground() {
         // Store the blob URL to release it later.
         imageUrls.value.push(innerResponse.body)
       } else if (/^audio\//i.test(contentType)) {
+        innerResponse.body = await data.blob()
+      } else if (/^application\/octet-stream/i.test(contentType) || /attachment|download/i.test(contentDisposition)) {
         innerResponse.body = await data.blob()
       } else {
         innerResponse.body = await data.text()
