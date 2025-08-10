@@ -114,6 +114,8 @@ const toggleLabel = computed(() => isOpen.value ? t('Collapse') : t('Expand'))
 const toggleAllLabel = computed(() => isOpen.value ? t('Collapse all') : t('Expand all'))
 
 const enumAttr = computed(() => ({ 'Valid values': props.property.enum }))
+
+const propertyName = computed(() => props.property.name || props.property.title)
 </script>
 
 <template>
@@ -130,11 +132,8 @@ const enumAttr = computed(() => ({ 'Valid values': props.property.enum }))
           }"
         >
           <div class="flex flex-row flex-wrap items-center gap-2 text-sm">
-            <span
-              v-if="props.property.name && props.property.name.trim() !== ''"
-              class="font-bold"
-            >
-              {{ props.property.name }}
+            <span v-if="propertyName" class="font-bold">
+              {{ propertyName }}
             </span>
 
             <div class="flex items-center">
