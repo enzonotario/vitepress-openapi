@@ -54,7 +54,8 @@ const toggleAllChildren = (expand) => {
   isOpen.value = expand
 }
 
-const isObject = props.property.types?.includes('object')
+const isUnion = props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true
+const isObject = props.property.types?.includes('object') || isUnion
 const isArray = props.property.types?.includes('array')
 const isObjectOrArray = isObject || isArray || props.property.type === 'object' || props.property.type === 'array'
 const isCollapsible = computed(() => {
@@ -79,7 +80,6 @@ const childProperties = computed(() => {
   }
   return []
 })
-const isUnion = props.property.meta?.isOneOf === true || props.property.meta?.isAnyOf === true
 
 const hasNestedObjectProperties = computed(() => {
   return props.property.properties
