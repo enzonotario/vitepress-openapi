@@ -181,14 +181,25 @@ class UiPropertyFactory {
     }
 
     if (schema.const !== undefined) {
-      const example = getPropertyExamples(schema) || schema.const
-      return {
-        name,
-        types: [schema.type as JSONSchemaType || 'string'],
-        required: false,
-        examples: [example],
-        meta: { isConstant: true },
+      // Preserve annotations (title, description, docs, etc.) for annotated enums.
+      const baseProperty = UiPropertyFactory.createBaseProperty(name, schema, required)
+
+      // Ensure type is properly inferred from `const` when not explicitly set.
+      const inferredType = determineSchemaType(schema as OpenAPI.SchemaObject)
+      if (inferredType) {
+        baseProperty.types = [inferredType]
       }
+
+      // Ensure we have an example showing the const value.
+      const example = getPropertyExamples(schema) || schema.const
+      if (example !== undefined) {
+        baseProperty.examples = Array.isArray(example) ? example : [example]
+      }
+
+      // Mark as constant explicitly (createBaseProperty already sets it, but be explicit).
+      baseProperty.meta = { ...(baseProperty.meta || {}), isConstant: true }
+
+      return baseProperty
     }
 
     if (schema.enum) {
