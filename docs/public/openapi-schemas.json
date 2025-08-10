@@ -217,6 +217,48 @@
           }
         }
       }
+    },
+    "/user-role": {
+      "get": {
+        "summary": "Get user role using oneOf constants",
+        "operationId": "getUserRoleOneOfConstants",
+        "description": "Example endpoint demonstrating a property 'role' constrained by oneOf constants.",
+        "responses": {
+          "200": {
+            "description": "An object with a role property using oneOf constants",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "role": {
+                      "type": "string",
+                      "description": "User role constrained by oneOf constants",
+                      "oneOf": [
+                        {
+                          "const": "admin",
+                          "title": "Administrator",
+                          "description": "Full access role"
+                        },
+                        {
+                          "const": "editor",
+                          "title": "Editor",
+                          "description": "Can edit content"
+                        },
+                        {
+                          "const": "viewer",
+                          "title": "Viewer",
+                          "description": "Read-only access"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

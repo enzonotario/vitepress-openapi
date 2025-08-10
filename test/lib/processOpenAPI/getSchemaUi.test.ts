@@ -1796,6 +1796,73 @@ const fixtures: Record<string, FixtureTest> = {
       file: '',
     },
   },
+
+  'oneOf constants': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        role: {
+          type: 'object',
+          oneOf: [
+            {
+              const: 'admin',
+              title: 'Administrator',
+              description: 'Full access role',
+            },
+            {
+              const: 'editor',
+              title: 'Editor',
+              description: 'Can edit content',
+            },
+            {
+              const: 'viewer',
+              title: 'Viewer',
+              description: 'Read-only access',
+            },
+          ],
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'role',
+          types: ['string'],
+          required: false,
+          properties: [
+            {
+              name: '',
+              types: ['string'],
+              required: false,
+              examples: ['admin'],
+              meta: { isConstant: true, isOneOfItem: true },
+            },
+            {
+              name: '',
+              types: ['string'],
+              required: false,
+              examples: ['editor'],
+              meta: { isConstant: true, isOneOfItem: true },
+            },
+            {
+              name: '',
+              types: ['string'],
+              required: false,
+              examples: ['viewer'],
+              meta: { isConstant: true, isOneOfItem: true },
+            },
+          ],
+          meta: { isOneOf: true },
+        },
+      ],
+    },
+    schemaUiJson: {
+      role: 'string',
+    },
+  },
 }
 
 describe('getSchemaUi and getSchemaUiJson from fixtures', () => {
