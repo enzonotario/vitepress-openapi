@@ -97,7 +97,73 @@ const disableHtmlTransform = computed(
   () => props.response.body && JSON.stringify(props.response.body).length > 1000,
 )
 
-const downloadBlob = (blob: Blob, fileName: string) => {
+const getHeader = (name: string): string | null => {
+  if (!props.response.headers) {
+    return null
+  }
+  const entry = Object.entries(props.response.headers).find(([k]) => k.toLowerCase() === name.toLowerCase())
+  return entry ? entry[1] : null
+}
+
+const downloadFileName = computed<string>(() => {
+  // Default fallback filename
+  const fallback = 'response_file'
+  const cd = getHeader('content-disposition')
+  if (!cd) {
+    return fallback
+  }
+
+  // Try RFC 5987 encoded filename*
+  const starMatch = cd.match(/filename\*\s*=\s*([^;]+)/i)
+  if (starMatch) {
+    let v = starMatch[1].trim()
+    if (v.startsWith('"') && v.endsWith('"')) {
+      v = v.slice(1, -1)
+    }
+    const parts = v.split('\'')
+    if (parts.length >= 3) {
+      const encoded = parts.slice(2).join('\'')
+      try {
+        const decoded = decodeURIComponent(encoded)
+        if (decoded) {
+          return decoded
+        }
+      } catch { /* ignore */ }
+    } else {
+      try {
+        const decoded = decodeURIComponent(v)
+        if (decoded) {
+          return decoded
+        }
+      } catch { /* ignore */ }
+    }
+  }
+
+  // Fallback to regular filename="..."
+  const fnameMatch = cd.match(/filename\s*=\s*([^;]+)/i)
+  if (fnameMatch) {
+    let v = fnameMatch[1].trim()
+    if (v.startsWith('"') && v.endsWith('"')) {
+      v = v.slice(1, -1)
+    }
+    if (v) {
+      return v
+    }
+  }
+
+  return fallback
+})
+
+const downloadBlob = (data: any, fileName: string) => {
+  let blob: Blob
+  if (data instanceof Blob) {
+    blob = data
+  } else if (typeof data === 'string') {
+    blob = new Blob([data], { type: 'application/octet-stream' })
+  } else {
+    blob = new Blob([JSON.stringify(data)], { type: 'application/octet-stream' })
+  }
+
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
@@ -137,7 +203,7 @@ const downloadBlob = (blob: Blob, fileName: string) => {
       <button
         type="button"
         aria-label="Download file"
-        @click="downloadBlob(props.response.body, 'response_file')"
+        @click="downloadBlob(props.response.body, downloadFileName)"
       >
         {{ t('Download file') }}
       </button>

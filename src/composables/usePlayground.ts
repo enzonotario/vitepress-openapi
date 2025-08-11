@@ -14,6 +14,7 @@ export interface PlaygroundResponse {
   type: string
   time: string | null
   status: number | null
+  headers?: Record<string, string>
 }
 
 export interface SubmitOptions {
@@ -103,7 +104,21 @@ export function usePlayground() {
       })
 
       const contentType = data.headers.get('Content-Type') || 'text/plain'
+      const contentDisposition = data.headers.get('Content-Disposition') || ''
       innerResponse.type = contentType
+      // Expose headers for downstream components (e.g., filename extraction).
+      try {
+        innerResponse.headers = Object.fromEntries(data.headers.entries())
+      } catch {
+        const hdrs: Record<string, string> = {}
+        if (contentType) {
+          hdrs['content-type'] = contentType
+        }
+        if (contentDisposition) {
+          hdrs['content-disposition'] = contentDisposition
+        }
+        innerResponse.headers = hdrs
+      }
 
       if (/json/i.test(contentType)) {
         innerResponse.body = await data.json()
@@ -115,6 +130,8 @@ export function usePlayground() {
         // Store the blob URL to release it later.
         imageUrls.value.push(innerResponse.body)
       } else if (/^audio\//i.test(contentType)) {
+        innerResponse.body = await data.blob()
+      } else if (/^application\/octet-stream/i.test(contentType) || /attachment|download/i.test(contentDisposition)) {
         innerResponse.body = await data.blob()
       } else {
         innerResponse.body = await data.text()
