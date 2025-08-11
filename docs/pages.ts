@@ -50,6 +50,12 @@ export const testsPages = [
     specPath: './public/openapi-content-types.json',
     themeConfig: {},
   },
+  {
+    slug: 'files',
+    label: 'Files',
+    specPath: './public/openapi-files.json',
+    themeConfig: {},
+  },
 ]
 
 export const examplesPages = [
