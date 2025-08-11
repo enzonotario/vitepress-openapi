@@ -13,7 +13,7 @@ const props = defineProps({
     required: true,
   },
   modelValue: {
-    type: [String, Number, Boolean, null, Array, Object],
+    type: [String, Number, Boolean, null, Array, Object, File],
     required: true,
   },
   compositeKey: {
@@ -27,6 +27,10 @@ const props = defineProps({
   hideLabel: {
     type: Boolean,
     default: false,
+  },
+  contentType: {
+    type: String,
+    default: '',
   },
 })
 
@@ -44,6 +48,10 @@ function handleInputChange(value: any) {
   emits('update:modelValue', value)
 }
 
+function isBinary(parameter: any) {
+  return parameter.schema?.format === 'binary'
+}
+
 function inputType(parameter: any) {
   if (parameter.schema?.type === 'integer') {
     return 'number'
@@ -51,10 +59,16 @@ function inputType(parameter: any) {
   if (parameter.schema?.type === 'number') {
     return 'number'
   }
-  if (parameter.schema?.format === 'binary') {
+  if (isBinary(parameter)) {
     return 'file'
   }
   return 'text'
+}
+
+function onFileChange(e: Event) {
+  const target = e.target as HTMLInputElement
+  const file = target?.files?.[0]
+  handleInputChange(file ?? '')
 }
 
 onMounted(() => {
@@ -122,17 +136,30 @@ const { t } = useI18n()
         </SelectContent>
       </Select>
 
-      <Input
-        v-else
-        :id="compositeKey"
-        :name="compositeKey"
-        :value="modelValue"
-        :type="inputType(parameter)"
-        :placeholder="String(parameterExample ?? '')"
-        class="bg-muted"
-        @update:model-value="handleInputChange($event)"
-        @keydown.enter="emits('submit')"
-      />
+      <div v-else class="flex-grow flex items-center gap-1">
+        <template v-if="isBinary(parameter)">
+          <Input
+            :id="compositeKey"
+            :name="compositeKey"
+            type="file"
+            accept="*"
+            class="bg-muted"
+            @change="onFileChange"
+          />
+        </template>
+        <template v-else>
+          <Input
+            :id="compositeKey"
+            :name="compositeKey"
+            :value="modelValue as any"
+            :type="inputType(parameter)"
+            :placeholder="String(parameterExample ?? '')"
+            class="bg-muted"
+            @update:model-value="handleInputChange($event)"
+            @keydown.enter="emits('submit')"
+          />
+        </template>
+      </div>
     </div>
   </div>
 </template>

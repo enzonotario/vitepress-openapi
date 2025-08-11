@@ -75,12 +75,12 @@ const bodyParameters = computed<BodyParameter[]>(() => {
 
 const getParameterValue = computed(() => (parameter: BodyParameter) => {
   if (isFormUrlEncodedContent.value || isMultipartFormDataContent.value) {
-    return paramValues.value[parameter.name] || ''
+    return (paramValues.value as Record<string, any>)[parameter.name] || ''
   }
   return bodyValue.value
 })
 
-const paramValues = ref<Record<string, string>>({})
+const paramValues = ref<Record<string, string | File>>({})
 
 const getEnabledParams = computed(() => {
   return Object.keys(paramValues.value).filter((key) => {
@@ -110,12 +110,17 @@ const parametersWithKeys = computed(() =>
 function createFormData(enabledParams: string[]): Record<string, string> | FormData {
   if (isFormUrlEncodedContent.value) {
     return Object.fromEntries(
-      enabledParams.map(key => [key, paramValues.value[key]]),
+      enabledParams.map(key => [key, paramValues.value[key] as string]),
     )
   } else if (isMultipartFormDataContent.value) {
     const formData = new FormData()
     enabledParams.forEach((key) => {
-      formData.append(key, paramValues.value[key] || '')
+      const v = paramValues.value[key]
+      if (v instanceof File) {
+        formData.append(key, v, v.name)
+      } else {
+        formData.append(key, v || '')
+      }
     })
     return formData
   }
@@ -123,7 +128,7 @@ function createFormData(enabledParams: string[]): Record<string, string> | FormD
   return {}
 }
 
-function updateParameterValue(parameter: BodyParameter, value: string): void {
+function updateParameterValue(parameter: BodyParameter, value: any): void {
   paramValues.value[parameter.name] = value
 
   if (isFormUrlEncodedContent.value || isMultipartFormDataContent.value) {
