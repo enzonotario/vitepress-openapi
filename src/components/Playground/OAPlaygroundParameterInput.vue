@@ -138,7 +138,6 @@ const { t } = useI18n()
             :id="compositeKey"
             :name="compositeKey"
             type="file"
-            accept="*"
             class="bg-muted"
             @change="onFileChange"
           />
