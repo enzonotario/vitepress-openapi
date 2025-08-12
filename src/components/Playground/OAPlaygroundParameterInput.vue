@@ -28,10 +28,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  contentType: {
-    type: String,
-    default: '',
-  },
 })
 
 const emits = defineEmits([
