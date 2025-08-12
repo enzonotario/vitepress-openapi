@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, onBeforeUnmount, ref, watch } from 'vue'
+import { getDownloadFileNameFromContentDisposition } from '../../lib/playground/getDownloadFileName'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
 interface ResponseType {
@@ -106,52 +107,8 @@ const getHeader = (name: string): string | null => {
 }
 
 const downloadFileName = computed<string>(() => {
-  // Default fallback filename
-  const fallback = 'response_file'
   const cd = getHeader('content-disposition')
-  if (!cd) {
-    return fallback
-  }
-
-  // Try RFC 5987 encoded filename*
-  const starMatch = cd.match(/filename\*\s*=\s*([^;]+)/i)
-  if (starMatch) {
-    let v = starMatch[1].trim()
-    if (v.startsWith('"') && v.endsWith('"')) {
-      v = v.slice(1, -1)
-    }
-    const parts = v.split('\'')
-    if (parts.length >= 3) {
-      const encoded = parts.slice(2).join('\'')
-      try {
-        const decoded = decodeURIComponent(encoded)
-        if (decoded) {
-          return decoded
-        }
-      } catch { /* ignore */ }
-    } else {
-      try {
-        const decoded = decodeURIComponent(v)
-        if (decoded) {
-          return decoded
-        }
-      } catch { /* ignore */ }
-    }
-  }
-
-  // Fallback to regular filename="..."
-  const fnameMatch = cd.match(/filename\s*=\s*([^;]+)/i)
-  if (fnameMatch) {
-    let v = fnameMatch[1].trim()
-    if (v.startsWith('"') && v.endsWith('"')) {
-      v = v.slice(1, -1)
-    }
-    if (v) {
-      return v
-    }
-  }
-
-  return fallback
+  return getDownloadFileNameFromContentDisposition(cd, 'response_file')
 })
 
 const downloadBlob = (data: any, fileName: string) => {
