@@ -97,10 +97,23 @@
       "get": {
         "responses": {
           "200": {
-            "description": "File content"
-          },
-          "404": {
-            "description": "Not found"
+            "description": "File content",
+            "headers": {
+              "Content-Disposition": {
+                "description": "Attachment filename",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
           }
         },
         "operationId": "get-files-download"
