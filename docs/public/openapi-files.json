@@ -1,0 +1,109 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Upload/Download API",
+    "version": "1.0.0",
+    "description": "Simple REST API to upload and download files"
+  },
+  "servers": [
+    {
+      "url": "https://vitepress-openapi.wiremockapi.cloud"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "UploadResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "size",
+          "url"
+        ]
+      },
+      "UploadBody": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "nullable": true,
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/files/upload": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid upload"
+          }
+        },
+        "operationId": "post-files"
+      }
+    },
+    "/files/download": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "File content",
+            "headers": {
+              "Content-Disposition": {
+                "description": "Attachment filename",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-files-download"
+      }
+    }
+  }
+}

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, onBeforeUnmount, ref, watch } from 'vue'
+import { getDownloadFileNameFromContentDisposition } from '../../lib/playground/getDownloadFileName'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
 interface ResponseType {
@@ -97,7 +98,29 @@ const disableHtmlTransform = computed(
   () => props.response.body && JSON.stringify(props.response.body).length > 1000,
 )
 
-const downloadBlob = (blob: Blob, fileName: string) => {
+const getHeader = (name: string): string | null => {
+  if (!props.response.headers) {
+    return null
+  }
+  const entry = Object.entries(props.response.headers).find(([k]) => k.toLowerCase() === name.toLowerCase())
+  return entry ? entry[1] : null
+}
+
+const downloadFileName = computed<string>(() => {
+  const cd = getHeader('content-disposition')
+  return getDownloadFileNameFromContentDisposition(cd, 'response_file')
+})
+
+const downloadBlob = (data: any, fileName: string) => {
+  let blob: Blob
+  if (data instanceof Blob) {
+    blob = data
+  } else if (typeof data === 'string') {
+    blob = new Blob([data], { type: 'application/octet-stream' })
+  } else {
+    blob = new Blob([JSON.stringify(data)], { type: 'application/octet-stream' })
+  }
+
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
@@ -137,7 +160,7 @@ const downloadBlob = (blob: Blob, fileName: string) => {
       <button
         type="button"
         aria-label="Download file"
-        @click="downloadBlob(props.response.body, 'response_file')"
+        @click="downloadBlob(props.response.body, downloadFileName)"
       >
         {{ t('Download file') }}
       </button>
