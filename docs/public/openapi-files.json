@@ -12,20 +12,6 @@
   ],
   "components": {
     "schemas": {
-      "HealthResponse": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "ok"
-            ]
-          }
-        },
-        "required": [
-          "status"
-        ]
-      },
       "UploadResponse": {
         "type": "object",
         "properties": {
