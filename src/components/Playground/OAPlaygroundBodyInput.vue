@@ -75,7 +75,7 @@ const bodyParameters = computed<BodyParameter[]>(() => {
 
 const getParameterValue = computed(() => (parameter: BodyParameter) => {
   if (isFormUrlEncodedContent.value || isMultipartFormDataContent.value) {
-    return (paramValues.value as Record<string, any>)[parameter.name] || ''
+    return (paramValues.value as Record<string, string | File>)[parameter.name] || ''
   }
   return bodyValue.value
 })
