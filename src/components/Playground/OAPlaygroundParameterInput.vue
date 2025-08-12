@@ -64,7 +64,7 @@ function inputType(parameter: any) {
 function onFileChange(e: Event) {
   const target = e.target as HTMLInputElement
   const file = target?.files?.[0]
-  handleInputChange(file ?? '')
+  handleInputChange(file ?? null)
 }
 
 onMounted(() => {
