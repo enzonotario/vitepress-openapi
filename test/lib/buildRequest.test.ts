@@ -473,3 +473,46 @@ describe('update request', () => {
     expect(fixedRequest.cookies.user).toBe('john')
   })
 })
+
+it('puts apiKey security scheme with in:"query" into query params', () => {
+  const request = buildRequest({
+    path: '/endpoint',
+    method: 'GET',
+    baseUrl: 'https://api.example.com',
+    parameters: [],
+    authorizations: {
+      type: 'apiKey',
+      name: 'api_key',
+      in: 'query',
+      value: 'example_key',
+      label: 'APIKey',
+    } as any,
+    body: null,
+    variables: {},
+  })
+
+  expect(request.url.toString()).toBe('https://api.example.com/endpoint')
+  expect(request.query.api_key).toBe('example_key')
+  expect(request.headers.api_key).toBeUndefined()
+})
+
+it('keeps apiKey security scheme in header when in:"header"', () => {
+  const request = buildRequest({
+    path: '/endpoint',
+    method: 'GET',
+    baseUrl: 'https://api.example.com',
+    parameters: [],
+    authorizations: {
+      type: 'apiKey',
+      name: 'X-API-Key',
+      in: 'header',
+      value: 'k',
+      label: 'APIKey',
+    } as any,
+    body: null,
+    variables: {},
+  })
+
+  expect(request.query['X-API-Key']).toBeUndefined()
+  expect(request.headers['x-api-key']).toBe('k')
+})

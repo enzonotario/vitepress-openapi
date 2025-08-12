@@ -120,6 +120,35 @@ function getQuery(
   return query
 }
 
+export function getAuthorizationsQuery(authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[]) {
+  const params: Record<string, string> = {}
+
+  if (!authorizations) {
+    return params
+  }
+
+  const authArray = Array.isArray(authorizations) ? authorizations : [authorizations]
+  for (const authorization of authArray) {
+    if (!authorization?.type) {
+      continue
+    }
+
+    if (authorization.type === 'apiKey' && authorization.in === 'query') {
+      const value = unref(authorization.value ?? authorization.name ?? '')
+      if (!value) {
+        continue
+      }
+      const name = authorization.name ?? ''
+      if (!name) {
+        continue
+      }
+      params[name] = value
+    }
+  }
+
+  return params
+}
+
 function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variables: Record<string, string>) {
   parameters.forEach((parameter) => {
     if (!parameter.name) {
@@ -175,7 +204,10 @@ export function buildRequest({
   const resolvedPath = getPath(resolvedVariables, pathParameters, path)
   const resolveMethod = (method?.toUpperCase() || 'GET') as OpenAPIV3.HttpMethods
 
-  const resolvedQuery = getQuery(resolvedVariables, queryParameters)
+  const resolvedQuery = {
+    ...getQuery(resolvedVariables, queryParameters),
+    ...getAuthorizationsQuery(authorizations),
+  }
 
   const resolvedHeaders = getHeaders(
     headers,
