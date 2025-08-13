@@ -578,3 +578,15 @@ it('does not override existing Cookie header', () => {
   // cookies object still includes param-derived value
   expect(request.cookies.token).toBe('abc')
 })
+
+it('auth query value overrides variable-derived query', () => {
+  const request = buildRequest({
+    path: '/endpoint',
+    method: 'GET',
+    baseUrl: 'https://api.example.com',
+    parameters: [{ name: 'api_key', in: 'query', schema: { type: 'string' } } as any],
+    variables: { api_key: 'from-vars' } as any,
+    authorizations: { type: 'apiKey', name: 'api_key', in: 'query', value: 'from-auth', label: 'APIKey' } as any,
+  })
+  expect(request.query.api_key).toBe('from-auth')
+})
