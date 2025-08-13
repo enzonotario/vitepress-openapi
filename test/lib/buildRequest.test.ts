@@ -486,7 +486,7 @@ it('puts apiKey security scheme with in:"query" into query params', () => {
       in: 'query',
       value: 'example_key',
       label: 'APIKey',
-    } as any,
+    },
     body: null,
     variables: {},
   })
@@ -508,11 +508,73 @@ it('keeps apiKey security scheme in header when in:"header"', () => {
       in: 'header',
       value: 'k',
       label: 'APIKey',
-    } as any,
+    },
     body: null,
     variables: {},
   })
 
   expect(request.query['X-API-Key']).toBeUndefined()
   expect(request.headers['x-api-key']).toBe('k')
+})
+
+it('puts apiKey security scheme with in:"cookie" into cookies', () => {
+  const request = buildRequest({
+    path: '/endpoint',
+    method: 'GET',
+    baseUrl: 'https://api.example.com',
+    parameters: [],
+    authorizations: {
+      type: 'apiKey',
+      name: 'api_key',
+      in: 'cookie',
+      value: 'example_key',
+      label: 'APIKey',
+    } as any,
+    body: null,
+    variables: {},
+  })
+
+  expect(request.url.toString()).toBe('https://api.example.com/endpoint')
+  expect(request.cookies.api_key).toBe('example_key')
+  expect(request.headers.cookie).toBeUndefined()
+  expect(request.query.api_key).toBeUndefined()
+  expect(request.headers.api_key).toBeUndefined()
+})
+
+it('fills cookies from cookie parameters and variables', () => {
+  const request = buildRequest({
+    path: '/endpoint',
+    method: 'GET',
+    baseUrl: 'https://api.example.com',
+    parameters: [
+      { name: 'acceptsCookies', in: 'cookie' } as any,
+    ],
+    variables: {
+      acceptsCookies: 'true',
+    },
+  })
+
+  expect(request.cookies.acceptsCookies).toBe('true')
+  expect(request.headers.cookie).toBeUndefined()
+})
+
+it('does not override existing Cookie header', () => {
+  const request = buildRequest({
+    path: '/endpoint',
+    method: 'GET',
+    baseUrl: 'https://api.example.com',
+    parameters: [
+      { name: 'token', in: 'cookie' } as any,
+    ],
+    variables: {
+      token: 'abc',
+    },
+    headers: {
+      cookie: 'session=xyz',
+    },
+  })
+
+  expect(request.headers.cookie).toBe('session=xyz')
+  // cookies object still includes param-derived value
+  expect(request.cookies.token).toBe('abc')
 })
