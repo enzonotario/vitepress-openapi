@@ -188,6 +188,7 @@ watch(selectedSchemeId, (schemeId) => {
     return {
       type: scheme.type,
       scheme: scheme.scheme,
+      in: scheme.in,
       name: scheme.name ?? name,
       value: typeof localStorage !== 'undefined'
         ? useStorage(`--oa-authorization-${name}`, example, localStorage)

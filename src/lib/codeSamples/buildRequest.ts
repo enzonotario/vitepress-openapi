@@ -120,6 +120,77 @@ function getQuery(
   return query
 }
 
+function getCookies(
+  variables: Record<string, string>,
+  cookieParameters: OpenAPIV3.ParameterObject[],
+) {
+  const cookies: Record<string, string> = {}
+
+  processParameters(variables, cookieParameters, (key: string, value: string) => {
+    cookies[key] = value
+  })
+
+  return cookies
+}
+
+export function getAuthorizationsQuery(authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[]) {
+  const params: Record<string, string> = {}
+
+  if (!authorizations) {
+    return params
+  }
+
+  const authArray = Array.isArray(authorizations) ? authorizations : [authorizations]
+  for (const authorization of authArray) {
+    if (!authorization?.type) {
+      continue
+    }
+
+    if (authorization.type === 'apiKey' && authorization.in === 'query') {
+      const value = unref(authorization.value ?? authorization.name ?? '')
+      if (!value) {
+        continue
+      }
+      const name = authorization.name ?? ''
+      if (!name) {
+        continue
+      }
+      params[name] = value
+    }
+  }
+
+  return params
+}
+
+export function getAuthorizationsCookies(authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[]) {
+  const cookies: Record<string, string> = {}
+
+  if (!authorizations) {
+    return cookies
+  }
+
+  const authArray = Array.isArray(authorizations) ? authorizations : [authorizations]
+  for (const authorization of authArray) {
+    if (!authorization?.type) {
+      continue
+    }
+
+    if (authorization.type === 'apiKey' && authorization.in === 'cookie') {
+      const value = unref(authorization.value ?? authorization.name ?? '')
+      if (!value) {
+        continue
+      }
+      const name = authorization.name ?? ''
+      if (!name) {
+        continue
+      }
+      cookies[name] = value
+    }
+  }
+
+  return cookies
+}
+
 function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variables: Record<string, string>) {
   parameters.forEach((parameter) => {
     if (!parameter.name) {
@@ -157,6 +228,7 @@ export function buildRequest({
   const pathParameters = parameters.filter(parameter => parameter.in === 'path')
   const queryParameters = parameters.filter(parameter => parameter.in === 'query')
   const headerParameters = parameters.filter(parameter => parameter.in === 'header')
+  const cookieParameters = parameters.filter(parameter => parameter.in === 'cookie')
 
   if (import.meta.env.VITE_DEBUG) {
     console.warn('Building request with parameters:', {
@@ -166,6 +238,7 @@ export function buildRequest({
       pathParameters,
       queryParameters,
       headerParameters,
+      cookieParameters,
       authorizations,
       body,
       resolvedVariables,
@@ -175,7 +248,10 @@ export function buildRequest({
   const resolvedPath = getPath(resolvedVariables, pathParameters, path)
   const resolveMethod = (method?.toUpperCase() || 'GET') as OpenAPIV3.HttpMethods
 
-  const resolvedQuery = getQuery(resolvedVariables, queryParameters)
+  const resolvedQuery = {
+    ...getQuery(resolvedVariables, queryParameters),
+    ...getAuthorizationsQuery(authorizations),
+  }
 
   const resolvedHeaders = getHeaders(
     headers,
@@ -183,6 +259,12 @@ export function buildRequest({
     headerParameters,
     authorizations,
   )
+
+  const resolvedCookies = {
+    ...(cookies || {}),
+    ...getCookies(resolvedVariables, cookieParameters),
+    ...getAuthorizationsCookies(authorizations),
+  }
 
   baseUrl = baseUrl ? resolveBaseUrl(baseUrl) : DEFAULT_BASE_URL
 
@@ -213,7 +295,7 @@ export function buildRequest({
     variables: resolvedVariables,
     headers: resolvedHeaders,
     query: resolvedQuery,
-    cookies,
+    cookies: resolvedCookies,
     contentType: resolvedHeaders['content-type'],
   })
 }

@@ -166,6 +166,27 @@
           }
         }
       }
+    },
+    "/onlyApiKeyQuery": {
+      "get": {
+        "operationId": "onlyApiKeyQuery",
+        "security": [
+          {
+            "apiKeyQuery": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "optionalParam",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "An optional query parameter"
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -174,6 +195,12 @@
         "type": "apiKey",
         "name": "api_key",
         "in": "header",
+        "example": "your-api-key"
+      },
+      "apiKeyQuery": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "query",
         "example": "your-api-key"
       },
       "bearerAuth": {
