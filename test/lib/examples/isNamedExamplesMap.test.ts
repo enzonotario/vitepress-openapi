@@ -25,12 +25,21 @@ describe('isNamedExamplesMap', () => {
     expect(isNamedExamplesMap({ ex1: { foo: 'bar' }, ex2: { baz: 123 } })).toBe(false)
   })
 
+  it('returns false when an entry is null', () => {
+    expect(isNamedExamplesMap({ ex1: null as any })).toBe(false)
+  })
+
+  it('returns false when Example-like key is nested, not top-level', () => {
+    expect(isNamedExamplesMap({ ex1: { data: { value: 1 } } })).toBe(false)
+  })
+
   it('returns true when any entry resembles an OpenAPI ExampleObject', () => {
     expect(isNamedExamplesMap({ ex1: { value: { a: 1 } } })).toBe(true)
-    expect(isNamedExamplesMap({ ex1: { summary: 's' } })).toBe(true)
-    expect(isNamedExamplesMap({ ex1: { description: 'd' } })).toBe(true)
     expect(isNamedExamplesMap({ ex1: { externalValue: 'http://example.com' } })).toBe(true)
     expect(isNamedExamplesMap({ ex1: { $ref: '#/components/examples/Foo' } })).toBe(true)
+
+    expect(isNamedExamplesMap({ ex1: { summary: 's' } })).toBe(false)
+    expect(isNamedExamplesMap({ ex1: { description: 'd' } })).toBe(false)
   })
 
   it('returns true for mixed entries when at least one is ExampleObject-shaped', () => {
