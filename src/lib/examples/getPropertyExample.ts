@@ -11,19 +11,32 @@ export function getPropertyExample(property: any): any {
     return property.example
   }
 
-  if (property?.examples && property?.examples?.length > 0) {
-    return property.examples[0]
+  if (property?.examples) {
+    if (Array.isArray(property.examples) && property.examples.length > 0) {
+      return property.examples[0]
+    }
+    if (!Array.isArray(property.examples) && typeof property.examples === 'object') {
+      const firstKey = Object.keys(property.examples)[0]
+      const entry = property.examples[firstKey]
+      if (entry && typeof entry === 'object' && 'value' in entry) {
+        return entry.value
+      }
+      if (entry !== undefined) {
+        return entry
+      }
+    }
   }
 
   if (property?.schema?.example !== undefined) {
     return property.schema.example
   }
 
-  if (property?.schema?.examples && property?.schema?.examples?.length > 0) {
-    const firstExample = property.schema.examples[0]
-
-    if (firstExample) {
-      return firstExample
+  if (property?.schema?.examples) {
+    if (Array.isArray(property.schema.examples) && property.schema.examples.length > 0) {
+      const firstExample = property.schema.examples[0]
+      if (firstExample) {
+        return firstExample
+      }
     }
   }
 

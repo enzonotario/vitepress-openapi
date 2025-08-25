@@ -82,4 +82,34 @@ describe('getPropertyExample', () => {
     const property = { subexample: '' }
     expect(getPropertyExample(property)).toBe('')
   })
+
+  it('returns first value from named examples', () => {
+    const property = {
+      examples: {
+        name_1: { value: 'parameter_value_1' },
+        name_2: { value: 'parameter_value_2' },
+      },
+      schema: {
+        type: 'string',
+        examples: ['schema_value_1', 'schema_value_2'],
+      },
+    }
+    expect(getPropertyExample(property)).toBe('parameter_value_1')
+  })
+
+  it('prioritizes parameter.examples over schema.examples', () => {
+    const property = {
+      examples: {
+        name_1: { value: 'parameter_value_1' },
+        name_2: { value: 'parameter_value_2' },
+      },
+      schema: {
+        examples: {
+          name_3: { value: 'schema_value_3' },
+          name_4: { value: 'schema_value_4' },
+        },
+      },
+    }
+    expect(getPropertyExample(property)).toBe('parameter_value_1')
+  })
 })
