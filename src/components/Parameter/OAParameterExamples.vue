@@ -3,6 +3,7 @@ import { useI18n } from '@byjohann/vue-i18n'
 import { computed } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { getPropertyExamples } from '../../lib/examples/getPropertyExamples'
+import { isNamedExamplesMap } from '../../lib/examples/isNamedExamplesMap'
 import OACodeValue from '../Common/OACodeValue.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
 
@@ -27,15 +28,20 @@ const examples = computed(() => {
     }))
   }
 
-  if (typeof values === 'object') {
-    return Object.keys(values).map((key) => {
-      const entry = values[key]
-      const value = entry && typeof entry === 'object' && 'value' in entry ? entry.value : entry
-      return {
-        name: key,
-        value,
-      }
-    })
+  if (values && typeof values === 'object' && !Array.isArray(values)) {
+    const keys = Object.keys(values)
+    if (isNamedExamplesMap(values)) {
+      return keys.map((key) => {
+        const entry = values[key]
+        const value = entry && typeof entry === 'object' && 'value' in entry ? entry.value : entry
+        return {
+          name: key,
+          value,
+        }
+      })
+    }
+    // Otherwise, it's a single object example.
+    return [{ name: JSON.stringify(values), value: values }]
   }
 
   return [

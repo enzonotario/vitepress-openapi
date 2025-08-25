@@ -558,6 +558,19 @@
             },
             "style": "form",
             "explode": true
+          },
+          {
+            "name": "metadata",
+            "in": "query",
+            "required": false,
+            "description": "Additional JSON metadata for the document",
+            "example": {
+              "author": "Jane Doe",
+              "category": "report"
+            },
+            "schema": {
+              "type": "object"
+            }
           }
         ],
         "requestBody": {
