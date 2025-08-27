@@ -1,7 +1,9 @@
 <script setup>
 import { useI18n } from '@byjohann/vue-i18n'
+import { computed } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { getPropertyExamples } from '../../lib/examples/getPropertyExamples'
+import { normalizeExamples } from '../../lib/examples/normalizeExamples'
 import OACodeValue from '../Common/OACodeValue.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
 
@@ -12,7 +14,10 @@ const props = defineProps({
   },
 })
 
-const examples = getPropertyExamples(props.property)
+const examples = computed(() => {
+  const values = getPropertyExamples(props.property)
+  return normalizeExamples(values)
+})
 
 const wrapExamples = useTheme().getWrapExamples()
 const { t } = useI18n()
@@ -21,10 +26,10 @@ const { t } = useI18n()
 <template>
   <div
     v-if="examples?.length === 1"
-    class="flex flex-row space-x-2"
+    class="flex flex-row items-center gap-2"
   >
     <span class="text-sm">{{ t('Example') }}</span>
-    <OACodeValue :value="examples[0]" />
+    <OACodeValue :value="examples[0]?.value" />
   </div>
   <div
     v-if="examples?.length > 1"
@@ -42,11 +47,12 @@ const { t } = useI18n()
             'flex-row flex-wrap': wrapExamples,
           }"
         >
-          <OACodeValue
+          <div
             v-for="(example, idx) in examples"
             :key="idx"
-            :value="example"
-          />
+          >
+            <OACodeValue :value="example.value" />
+          </div>
         </div>
       </template>
     </OAParameterAttribute>

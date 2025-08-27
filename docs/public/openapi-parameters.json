@@ -54,7 +54,11 @@
             "description": "Region for user creation",
             "schema": {
               "type": "string",
-              "enum": ["us-east", "us-west", "eu-central"],
+              "enum": [
+                "us-east",
+                "us-west",
+                "eu-central"
+              ],
               "default": "us-east"
             }
           }
@@ -65,7 +69,10 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["name", "email"],
+                "required": [
+                  "name",
+                  "email"
+                ],
                 "properties": {
                   "name": {
                     "type": "string",
@@ -118,9 +125,16 @@
                     "description": "User's preferences",
                     "items": {
                       "type": "string",
-                      "enum": ["email", "sms", "push"]
+                      "enum": [
+                        "email",
+                        "sms",
+                        "push"
+                      ]
                     },
-                    "example": ["email", "push"]
+                    "example": [
+                      "email",
+                      "push"
+                    ]
                   },
                   "metadata": {
                     "type": "object",
@@ -435,6 +449,16 @@
             "in": "path",
             "required": true,
             "description": "The ID of the document to update",
+            "examples": {
+              "example1": {
+                "value": "doc-123",
+                "summary": "A sample document ID"
+              },
+              "example2": {
+                "value": "doc-456",
+                "summary": "Another document ID"
+              }
+            },
             "schema": {
               "type": "string",
               "example": "doc-123"
@@ -455,6 +479,16 @@
             "in": "header",
             "required": false,
             "description": "Unique transaction identifier for tracing",
+            "examples": {
+              "example1": {
+                "value": "123e4567-e89b-12d3-a456-426614174000",
+                "summary": "UUID format"
+              },
+              "example2": {
+                "value": "456e7890-e12b-34d5-c678-526614174999",
+                "summary": "Another UUID"
+              }
+            },
             "schema": {
               "type": "string",
               "format": "uuid",
@@ -466,6 +500,16 @@
             "in": "query",
             "required": false,
             "description": "Document version for concurrency control",
+            "examples": {
+              "first": {
+                "value": 1,
+                "summary": "First version"
+              },
+              "latest": {
+                "value": 5,
+                "summary": "Latest version"
+              }
+            },
             "schema": {
               "type": "integer",
               "minimum": 1,
@@ -489,7 +533,11 @@
             "description": "Format of the document content",
             "schema": {
               "type": "string",
-              "enum": ["plain", "markdown", "html"],
+              "enum": [
+                "plain",
+                "markdown",
+                "html"
+              ],
               "default": "plain"
             }
           },
@@ -503,10 +551,26 @@
               "items": {
                 "type": "string"
               },
-              "example": ["important", "draft"]
+              "example": [
+                "important",
+                "draft"
+              ]
             },
             "style": "form",
             "explode": true
+          },
+          {
+            "name": "metadata",
+            "in": "query",
+            "required": false,
+            "description": "Additional JSON metadata for the document",
+            "example": {
+              "author": "Jane Doe",
+              "category": "report"
+            },
+            "schema": {
+              "type": "object"
+            }
           }
         ],
         "requestBody": {
