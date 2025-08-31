@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
-import { defineEmits, defineProps, onMounted } from 'vue'
+import { computed, defineEmits, defineProps, onMounted } from 'vue'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import { formatValueForPlaceholder } from '../../lib/format/formatValueForDisplay'
@@ -76,7 +76,12 @@ onMounted(() => {
 })
 
 const parameterExample = getPropertyExample(props.parameter)
+
 const { t } = useI18n()
+
+const selectPlaceholder = computed(() =>
+  formatValueForPlaceholder(parameterExample ?? t('Select')),
+)
 </script>
 
 <template>
@@ -132,8 +137,8 @@ const { t } = useI18n()
         :name="compositeKey"
         @update:model-value="handleInputChange($event)"
       >
-        <SelectTrigger :aria-label="formatValueForPlaceholder(parameterExample ?? t('Select'))">
-          <SelectValue :placeholder="formatValueForPlaceholder(parameterExample ?? t('Select'))" />
+        <SelectTrigger :aria-label="selectPlaceholder">
+          <SelectValue :placeholder="selectPlaceholder" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>

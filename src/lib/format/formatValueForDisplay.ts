@@ -8,7 +8,8 @@ function isJsonLikeString(value: string): boolean {
 
 function safeStringify(value: any): string {
   try {
-    return JSON.stringify(value)
+    const json = JSON.stringify(value)
+    return json ?? String(value)
   }
   catch {
     return String(value)
