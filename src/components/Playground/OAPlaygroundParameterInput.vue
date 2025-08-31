@@ -38,6 +38,20 @@ const emits = defineEmits([
   'submit',
 ])
 
+const { t } = useI18n()
+
+const parameterExample = getPropertyExample(props.parameter)
+
+const selectPlaceholder = computed(() =>
+  formatValueForPlaceholder(parameterExample ?? t('Select')),
+)
+
+onMounted(() => {
+  if (props.parameter.schema?.enum) {
+    emits('update:modelValue', getPropertyExample(props.parameter) ?? props.parameter.schema.enum[0])
+  }
+})
+
 function handleInputChange(value: any) {
   if (!props.enabled) {
     emits('update:enabled', true)
@@ -68,20 +82,6 @@ function onFileChange(e: Event) {
   const file = target?.files?.[0]
   handleInputChange(file ?? null)
 }
-
-onMounted(() => {
-  if (props.parameter.schema?.enum) {
-    emits('update:modelValue', getPropertyExample(props.parameter) ?? props.parameter.schema.enum[0])
-  }
-})
-
-const parameterExample = getPropertyExample(props.parameter)
-
-const { t } = useI18n()
-
-const selectPlaceholder = computed(() =>
-  formatValueForPlaceholder(parameterExample ?? t('Select')),
-)
 </script>
 
 <template>
