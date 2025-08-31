@@ -28,6 +28,12 @@ describe('formatValueForDisplay', () => {
   it('undefined -> empty string', () => {
     expect(formatValueForDisplay(undefined as any)).toBe('')
   })
+
+  it('handles top-level function/symbol without returning undefined', () => {
+    const fn = function fnTest() {}
+    expect(formatValueForDisplay(fn)).toContain('function')
+    expect(formatValueForDisplay(Symbol('s'))).toContain('Symbol(')
+  })
 })
 
 describe('formatValueForPlaceholder', () => {
