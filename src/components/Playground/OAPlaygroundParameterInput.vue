@@ -3,6 +3,7 @@ import { useI18n } from '@byjohann/vue-i18n'
 import { defineEmits, defineProps, onMounted } from 'vue'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
+import { formatValueForPlaceholder } from '../../lib/format/formatValueForDisplay'
 import { Checkbox } from '../ui/checkbox'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -131,8 +132,8 @@ const { t } = useI18n()
         :name="compositeKey"
         @update:model-value="handleInputChange($event)"
       >
-        <SelectTrigger :aria-label="String(parameterExample ?? t('Select'))">
-          <SelectValue :placeholder="String(parameterExample ?? t('Select'))" />
+        <SelectTrigger :aria-label="formatValueForPlaceholder(parameterExample ?? t('Select'))">
+          <SelectValue :placeholder="formatValueForPlaceholder(parameterExample ?? t('Select'))" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -170,7 +171,7 @@ const { t } = useI18n()
             :name="compositeKey"
             :value="modelValue as any"
             :type="inputType(parameter)"
-            :placeholder="String(parameterExample ?? '')"
+            :placeholder="formatValueForPlaceholder(parameterExample ?? '')"
             class="bg-muted"
             @update:model-value="handleInputChange($event)"
             @keydown.enter="emits('submit')"

@@ -1,4 +1,6 @@
 <script setup>
+import { formatValueForDisplay } from '../../lib/format/formatValueForDisplay'
+
 const { value } = defineProps({
   value: [String, Number, Boolean, Array, Object],
 })
@@ -18,7 +20,7 @@ const getDisplayValue = (value) => {
       :key="attributeIdx"
       class="!text-xs text-wrap break-all"
     >
-      {{ getDisplayValue(item) }}
+      {{ formatValueForDisplay(item) }}
     </code>
   </template>
 
