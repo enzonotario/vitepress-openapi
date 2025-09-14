@@ -612,4 +612,101 @@ describe('buildHarRequest', () => {
     )
     expect(result.queryString.length).toBe(1)
   })
+
+  it('serializes object query parameter values to JSON strings', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/users',
+      method: 'GET',
+      parameters: [
+        { name: 'filter', in: 'query', example: { status: 'active', type: 'user' } },
+        { name: 'sort', in: 'query', example: 'name' },
+      ],
+      authorizations: null,
+      body: null,
+      variables: {},
+    })
+
+    const result = buildHarRequest(request)
+
+    expect(result).toEqual({
+      method: 'GET',
+      url: 'https://api.example.com/users',
+      httpVersion: 'HTTP/1.1',
+      headers: [],
+      queryString: [
+        { name: 'filter', value: '{"status":"active","type":"user"}' },
+        { name: 'sort', value: 'name' },
+      ],
+      cookies: [],
+      headersSize: -1,
+      bodySize: -1,
+    })
+  })
+
+  it('serializes array query parameter values to JSON strings', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/users',
+      method: 'GET',
+      parameters: [
+        { name: 'tags', in: 'query', example: ['admin', 'user'] },
+        { name: 'ids', in: 'query' },
+      ],
+      authorizations: null,
+      body: null,
+      variables: {
+        ids: [1, 2, 3],
+      },
+    })
+
+    const result = buildHarRequest(request)
+
+    expect(result).toEqual({
+      method: 'GET',
+      url: 'https://api.example.com/users',
+      httpVersion: 'HTTP/1.1',
+      headers: [],
+      queryString: [
+        { name: 'ids', value: '[1,2,3]' },
+        { name: 'tags', value: '["admin","user"]' },
+      ],
+      cookies: [],
+      headersSize: -1,
+      bodySize: -1,
+    })
+  })
+
+  it('keeps string query parameters as strings', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/users',
+      method: 'GET',
+      parameters: [
+        { name: 'search', in: 'query', example: 'test query' },
+        { name: 'page', in: 'query' },
+      ],
+      authorizations: null,
+      body: null,
+      variables: {
+        page: '2',
+      },
+    })
+
+    const result = buildHarRequest(request)
+
+    expect(result).toEqual({
+      method: 'GET',
+      url: 'https://api.example.com/users',
+      httpVersion: 'HTTP/1.1',
+      headers: [],
+      queryString: [
+        { name: 'page', value: '2' },
+        { name: 'search', value: 'test query' },
+      ],
+      cookies: [],
+      headersSize: -1,
+      bodySize: -1,
+    })
+  })
 })
