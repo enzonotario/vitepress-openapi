@@ -40,15 +40,19 @@ const emits = defineEmits([
 
 const { t } = useI18n()
 
-const parameterExample = getPropertyExample(props.parameter)
+const parameterExample = computed(() => getPropertyExample(props.parameter))
 
 const selectPlaceholder = computed(() =>
-  formatValueForPlaceholder(parameterExample ?? t('Select')),
+  formatValueForPlaceholder(parameterExample.value ?? t('Select')),
+)
+
+const inputPlaceholder = computed(() =>
+  formatValueForPlaceholder(parameterExample.value ?? ''),
 )
 
 onMounted(() => {
   if (props.parameter.schema?.enum) {
-    emits('update:modelValue', getPropertyExample(props.parameter) ?? props.parameter.schema.enum[0])
+    emits('update:modelValue', parameterExample.value ?? props.parameter.schema.enum[0])
   }
 })
 
@@ -176,7 +180,7 @@ function onFileChange(e: Event) {
             :name="compositeKey"
             :value="modelValue as any"
             :type="inputType(parameter)"
-            :placeholder="formatValueForPlaceholder(parameterExample ?? '')"
+            :placeholder="inputPlaceholder"
             class="bg-muted"
             @update:model-value="handleInputChange($event)"
             @keydown.enter="emits('submit')"
