@@ -19,7 +19,7 @@ export function buildHarRequest(
           // Exploded arrays: create multiple entries with same name
           return value.map(v => ({ name, value: String(v) }))
         }
-        return [{ name, value: String(value) }]
+        return [{ name, value: typeof value === 'object' ? JSON.stringify(value) : String(value) }]
       }),
     ],
     cookies: Object.entries(oaRequest.cookies).map(([name, value]) => ({
