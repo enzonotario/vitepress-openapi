@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
-import { defineEmits, defineProps, onMounted } from 'vue'
+import { computed, defineEmits, defineProps, onMounted } from 'vue'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
+import { formatValueForPlaceholder } from '../../lib/format/formatValueForDisplay'
 import { Checkbox } from '../ui/checkbox'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -36,6 +37,24 @@ const emits = defineEmits([
   'submit',
 ])
 
+const { t } = useI18n()
+
+const parameterExample = computed(() => getPropertyExample(props.parameter))
+
+const selectPlaceholder = computed(() =>
+  formatValueForPlaceholder(parameterExample.value ?? t('Select')),
+)
+
+const inputPlaceholder = computed(() =>
+  formatValueForPlaceholder(parameterExample.value ?? ''),
+)
+
+onMounted(() => {
+  if (props.parameter.schema?.enum) {
+    emits('update:modelValue', parameterExample.value ?? props.parameter.schema.enum[0])
+  }
+})
+
 function handleInputChange(value: any) {
   if (!props.enabled) {
     emits('update:enabled', true)
@@ -66,15 +85,6 @@ function onFileChange(e: Event) {
   const file = target?.files?.[0]
   handleInputChange(file ?? null)
 }
-
-onMounted(() => {
-  if (props.parameter.schema?.enum) {
-    emits('update:modelValue', getPropertyExample(props.parameter) ?? props.parameter.schema.enum[0])
-  }
-})
-
-const parameterExample = getPropertyExample(props.parameter)
-const { t } = useI18n()
 </script>
 
 <template>
@@ -116,8 +126,8 @@ const { t } = useI18n()
         :name="compositeKey"
         @update:model-value="handleInputChange($event)"
       >
-        <SelectTrigger :aria-label="String(parameterExample ?? t('Select'))">
-          <SelectValue :placeholder="String(parameterExample ?? t('Select'))" />
+        <SelectTrigger :aria-label="selectPlaceholder">
+          <SelectValue :placeholder="selectPlaceholder" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -148,7 +158,7 @@ const { t } = useI18n()
             :name="compositeKey"
             :value="modelValue as any"
             :type="inputType(parameter)"
-            :placeholder="String(parameterExample ?? '')"
+            :placeholder="inputPlaceholder"
             class="bg-muted"
             @update:model-value="handleInputChange($event)"
             @keydown.enter="emits('submit')"

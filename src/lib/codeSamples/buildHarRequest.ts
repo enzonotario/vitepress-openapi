@@ -16,7 +16,7 @@ export function buildHarRequest(
     queryString: [
       ...Object.entries(oaRequest.query).map(([name, value]) => ({
         name,
-        value,
+        value: typeof value === 'object' ? JSON.stringify(value) : value,
       })),
     ],
     cookies: Object.entries(oaRequest.cookies).map(([name, value]) => ({
