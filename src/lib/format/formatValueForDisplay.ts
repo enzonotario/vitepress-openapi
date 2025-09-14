@@ -1,9 +1,16 @@
 function isJsonLikeString(value: string): boolean {
   const trimmed = value.trim()
-  return (
-    (trimmed.startsWith('{') && trimmed.endsWith('}'))
-    || (trimmed.startsWith('[') && trimmed.endsWith(']'))
-  )
+  const looksLikeContainer = (trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))
+  if (!looksLikeContainer) {
+    return false
+  }
+  try {
+    const parsed = JSON.parse(trimmed)
+    return typeof parsed === 'object' && parsed !== null
+  }
+  catch {
+    return false
+  }
 }
 
 function safeStringify(value: any): string {
