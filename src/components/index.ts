@@ -10,6 +10,7 @@ import OAOperationLink from './Feature/OAOperationLink.vue'
 import OAServers from './Feature/OAServers.vue'
 import OASpec from './Feature/OASpec.vue'
 import OASpecSkeleton from './Feature/OASpecSkeleton.vue'
+import OAParameter from './Parameter/OAParameter.vue'
 import OAParameters from './Parameter/OAParameters.vue'
 import OAPathEndpoint from './Path/OAPathEndpoint.vue'
 import OAPlayground from './Playground/OAPlayground.vue'
@@ -25,6 +26,7 @@ export {
   OAOperation,
   OAOperationContext,
   OAOperationLink,
+  OAParameter,
   OAParameters,
   OAPathEndpoint,
   OAPlayground,
