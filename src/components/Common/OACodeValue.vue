@@ -1,13 +1,9 @@
 <script setup>
+import { formatValueForDisplay } from '../../lib/format/formatValueForDisplay'
+
 const { value } = defineProps({
   value: [String, Number, Boolean, Array, Object],
 })
-
-const getDisplayValue = (value) => {
-  // We run JSON.stringify on everything except objects (which Vue handles better)
-  // to distinguish `"null"` from `null`, `"1"` from `1`, etc.
-  return value && typeof value === 'object' ? value : JSON.stringify(value)
-}
 </script>
 
 <template>
@@ -17,11 +13,11 @@ const getDisplayValue = (value) => {
       :key="attributeIdx"
       class="!text-xs text-wrap break-all"
     >
-      {{ getDisplayValue(item) }}
+      {{ formatValueForDisplay(item) }}
     </code>
   </template>
 
   <code v-else class="!text-xs text-wrap break-all">
-    {{ getDisplayValue(value) }}
+    {{ formatValueForDisplay(value) }}
   </code>
 </template>
