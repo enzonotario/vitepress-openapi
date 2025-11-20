@@ -5,6 +5,7 @@ import { DEFAULT_BASE_URL } from '../../composables/useTheme'
 import { getPropertyExample } from '../examples/getPropertyExample'
 import { resolveBaseUrl } from '../resolveBaseUrl'
 import { OARequest } from './request'
+
 function processParameters(variables: Record<string, string>, parameters: OpenAPIV3.ParameterObject[], callback: (key: string, value: string) => void) {
   const parameterNames = new Set(parameters.map(parameter => parameter.name))
   for (const [key, value] of Object.entries(variables)) {
@@ -175,10 +176,14 @@ function getQuery(
   let query: Record<string, string> = {}
 
   queryParameters.forEach((parameter) => {
-    if (!parameter.name) return
+    if (!parameter.name) {
+      return
+    }
 
     const value = variables[parameter.name]
-    if (value === undefined || value === '') return
+    if (value === undefined || value === '') {
+      return
+    }
 
     // Default style for query is form, explode is true
     const style = parameter.style || 'form'

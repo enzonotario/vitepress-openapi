@@ -106,17 +106,17 @@ function updateObject() {
     acc[key] = value
     return acc
   }, {} as Record<string, string>)
-  
+
   if (!props.enabled) {
     emits('update:enabled', true)
   }
-  
+
   emits('update:modelValue', obj)
 }
 
 function addObjectField() {
   objectEntries.value.push({ id: Math.random().toString(36).substring(7), key: '', value: '' })
-  
+
   if (!props.enabled) {
     emits('update:enabled', true)
   }

@@ -27,7 +27,7 @@ const getDisplayValue = (value) => {
     class="!text-xs break-all"
     :class="{
       'text-wrap': !value || typeof value !== 'object',
-      'whitespace-pre-wrap': value && typeof value === 'object'
+      'whitespace-pre-wrap': value && typeof value === 'object',
     }"
   >
     {{ getDisplayValue(value) }}
