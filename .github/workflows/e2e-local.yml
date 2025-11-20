@@ -2,7 +2,7 @@ name: E2E Local Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, feat/deepobject-support ]
   pull_request:
     branches: [ main, develop ]
 
@@ -32,7 +32,15 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Run Playwright tests
-        run: pnpm exec playwright test local
+        run: pnpm exec playwright test local --update-snapshots
+
+      - name: Upload updated snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: updated-snapshots
+          path: e2e/local/**/*-linux.png
+          retention-days: 30
 
       - uses: actions/upload-artifact@v4
         if: always()
