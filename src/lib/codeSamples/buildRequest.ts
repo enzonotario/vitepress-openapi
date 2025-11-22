@@ -51,7 +51,7 @@ function getHeaders(
     resolvedHeaders.set(key.toLowerCase(), value)
   })
 
-  getAuthorizationsHeaders(authorizations).forEach((value, key) => {
+  getAuthorizationsHeaders(authorizations).forEach((value: string, key: string) => {
     resolvedHeaders.set(key.toLowerCase(), value)
   })
 
@@ -107,14 +107,90 @@ export function getAuthorizationsHeaders(authorizations: PlaygroundSecuritySchem
   return headers
 }
 
+function serializeParameter(
+  key: string,
+  value: any,
+  style: string = 'form',
+  explode: boolean = true,
+): Record<string, string> {
+  if (value === undefined || value === null || value === '') {
+    return {}
+  }
+
+  // deepObject style for nested objects (e.g., metadata[key]=val)
+  if (style === 'deepObject' && typeof value === 'object' && !Array.isArray(value)) {
+    const result: Record<string, string> = {}
+    Object.entries(value).forEach(([k, v]) => {
+      result[`${key}[${k}]`] = String(v)
+    })
+    return result
+  }
+
+  // Handle arrays
+  if (Array.isArray(value)) {
+    if (style === 'form') {
+      if (explode) {
+        // Can't represent duplicate keys in Record<string, string>
+        // Join with comma as fallback
+        return { [key]: value.join(',') }
+      } else {
+        // form + no explode: comma-separated
+        return { [key]: value.join(',') }
+      }
+    } else if (style === 'spaceDelimited') {
+      return { [key]: value.join(' ') }
+    } else if (style === 'pipeDelimited') {
+      return { [key]: value.join('|') }
+    }
+    // Default: comma-separated
+    return { [key]: value.join(',') }
+  }
+
+  // Handle objects
+  if (typeof value === 'object') {
+    if (style === 'form') {
+      if (explode) {
+        // Flatten object: key1=val1&key2=val2
+        return Object.entries(value).reduce((acc, [k, v]) => {
+          acc[k] = String(v)
+          return acc
+        }, {} as Record<string, string>)
+      } else {
+        // key=k1,v1,k2,v2
+        const serialized = Object.entries(value).map(([k, v]) => `${k},${v}`).join(',')
+        return { [key]: serialized }
+      }
+    }
+    // For other styles with objects, stringify
+    return { [key]: JSON.stringify(value) }
+  }
+
+  // Primitive values
+  return { [key]: String(value) }
+}
+
 function getQuery(
-  variables: Record<string, string>,
+  variables: Record<string, string | number | boolean | object | (string | number | boolean | object)[]>,
   queryParameters: OpenAPIV3.ParameterObject[],
 ) {
-  const query: Record<string, string> = {}
+  let query: Record<string, string> = {}
 
-  processParameters(variables, queryParameters, (key: string, value: string) => {
-    query[key] = value
+  queryParameters.forEach((parameter) => {
+    if (!parameter.name) {
+      return
+    }
+
+    const value = variables[parameter.name]
+    if (value === undefined || value === '') {
+      return
+    }
+
+    // Default style for query is form, explode is true
+    const style = parameter.style || 'form'
+    const explode = parameter.explode ?? true
+
+    const serialized = serializeParameter(parameter.name, value, style, explode)
+    query = { ...query, ...serialized }
   })
 
   return query

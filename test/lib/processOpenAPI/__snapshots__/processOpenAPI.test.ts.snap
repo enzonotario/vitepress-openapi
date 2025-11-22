@@ -595,8 +595,8 @@ curl_close($ch);",
             "source": "requests.get(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists",
     params={
-      "limit": 10,
-      "offset": 1
+      "limit": "10",
+      "offset": "1"
     }
 )",
           },
@@ -3207,8 +3207,8 @@ curl_close($ch);",
             "source": "requests.get(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums",
     params={
-      "limit": 10,
-      "offset": 1
+      "limit": "10",
+      "offset": "1"
     }
 )",
           },

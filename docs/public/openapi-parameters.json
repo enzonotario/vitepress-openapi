@@ -563,13 +563,19 @@
             "name": "metadata",
             "in": "query",
             "required": false,
-            "description": "Additional JSON metadata for the document",
+            "description": "Additional metadata for the document (deepObject style)",
+            "style": "deepObject",
+            "explode": true,
             "example": {
               "author": "Jane Doe",
-              "category": "report"
+              "category": "report",
+              "priority": "high"
             },
             "schema": {
-              "type": "object"
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
             }
           }
         ],
