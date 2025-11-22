@@ -4,10 +4,10 @@ const { value } = defineProps({
 })
 
 const getDisplayValue = (value) => {
-  if (value && typeof value === 'object' && !Array.isArray(value)) {
-    return JSON.stringify(value, null, 2)
-  }
-  return JSON.stringify(value)
+  // We run JSON.stringify on everything except objects (which Vue handles better)
+  // to distinguish `"null"` from `null`, `"1"` from `1`, etc.
+  const space = value && typeof value === 'object' && !Array.isArray(value) ? 2 : 0
+  return JSON.stringify(value, null, space)
 }
 </script>
 

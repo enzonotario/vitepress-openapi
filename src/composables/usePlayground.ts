@@ -91,7 +91,12 @@ export function usePlayground() {
 
       const url = new URL(request.url ?? defaultRequestUrl)
       for (const [key, value] of Object.entries(request.query)) {
-        url.searchParams.set(key, String(value))
+        if (Array.isArray(value)) {
+          // For exploded arrays, append each value separately
+          value.forEach(v => url.searchParams.append(key, String(v)))
+        } else {
+          url.searchParams.set(key, String(value))
+        }
       }
 
       const data = await fetch(url.toString(), {

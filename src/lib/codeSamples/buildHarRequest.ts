@@ -14,10 +14,13 @@ export function buildHarRequest(
       value,
     })),
     queryString: [
-      ...Object.entries(oaRequest.query).map(([name, value]) => ({
-        name,
-        value,
-      })),
+      ...Object.entries(oaRequest.query).flatMap(([name, value]) => {
+        if (Array.isArray(value)) {
+          // Exploded arrays: create multiple entries with same name
+          return value.map(v => ({ name, value: String(v) }))
+        }
+        return [{ name, value: String(value) }]
+      }),
     ],
     cookies: Object.entries(oaRequest.cookies).map(([name, value]) => ({
       name,

@@ -563,19 +563,13 @@
             "name": "metadata",
             "in": "query",
             "required": false,
-            "description": "Additional metadata for the document (deepObject style)",
-            "style": "deepObject",
-            "explode": true,
+            "description": "Additional JSON metadata for the document",
             "example": {
               "author": "Jane Doe",
-              "category": "report",
-              "priority": "high"
+              "category": "report"
             },
             "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
+              "type": "object"
             }
           }
         ],
@@ -635,6 +629,338 @@
           },
           "413": {
             "description": "Payload Too Large - Document size exceeds limits"
+          }
+        }
+      }
+    },
+    "/deepobject-test": {
+      "get": {
+        "summary": "Test deepObject parameter variants",
+        "description": "Endpoint to test different variants of deepObject style parameters in query strings.",
+        "parameters": [
+          {
+            "name": "X-API-Key",
+            "in": "header",
+            "required": true,
+            "description": "API key for authentication",
+            "schema": {
+              "type": "string",
+              "example": "api-key-123"
+            }
+          },
+          {
+            "name": "simpleObject",
+            "in": "query",
+            "required": false,
+            "description": "Simple object with deepObject style and explode: true (default)",
+            "style": "deepObject",
+            "explode": true,
+            "example": {
+              "name": "John Doe",
+              "age": 30,
+              "active": true
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "age": {
+                  "type": "integer"
+                },
+                "active": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          {
+            "name": "simpleObjectNoExplode",
+            "in": "query",
+            "required": false,
+            "description": "Simple object with deepObject style and explode: false",
+            "style": "deepObject",
+            "explode": false,
+            "example": {
+              "author": "Jane Doe",
+              "category": "report"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "author": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "name": "nestedObject",
+            "in": "query",
+            "required": false,
+            "description": "Nested object with deepObject style (object within object)",
+            "style": "deepObject",
+            "explode": true,
+            "example": {
+              "user": {
+                "name": "John",
+                "email": "john@example.com"
+              },
+              "settings": {
+                "theme": "dark",
+                "notifications": true
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "settings": {
+                  "type": "object",
+                  "properties": {
+                    "theme": {
+                      "type": "string"
+                    },
+                    "notifications": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "objectWithArrays",
+            "in": "query",
+            "required": false,
+            "description": "Object containing arrays with deepObject style",
+            "style": "deepObject",
+            "explode": true,
+            "example": {
+              "tags": [
+                "important",
+                "urgent"
+              ],
+              "categories": [
+                "work",
+                "personal"
+              ],
+              "ids": [
+                1,
+                2,
+                3
+              ]
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "categories": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "complexNestedObject",
+            "in": "query",
+            "required": false,
+            "description": "Complex nested object with multiple levels and mixed types",
+            "style": "deepObject",
+            "explode": true,
+            "example": {
+              "metadata": {
+                "author": {
+                  "name": "Jane Doe",
+                  "id": 123
+                },
+                "created": "2023-01-01",
+                "tags": [
+                  "draft",
+                  "review"
+                ]
+              },
+              "config": {
+                "enabled": true,
+                "priority": 5
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "author": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "created": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "priority": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "mixedTypesObject",
+            "in": "query",
+            "required": false,
+            "description": "Object with mixed data types (string, number, boolean, array)",
+            "style": "deepObject",
+            "explode": true,
+            "example": {
+              "name": "Product",
+              "price": 99.99,
+              "inStock": true,
+              "discount": 0.15,
+              "features": [
+                "feature1",
+                "feature2"
+              ],
+              "rating": 4.5
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "inStock": {
+                  "type": "boolean"
+                },
+                "discount": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "features": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "rating": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          {
+            "name": "objectWithAdditionalProperties",
+            "in": "query",
+            "required": false,
+            "description": "Object with additionalProperties allowing dynamic keys",
+            "style": "deepObject",
+            "explode": true,
+            "example": {
+              "customField1": "value1",
+              "customField2": "value2",
+              "dynamicKey": "dynamicValue"
+            },
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with parsed deepObject parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "simpleObject": {
+                      "type": "object"
+                    },
+                    "simpleObjectNoExplode": {
+                      "type": "object"
+                    },
+                    "nestedObject": {
+                      "type": "object"
+                    },
+                    "objectWithArrays": {
+                      "type": "object"
+                    },
+                    "complexNestedObject": {
+                      "type": "object"
+                    },
+                    "mixedTypesObject": {
+                      "type": "object"
+                    },
+                    "objectWithAdditionalProperties": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Invalid deepObject parameter format"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API key"
           }
         }
       }
