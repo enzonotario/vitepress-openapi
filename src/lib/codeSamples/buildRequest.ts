@@ -6,20 +6,31 @@ import { getPropertyExample } from '../examples/getPropertyExample'
 import { resolveBaseUrl } from '../resolveBaseUrl'
 import { OARequest } from './request'
 
-function processParameters(variables: Record<string, string>, parameters: OpenAPIV3.ParameterObject[], callback: (key: string, value: string) => void) {
+type ParameterValue =
+  | string
+  | number
+  | boolean
+  | Record<string, unknown>
+  | Array<string | number | boolean | Record<string, unknown>>
+
+function processParameters(
+  variables: Record<string, ParameterValue>,
+  parameters: OpenAPIV3.ParameterObject[],
+  callback: (key: string, value: string) => void,
+) {
   const parameterNames = new Set(parameters.map(parameter => parameter.name))
-  for (const [key, value] of Object.entries(variables)) {
+  for (const [key, rawValue] of Object.entries(variables)) {
     if (!parameterNames.has(key)) {
       continue
     }
-    if (value === undefined || value === '') {
+    if (rawValue === undefined || rawValue === '') {
       continue
     }
-    callback(key, value)
+    callback(key, String(rawValue))
   }
 }
 
-function getPath(variables: Record<string, string>, pathParameters: OpenAPIV3.ParameterObject[], path: string = '') {
+function getPath(variables: Record<string, ParameterValue>, pathParameters: OpenAPIV3.ParameterObject[], path: string = '') {
   let resolvedPath = path
   processParameters(variables, pathParameters, (key, value) => {
     resolvedPath = resolvedPath.replace(`{${key}}`, value)
@@ -29,7 +40,7 @@ function getPath(variables: Record<string, string>, pathParameters: OpenAPIV3.Pa
 
 function getHeaders(
   headers: Record<string, string> | Headers | undefined,
-  variables: Record<string, string>,
+  variables: Record<string, ParameterValue>,
   headerParameters: OpenAPIV3.ParameterObject[],
   authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[],
 ): Record<string, string> {
@@ -107,73 +118,127 @@ export function getAuthorizationsHeaders(authorizations: PlaygroundSecuritySchem
   return headers
 }
 
+function serializeDeepObject(key: string, value: Record<string, unknown>): Record<string, string> {
+  const result: Record<string, string> = {}
+  Object.entries(value).forEach(([k, v]) => {
+    if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+      const nested = serializeDeepObject(`${key}[${k}]`, v as Record<string, unknown>)
+      Object.assign(result, nested)
+    } else if (Array.isArray(v)) {
+      // Check if array contains only primitives or has objects/arrays
+      const hasComplexElements = v.some(el => el !== null && typeof el === 'object')
+      if (hasComplexElements) {
+        // JSON stringify arrays with objects or nested arrays
+        result[`${key}[${k}]`] = JSON.stringify(v)
+      } else {
+        // Use comma-separated for arrays of primitives
+        result[`${key}[${k}]`] = v.join(',')
+      }
+    } else if (v !== null && typeof v === 'object') {
+      // JSON stringify non-plain objects
+      result[`${key}[${k}]`] = JSON.stringify(v)
+    } else {
+      result[`${key}[${k}]`] = String(v)
+    }
+  })
+  return result
+}
+
 function serializeParameter(
   key: string,
-  value: any,
-  style: string = 'form',
-  explode: boolean = true,
-): Record<string, string> {
+  value: ParameterValue,
+  style: OpenAPIV3.ParameterObject['style'] = 'form',
+  explode = true,
+): Record<string, string | string[]> {
   if (value === undefined || value === null || value === '') {
     return {}
   }
 
-  // deepObject style for nested objects (e.g., metadata[key]=val)
-  if (style === 'deepObject' && typeof value === 'object' && !Array.isArray(value)) {
-    const result: Record<string, string> = {}
-    Object.entries(value).forEach(([k, v]) => {
-      result[`${key}[${k}]`] = String(v)
-    })
-    return result
-  }
-
-  // Handle arrays
   if (Array.isArray(value)) {
-    if (style === 'form') {
-      if (explode) {
-        // Can't represent duplicate keys in Record<string, string>
-        // Join with comma as fallback
-        return { [key]: value.join(',') }
-      } else {
-        // form + no explode: comma-separated
-        return { [key]: value.join(',') }
+    // Helper to serialize array elements
+    const serializeElement = (element: unknown): string => {
+      if (Array.isArray(element) || (element !== null && typeof element === 'object')) {
+        return JSON.stringify(element)
       }
-    } else if (style === 'spaceDelimited') {
-      return { [key]: value.join(' ') }
-    } else if (style === 'pipeDelimited') {
-      return { [key]: value.join('|') }
+      return String(element)
     }
-    // Default: comma-separated
-    return { [key]: value.join(',') }
+
+    const serializedValues = value.map(serializeElement)
+
+    if (style === 'spaceDelimited') {
+      if (!explode) {
+        return { [key]: serializedValues.join(' ') }
+      }
+      // Return as array for repeated parameters
+      return { [key]: serializedValues }
+    } else if (style === 'pipeDelimited') {
+      if (!explode) {
+        return { [key]: serializedValues.join('|') }
+      }
+      // Return as array for repeated parameters
+      return { [key]: serializedValues }
+    } else if (style === 'form') {
+      if (explode) {
+        // Return as array for repeated parameters
+        return { [key]: serializedValues }
+      }
+      // Return comma-separated
+      return { [key]: serializedValues.join(',') }
+    }
+    // Default: explode behavior
+    return { [key]: explode ? serializedValues : serializedValues.join(',') }
   }
 
-  // Handle objects
   if (typeof value === 'object') {
-    if (style === 'form') {
+    if (style === 'deepObject') {
       if (explode) {
-        // Flatten object: key1=val1&key2=val2
-        return Object.entries(value).reduce((acc, [k, v]) => {
-          acc[k] = String(v)
-          return acc
-        }, {} as Record<string, string>)
+        return serializeDeepObject(key, value as Record<string, unknown>)
       } else {
-        // key=k1,v1,k2,v2
         const serialized = Object.entries(value).map(([k, v]) => `${k},${v}`).join(',')
         return { [key]: serialized }
       }
     }
-    // For other styles with objects, stringify
+
+    if (style === 'form') {
+      if (explode) {
+        return Object.entries(value).reduce((acc, [k, v]) => {
+          if (Array.isArray(v)) {
+            const hasComplexElements = v.some(el => el !== null && typeof el === 'object')
+            acc[k] = hasComplexElements ? JSON.stringify(v) : v.join(',')
+          } else if (v !== null && typeof v === 'object') {
+            acc[k] = JSON.stringify(v)
+          } else {
+            acc[k] = String(v)
+          }
+          return acc
+        }, {} as Record<string, string>)
+      } else {
+        const serialized = Object.entries(value).map(([k, v]) => {
+          let serializedValue: string
+          if (Array.isArray(v)) {
+            const hasComplexElements = v.some(el => el !== null && typeof el === 'object')
+            serializedValue = hasComplexElements ? JSON.stringify(v) : v.join(',')
+          } else if (v !== null && typeof v === 'object') {
+            serializedValue = JSON.stringify(v)
+          } else {
+            serializedValue = String(v)
+          }
+          return `${k},${serializedValue}`
+        }).join(',')
+        return { [key]: serialized }
+      }
+    }
     return { [key]: JSON.stringify(value) }
   }
 
-  // Primitive values
   return { [key]: String(value) }
 }
 
 function getQuery(
-  variables: Record<string, string | number | boolean | object | (string | number | boolean | object)[]>,
+  variables: Record<string, ParameterValue>,
   queryParameters: OpenAPIV3.ParameterObject[],
-) {
-  let query: Record<string, string> = {}
+): Record<string, string | string[]> {
+  let query: Record<string, string | string[]> = {}
 
   queryParameters.forEach((parameter) => {
     if (!parameter.name) {
@@ -197,7 +262,7 @@ function getQuery(
 }
 
 function getCookies(
-  variables: Record<string, string>,
+  variables: Record<string, ParameterValue>,
   cookieParameters: OpenAPIV3.ParameterObject[],
 ) {
   const cookies: Record<string, string> = {}
@@ -267,7 +332,7 @@ export function getAuthorizationsCookies(authorizations: PlaygroundSecuritySchem
   return cookies
 }
 
-function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variables: Record<string, string>) {
+function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variables: Record<string, string>): Record<string, string> {
   parameters.forEach((parameter) => {
     if (!parameter.name) {
       return
@@ -279,7 +344,7 @@ function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variabl
 
     const example = getPropertyExample(parameter)
     if (example != null) {
-      variables[parameter.name] = example
+      variables[parameter.name] = String(example)
     }
   })
 

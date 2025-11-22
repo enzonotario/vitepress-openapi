@@ -370,4 +370,246 @@ describe('buildHarRequest', () => {
       },
     })
   })
+
+  it('generates HAR request with deepObject style query parameters', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'metadata', in: 'query', style: 'deepObject', explode: true, schema: { type: 'object' } } as any,
+      ],
+      variables: {
+        metadata: { key1: 'value1', key2: 'value2' },
+      },
+    })
+    const result = buildHarRequest(request)
+
+    expect(result).toEqual({
+      method: 'GET',
+      url: 'https://api.example.com/resource',
+      httpVersion: 'HTTP/1.1',
+      headers: [],
+      queryString: [
+        { name: 'metadata[key1]', value: 'value1' },
+        { name: 'metadata[key2]', value: 'value2' },
+      ],
+      cookies: [],
+      headersSize: -1,
+      bodySize: -1,
+    })
+  })
+
+  it('generates HAR request with deepObject style and multiple parameters', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'metadata', in: 'query', style: 'deepObject', explode: true, schema: { type: 'object' } } as any,
+        { name: 'filter', in: 'query', style: 'deepObject', schema: { type: 'object' } } as any,
+        { name: 'search', in: 'query' },
+      ],
+      variables: {
+        metadata: { key1: 'value1', key2: 'value2' },
+        filter: { status: 'active', role: 'admin' },
+        search: 'test',
+      },
+    })
+    const result = buildHarRequest(request)
+
+    expect(result.queryString).toEqual(
+      expect.arrayContaining([
+        { name: 'metadata[key1]', value: 'value1' },
+        { name: 'metadata[key2]', value: 'value2' },
+        { name: 'filter[status]', value: 'active' },
+        { name: 'filter[role]', value: 'admin' },
+        { name: 'search', value: 'test' },
+      ]),
+    )
+    expect(result.queryString.length).toBe(5)
+  })
+
+  it('generates HAR request with deepObject style and nested object values', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'user', in: 'query', style: 'deepObject', explode: true, schema: { type: 'object' } } as any,
+      ],
+      variables: {
+        user: {
+          name: 'John Doe',
+          age: 30,
+          metadata: { hobby: 'photography' },
+        },
+      },
+    })
+    const result = buildHarRequest(request)
+
+    expect(result.queryString).toEqual(
+      expect.arrayContaining([
+        { name: 'user[name]', value: 'John Doe' },
+        { name: 'user[age]', value: '30' },
+        { name: 'user[metadata][hobby]', value: 'photography' },
+      ]),
+    )
+    expect(result.queryString.length).toBe(3)
+  })
+
+  it('generates HAR request with deepObject style and simple object with mixed types', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'simpleObject', in: 'query', style: 'deepObject', explode: true, schema: { type: 'object' } } as any,
+      ],
+      variables: {
+        simpleObject: {
+          name: 'John Doe',
+          age: 30,
+          active: true,
+        },
+      },
+    })
+    const result = buildHarRequest(request)
+
+    expect(result.queryString).toEqual(
+      expect.arrayContaining([
+        { name: 'simpleObject[name]', value: 'John Doe' },
+        { name: 'simpleObject[age]', value: '30' },
+        { name: 'simpleObject[active]', value: 'true' },
+      ]),
+    )
+    expect(result.queryString.length).toBe(3)
+  })
+
+  it('generates HAR request with deepObject style and nested object with multiple levels', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'nestedObject', in: 'query', style: 'deepObject', explode: true, schema: { type: 'object' } } as any,
+      ],
+      variables: {
+        nestedObject: {
+          user: {
+            name: 'John',
+            email: 'john@example.com',
+          },
+          settings: {
+            theme: 'dark',
+            notifications: true,
+          },
+        },
+      },
+    })
+    const result = buildHarRequest(request)
+
+    expect(result.queryString).toEqual(
+      expect.arrayContaining([
+        { name: 'nestedObject[user][name]', value: 'John' },
+        { name: 'nestedObject[user][email]', value: 'john@example.com' },
+        { name: 'nestedObject[settings][theme]', value: 'dark' },
+        { name: 'nestedObject[settings][notifications]', value: 'true' },
+      ]),
+    )
+    expect(result.queryString.length).toBe(4)
+  })
+
+  it('generates HAR request with deepObject style and object containing arrays', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'objectWithArrays', in: 'query', style: 'deepObject', explode: true, schema: { type: 'object' } } as any,
+      ],
+      variables: {
+        objectWithArrays: {
+          tags: ['important', 'urgent'],
+          categories: ['work', 'personal'],
+          ids: [1, 2, 3],
+        },
+      },
+    })
+    const result = buildHarRequest(request)
+
+    expect(result.queryString).toEqual(
+      expect.arrayContaining([
+        { name: 'objectWithArrays[tags]', value: 'important,urgent' },
+        { name: 'objectWithArrays[categories]', value: 'work,personal' },
+        { name: 'objectWithArrays[ids]', value: '1,2,3' },
+      ]),
+    )
+    expect(result.queryString.length).toBe(3)
+  })
+
+  it('generates HAR request with deepObject style and complex nested object with arrays', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'complexNestedObject', in: 'query', style: 'deepObject', explode: true, schema: { type: 'object' } } as any,
+      ],
+      variables: {
+        complexNestedObject: {
+          metadata: {
+            author: {
+              name: 'Jane Doe',
+              id: 123,
+            },
+            created: '2023-01-01',
+            tags: ['draft', 'review'],
+          },
+          config: {
+            enabled: true,
+            priority: 5,
+          },
+        },
+      },
+    })
+    const result = buildHarRequest(request)
+
+    expect(result.queryString).toEqual(
+      expect.arrayContaining([
+        { name: 'complexNestedObject[metadata][author][name]', value: 'Jane Doe' },
+        { name: 'complexNestedObject[metadata][author][id]', value: '123' },
+        { name: 'complexNestedObject[metadata][created]', value: '2023-01-01' },
+        { name: 'complexNestedObject[metadata][tags]', value: 'draft,review' },
+        { name: 'complexNestedObject[config][enabled]', value: 'true' },
+        { name: 'complexNestedObject[config][priority]', value: '5' },
+      ]),
+    )
+    expect(result.queryString.length).toBe(6)
+  })
+
+  it('generates HAR request with deepObject style and explode false', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      parameters: [
+        { name: 'simpleObjectNoExplode', in: 'query', style: 'deepObject', explode: false, schema: { type: 'object' } } as any,
+      ],
+      variables: {
+        simpleObjectNoExplode: {
+          author: 'Jane Doe',
+          category: 'report',
+        },
+      },
+    })
+    const result = buildHarRequest(request)
+
+    expect(result.queryString).toEqual(
+      expect.arrayContaining([
+        { name: 'simpleObjectNoExplode', value: 'author,Jane Doe,category,report' },
+      ]),
+    )
+    expect(result.queryString.length).toBe(1)
+  })
 })
