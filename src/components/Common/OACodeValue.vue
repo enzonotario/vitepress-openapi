@@ -4,9 +4,10 @@ const { value } = defineProps({
 })
 
 const getDisplayValue = (value) => {
-  // We run JSON.stringify on everything except objects (which Vue handles better)
-  // to distinguish `"null"` from `null`, `"1"` from `1`, etc.
-  return value && typeof value === 'object' ? value : JSON.stringify(value)
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    return JSON.stringify(value, null, 2)
+  }
+  return JSON.stringify(value)
 }
 </script>
 
@@ -21,7 +22,14 @@ const getDisplayValue = (value) => {
     </code>
   </template>
 
-  <code v-else class="!text-xs text-wrap break-all">
+  <code
+    v-else
+    class="!text-xs break-all"
+    :class="{
+      'text-wrap': !value || typeof value !== 'object',
+      'whitespace-pre-wrap': value && typeof value === 'object',
+    }"
+  >
     {{ getDisplayValue(value) }}
   </code>
 </template>

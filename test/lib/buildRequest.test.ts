@@ -206,7 +206,8 @@ describe('buildRequest', () => {
         tag: ['urgent', 'important'],
       },
     })
-    expect(request.query.tag).toEqual(['urgent', 'important'])
+    // Arrays are serialized as comma-separated strings
+    expect(request.query.tag).toBe('urgent,important')
   })
 
   it('does not include body for GET requests', () => {
@@ -589,4 +590,162 @@ it('auth query value overrides variable-derived query', () => {
     authorizations: { type: 'apiKey', name: 'api_key', in: 'query', value: 'from-auth', label: 'APIKey' } as any,
   })
   expect(request.query.api_key).toBe('from-auth')
+})
+
+describe('parameter serialization', () => {
+  describe('deepObject style', () => {
+    it('serializes object parameters with deepObject style', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'metadata', in: 'query', style: 'deepObject', explode: true, schema: { type: 'object' } } as any,
+        ],
+        variables: {
+          metadata: { key1: 'value1', key2: 'value2' },
+        },
+      })
+
+      expect(request.query['metadata[key1]']).toBe('value1')
+      expect(request.query['metadata[key2]']).toBe('value2')
+    })
+
+    it('handles nested object with deepObject style', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'filter', in: 'query', style: 'deepObject', schema: { type: 'object' } } as any,
+        ],
+        variables: {
+          filter: { status: 'active', role: 'admin' },
+        },
+      })
+
+      expect(request.query['filter[status]']).toBe('active')
+      expect(request.query['filter[role]']).toBe('admin')
+    })
+  })
+
+  describe('form style with objects', () => {
+    it('flattens object when explode is true', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'metadata', in: 'query', style: 'form', explode: true, schema: { type: 'object' } } as any,
+        ],
+        variables: {
+          metadata: { key1: 'value1', key2: 'value2' },
+        },
+      })
+
+      expect(request.query.key1).toBe('value1')
+      expect(request.query.key2).toBe('value2')
+    })
+
+    it('serializes object as comma-separated when explode is false', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'metadata', in: 'query', style: 'form', explode: false, schema: { type: 'object' } } as any,
+        ],
+        variables: {
+          metadata: { key1: 'value1', key2: 'value2' },
+        },
+      })
+
+      expect(request.query.metadata).toBe('key1,value1,key2,value2')
+    })
+  })
+
+  describe('array parameters', () => {
+    it('serializes array with form style and explode true', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'tags', in: 'query', style: 'form', explode: true, schema: { type: 'array' } } as any,
+        ],
+        variables: {
+          tags: ['tag1', 'tag2', 'tag3'],
+        },
+      })
+
+      expect(request.query.tags).toBe('tag1,tag2,tag3')
+    })
+
+    it('serializes array with form style and explode false', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'tags', in: 'query', style: 'form', explode: false, schema: { type: 'array' } } as any,
+        ],
+        variables: {
+          tags: ['tag1', 'tag2', 'tag3'],
+        },
+      })
+
+      expect(request.query.tags).toBe('tag1,tag2,tag3')
+    })
+
+    it('serializes array with spaceDelimited style', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'tags', in: 'query', style: 'spaceDelimited', schema: { type: 'array' } } as any,
+        ],
+        variables: {
+          tags: ['tag1', 'tag2', 'tag3'],
+        },
+      })
+
+      expect(request.query.tags).toBe('tag1 tag2 tag3')
+    })
+
+    it('serializes array with pipeDelimited style', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'tags', in: 'query', style: 'pipeDelimited', schema: { type: 'array' } } as any,
+        ],
+        variables: {
+          tags: ['tag1', 'tag2', 'tag3'],
+        },
+      })
+
+      expect(request.query.tags).toBe('tag1|tag2|tag3')
+    })
+  })
+
+  describe('default styles', () => {
+    it('defaults to form style with explode true for query parameters', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'filter', in: 'query', schema: { type: 'object' } } as any,
+        ],
+        variables: {
+          filter: { key1: 'value1' },
+        },
+      })
+
+      // Default form + explode should flatten
+      expect(request.query.key1).toBe('value1')
+    })
+  })
 })
