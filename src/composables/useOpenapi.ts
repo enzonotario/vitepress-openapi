@@ -2,6 +2,7 @@ import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
 import { OpenApi } from '../lib/OpenApi'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
+import { parseSpec } from '../lib/utils/parseSpec'
 import { useTheme } from './useTheme'
 
 export const OPENAPI_LOCAL_KEY = Symbol('openapiLocal')
@@ -42,7 +43,7 @@ export function useOpenapi({
     spec?: OpenAPIDocument | string
   } = {}) {
     if (spec) {
-      const originalSpec = typeof spec === 'string' ? JSON.parse(spec) : spec
+      const originalSpec = parseSpec(spec)
 
       setInstance({
         spec: parseOpenapi().parseSync({
@@ -65,7 +66,7 @@ export function useOpenapi({
     spec?: OpenAPIDocument | string
   } = {}) {
     if (spec) {
-      const originalSpec = typeof spec === 'string' ? JSON.parse(spec) : spec
+      const originalSpec = parseSpec(spec)
 
       setInstance({
         spec: await parseOpenapi().parseAsync({
