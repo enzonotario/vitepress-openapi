@@ -3,8 +3,13 @@ import { formatValueForDisplay, formatValueForPlaceholder } from '../../../src/l
 
 describe('formatValueForDisplay', () => {
   it('stringifies objects and arrays as JSON (single line)', () => {
-    expect(formatValueForDisplay({ a: 1 })).toBe('{"a":1}')
-    expect(formatValueForDisplay([1, 2])).toBe('[1,2]')
+    expect(formatValueForDisplay({ a: 1 })).toBe(`{
+  "a": 1
+}`)
+    expect(formatValueForDisplay([1, 2])).toBe(`[
+  1,
+  2
+]`)
   })
 
   it('returns JSON strings as-is (no extra escaping)', () => {
