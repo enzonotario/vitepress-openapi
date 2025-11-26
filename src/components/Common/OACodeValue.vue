@@ -4,13 +4,6 @@ import { formatValueForDisplay } from '../../lib/format/formatValueForDisplay'
 const { value } = defineProps({
   value: [String, Number, Boolean, Array, Object],
 })
-
-const getDisplayValue = (value) => {
-  // We run JSON.stringify on everything except objects (which Vue handles better)
-  // to distinguish `"null"` from `null`, `"1"` from `1`, etc.
-  const space = value && typeof value === 'object' && !Array.isArray(value) ? 2 : 0
-  return JSON.stringify(value, null, space)
-}
 </script>
 
 <template>
@@ -32,6 +25,6 @@ const getDisplayValue = (value) => {
       'whitespace-pre-wrap': value && typeof value === 'object',
     }"
   >
-    {{ getDisplayValue(value) }}
+    {{ formatValueForDisplay(value) }}
   </code>
 </template>
