@@ -13,9 +13,13 @@ function isJsonLikeString(value: string): boolean {
   }
 }
 
-function safeStringify(value: any): string {
+function safeStringify(value: any, space: number | string = 0): string {
   try {
-    const json = JSON.stringify(value)
+    const json = JSON.stringify(
+      value,
+      null,
+      space,
+    )
     return json ?? String(value)
   }
   catch {
@@ -30,7 +34,14 @@ function formatStringCommon(value: string, options: { quoteNormalStrings: boolea
   return options.quoteNormalStrings ? JSON.stringify(value) : String(value)
 }
 
-export function formatValueForDisplay(value: any): string {
+export function formatValueForDisplay(
+  value: any,
+  options: {
+    space?: number | string
+  } = {
+    space: 2,
+  },
+): string {
   if (value === undefined) {
     return ''
   }
@@ -40,24 +51,30 @@ export function formatValueForDisplay(value: any): string {
   }
 
   if (typeof value === 'object') {
-    return safeStringify(value)
+    return safeStringify(value, options?.space ?? 0)
   }
 
   if (typeof value === 'string') {
-    // For normal strings, keep quotes to distinguish from numbers/booleans.
     return formatStringCommon(value, { quoteNormalStrings: true })
   }
 
-  return safeStringify(value)
+  return safeStringify(value, options?.space ?? 0)
 }
 
-export function formatValueForPlaceholder(value: any): string {
+export function formatValueForPlaceholder(
+  value: any,
+  options: {
+    space?: number | string
+  } = {
+    space: 0,
+  },
+): string {
   if (value === undefined || value === null) {
     return ''
   }
 
   if (typeof value === 'object') {
-    return safeStringify(value)
+    return safeStringify(value, options?.space ?? 0)
   }
 
   if (typeof value === 'string') {
