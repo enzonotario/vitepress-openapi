@@ -344,7 +344,11 @@ function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variabl
 
     const example = getPropertyExample(parameter)
     if (example != null) {
-      variables[parameter.name] = String(example)
+      if (typeof example === 'object' && example !== null) {
+        variables[parameter.name] = JSON.stringify(example)
+      } else {
+        variables[parameter.name] = String(example)
+      }
     }
   })
 

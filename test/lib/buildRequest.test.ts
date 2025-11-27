@@ -993,7 +993,7 @@ describe('parameter serialization', () => {
   })
 })
 
-describe('JSON examples in query parameters', () => {
+describe('jSON examples in query parameters', () => {
   it('handles JSON object examples in query parameters', () => {
     const request = buildRequest({
       path: '/users',
@@ -1006,7 +1006,7 @@ describe('JSON examples in query parameters', () => {
       body: null,
       variables: {},
     })
-    expect(request.query.filter).toEqual({ status: 'active', type: 'user' })
+    expect(request.query.filter).toEqual(`{"status":"active","type":"user"}`)
   })
 
   it('handles JSON array examples in query parameters', () => {
@@ -1021,7 +1021,7 @@ describe('JSON examples in query parameters', () => {
       body: null,
       variables: {},
     })
-    expect(request.query.tags).toEqual(['admin', 'active'])
+    expect(request.query.tags).toEqual('["admin","active"]')
   })
 
   it('handles mixed JSON and string examples in query parameters', () => {
@@ -1038,9 +1038,9 @@ describe('JSON examples in query parameters', () => {
       body: null,
       variables: {},
     })
-    expect(request.query.filter).toEqual({ status: 'active' })
+    expect(request.query.filter).toEqual('{"status":"active"}')
     expect(request.query.sort).toBe('name')
-    expect(request.query.tags).toEqual(['admin', 'user'])
+    expect(request.query.tags).toEqual('["admin","user"]')
   })
 
   it('variables take precedence over JSON object examples', () => {
@@ -1049,7 +1049,13 @@ describe('JSON examples in query parameters', () => {
       method: 'GET',
       baseUrl: 'https://api.example.com',
       parameters: [
-        { name: 'filter', in: 'query', example: { status: 'active' } },
+        {
+          name: 'filter',
+          in: 'query',
+          example: { status: 'active' },
+          style: 'deepObject',
+          explode: true,
+        },
       ],
       authorizations: null,
       body: null,
@@ -1057,6 +1063,9 @@ describe('JSON examples in query parameters', () => {
         filter: { status: 'inactive', type: 'admin' },
       },
     })
-    expect(request.query.filter).toEqual({ status: 'inactive', type: 'admin' })
+    expect(request.query).toEqual({
+      'filter[status]': 'inactive',
+      'filter[type]': 'admin',
+    })
   })
 })

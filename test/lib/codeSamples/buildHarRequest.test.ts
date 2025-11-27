@@ -668,8 +668,10 @@ describe('buildHarRequest', () => {
       httpVersion: 'HTTP/1.1',
       headers: [],
       queryString: [
-        { name: 'ids', value: '[1,2,3]' },
         { name: 'tags', value: '["admin","user"]' },
+        { name: 'ids', value: '1' },
+        { name: 'ids', value: '2' },
+        { name: 'ids', value: '3' },
       ],
       cookies: [],
       headersSize: -1,
@@ -701,8 +703,8 @@ describe('buildHarRequest', () => {
       httpVersion: 'HTTP/1.1',
       headers: [],
       queryString: [
-        { name: 'page', value: '2' },
         { name: 'search', value: 'test query' },
+        { name: 'page', value: '2' },
       ],
       cookies: [],
       headersSize: -1,
