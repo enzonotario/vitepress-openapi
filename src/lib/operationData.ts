@@ -13,6 +13,7 @@ export interface OperationData {
   playground: {
     request: Ref<OARequest>
     selectedServer: Ref<string>
+    parameterValues: Ref<Record<string, any>>
   }
   requestBody: {
     selectedContentType: Ref<string | undefined>
@@ -48,6 +49,7 @@ export function initOperationData({
             mergeDefaults: true,
           })
         : ref(selectedServer),
+      parameterValues: ref({}),
     },
     requestBody: {
       selectedContentType: ref(defaultRequestContentType),
