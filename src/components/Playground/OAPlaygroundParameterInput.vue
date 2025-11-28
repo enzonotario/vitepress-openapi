@@ -146,6 +146,7 @@ function onFileChange(e: Event) {
         v-else-if="parameter.schema?.enum"
         :id="compositeKey"
         :name="compositeKey"
+        :model-value="String(modelValue ?? '')"
         @update:model-value="handleInputChange($event)"
       >
         <SelectTrigger :aria-label="selectPlaceholder">

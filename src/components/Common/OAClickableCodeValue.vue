@@ -13,6 +13,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  isEnum: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { setParameterValue, hasOperationData } = usePlayground()
@@ -20,7 +24,8 @@ const { t } = useI18n()
 
 function handleClick() {
   if (hasOperationData && props.parameterName) {
-    setParameterValue(props.parameterName, props.value)
+    const valueToSet = props.isEnum ? String(props.value) : props.value
+    setParameterValue(props.parameterName, valueToSet)
   }
 }
 

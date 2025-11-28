@@ -63,6 +63,7 @@ const { t } = useI18n()
               :key="idx"
               :value="value"
               :parameter-name="props.parameter.name"
+              :is-enum="true"
             />
           </div>
         </template>
