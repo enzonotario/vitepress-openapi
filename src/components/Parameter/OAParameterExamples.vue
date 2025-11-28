@@ -26,10 +26,11 @@ const wrapExamples = useTheme().getWrapExamples()
 const { t } = useI18n()
 
 function setExample(value) {
+  const parsedValue = typeof value === 'object' && value !== null
+    ? JSON.parse(JSON.stringify(value))
+    : value
   if (operationData && props.property.name) {
-    operationData.playground.parameterValues.value[props.property.name] = typeof value === 'object' && value !== null
-      ? JSON.stringify(value)
-      : String(value)
+    operationData.playground.parameterValues.value[props.property.name] = parsedValue
   }
 }
 </script>
