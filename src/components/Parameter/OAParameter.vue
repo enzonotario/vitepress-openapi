@@ -2,6 +2,7 @@
 import { useI18n } from '@byjohann/vue-i18n'
 import { titleCase } from 'scule'
 import { getConstraints } from '../../lib/parser/constraintsParser'
+import OAClickableCodeValue from '../Common/OAClickableCodeValue.vue'
 import OACodeValue from '../Common/OACodeValue.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
@@ -57,10 +58,11 @@ const { t } = useI18n()
       <OAParameterAttribute v-if="props.parameter.schema.enum" :name="t('Valid values')" :value="props.parameter.schema.enum.join(', ')">
         <template #value>
           <div class="flex flex-wrap gap-2">
-            <OACodeValue
+            <OAClickableCodeValue
               v-for="(value, idx) in props.parameter.schema.enum"
               :key="idx"
               :value="value"
+              :parameter-name="props.parameter.name"
             />
           </div>
         </template>
