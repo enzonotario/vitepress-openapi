@@ -4,7 +4,7 @@ import { computed } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { getPropertyExamples } from '../../lib/examples/getPropertyExamples'
 import { normalizeExamples } from '../../lib/examples/normalizeExamples'
-import OAClickableCodeValue from '../Common/OAClickableCodeValue.vue'
+import OACodeValue from '../Common/OACodeValue.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
 
 const props = defineProps({
@@ -29,7 +29,7 @@ const { t } = useI18n()
     class="flex flex-row items-center gap-2"
   >
     <span class="text-sm">{{ t('Example') }}</span>
-    <OAClickableCodeValue
+    <OACodeValue
       :value="examples[0]?.value"
       :parameter-name="props.property.name"
     />
@@ -50,7 +50,7 @@ const { t } = useI18n()
             'flex-row flex-wrap': wrapExamples,
           }"
         >
-          <OAClickableCodeValue
+          <OACodeValue
             v-for="(example, idx) in examples"
             :key="idx"
             :value="example.value"
