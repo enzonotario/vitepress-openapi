@@ -61,6 +61,8 @@ const { t } = useI18n()
               v-for="(value, idx) in props.parameter.schema.enum"
               :key="idx"
               :value="value"
+              :parameter-name="props.parameter.name"
+              :is-enum="true"
             />
           </div>
         </template>

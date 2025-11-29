@@ -50,6 +50,13 @@ const inputPlaceholder = computed(() =>
   formatValueForPlaceholder(parameterExample.value ?? ''),
 )
 
+const displayValue = computed(() => {
+  if (typeof props.modelValue === 'object' && props.modelValue !== null) {
+    return JSON.stringify(props.modelValue)
+  }
+  return props.modelValue
+})
+
 onMounted(() => {
   if (props.parameter.schema?.enum) {
     emits('update:modelValue', parameterExample.value ?? props.parameter.schema.enum[0])
@@ -139,6 +146,7 @@ function onFileChange(e: Event) {
         v-else-if="parameter.schema?.enum"
         :id="compositeKey"
         :name="compositeKey"
+        :model-value="String(modelValue ?? '')"
         @update:model-value="handleInputChange($event)"
       >
         <SelectTrigger :aria-label="selectPlaceholder">
@@ -178,7 +186,7 @@ function onFileChange(e: Event) {
           <Input
             :id="compositeKey"
             :name="compositeKey"
-            :value="modelValue as any"
+            :model-value="displayValue as any"
             :type="inputType(parameter)"
             :placeholder="inputPlaceholder"
             class="bg-muted"

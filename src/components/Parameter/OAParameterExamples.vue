@@ -29,7 +29,10 @@ const { t } = useI18n()
     class="flex flex-row items-center gap-2"
   >
     <span class="text-sm">{{ t('Example') }}</span>
-    <OACodeValue :value="examples[0]?.value" />
+    <OACodeValue
+      :value="examples[0]?.value"
+      :parameter-name="props.property.name"
+    />
   </div>
   <div
     v-if="examples?.length > 1"
@@ -47,12 +50,12 @@ const { t } = useI18n()
             'flex-row flex-wrap': wrapExamples,
           }"
         >
-          <div
+          <OACodeValue
             v-for="(example, idx) in examples"
             :key="idx"
-          >
-            <OACodeValue :value="example.value" />
-          </div>
+            :value="example.value"
+            :parameter-name="props.property.name"
+          />
         </div>
       </template>
     </OAParameterAttribute>

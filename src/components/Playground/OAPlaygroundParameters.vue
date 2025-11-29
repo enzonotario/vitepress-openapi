@@ -120,22 +120,6 @@ const customServer = typeof localStorage !== 'undefined'
   ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
   : ref(selectedServer.value)
 
-const variables = ref({
-  ...initializeVariables(headerParameters),
-  ...initializeVariables(pathParameters),
-  ...initializeVariables(queryParameters),
-})
-
-const enabledParameters = ref(
-  [...headerParameters, ...pathParameters, ...queryParameters].reduce((acc, parameter) => {
-    if (parameter.name) {
-      const key = createCompositeKey({ parameter, operationId: props.operationId })
-      acc[key] = parameter.required === true
-    }
-    return acc
-  }, { body: true } as Record<string, boolean>),
-)
-
 function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
   return parameters
     .reduce((acc: Record<string, string>, parameter: OpenAPIV3.ParameterObject) => {
@@ -147,6 +131,30 @@ function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
       return acc
     }, {})
 }
+
+const variables = operationData.playground.parameterValues
+
+const initialVariables = {
+  ...initializeVariables(headerParameters),
+  ...initializeVariables(pathParameters),
+  ...initializeVariables(queryParameters),
+}
+
+if (Object.keys(variables.value).length === 0) {
+  variables.value = initialVariables
+} else {
+  variables.value = { ...initialVariables, ...variables.value }
+}
+
+const enabledParameters = ref(
+  [...headerParameters, ...pathParameters, ...queryParameters].reduce((acc, parameter) => {
+    if (parameter.name) {
+      const key = createCompositeKey({ parameter, operationId: props.operationId })
+      acc[key] = parameter.required === true
+    }
+    return acc
+  }, { body: true } as Record<string, boolean>),
+)
 
 const authorizations = ref<PlaygroundSecurityScheme[]>([])
 

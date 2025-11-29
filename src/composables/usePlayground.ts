@@ -1,5 +1,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { ref } from 'vue'
+import type { OperationData } from '../lib/operationData'
+import { inject, ref } from 'vue'
+import { OPERATION_DATA_KEY } from '../lib/operationData'
 
 export interface SecuritySchemeDefaultValues {
   'http-basic': string
@@ -37,6 +39,7 @@ export function usePlayground() {
   const loading = ref(false)
   const response = ref<PlaygroundResponse | null>(null)
   const imageUrls = ref<string[]>([])
+  const operationData = inject<OperationData | undefined>(OPERATION_DATA_KEY)
 
   function setSecuritySchemeDefaultValues(values: Partial<SecuritySchemeDefaultValues>) {
     securitySchemeDefaultValues = {
@@ -175,6 +178,18 @@ export function usePlayground() {
     imageUrls.value = []
   }
 
+  function setParameterValue(parameterName: string, value: any) {
+    if (!operationData || !parameterName) {
+      return
+    }
+
+    const parsedValue = typeof value === 'object' && value !== null
+      ? JSON.parse(JSON.stringify(value))
+      : value
+
+    operationData.playground.parameterValues.value[parameterName] = parsedValue
+  }
+
   return {
     loading,
     response,
@@ -183,5 +198,7 @@ export function usePlayground() {
     getSecuritySchemeDefaultValue,
     submitRequest,
     cleanupImageUrls,
+    setParameterValue,
+    hasOperationData: !!operationData,
   }
 }
