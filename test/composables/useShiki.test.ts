@@ -1,5 +1,13 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useShiki } from '../../src/composables/useShiki'
+
+vi.mock('shiki/core', async (importOriginal) => {
+  const original = await importOriginal<typeof import('shiki/core')>()
+  return {
+    ...original,
+    createHighlighterCore: vi.fn().mockImplementation(original.createHighlighterCore),
+  }
+})
 
 describe('useShiki', () => {
   beforeEach(() => {
@@ -188,6 +196,46 @@ describe('useShiki', () => {
     const result = shiki.renderShiki(code, { lang: 'markdown', theme: 'vitesse-dark' })
 
     expect(result).toContain('shiki')
+  })
+})
+
+describe('useShiki error handling', () => {
+  beforeEach(() => {
+    vi.resetAllMocks()
+    const shiki = useShiki()
+    shiki.reset()
+  })
+
+  it('allows retry after initialization failure', async () => {
+    const { createHighlighterCore } = await import('shiki/core')
+    const mockedCreate = vi.mocked(createHighlighterCore)
+
+    mockedCreate.mockRejectedValueOnce(new Error('Network error'))
+
+    const shiki = useShiki()
+
+    await expect(shiki.init()).rejects.toThrow('Network error')
+    expect(shiki.isReady()).toBe(false)
+
+    mockedCreate.mockRestore()
+
+    await shiki.init()
+    expect(shiki.isReady()).toBe(true)
+  })
+
+  it('clears initPromise on failure to allow retry', async () => {
+    const { createHighlighterCore } = await import('shiki/core')
+    const mockedCreate = vi.mocked(createHighlighterCore)
+
+    mockedCreate.mockRejectedValueOnce(new Error('First failure'))
+    mockedCreate.mockRejectedValueOnce(new Error('Second failure'))
+
+    const shiki = useShiki()
+
+    await expect(shiki.init()).rejects.toThrow('First failure')
+    await expect(shiki.init()).rejects.toThrow('Second failure')
+
+    expect(mockedCreate).toHaveBeenCalledTimes(2)
   })
 })
 

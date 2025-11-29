@@ -27,23 +27,28 @@ export function useShiki() {
     }
 
     initPromise = (async () => {
-      if (shiki) {
+      try {
+        if (shiki) {
+          loading.value = false
+          return
+        }
+
+        shiki = await createHighlighterCore({
+          themes: [
+            themeConfig.getHighlighterTheme()?.light,
+            themeConfig.getHighlighterTheme()?.dark,
+          ],
+          langs,
+          engine: createJavaScriptRegexEngine({
+            target: 'ES2018',
+          }),
+        })
+
         loading.value = false
-        return
+      } catch (error) {
+        initPromise = null
+        throw error
       }
-
-      shiki = await createHighlighterCore({
-        themes: [
-          themeConfig.getHighlighterTheme()?.light,
-          themeConfig.getHighlighterTheme()?.dark,
-        ],
-        langs,
-        engine: createJavaScriptRegexEngine({
-          target: 'ES2018',
-        }),
-      })
-
-      loading.value = false
     })()
 
     return initPromise
