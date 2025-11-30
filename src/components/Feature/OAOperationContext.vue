@@ -7,6 +7,7 @@ import { useTheme } from '../../composables/useTheme'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { initOperationData, OPERATION_DATA_KEY } from '../../lib/operationData'
 import { resolveBaseUrl } from '../../lib/resolveBaseUrl'
+import { isLocalStorageAvailable } from '../../lib/utils'
 
 const props = defineProps({
   operationId: {
@@ -53,7 +54,7 @@ const defaultServer = computed(
     : themeConfig.getOperationDefaultBaseUrl(),
 )
 
-const customServer = typeof localStorage !== 'undefined'
+const customServer = isLocalStorageAvailable()
   ? useStorage('--oa-custom-server-url', null, localStorage)
   : ref(defaultServer.value)
 

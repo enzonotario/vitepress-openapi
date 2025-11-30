@@ -12,6 +12,7 @@ import { buildRequest } from '../../lib/codeSamples/buildRequest'
 import { getPropertyExample } from '../../lib/examples/getPropertyExample'
 import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import { createCompositeKey } from '../../lib/playground/createCompositeKey'
+import { isLocalStorageAvailable } from '../../lib/utils'
 import OAPlaygroundBodyInput from '../Playground/OAPlaygroundBodyInput.vue'
 import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
@@ -96,7 +97,7 @@ const request = computed({
 
 const allowCustomServer = computed(() => useTheme().getServerAllowCustomServer())
 
-const useCustomServer = typeof localStorage !== 'undefined'
+const useCustomServer = isLocalStorageAvailable()
   ? useStorage('--oa-use-custom-server', allowCustomServer.value, localStorage)
   : ref(false)
 
@@ -116,7 +117,7 @@ const serversUrls: ComputedRef<string[]> = computed(() =>
     .filter(value => value !== undefined),
 )
 
-const customServer = typeof localStorage !== 'undefined'
+const customServer = isLocalStorageAvailable()
   ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
   : ref(selectedServer.value)
 
@@ -198,7 +199,7 @@ watch(selectedSchemeId, (schemeId) => {
       scheme: scheme.scheme,
       in: scheme.in,
       name: scheme.name ?? name,
-      value: typeof localStorage !== 'undefined'
+      value: isLocalStorageAvailable()
         ? useStorage(`--oa-authorization-${name}`, example, localStorage)
         : example,
       label: name,

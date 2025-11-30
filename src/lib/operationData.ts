@@ -4,6 +4,7 @@ import type { OARequest } from './codeSamples/request'
 import { useStorage } from '@vueuse/core'
 import { ref } from 'vue'
 import { useTheme } from '../composables/useTheme'
+import { isLocalStorageAvailable } from './utils'
 
 export interface OperationData {
   operationId: string
@@ -44,7 +45,7 @@ export function initOperationData({
     },
     playground: {
       request: ref(request || {} as OARequest),
-      selectedServer: typeof localStorage !== 'undefined'
+      selectedServer: isLocalStorageAvailable()
         ? useStorage(`--oa-operation-${operation.operationId}-selectedServer`, selectedServer, localStorage, {
             mergeDefaults: true,
           })
