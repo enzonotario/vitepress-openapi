@@ -104,6 +104,9 @@ describe('useShiki', () => {
 
   it('concurrent init calls only initialize once', async () => {
     const shiki = useShiki()
+    const { createHighlighterCore } = await import('shiki/core')
+    const mockedCreate = vi.mocked(createHighlighterCore)
+    const callsBefore = mockedCreate.mock.calls.length
 
     const results = await Promise.all([
       shiki.init(),
@@ -113,6 +116,7 @@ describe('useShiki', () => {
 
     expect(results.length).toBe(3)
     expect(shiki.isReady()).toBe(true)
+    expect(mockedCreate.mock.calls.length - callsBefore).toBe(1)
   })
 
   it('supports different themes', async () => {
