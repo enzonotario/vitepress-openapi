@@ -15,25 +15,47 @@ import { useTheme } from './useTheme'
 const langs = [js, ts, markdown, json, xml, python, bash, php]
 
 let shiki: HighlighterCore | null = null
+let initPromise: Promise<void> | null = null
 
 const loading = ref(true)
 const themeConfig = useTheme()
 
 export function useShiki() {
-  async function init() {
-    if (shiki) {
-      return
+  function init(): Promise<void> {
+    if (initPromise) {
+      return initPromise
     }
-    shiki = await createHighlighterCore({
-      themes: [
-        themeConfig.getHighlighterTheme()?.light,
-        themeConfig.getHighlighterTheme()?.dark,
-      ],
-      langs,
-      engine: createJavaScriptRegexEngine({
-        target: 'ES2018',
-      }),
-    })
+
+    initPromise = (async () => {
+      try {
+        if (shiki) {
+          loading.value = false
+          return
+        }
+
+        shiki = await createHighlighterCore({
+          themes: [
+            themeConfig.getHighlighterTheme()?.light,
+            themeConfig.getHighlighterTheme()?.dark,
+          ],
+          langs,
+          engine: createJavaScriptRegexEngine({
+            target: 'ES2018',
+          }),
+        })
+
+        loading.value = false
+      } catch (error) {
+        initPromise = null
+        throw error
+      }
+    })()
+
+    return initPromise
+  }
+
+  function isReady(): boolean {
+    return shiki !== null
   }
 
   function renderShiki(content: string, { lang, theme }: { lang: string, theme: string }) {
@@ -47,10 +69,18 @@ export function useShiki() {
     }
   }
 
+  function reset() {
+    shiki = null
+    initPromise = null
+    loading.value = true
+  }
+
   return {
     loading,
     renderShiki,
     init,
+    isReady,
+    reset,
     initShiki: async () => {
       console.warn('initShiki is deprecated, use init instead')
       await init()
