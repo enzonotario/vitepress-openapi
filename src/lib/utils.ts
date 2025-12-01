@@ -6,6 +6,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function isLocalStorageAvailable(): boolean {
+  return typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function'
+}
+
 export function scrollToHash({
   hash,
 }: {
