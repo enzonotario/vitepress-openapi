@@ -42,6 +42,10 @@ watch(selectedExampleIndex, () => {
   }
 })
 
+watch(examples, () => {
+  selectedExampleIndex.value = '0'
+})
+
 function getOptionLabel(example) {
   if (example.summary) {
     return `${example.name} - ${example.summary}`
@@ -91,7 +95,7 @@ const { t } = useI18n()
               <SelectGroup>
                 <SelectItem
                   v-for="(example, idx) in examples"
-                  :key="idx"
+                  :key="example.name ?? idx"
                   :value="String(idx)"
                 >
                   {{ getOptionLabel(example) }}
