@@ -26,7 +26,7 @@ function hasSlot(name: string): boolean {
 
 <template>
   <div
-    class="flex flex-row gap-2 text-sm"
+    class="flex flex-row gap-2 text-sm flex-1"
   >
     <span
       :class="{

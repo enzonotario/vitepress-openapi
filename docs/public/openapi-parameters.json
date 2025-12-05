@@ -964,6 +964,307 @@
           }
         }
       }
+    },
+    "/test/named-examples/{resourceId}": {
+      "post": {
+        "summary": "Test endpoint for named examples",
+        "description": "Endpoint designed to test the named examples functionality with various parameter types and multiple named examples.",
+        "parameters": [
+          {
+            "name": "resourceId",
+            "in": "path",
+            "required": true,
+            "description": "Resource ID path parameter with named examples",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+$"
+            },
+            "examples": {
+              "userResource": {
+                "value": "user-12345",
+                "summary": "User resource identifier"
+              },
+              "documentResource": {
+                "value": "doc-67890",
+                "summary": "Document resource identifier"
+              },
+              "productResource": {
+                "value": "prod-abcde",
+                "summary": "Product resource identifier"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Status of the operation with multiple named examples",
+            "schema": {
+              "type": "string",
+              "enum": ["pending", "active", "completed", "cancelled"]
+            },
+            "examples": {
+              "pending": {
+                "value": "pending",
+                "summary": "Operation is pending"
+              },
+              "active": {
+                "value": "active",
+                "summary": "Operation is currently active"
+              },
+              "completed": {
+                "value": "completed",
+                "summary": "Operation has been completed"
+              },
+              "cancelled": {
+                "value": "cancelled",
+                "summary": "Operation was cancelled"
+              }
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "required": false,
+            "description": "Priority level with numeric named examples",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "examples": {
+              "low": {
+                "value": 1,
+                "summary": "Low priority"
+              },
+              "medium": {
+                "value": 3,
+                "summary": "Medium priority"
+              },
+              "high": {
+                "value": 5,
+                "summary": "High priority"
+              }
+            }
+          },
+          {
+            "name": "X-Environment",
+            "in": "header",
+            "required": false,
+            "description": "Environment header with named examples",
+            "schema": {
+              "type": "string",
+              "enum": ["development", "staging", "production"]
+            },
+            "examples": {
+              "dev": {
+                "value": "development",
+                "summary": "Development environment"
+              },
+              "staging": {
+                "value": "staging",
+                "summary": "Staging environment"
+              },
+              "prod": {
+                "value": "production",
+                "summary": "Production environment"
+              }
+            }
+          },
+          {
+            "name": "X-Request-Type",
+            "in": "header",
+            "required": false,
+            "description": "Request type with boolean-like named examples",
+            "schema": {
+              "type": "string"
+            },
+            "examples": {
+              "async": {
+                "value": "async",
+                "summary": "Asynchronous request"
+              },
+              "sync": {
+                "value": "sync",
+                "summary": "Synchronous request"
+              },
+              "batch": {
+                "value": "batch",
+                "summary": "Batch request"
+              }
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "description": "Filter object with named examples containing different structures",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "operator": {
+                  "type": "string",
+                  "enum": ["equals", "contains", "startsWith", "endsWith"]
+                }
+              }
+            },
+            "examples": {
+              "byName": {
+                "value": {
+                  "field": "name",
+                  "value": "John",
+                  "operator": "equals"
+                },
+                "summary": "Filter by exact name match"
+              },
+              "byEmail": {
+                "value": {
+                  "field": "email",
+                  "value": "@example.com",
+                  "operator": "contains"
+                },
+                "summary": "Filter by email domain"
+              },
+              "byPrefix": {
+                "value": {
+                  "field": "id",
+                  "value": "user-",
+                  "operator": "startsWith"
+                },
+                "summary": "Filter by ID prefix"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "description": "Tags array with different named examples",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "style": "form",
+            "explode": true,
+            "examples": {
+              "single": {
+                "value": ["important"],
+                "summary": "Single tag"
+              },
+              "multiple": {
+                "value": ["important", "urgent", "review"],
+                "summary": "Multiple tags"
+              },
+              "empty": {
+                "value": [],
+                "summary": "No tags"
+              }
+            }
+          },
+          {
+            "name": "metadata",
+            "in": "query",
+            "required": false,
+            "description": "Complex metadata object with nested named examples",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "integer"
+                },
+                "features": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "examples": {
+              "minimal": {
+                "value": {
+                  "source": "api",
+                  "version": 1
+                },
+                "summary": "Minimal metadata"
+              },
+              "full": {
+                "value": {
+                  "source": "web",
+                  "version": 2,
+                  "features": ["feature1", "feature2", "feature3"]
+                },
+                "summary": "Full metadata with features"
+              },
+              "legacy": {
+                "value": {
+                  "source": "mobile",
+                  "version": 0
+                },
+                "summary": "Legacy version"
+              }
+            }
+          },
+          {
+            "name": "sessionId",
+            "in": "cookie",
+            "required": false,
+            "description": "Session ID with different named examples",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9-]+$"
+            },
+            "examples": {
+              "newSession": {
+                "value": "sess-new-12345",
+                "summary": "New session identifier"
+              },
+              "existingSession": {
+                "value": "sess-existing-67890",
+                "summary": "Existing session identifier"
+              },
+              "guestSession": {
+                "value": "sess-guest-abcde",
+                "summary": "Guest session identifier"
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
     }
   }
 }
