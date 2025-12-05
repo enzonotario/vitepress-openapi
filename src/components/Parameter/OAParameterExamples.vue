@@ -84,7 +84,7 @@ const { t } = useI18n()
               class="h-6 max-w-28 bg-[var(--vp-code-bg)]"
             >
               <SelectValue :placeholder="t('Select an example')" class="truncate">
-                {{ examples[Number.parseInt(selectedExampleIndex, 10)]?.name }}
+                {{ selectedExample?.name }}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
