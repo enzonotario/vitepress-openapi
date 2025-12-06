@@ -73,37 +73,37 @@ const { t } = useI18n()
     v-if="examples?.length > 1 && isNamedExamples"
     class="flex flex-row items-center gap-2"
   >
-    <OAParameterAttribute :name="t('Examples')">
+    <OAParameterAttribute :name="t('Examples')" class="flex-1">
       <template #value>
-        <div class="flex justify-between items-start gap-2 flex-1">
-          <OACodeValue
-            v-if="selectedExample"
-            :value="selectedExample.value"
-            :parameter-name="props.property.name"
-          />
+        <OACodeValue
+          v-if="selectedExample"
+          :value="selectedExample.value"
+          :parameter-name="props.property.name"
+        />
+      </template>
 
-          <Select v-model="selectedExampleIndex">
-            <SelectTrigger
-              :aria-label="t('Select an example')"
-              class="h-6 max-w-28 bg-[var(--vp-code-bg)]"
-            >
-              <SelectValue :placeholder="t('Select an example')" class="truncate">
-                {{ selectedExample?.name }}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem
-                  v-for="(example, idx) in examples"
-                  :key="example.name ?? idx"
-                  :value="String(idx)"
-                >
-                  {{ getOptionLabel(example) }}
-                </SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+      <template #end>
+        <Select v-model="selectedExampleIndex">
+          <SelectTrigger
+            :aria-label="t('Select an example')"
+            class="h-6 max-w-28 bg-[var(--vp-code-bg)]"
+          >
+            <SelectValue :placeholder="t('Select an example')" class="truncate">
+              {{ selectedExample?.name }}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem
+                v-for="(example, idx) in examples"
+                :key="example.name ?? idx"
+                :value="String(idx)"
+              >
+                {{ getOptionLabel(example) }}
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </template>
     </OAParameterAttribute>
   </div>

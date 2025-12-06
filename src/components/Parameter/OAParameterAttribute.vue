@@ -26,7 +26,7 @@ function hasSlot(name: string): boolean {
 
 <template>
   <div
-    class="flex flex-row gap-2 text-sm flex-1"
+    class="flex flex-row gap-2 text-sm"
   >
     <span
       :class="{
@@ -36,9 +36,15 @@ function hasSlot(name: string): boolean {
       {{ props.name }}
     </span>
 
-    <slot v-if="hasSlot('value')" name="value" />
-    <span v-else class="text-muted-foreground">
-      {{ props.value }}
-    </span>
+    <div class="flex justify-between items-start gap-2 flex-1">
+      <div>
+        <slot v-if="hasSlot('value')" name="value" />
+        <span v-else class="text-muted-foreground">
+          {{ props.value }}
+        </span>
+      </div>
+
+      <slot v-if="hasSlot('end')" name="end" />
+    </div>
   </div>
 </template>
