@@ -1,90 +1,130 @@
-import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
+import type { InjectionKey } from 'vue'
+import type { OpenApiSpecInstance } from '../lib/OpenApiSpec'
+import type { OpenAPIDocument } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
-import { OpenApi } from '../lib/OpenApi'
+import { inject, provide } from 'vue'
+import { createOpenApiSpec } from '../lib/OpenApiSpec'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
 import { parseSpec } from '../lib/utils/parseSpec'
 import { useTheme } from './useTheme'
 
-export const OPENAPI_LOCAL_KEY = Symbol('openapiLocal')
+export const OPENAPI_LOCAL_KEY: InjectionKey<OpenApiSpecInstance> = Symbol('openapiLocal')
 
-let openapi: ReturnType<typeof OpenApi> | null = null
+let globalInstance: OpenApiSpecInstance | null = null
 
-export function useOpenapi({
-  spec,
-  config,
-}: {
+function createInstance(options: {
+  spec: OpenAPIDocument | string
+  defaultTag?: string
+  defaultTagDescription?: string
+}): OpenApiSpecInstance {
+  const originalSpec = parseSpec(options.spec)
+  const parsedSpec = parseOpenapi().parseSync({
+    spec: options.spec,
+    defaultTag: options.defaultTag,
+    defaultTagDescription: options.defaultTagDescription,
+  })
+  return createOpenApiSpec({
+    spec: parsedSpec,
+    originalSpec,
+  })
+}
+
+async function createInstanceAsync(options: {
+  spec: OpenAPIDocument | string
+  defaultTag?: string
+  defaultTagDescription?: string
+}): Promise<OpenApiSpecInstance> {
+  const originalSpec = parseSpec(options.spec)
+  const parsedSpec = await parseOpenapi().parseAsync({
+    spec: options.spec,
+    defaultTag: options.defaultTag,
+    defaultTagDescription: options.defaultTagDescription,
+  })
+  return createOpenApiSpec({
+    spec: parsedSpec,
+    originalSpec,
+  })
+}
+
+export function provideOpenapi(instance: OpenApiSpecInstance): void {
+  provide(OPENAPI_LOCAL_KEY, instance)
+}
+
+export function injectOpenapi(): OpenApiSpecInstance | null {
+  return inject(OPENAPI_LOCAL_KEY, null)
+}
+
+export function getGlobalOpenapi(): OpenApiSpecInstance | null {
+  return globalInstance
+}
+
+export function setGlobalOpenapi(instance: OpenApiSpecInstance): void {
+  globalInstance = instance
+}
+
+export function useOpenapi(options: {
   spec?: OpenAPIDocument | string
   config?: PartialUseThemeConfig
-} = {}) {
-  if (config) {
-    useTheme(config)
+} = {}): OpenApiSpecInstance & {
+  async: (asyncOptions?: { spec?: OpenAPIDocument | string }) => Promise<OpenApiSpecInstance>
+} {
+  if (options.config) {
+    useTheme(options.config)
   }
 
-  if (spec) {
-    sync({ spec })
-  }
-
-  function setInstance({
-    spec,
-    originalSpec,
-  }: {
-    spec: ParsedOpenAPI | OpenAPIDocument
-    originalSpec?: OpenAPIDocument
-  }) {
-    openapi = OpenApi({
-      spec,
-      originalSpec,
+  if (options.spec) {
+    globalInstance = createInstance({
+      spec: options.spec,
+      defaultTag: options.config?.spec?.defaultTag,
+      defaultTagDescription: options.config?.spec?.defaultTagDescription,
     })
   }
 
-  function sync({
-    spec,
-  }: {
-    spec?: OpenAPIDocument | string
-  } = {}) {
-    if (spec) {
-      const originalSpec = parseSpec(spec)
+  const instance = injectOpenapi() ?? globalInstance ?? createOpenApiSpec({})
 
-      setInstance({
-        spec: parseOpenapi().parseSync({
-          spec,
-          defaultTag: config?.spec?.defaultTag,
-          defaultTagDescription: config?.spec?.defaultTagDescription,
-        }),
-        originalSpec,
-      })
-    } else {
+  async function asyncParse(asyncOptions: { spec?: OpenAPIDocument | string } = {}): Promise<OpenApiSpecInstance> {
+    const specToUse = asyncOptions.spec ?? options.spec
+    if (!specToUse) {
       throw new Error('No spec provided')
     }
-
-    return openapi
-  }
-
-  async function async({
-    spec,
-  }: {
-    spec?: OpenAPIDocument | string
-  } = {}) {
-    if (spec) {
-      const originalSpec = parseSpec(spec)
-
-      setInstance({
-        spec: await parseOpenapi().parseAsync({
-          spec,
-          defaultTag: config?.spec?.defaultTag,
-          defaultTagDescription: config?.spec?.defaultTagDescription,
-        }),
-        originalSpec,
-      })
-    } else {
-      throw new Error('No spec provided')
-    }
-
-    return openapi
+    globalInstance = await createInstanceAsync({
+      spec: specToUse,
+      defaultTag: options.config?.spec?.defaultTag,
+      defaultTagDescription: options.config?.spec?.defaultTagDescription,
+    })
+    return globalInstance
   }
 
   return {
-    ...openapi,
-    async,
+    ...instance,
+    async: asyncParse,
   }
+}
+
+export function createOpenapi(options: {
+  spec: OpenAPIDocument | string
+  config?: PartialUseThemeConfig
+}): OpenApiSpecInstance {
+  if (options.config) {
+    useTheme(options.config)
+  }
+  return createInstance({
+    spec: options.spec,
+    defaultTag: options.config?.spec?.defaultTag,
+    defaultTagDescription: options.config?.spec?.defaultTagDescription,
+  })
+}
+
+export async function createOpenapiAsync(options: {
+  spec: OpenAPIDocument | string
+  config?: PartialUseThemeConfig
+}): Promise<OpenApiSpecInstance> {
+  if (options.config) {
+    useTheme(options.config)
+  }
+  return createInstanceAsync({
+    spec: options.spec,
+    defaultTag: options.config?.spec?.defaultTag,
+    defaultTagDescription: options.config?.spec?.defaultTagDescription,
+  })
 }

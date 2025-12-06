@@ -1,5 +1,5 @@
 <script setup>
-import OAContextProvider from '../Context/OAContextProvider.vue'
+import OAProvider from '../Context/OAProvider.vue'
 import OAServersContent from './OAServersContent.vue'
 
 const props = defineProps({
@@ -11,9 +11,9 @@ const props = defineProps({
 </script>
 
 <template>
-  <OAContextProvider :spec="props.spec">
+  <OAProvider :spec="props.spec">
     <template #default="{ openapi }">
       <OAServersContent :openapi="openapi" />
     </template>
-  </OAContextProvider>
+  </OAProvider>
 </template>
