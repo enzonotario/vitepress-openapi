@@ -1,5 +1,5 @@
 import type { OpenAPIDocument } from '../types'
-import { createOpenApiSpec } from '../lib/OpenApiSpec'
+import { createOpenApiSpec } from '../lib/createOpenApiSpec'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
 
 export function usePaths({

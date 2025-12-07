@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OpenApiSpecInstance } from '../../lib/OpenApiSpec'
+import type { OpenApiSpecInstance } from '../../lib/createOpenApiSpec'
 import { provide } from 'vue'
 import {
   getGlobalOpenapi,

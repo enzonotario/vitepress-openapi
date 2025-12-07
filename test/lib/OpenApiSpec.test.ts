@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createOpenApiSpec } from '../../src/lib/OpenApiSpec'
+import { createOpenApiSpec } from '../../src/lib/createOpenApiSpec'
 import { spec } from '../testsConstants'
 
 describe('createOpenApiSpec', () => {
