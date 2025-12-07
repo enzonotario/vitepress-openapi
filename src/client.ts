@@ -1,14 +1,14 @@
 import type { Awaitable } from 'vitepress'
 import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
-import type { OpenApi } from './lib/OpenApi'
+import type { OpenApiSpecInstance } from './lib/OpenApiSpec'
 import { createI18n } from '@byjohann/vue-i18n'
 import { watch } from 'vue'
 import * as components from './components'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 
 interface OAEnhanceAppContext extends EnhanceAppContext {
-  openapi?: ReturnType<typeof OpenApi> | null
+  openapi?: OpenApiSpecInstance | null
 }
 
 interface VPTheme {
@@ -53,5 +53,5 @@ export { useShiki } from './composables/useShiki'
 export { useTheme } from './composables/useTheme'
 export { generateCodeSample } from './lib/codeSamples/generateCodeSample'
 export { OARequest } from './lib/codeSamples/request'
-export { OpenApi } from './lib/OpenApi'
+export { createOpenApiSpec } from './lib/OpenApiSpec'
 export { locales } from './locales'

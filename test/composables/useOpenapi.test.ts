@@ -1,19 +1,10 @@
-import { describe, expect, it, beforeEach } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import {
-  createOpenapi,
-  createOpenapiAsync,
-  getGlobalOpenapi,
-  setGlobalOpenapi,
   useOpenapi,
 } from '../../src/composables/useOpenapi'
-import { createOpenApiSpec } from '../../src/lib/OpenApiSpec'
 import { spec, specWithSchemaAndContentTypes } from '../testsConstants'
 
 describe('useOpenapi', () => {
-  beforeEach(() => {
-    setGlobalOpenapi(createOpenApiSpec({}))
-  })
-
   it('returns an instance with all required methods', () => {
     const openapi = useOpenapi({ spec })
 
@@ -379,53 +370,3 @@ describe('useOpenapi.async -> securityUi', async () => {
     ])
   })
 })
-
-describe('createOpenapi', () => {
-  it('creates an instance synchronously', () => {
-    const openapi = createOpenapi({ spec })
-    expect(openapi.getSpec()).toBeDefined()
-    expect(openapi.getInfo().title).toBe('Test API')
-  })
-
-  it('supports custom config', () => {
-    const openapi = createOpenapi({
-      spec: {
-        openapi: '3.0.0',
-        paths: {
-          '/test': {
-            get: {
-              operationId: 'test',
-            },
-          },
-        },
-      },
-      config: {
-        spec: {
-          defaultTag: 'CustomTag',
-        },
-      },
-    })
-    expect(openapi.getOperationsTags()).toEqual(['CustomTag'])
-  })
-})
-
-describe('createOpenapiAsync', () => {
-  it('creates an instance asynchronously', async () => {
-    const openapi = await createOpenapiAsync({ spec: specWithSchemaAndContentTypes })
-    expect(openapi.getSpec()).toBeDefined()
-    const getPetsOperation = openapi.getOperation('getPets')
-    expect(getPetsOperation.responses['400'].content['application/json'].ui).toBeDefined()
-  })
-})
-
-describe('global openapi instance', () => {
-  it('setGlobalOpenapi and getGlobalOpenapi work correctly', () => {
-    const instance = createOpenApiSpec({ spec })
-    setGlobalOpenapi(instance)
-
-    const retrieved = getGlobalOpenapi()
-    expect(retrieved).toBe(instance)
-    expect(retrieved?.getInfo().title).toBe('Test API')
-  })
-})
-

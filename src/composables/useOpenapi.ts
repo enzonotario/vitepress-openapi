@@ -2,7 +2,7 @@ import type { InjectionKey } from 'vue'
 import type { OpenApiSpecInstance } from '../lib/OpenApiSpec'
 import type { OpenAPIDocument } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
-import { inject, provide } from 'vue'
+import { inject } from 'vue'
 import { createOpenApiSpec } from '../lib/OpenApiSpec'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
 import { parseSpec } from '../lib/utils/parseSpec'
@@ -46,20 +46,12 @@ async function createInstanceAsync(options: {
   })
 }
 
-export function provideOpenapi(instance: OpenApiSpecInstance): void {
-  provide(OPENAPI_LOCAL_KEY, instance)
-}
-
 export function injectOpenapi(): OpenApiSpecInstance | null {
   return inject(OPENAPI_LOCAL_KEY, null)
 }
 
 export function getGlobalOpenapi(): OpenApiSpecInstance | null {
   return globalInstance
-}
-
-export function setGlobalOpenapi(instance: OpenApiSpecInstance): void {
-  globalInstance = instance
 }
 
 export function useOpenapi(options: {
@@ -99,32 +91,4 @@ export function useOpenapi(options: {
     ...instance,
     async: asyncParse,
   }
-}
-
-export function createOpenapi(options: {
-  spec: OpenAPIDocument | string
-  config?: PartialUseThemeConfig
-}): OpenApiSpecInstance {
-  if (options.config) {
-    useTheme(options.config)
-  }
-  return createInstance({
-    spec: options.spec,
-    defaultTag: options.config?.spec?.defaultTag,
-    defaultTagDescription: options.config?.spec?.defaultTagDescription,
-  })
-}
-
-export async function createOpenapiAsync(options: {
-  spec: OpenAPIDocument | string
-  config?: PartialUseThemeConfig
-}): Promise<OpenApiSpecInstance> {
-  if (options.config) {
-    useTheme(options.config)
-  }
-  return createInstanceAsync({
-    spec: options.spec,
-    defaultTag: options.config?.spec?.defaultTag,
-    defaultTagDescription: options.config?.spec?.defaultTagDescription,
-  })
 }

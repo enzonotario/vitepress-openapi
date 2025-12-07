@@ -1,5 +1,5 @@
 import type { OpenAPIDocument } from '../types'
-import { OpenApi } from '../lib/OpenApi'
+import { createOpenApiSpec } from '../lib/OpenApiSpec'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
 
 export function usePaths({
@@ -11,7 +11,7 @@ export function usePaths({
   defaultTag?: string
   defaultTagDescription?: string
 }) {
-  const openapi = OpenApi({
+  const openapi = createOpenApiSpec({
     spec: parseOpenapi().transformSync({
       spec,
       defaultTag,
