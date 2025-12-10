@@ -3,7 +3,7 @@ import type { SplitterGroupEmits, SplitterGroupProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { SplitterGroup, useForwardPropsEmits } from 'reka-ui'
 import { computed } from 'vue'
-import { cn } from '../../../../../../src/lib/utils'
+import { cn } from '../../../../../../src/lib/utils/utils'
 
 const props = defineProps<SplitterGroupProps & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<SplitterGroupEmits>()

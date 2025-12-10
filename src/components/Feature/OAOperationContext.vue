@@ -5,9 +5,9 @@ import { useStorage } from '@vueuse/core'
 import { computed, provide, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { buildRequest } from '../../lib/codeSamples/buildRequest'
-import { initOperationData, OPERATION_DATA_KEY } from '../../lib/operationData'
-import { resolveBaseUrl } from '../../lib/resolveBaseUrl'
-import { isLocalStorageAvailable } from '../../lib/utils'
+import { initOperationData, OPERATION_DATA_KEY } from '../../lib/operation/operationData'
+import { resolveBaseUrl } from '../../lib/utils/resolveBaseUrl'
+import { isLocalStorageAvailable } from '../../lib/utils/utils'
 
 const props = defineProps({
   operationId: {

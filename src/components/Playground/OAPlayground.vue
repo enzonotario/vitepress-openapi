@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { OperationData } from '../../lib/operationData'
+import type { OperationData } from '../../lib/operation/operationData'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, inject, onBeforeUnmount } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
 import { useTheme } from '../../composables/useTheme'
-import { OPERATION_DATA_KEY } from '../../lib/operationData'
+import { OPERATION_DATA_KEY } from '../../lib/operation/operationData'
 import OAHeading from '../Common/OAHeading.vue'
 import { Button } from '../ui/button'
 import OAPlaygroundParameters from './OAPlaygroundParameters.vue'

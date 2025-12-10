@@ -1,6 +1,6 @@
 import type { OAExampleObject } from '../../types'
 import type { OAProperty } from '../parser/getSchemaUi'
-import { isFile, isFormUrlEncoded, isMultipartFormData, isXml } from '../contentTypeUtils'
+import { isFile, isFormUrlEncoded, isMultipartFormData, isXml } from '../utils/contentTypeUtils'
 import { getSchemaUiJson } from './getSchemaUiJson'
 import { getSchemaUiXml } from './getSchemaUiXml'
 

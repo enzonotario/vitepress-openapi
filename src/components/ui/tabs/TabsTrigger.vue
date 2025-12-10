@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue'
 import type { TabsTriggerVariants } from './index'
 import { TabsTrigger, useForwardProps } from 'reka-ui'
 import { computed } from 'vue'
-import { cn } from '../../../lib/utils'
+import { cn } from '../../../lib/utils/utils'
 import { tabsTriggerVariants } from './index'
 
 interface Props extends TabsTriggerProps {

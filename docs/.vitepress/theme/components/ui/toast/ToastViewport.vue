@@ -3,7 +3,7 @@ import type { ToastViewportProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { ToastViewport } from 'reka-ui'
 import { computed } from 'vue'
-import { cn } from '../../../../../../src/lib/utils'
+import { cn } from '../../../../../../src/lib/utils/utils'
 
 const props = defineProps<ToastViewportProps & { class?: HTMLAttributes['class'] }>()
 

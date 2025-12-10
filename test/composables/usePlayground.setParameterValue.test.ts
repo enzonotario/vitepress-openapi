@@ -1,4 +1,4 @@
-import type { OperationData } from '../../src/lib/operationData'
+import type { OperationData } from '../../src/lib/operation/operationData'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 

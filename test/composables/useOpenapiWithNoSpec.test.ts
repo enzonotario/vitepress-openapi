@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createOpenApiSpec } from '../../src/lib/createOpenApiSpec'
+import { createOpenApiSpec } from '../../src/lib/spec/createOpenApiSpec'
 
 describe('createOpenApiSpec with no spec', () => {
   const openapi = createOpenApiSpec()

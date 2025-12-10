@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { createOpenApiSpec } from '../../src/lib/createOpenApiSpec'
-import { spec } from '../testsConstants'
+import { createOpenApiSpec } from '../../../src/lib/spec/createOpenApiSpec'
+import { spec } from '../../testsConstants'
 
 describe('createOpenApiSpec', () => {
   it('creates an instance with default empty spec', () => {

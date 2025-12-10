@@ -7,7 +7,7 @@ export {
 } from './composables/useOpenapi'
 export { usePaths } from './composables/usePaths'
 export { useSidebar } from './composables/useSidebar'
-export { createOpenApiSpec, type OpenApiSpecInstance } from './lib/createOpenApiSpec'
+export { createOpenApiSpec, type OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
 export { parseSpec } from './lib/utils/parseSpec'
 
 export const httpVerbs: readonly OpenAPIV3.HttpMethods[] = Object.values(OpenAPIV3.HttpMethods)

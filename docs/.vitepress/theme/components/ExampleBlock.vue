@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Slots } from 'vue'
 import { useSlots } from 'vue'
-import { cn } from '../../../../src/lib/utils'
+import { cn } from '../../../../src/lib/utils/utils'
 import BrowserWindow from './BrowserWindow.vue'
 
 const props = defineProps({

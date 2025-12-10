@@ -1,7 +1,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { OperationData } from '../lib/operationData'
+import type { OperationData } from '../lib/operation/operationData'
 import { inject, ref } from 'vue'
-import { OPERATION_DATA_KEY } from '../lib/operationData'
+import { OPERATION_DATA_KEY } from '../lib/operation/operationData'
 
 export interface SecuritySchemeDefaultValues {
   'http-basic': string

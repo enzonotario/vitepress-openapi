@@ -1,6 +1,6 @@
 import type { HarRequest } from '@scalar/snippetz'
 import type { OARequest } from './request'
-import { isFormUrlEncoded, isMultipartFormData } from '../contentTypeUtils'
+import { isFormUrlEncoded, isMultipartFormData } from '../utils/contentTypeUtils'
 
 export function buildHarRequest(
   oaRequest: OARequest,

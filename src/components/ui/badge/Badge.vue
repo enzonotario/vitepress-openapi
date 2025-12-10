@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'vue'
 import type { BadgeVariants } from '.'
 import { badgeVariants } from '.'
-import { cn } from '../../../lib/utils'
+import { cn } from '../../../lib/utils/utils'
 
 const props = defineProps<{
   variant?: BadgeVariants['variant']

@@ -4,7 +4,7 @@ import { useData } from 'vitepress'
 import { getHeaders } from 'vitepress/dist/client/theme-default/composables/outline.js'
 import { VPHomeContent } from 'vitepress/theme'
 import { inject, onMounted, watch } from 'vue'
-import { scrollToHash } from '../../../../../src/lib/utils'
+import { scrollToHash } from '../../../../../src/lib/utils/utils'
 import VPDocAsideOutline from '../vitepress/VPDocAsideOutline.vue'
 import SandboxPreviewSidebar from './SandboxPreviewSidebar.vue'
 

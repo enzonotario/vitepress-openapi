@@ -3,8 +3,8 @@ import type { OpenAPIDocument } from '../../types'
 import { parseYAML } from 'confbox'
 import { provide } from 'vue'
 import { OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
-import { createOpenApiSpec } from '../../lib/createOpenApiSpec'
 import { parseOpenapi } from '../../lib/parser/parseOpenapi'
+import { createOpenApiSpec } from '../../lib/spec/createOpenApiSpec'
 
 const props = defineProps({
   spec: {

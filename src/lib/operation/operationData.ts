@@ -1,10 +1,10 @@
 import type { Ref } from 'vue'
-import type { ParsedOperation } from '../types'
-import type { OARequest } from './codeSamples/request'
+import type { ParsedOperation } from '../../types'
+import type { OARequest } from '../codeSamples/request'
 import { useStorage } from '@vueuse/core'
 import { ref } from 'vue'
-import { useTheme } from '../composables/useTheme'
-import { isLocalStorageAvailable } from './utils'
+import { useTheme } from '../../composables/useTheme'
+import { isLocalStorageAvailable } from '../utils/utils'
 
 export interface OperationData {
   operationId: string
