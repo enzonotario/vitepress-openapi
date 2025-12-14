@@ -23,6 +23,7 @@ export function scrollToHash({
 
   const element = document.querySelector(
     hash
+      // . escape { and } characters
       .replace(/([{}])/g, '\\$1'),
   )
 
