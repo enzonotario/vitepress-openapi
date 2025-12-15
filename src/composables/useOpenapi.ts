@@ -1,6 +1,6 @@
 import type { InjectionKey } from 'vue'
 import type { OpenApiSpecInstance } from '../lib/spec/createOpenApiSpec'
-import type { OpenAPIDocument } from '../types'
+import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
 import { inject } from 'vue'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
@@ -11,6 +11,13 @@ import { useTheme } from './useTheme'
 export const OPENAPI_LOCAL_KEY: InjectionKey<OpenApiSpecInstance> = Symbol('openapiLocal')
 
 let globalInstance: OpenApiSpecInstance | null = null
+
+function buildInstance(
+  parsedSpec: ParsedOpenAPI,
+  originalSpec: OpenAPIDocument,
+): OpenApiSpecInstance {
+  return createOpenApiSpec({ spec: parsedSpec, originalSpec })
+}
 
 function createInstance(options: {
   spec: OpenAPIDocument | string
@@ -23,10 +30,7 @@ function createInstance(options: {
     defaultTag: options.defaultTag,
     defaultTagDescription: options.defaultTagDescription,
   })
-  return createOpenApiSpec({
-    spec: parsedSpec,
-    originalSpec,
-  })
+  return buildInstance(parsedSpec, originalSpec)
 }
 
 async function createInstanceAsync(options: {
@@ -40,10 +44,7 @@ async function createInstanceAsync(options: {
     defaultTag: options.defaultTag,
     defaultTagDescription: options.defaultTagDescription,
   })
-  return createOpenApiSpec({
-    spec: parsedSpec,
-    originalSpec,
-  })
+  return buildInstance(parsedSpec, originalSpec)
 }
 
 export function injectOpenapi(): OpenApiSpecInstance | null {
