@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { getPropertyExample } from '@/lib/examples/getPropertyExample'
+import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineEmits, defineProps, onMounted } from 'vue'
-import { getPropertyExample } from '../../lib/examples/getPropertyExample'
-import { formatValueForPlaceholder } from '../../lib/format/formatValueForDisplay'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import { Checkbox } from '../ui/checkbox'
 import { Input } from '../ui/input'

@@ -281,6 +281,7 @@ export default defineConfigWithTheme({
   vite: {
     resolve: {
       alias: {
+        '@': fileURLToPath(new URL('../../src', import.meta.url)),
         ...(process.env.NODE_ENV === 'production'
           ? {
               '@docs': fileURLToPath(new URL('../', import.meta.url)),

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { OpenAPIDocument } from '../../types'
+import { parseOpenapi } from '@/lib/parser/parseOpenapi'
+import { createOpenApiSpec } from '@/lib/spec/createOpenApiSpec'
 import { parseYAML } from 'confbox'
 import { provide } from 'vue'
 import { OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
-import { parseOpenapi } from '../../lib/parser/parseOpenapi'
-import { createOpenApiSpec } from '../../lib/spec/createOpenApiSpec'
 
 const props = defineProps({
   spec: {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { getDownloadFileNameFromContentDisposition } from '@/lib/playground/getDownloadFileName'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, onBeforeUnmount, ref, watch } from 'vue'
-import { getDownloadFileNameFromContentDisposition } from '../../lib/playground/getDownloadFileName'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
 interface ResponseType {

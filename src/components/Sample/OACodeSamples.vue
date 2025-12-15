@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { OperationData } from '../../lib/operation/operationData'
+import type { OperationData } from '@/lib/operation/operationData'
+import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { computed, inject, ref, watch } from 'vue'
 import { useTheme } from '../../composables/useTheme'
-import { OPERATION_DATA_KEY } from '../../lib/operation/operationData'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
 const props = defineProps({
