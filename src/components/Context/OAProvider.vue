@@ -44,8 +44,8 @@ if (existingOpenapi && !needsAsync) {
       :spec-url="props.specUrl"
       @update:spec="emit('update:spec', $event)"
     >
-      <template #default="{ openapi }">
-        <slot :openapi="openapi" />
+      <template #default="{ openapi: asyncOpenapi }">
+        <slot :openapi="asyncOpenapi" />
       </template>
     </OAProviderAsync>
     <template #fallback>
