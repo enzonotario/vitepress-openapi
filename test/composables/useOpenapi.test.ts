@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 import {
   useOpenapi,
 } from '../../src/composables/useOpenapi'
@@ -216,9 +216,13 @@ describe('useOpenapi with custom config', () => {
   })
 })
 
-describe('useOpenapi.async', async () => {
-  const openapi = await useOpenapi().async({
-    spec: specWithSchemaAndContentTypes,
+describe('useOpenapi.async', () => {
+  let openapi: Awaited<ReturnType<ReturnType<typeof useOpenapi>['async']>>
+
+  beforeAll(async () => {
+    openapi = await useOpenapi().async({
+      spec: specWithSchemaAndContentTypes,
+    })
   })
 
   it('parses schema with content types', () => {
@@ -228,76 +232,80 @@ describe('useOpenapi.async', async () => {
   })
 })
 
-describe('useOpenapi.async -> securityUi', async () => {
-  const openapi = await useOpenapi().async({
-    spec: {
-      openapi: '3.0.0',
-      paths: {
-        '/onlyApiKey': {
-          get: {
-            operationId: 'onlyApiKey',
-            security: [
-              {
-                apiKey: [],
-              },
-            ],
+describe('useOpenapi.async -> securityUi', () => {
+  let openapi: Awaited<ReturnType<ReturnType<typeof useOpenapi>['async']>>
+
+  beforeAll(async () => {
+    openapi = await useOpenapi().async({
+      spec: {
+        openapi: '3.0.0',
+        paths: {
+          '/onlyApiKey': {
+            get: {
+              operationId: 'onlyApiKey',
+              security: [
+                {
+                  apiKey: [],
+                },
+              ],
+            },
+          },
+          '/onlyBearerAuth': {
+            get: {
+              operationId: 'onlyBearerAuth',
+              security: [
+                {
+                  bearerAuth: [],
+                },
+              ],
+            },
+          },
+          '/apiKeyAndBearerAuth': {
+            get: {
+              operationId: 'apiKeyAndBearerAuth',
+              security: [
+                {
+                  apiKey: [],
+                  bearerAuth: [],
+                },
+              ],
+            },
+          },
+          '/apiKeyOrBearerAuth': {
+            get: {
+              operationId: 'apiKeyOrBearerAuth',
+              security: [
+                {
+                  apiKey: [],
+                },
+                {
+                  bearerAuth: [],
+                },
+              ],
+            },
+          },
+          '/noSecurity': {
+            get: {
+              operationId: 'noSecurity',
+              security: [],
+            },
           },
         },
-        '/onlyBearerAuth': {
-          get: {
-            operationId: 'onlyBearerAuth',
-            security: [
-              {
-                bearerAuth: [],
-              },
-            ],
-          },
-        },
-        '/apiKeyAndBearerAuth': {
-          get: {
-            operationId: 'apiKeyAndBearerAuth',
-            security: [
-              {
-                apiKey: [],
-                bearerAuth: [],
-              },
-            ],
-          },
-        },
-        '/apiKeyOrBearerAuth': {
-          get: {
-            operationId: 'apiKeyOrBearerAuth',
-            security: [
-              {
-                apiKey: [],
-              },
-              {
-                bearerAuth: [],
-              },
-            ],
-          },
-        },
-        '/noSecurity': {
-          get: {
-            operationId: 'noSecurity',
-            security: [],
+        components: {
+          securitySchemes: {
+            apiKey: {
+              type: 'apiKey',
+              name: 'api_key',
+              in: 'header',
+            },
+            bearerAuth: {
+              type: 'http',
+              scheme: 'bearer',
+            },
           },
         },
       },
-      components: {
-        securitySchemes: {
-          apiKey: {
-            type: 'apiKey',
-            name: 'api_key',
-            in: 'header',
-          },
-          bearerAuth: {
-            type: 'http',
-            scheme: 'bearer',
-          },
-        },
-      },
-    },
+    })
   })
 
   it('returns correct securityUi for operations', () => {
