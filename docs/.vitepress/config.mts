@@ -282,18 +282,15 @@ export default defineConfigWithTheme({
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('../../src', import.meta.url)),
-        ...(process.env.NODE_ENV === 'production'
+        '@docs': fileURLToPath(new URL('../', import.meta.url)),
+        '@public': fileURLToPath(new URL('../public', import.meta.url)),
+        ...(process.env.NODE_ENV !== 'production'
           ? {
-              '@docs': fileURLToPath(new URL('../', import.meta.url)),
-              '@public': fileURLToPath(new URL('../public', import.meta.url)),
-            }
-          : {
-              '@docs': fileURLToPath(new URL('../', import.meta.url)),
-              '@public': fileURLToPath(new URL('../public', import.meta.url)),
               'vitepress-openapi/client': fileURLToPath(new URL('../../src/client', import.meta.url)),
               'vitepress-openapi/dist/style.css': fileURLToPath(new URL('../../src/theme', import.meta.url)),
               'vitepress-openapi': fileURLToPath(new URL('../../src/index', import.meta.url)),
-            }),
+            }
+          : {}),
       },
     },
   },
