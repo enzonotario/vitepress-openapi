@@ -287,8 +287,8 @@ export default defineConfigWithTheme({
     resolve: {
       alias: {
         '@': resolve(rootDir, 'src'),
-        '@docs': fileURLToPath(new URL('../', import.meta.url)),
-        '@public': fileURLToPath(new URL('../public', import.meta.url)),
+        '@docs': resolve(rootDir, 'docs'),
+        '@public': resolve(rootDir, 'docs/public'),
         ...(process.env.NODE_ENV !== 'production'
           ? {
               'vitepress-openapi/client': fileURLToPath(new URL('../../src/client', import.meta.url)),

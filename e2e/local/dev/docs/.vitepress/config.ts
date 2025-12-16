@@ -1,8 +1,13 @@
 import { fileURLToPath } from 'node:url'
+import { resolve, dirname } from 'node:path'
 import { defineConfig } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import { testsPages } from '../../../../../docs/pages'
 import spec from '../../../../../docs/public/openapi.json'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const rootDir = resolve(__dirname, '../../../../../')
 
 const sidebar = useSidebar({
   spec,
@@ -71,13 +76,14 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
+        '@': resolve(rootDir, 'src'),
+        '@public': resolve(rootDir, 'docs/public'),
         ...(process.env.NODE_ENV === 'production'
           ? {}
           : {
               'vitepress-openapi/client': fileURLToPath(new URL('../../../../../src/client', import.meta.url)),
               'vitepress-openapi/dist/style.css': fileURLToPath(new URL('../../../../../dist/vitepress-openapi.css', import.meta.url)),
               'vitepress-openapi': fileURLToPath(new URL('../../../../../src/index', import.meta.url)),
-              '@public': fileURLToPath(new URL('../../../../../docs/public', import.meta.url)),
             }),
       },
     },
