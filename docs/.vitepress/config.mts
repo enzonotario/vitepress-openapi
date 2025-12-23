@@ -1,4 +1,5 @@
 import { fileURLToPath } from 'node:url'
+import { resolve, dirname } from 'node:path'
 import { defineConfigWithTheme } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import { examplesPages, testsPages } from '../pages'
@@ -10,6 +11,10 @@ const sidebar = useSidebar({
 })
 
 const gaId = process.env.GA_ID || 'G-TEST'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const rootDir = resolve(__dirname, '../..')
 
 export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
@@ -281,18 +286,16 @@ export default defineConfigWithTheme({
   vite: {
     resolve: {
       alias: {
-        ...(process.env.NODE_ENV === 'production'
+        '@': resolve(rootDir, 'src'),
+        '@docs': resolve(rootDir, 'docs'),
+        '@public': resolve(rootDir, 'docs/public'),
+        ...(process.env.NODE_ENV !== 'production'
           ? {
-              '@docs': fileURLToPath(new URL('../', import.meta.url)),
-              '@public': fileURLToPath(new URL('../public', import.meta.url)),
-            }
-          : {
-              '@docs': fileURLToPath(new URL('../', import.meta.url)),
-              '@public': fileURLToPath(new URL('../public', import.meta.url)),
               'vitepress-openapi/client': fileURLToPath(new URL('../../src/client', import.meta.url)),
               'vitepress-openapi/dist/style.css': fileURLToPath(new URL('../../src/theme', import.meta.url)),
               'vitepress-openapi': fileURLToPath(new URL('../../src/index', import.meta.url)),
-            }),
+            }
+          : {}),
       },
     },
   },

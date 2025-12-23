@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 import type { PlaygroundSecurityScheme, SecurityUi } from '../../types'
+import { buildRequest } from '@/lib/codeSamples/buildRequest'
+import { initOperationData, OPERATION_DATA_KEY } from '@/lib/operation/operationData'
+import { resolveBaseUrl } from '@/lib/utils/resolveBaseUrl'
+import { isLocalStorageAvailable } from '@/lib/utils/utils'
 import { useStorage } from '@vueuse/core'
 import { computed, provide, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
-import { buildRequest } from '../../lib/codeSamples/buildRequest'
-import { initOperationData, OPERATION_DATA_KEY } from '../../lib/operationData'
-import { resolveBaseUrl } from '../../lib/resolveBaseUrl'
-import { isLocalStorageAvailable } from '../../lib/utils'
 
 const props = defineProps({
   operationId: {

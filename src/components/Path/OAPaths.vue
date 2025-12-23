@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
-import { defineProps, inject } from 'vue'
-import { OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
+import { defineProps } from 'vue'
+import { getGlobalOpenapi, injectOpenapi } from '../../composables/useOpenapi'
 import { useTheme } from '../../composables/useTheme'
 import OALazy from '../Common/Lazy/OALazy.vue'
 import OAOperationContent from '../Feature/OAOperationContent.vue'
@@ -30,33 +30,35 @@ const operations = Object.entries(paths).reduce((acc: { operationId: string }[],
 
 const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
 
-const openapi: any = inject(OPENAPI_LOCAL_KEY)
+const openapi = injectOpenapi() ?? getGlobalOpenapi()
 </script>
 
 <template>
-  <OALazy
-    v-for="(operation, operationIdx) in operations"
-    :key="operation.operationId"
-    :is-lazy="lazyRendering && operationIdx > 0"
-  >
-    <OAOperationContent
-      :openapi="openapi"
-      :operation-id="operation.operationId"
-      prefix-headings
-      hide-branding
+  <template v-if="openapi">
+    <OALazy
+      v-for="(operation, operationIdx) in operations"
+      :key="operation.operationId"
+      :is-lazy="lazyRendering && operationIdx > 0"
     >
-      <!-- Expose all slots upwards -->
-      <template
-        v-for="(_, name) in slots"
-        #[name]="slotProps"
+      <OAOperationContent
+        :openapi="openapi"
+        :operation-id="operation.operationId"
+        prefix-headings
+        hide-branding
       >
-        <slot
-          :name="name"
-          v-bind="slotProps || {}"
-        />
-      </template>
-    </OAOperationContent>
+        <!-- Expose all slots upwards -->
+        <template
+          v-for="(_, name) in slots"
+          #[name]="slotProps"
+        >
+          <slot
+            :name="name"
+            v-bind="slotProps || {}"
+          />
+        </template>
+      </OAOperationContent>
 
-    <hr>
-  </OALazy>
+      <hr>
+    </OALazy>
+  </template>
 </template>

@@ -3,7 +3,7 @@ import { availableLanguages, useTheme } from '../../composables/useTheme'
 import { httpVerbs } from '../../index'
 import { buildRequest } from '../codeSamples/buildRequest'
 import { generateCodeSample } from '../codeSamples/generateCodeSample'
-import { resolveBaseUrl } from '../resolveBaseUrl'
+import { resolveBaseUrl } from '../utils/resolveBaseUrl'
 
 export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOpenAPI> {
   if (!spec?.paths) {

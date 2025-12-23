@@ -6,7 +6,7 @@ import {
   isMultipartFormData,
   isPlainText,
   isXml,
-} from '../../src/lib/contentTypeUtils'
+} from '../../../src/lib/utils/contentTypeUtils'
 
 describe('contentTypeUtils', () => {
   describe('isJson', () => {

@@ -1,6 +1,6 @@
 <script setup>
+import { cn } from '@/lib/utils/utils'
 import { useMarkdown } from '../../composables/useMarkdown'
-import { cn } from '../../lib/utils'
 
 const props = defineProps({
   content: {

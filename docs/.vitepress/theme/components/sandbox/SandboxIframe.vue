@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { compressToURL } from '@amoutonbrady/lz-string'
 import { ExternalLink } from 'lucide-vue-next'
-import { deepUnref } from '../../../../../src/lib/deepUnref'
-import { cn } from '../../../../../src/lib/utils'
+import { deepUnref } from '../../../../../src/lib/utils/deepUnref'
+import { cn } from '../../../../../src/lib/utils/utils'
 import { initSandboxData } from '../../sandboxData'
 import BrowserWindow from '../BrowserWindow.vue'
 

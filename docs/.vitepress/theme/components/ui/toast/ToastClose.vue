@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue'
 import { X } from 'lucide-vue-next'
 import { ToastClose } from 'reka-ui'
 import { computed } from 'vue'
-import { cn } from '../../../../../../src/lib/utils'
+import { cn } from '../../../../../../src/lib/utils/utils'
 
 const props = defineProps<ToastCloseProps & {
   class?: HTMLAttributes['class']

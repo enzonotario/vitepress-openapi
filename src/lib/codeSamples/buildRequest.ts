@@ -3,7 +3,7 @@ import type { PlaygroundSecurityScheme } from '../../types'
 import { unref } from 'vue'
 import { DEFAULT_BASE_URL } from '../../composables/useTheme'
 import { getPropertyExample } from '../examples/getPropertyExample'
-import { resolveBaseUrl } from '../resolveBaseUrl'
+import { resolveBaseUrl } from '../utils/resolveBaseUrl'
 import { OARequest } from './request'
 
 type ParameterValue =

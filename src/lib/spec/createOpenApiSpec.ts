@@ -1,22 +1,50 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { OpenAPIDocument, ParsedOpenAPI, ParsedPaths } from '../types'
-import { httpVerbs } from '../index'
+import type { OpenAPIDocument, ParsedOpenAPI, ParsedPaths } from '../../types'
+import { httpVerbs } from '../../index'
 
-export function OpenApi({
-  spec,
-  originalSpec,
-}: {
-  spec: ParsedOpenAPI | OpenAPIDocument | null
+export interface OpenApiSpecInstance {
+  spec: OpenAPIDocument
+  originalSpec: OpenAPIDocument | null
+  getSpec: () => OpenAPIDocument
+  setSpec: (spec: OpenAPIDocument) => void
+  getOriginalSpec: () => OpenAPIDocument | null
+  setOriginalSpec: (spec: OpenAPIDocument | null) => void
+  getOperation: (operationId: string) => any | null
+  getOperationPath: (operationId: string) => string | null
+  getOperationMethod: (operationId: string) => string | null
+  getOperationParameters: (operationId: string) => any[]
+  getPaths: () => ParsedPaths
+  getPathsByVerbs: () => any[]
+  getInfo: () => any
+  getExternalDocs: () => any
+  getServers: () => any[]
+  getOperationServers: (operationId: string) => OpenAPIV3.ServerObject[]
+  getOperationsTags: () => string[]
+  getPathsByTags: (tags: string | string[]) => OpenAPIV3.PathsObject
+  getPathsWithoutTags: () => OpenAPIV3.PathsObject
+  getTags: () => { name: string | null, description: string | null }[]
+  getFilteredTags: () => { name: string | null, description: string | null }[]
+}
+
+export function createOpenApiSpec(options: {
+  spec?: ParsedOpenAPI | OpenAPIDocument | null
   originalSpec?: OpenAPIDocument | null
-} = {
-  spec: null,
-  originalSpec: null,
-}) {
+} = {}): OpenApiSpecInstance {
   let innerSpec: OpenAPIDocument | null = null
-  let innerOriginalSpec: OpenAPIDocument | null = originalSpec ?? null
+  let innerOriginalSpec: OpenAPIDocument | null = options.originalSpec ?? null
 
-  function setSpec(spec: any) {
+  function setSpec(spec: OpenAPIDocument) {
     innerSpec = spec
+  }
+
+  function getSpec(): OpenAPIDocument {
+    if (!innerSpec) {
+      setSpec((options.spec ?? {}) as OpenAPIDocument)
+    }
+    if (!innerSpec) {
+      throw new Error('OpenAPI spec is not defined')
+    }
+    return innerSpec
   }
 
   function getOriginalSpec(): OpenAPIDocument | null {
@@ -25,18 +53,6 @@ export function OpenApi({
 
   function setOriginalSpec(spec: OpenAPIDocument | null) {
     innerOriginalSpec = spec
-  }
-
-  function getSpec(): OpenAPIDocument {
-    if (!innerSpec) {
-      setSpec(spec ?? {})
-    }
-
-    if (!innerSpec) {
-      throw new Error('OpenAPI spec is not defined')
-    }
-
-    return innerSpec
   }
 
   function findOperation(paths: OpenAPIV3.PathsObject, operationId: string) {
@@ -52,21 +68,17 @@ export function OpenApi({
 
   function getOperation(operationId: string) {
     const paths = getSpec().paths as OpenAPIV3.PathsObject
-
     if (!paths) {
       return null
     }
-
     return findOperation(paths, operationId)
   }
 
   function getOperationPath(operationId: string) {
     const paths = getSpec().paths as OpenAPIV3.PathsObject
-
     if (!paths) {
       return null
     }
-
     for (const [path, methods] of Object.entries(paths)) {
       for (const verb of httpVerbs) {
         if (methods && methods[verb]?.operationId === operationId) {
@@ -74,17 +86,14 @@ export function OpenApi({
         }
       }
     }
-
     return null
   }
 
   function getOperationMethod(operationId: string) {
     const paths = getSpec().paths as OpenAPIV3.PathsObject
-
     if (!paths) {
       return null
     }
-
     for (const path of Object.values(paths)) {
       for (const verb of httpVerbs) {
         if (path && path[verb]?.operationId === operationId) {
@@ -92,7 +101,6 @@ export function OpenApi({
         }
       }
     }
-
     return null
   }
 
@@ -110,7 +118,6 @@ export function OpenApi({
 
   function getPathsByVerbs() {
     const paths = getPaths()
-
     return Object.keys(paths)
       .flatMap((path) => {
         return httpVerbs
@@ -119,9 +126,7 @@ export function OpenApi({
             if (!paths || !paths[path] || !paths[path][verb]) {
               return null
             }
-
             const { operationId, summary, tags } = paths[path][verb]
-
             return {
               path,
               verb,
@@ -145,27 +150,21 @@ export function OpenApi({
     return getSpec().servers ?? []
   }
 
-  function getOperationServers(operationId: string) {
+  function getOperationServers(operationId: string): OpenAPIV3.ServerObject[] {
     const operation = findOperation(getPaths(), operationId)
-
     if (!operation) {
       return []
     }
-
     const operationPath = getOperationPath(operationId)
-
     const paths = getSpec().paths as OpenAPIV3.PathsObject
-
     const pathServers = paths[(operationPath ?? '')]?.servers
 
     if (operation?.servers !== undefined) {
       return operation.servers as OpenAPIV3.ServerObject[]
     }
-
     if (pathServers !== undefined) {
       return pathServers as OpenAPIV3.ServerObject[]
     }
-
     return getSpec().servers ?? []
   }
 
@@ -173,9 +172,7 @@ export function OpenApi({
     if (!getSpec().paths) {
       return []
     }
-
     const paths = getSpec().paths as OpenAPIV3.PathsObject
-
     return Object.values(paths).reduce((tags: string[], path) => {
       for (const verb of httpVerbs) {
         if (path && path[verb]?.tags) {
@@ -193,22 +190,18 @@ export function OpenApi({
   function filterPaths(predicate: (operation: any) => boolean) {
     const paths = getPaths() ?? {}
     const output: OpenAPIV3.PathsObject = {}
-
     for (const [path, methods] of Object.entries(paths)) {
       if (!methods) {
         continue
       }
-
       for (const verb of httpVerbs) {
         const operation = methods[verb]
-
         if (operation && predicate(operation)) {
           output[path] = output[path] || {}
           output[path][verb] = operation
         }
       }
     }
-
     return output
   }
 
@@ -231,10 +224,8 @@ export function OpenApi({
 
   function getFilteredTags() {
     const operationsTags = getOperationsTags()
-
     const tags = getTags()
       .filter(tag => operationsTags.includes(tag.name ?? ''))
-
     return tags
       .concat([
         ...operationsTags

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { OperationSlot, PathsGroupView } from '../../types'
+import { scrollToHash } from '@/lib/utils/utils'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, nextTick, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
-import { scrollToHash } from '../../lib/utils'
 import OAHeading from '../Common/OAHeading.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Button } from '../ui/button'

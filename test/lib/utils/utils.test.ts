@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { isLocalStorageAvailable } from '../../src/lib/utils'
+import { isLocalStorageAvailable } from '../../../src/lib/utils/utils'
 
 describe('utils', () => {
   describe('isLocalStorageAvailable', () => {

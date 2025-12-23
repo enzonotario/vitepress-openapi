@@ -7,7 +7,7 @@ import vitesseLight from '@shikijs/themes/vitesse-light'
 import { useDark } from '@vueuse/core'
 import { ref } from 'vue'
 import { generateCodeSample } from '../lib/codeSamples/generateCodeSample'
-import { deepUnref } from '../lib/deepUnref'
+import { deepUnref } from '../lib/utils/deepUnref'
 import { locales } from '../locales'
 
 function ensureNestedProperty<T, K extends keyof T>(obj: T, key: K): Exclude<NonNullable<T[K]>, false> {

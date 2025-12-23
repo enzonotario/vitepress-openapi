@@ -2,10 +2,10 @@ import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { DefaultTheme } from 'vitepress'
 import type { OpenAPIDocument } from '../types'
 import { httpVerbs } from '../index'
-import { OpenApi } from '../lib/OpenApi'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
 import { cleanSidebarItems } from '../lib/sidebar/cleanSidebarItems'
 import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItemsByPaths'
+import { createOpenApiSpec } from '../lib/spec/createOpenApiSpec'
 
 type MethodAliases = Record<string, string>
 
@@ -89,7 +89,7 @@ export function useSidebar({
   sidebarItemTemplate,
   sidebarGroupTemplate,
 }: SidebarConfig = {}) {
-  let openApiInstance: ReturnType<typeof OpenApi> | null = null
+  let openApiInstance: ReturnType<typeof createOpenApiSpec> | null = null
 
   function getOpenApi() {
     if (!spec) {
@@ -97,7 +97,7 @@ export function useSidebar({
     }
 
     if (!openApiInstance) {
-      openApiInstance = OpenApi({
+      openApiInstance = createOpenApiSpec({
         spec: parseOpenapi().transformSync({
           spec,
           defaultTag,

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OAExampleObject } from '../../types'
-import { computed, ref, watch } from 'vue'
+import { createCompositeKey } from '@/lib/playground/createCompositeKey'
 import {
   isFormUrlEncoded,
   isJson,
   isMultipartFormData,
   isXml,
-} from '../../lib/contentTypeUtils'
-import { createCompositeKey } from '../../lib/playground/createCompositeKey'
+} from '@/lib/utils/contentTypeUtils'
+import { computed, ref, watch } from 'vue'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import { Textarea } from '../ui/textarea'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'

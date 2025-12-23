@@ -1,7 +1,7 @@
 <script setup>
+import { getConstraints } from '@/lib/parser/constraintsParser'
 import { useI18n } from '@byjohann/vue-i18n'
 import { titleCase } from 'scule'
-import { getConstraints } from '../../lib/parser/constraintsParser'
 import OACodeValue from '../Common/OACodeValue.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
