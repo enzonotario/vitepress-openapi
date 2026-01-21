@@ -2,7 +2,7 @@
 import { useI18n } from '@byjohann/vue-i18n'
 import { ChevronDown, ChevronRight, ChevronUp, Maximize2, Minimize2 } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
-import OAMarkdown from '../Common/OAMarkdown.vue'
+import {OAMarkdown} from '../index'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button/index'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '../ui/collapsible'

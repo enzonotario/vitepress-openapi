@@ -1,3 +1,6 @@
 import 'tailwindcss/tailwind.css'
-import './style.css'
-import './json.css'
+
+if (typeof window !== 'undefined') {
+    import('./style.css')
+    import('./json.css')
+}

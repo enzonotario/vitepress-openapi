@@ -4,7 +4,7 @@ import { titleCase } from 'scule'
 import { getConstraints } from '@/lib/parser/constraintsParser'
 import { usePlayground } from '../../composables/usePlayground'
 import OACodeValue from '../Common/OACodeValue.vue'
-import OAMarkdown from '../Common/OAMarkdown.vue'
+import {OAMarkdown} from '../index'
 import OAParameterAttribute from './OAParameterAttribute.vue'
 import OAParameterExamples from './OAParameterExamples.vue'
 

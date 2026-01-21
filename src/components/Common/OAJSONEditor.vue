@@ -1,7 +1,10 @@
 <script setup>
-import JsonEditorVue from 'json-editor-vue'
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { useTheme } from '../../composables/useTheme'
+
+const JsonEditorVue = defineAsyncComponent(() => {
+  return import('json-editor-vue')
+})
 
 const props = defineProps({
   modelValue: {

@@ -6,7 +6,7 @@ import { computed, inject } from 'vue'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { useTheme } from '../../composables/useTheme'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
-import OAHeading from '../Common/OAHeading.vue'
+import {OAHeading} from '../index'
 import OASchemaTabs from '../Schema/OASchemaTabs.vue'
 
 const props = defineProps({

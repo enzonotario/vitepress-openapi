@@ -8,7 +8,7 @@ export const OAIntroduction = defineAsyncComponent(() => import('./Feature/OAInt
 export const OALocaleSelect = defineAsyncComponent(() => import('./Feature/OALocaleSelect.vue'))
 export const OAOperation = defineAsyncComponent(() => import('./Feature/OAOperation.vue'))
 export const OAOperationContext = defineAsyncComponent(() => import('./Feature/OAOperationContext.vue'))
-export const OAOperationLink = defineAsyncComponent(() => import('./Feature/OAOperationLink.vue'))
+export const OAOperationLink = defineAsyncComponent<any>(() => import('./Feature/OAOperationLink.vue'))
 export const OAServers = defineAsyncComponent(() => import('./Feature/OAServers.vue'))
 export const OASpec = defineAsyncComponent(() => import('./Feature/OASpec.vue'))
 export const OASpecSkeleton = defineAsyncComponent(() => import('./Feature/OASpecSkeleton.vue'))

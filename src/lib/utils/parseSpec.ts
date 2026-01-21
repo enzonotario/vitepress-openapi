@@ -1,11 +1,11 @@
-import type { OpenAPIDocument } from '../../types'
-import { parseYAML } from 'confbox'
+import type { OpenAPIDocument, ParsedPaths } from '../../types'
 
-export function parseSpec(spec: OpenAPIDocument | string): OpenAPIDocument {
+export async function parseSpec(spec: OpenAPIDocument | string): Promise<OpenAPIDocument> {
   if (typeof spec === 'string') {
     try {
+      const { parseYAML } = await import('confbox')
       const parsed = parseYAML(spec)
-      return (parsed ?? {}) as OpenAPIDocument
+      return (parsed ?? {}) as OpenAPIDocument & { paths: ParsedPaths }
     }
     catch (e) {
       console.error('Error parsing spec', e)
