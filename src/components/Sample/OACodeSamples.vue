@@ -34,17 +34,24 @@ const activeSampleKey = ref('')
 
 const radioGroupName = `group-${props.operationId}`
 
-watch(operationData.playground.request, async (request) => {
+watch(operationData.playground.request, async (request, _, onInvalidate) => {
+  let cancelled = false
+  onInvalidate(() => {
+    cancelled = true
+  })
+
   if (!availableLanguages || !generator) {
     return
   }
 
-  samples.value = await Promise.all(
+  const nextSamples = await Promise.all(
     availableLanguages.map(async (langConfig) => {
       const { lang, target, client, highlighter } = langConfig
-      const key = [lang, target, client].filter(Boolean).join('-')
+      const key = [lang, target, client]
+        .filter(Boolean)
+        .join('-')
       const tabId = `tab-${props.operationId}-${key}`
-      
+
       try {
         const source = await generator(langConfig, request)
         if (!source) {
@@ -56,7 +63,7 @@ watch(operationData.playground.request, async (request) => {
           key,
           tabId,
           highlighter: highlighter || 'plain',
-          source: source,
+          source,
         }
       }
       catch (error) {
@@ -71,6 +78,12 @@ watch(operationData.playground.request, async (request) => {
       }
     }),
   )
+
+  // Guard against stale data due to rapid updates of `operationData.playground.request`
+  if (cancelled) {
+    return
+  }
+  samples.value = nextSamples
 
   if (!activeSampleKey.value || !samples.value.some(s => s.key === activeSampleKey.value)) {
     const defaultLang = themeConfig.getCodeSamplesDefaultLang()
