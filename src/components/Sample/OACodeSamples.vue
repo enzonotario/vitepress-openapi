@@ -13,6 +13,8 @@ type Sample = LanguageConfig & {
   source: string
 }
 
+const GENERATOR_FALLBACK_MESSAGE = `// Failed to generate sample.\n// Please check the console for details.`;
+
 const props = defineProps({
   operationId: {
     type: String,
@@ -41,15 +43,33 @@ watch(operationData.playground.request, async (request) => {
 
   samples.value = await Promise.all(
     availableLanguages.map(async (langConfig) => {
-      const key = langConfig.target && langConfig.client
-        ? `${langConfig.lang}-${langConfig.target}-${langConfig.client}`
-        : langConfig.lang
-      return {
-        ...langConfig,
-        key,
-        highlighter: langConfig.highlighter || 'plain',
-        tabId: `tab-${props.operationId}-${key}`,
-        source: await generator(langConfig, request),
+      const { lang, target, client, highlighter } = langConfig
+      const key = [lang, target, client].filter(Boolean).join('-')
+      const tabId = `tab-${props.operationId}-${key}`;
+      
+      try {
+        const source = await generator(langConfig, request);
+        if (!source) {
+          throw new Error('Failed to generate code sample');
+        }
+
+        return {
+          ...langConfig,
+          key,
+          tabId,
+          highlighter: source ? (highlighter || 'plain') : 'plain',
+          source: source || GENERATOR_FALLBACK_MESSAGE,
+        }
+      }
+      catch (error) {
+        console.error(`Failed to generate code sample for '${lang}'`, { langConfig, error })
+        return {
+          ...langConfig,
+          key,
+          tabId,
+          highlighter: 'plain',
+          source: GENERATOR_FALLBACK_MESSAGE,
+        }
       }
     }),
   )
