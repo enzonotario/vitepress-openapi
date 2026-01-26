@@ -13,8 +13,6 @@ type Sample = LanguageConfig & {
   source: string
 }
 
-const GENERATOR_FALLBACK_MESSAGE = `// Failed to generate sample.\n// Please check the console for details.`;
-
 const props = defineProps({
   operationId: {
     type: String,
@@ -45,20 +43,20 @@ watch(operationData.playground.request, async (request) => {
     availableLanguages.map(async (langConfig) => {
       const { lang, target, client, highlighter } = langConfig
       const key = [lang, target, client].filter(Boolean).join('-')
-      const tabId = `tab-${props.operationId}-${key}`;
+      const tabId = `tab-${props.operationId}-${key}`
       
       try {
-        const source = await generator(langConfig, request);
+        const source = await generator(langConfig, request)
         if (!source) {
-          throw new Error('Failed to generate code sample');
+          throw new Error('Code generator returned empty result.')
         }
 
         return {
           ...langConfig,
           key,
           tabId,
-          highlighter: source ? (highlighter || 'plain') : 'plain',
-          source: source || GENERATOR_FALLBACK_MESSAGE,
+          highlighter: highlighter || 'plain',
+          source: source,
         }
       }
       catch (error) {
@@ -68,7 +66,7 @@ watch(operationData.playground.request, async (request) => {
           key,
           tabId,
           highlighter: 'plain',
-          source: GENERATOR_FALLBACK_MESSAGE,
+          source: `// Failed to generate sample.\n// Please check the console for details.`,
         }
       }
     }),
