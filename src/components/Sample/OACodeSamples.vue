@@ -42,7 +42,7 @@ watch(operationData.playground.request, async (request) => {
   samples.value = await Promise.all(
     availableLanguages.map(async (langConfig) => {
       const key = langConfig.target && langConfig.client
-        ? `${langConfig.target}-${langConfig.client}`
+        ? `${langConfig.lang}-${langConfig.target}-${langConfig.client}`
         : langConfig.lang
       return {
         ...langConfig,
