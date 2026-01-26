@@ -83,7 +83,12 @@ export function useShiki() {
    */
   async function ensureLanguage(lang: string): Promise<boolean> {
     // Make sure shiki is initialized first
-    await init()
+    try {
+      await init()
+    } catch (e) {
+      console.error('Failed to initialize Shiki:', e)
+      return false
+    }
 
     if (!shiki) {
       return false
