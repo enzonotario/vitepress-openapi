@@ -34,7 +34,7 @@ const activeSampleKey = ref('')
 
 const radioGroupName = `group-${props.operationId}`
 
-watch(operationData.playground.request, async (request, _, onInvalidate) => {
+watch(operationData.playground.request, async (playgroundRequest, _, onInvalidate) => {
   let cancelled = false
   onInvalidate(() => {
     cancelled = true
@@ -53,7 +53,7 @@ watch(operationData.playground.request, async (request, _, onInvalidate) => {
       const tabId = `tab-${props.operationId}-${key}`
 
       try {
-        const source = await generator(langConfig, request)
+        const source = await generator(langConfig, playgroundRequest)
         if (!source) {
           throw new Error('Code generator returned empty result.')
         }
@@ -72,7 +72,7 @@ watch(operationData.playground.request, async (request, _, onInvalidate) => {
           ...langConfig,
           key,
           tabId,
-          highlighter: 'plain',
+          highlighter: 'shell',
           source: `// Failed to generate sample.\n// Please check the console for details.`,
         }
       }
@@ -94,7 +94,6 @@ watch(operationData.playground.request, async (request, _, onInvalidate) => {
   }
 }, {
   deep: true,
-  immediate: true,
 })
 </script>
 
