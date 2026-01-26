@@ -563,20 +563,25 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
       "get": {
         "codeSamples": [
           {
+            "client": "curl",
             "highlighter": "bash",
             "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1'",
+            "target": "shell",
           },
           {
+            "client": "fetch",
             "highlighter": "javascript",
             "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1')",
+            "target": "js",
           },
           {
+            "client": "curl",
             "highlighter": "php",
             "icon": ".php",
             "label": "PHP",
@@ -586,8 +591,10 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
 curl_exec($ch);
 
 curl_close($ch);",
+            "target": "php",
           },
           {
+            "client": "requests",
             "highlighter": "python",
             "icon": ".py",
             "label": "Python",
@@ -599,6 +606,7 @@ curl_close($ch);",
       "offset": "1"
     }
 )",
+            "target": "python",
           },
         ],
         "description": "Get a list of all legendary Argentine Rock artists and explore their contributions to the music scene. You can get one using the [](/operations/getArtist) endpoint.",
@@ -981,6 +989,7 @@ The response includes:
       "post": {
         "codeSamples": [
           {
+            "client": "curl",
             "highlighter": "bash",
             "icon": "curl",
             "label": "cURL",
@@ -996,8 +1005,10 @@ The response includes:
   "image": "https://cdn.rock-legends.com/photos/charly.jpg",
   "band": "Sui Generis"
 }'",
+            "target": "shell",
           },
           {
+            "client": "fetch",
             "highlighter": "javascript",
             "icon": ".js",
             "label": "JavaScript",
@@ -1016,8 +1027,10 @@ The response includes:
     band: 'Sui Generis'
   })
 })",
+            "target": "js",
           },
           {
+            "client": "curl",
             "highlighter": "php",
             "icon": ".php",
             "label": "PHP",
@@ -1037,8 +1050,10 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 curl_exec($ch);
 
 curl_close($ch);",
+            "target": "php",
           },
           {
+            "client": "requests",
             "highlighter": "python",
             "icon": ".py",
             "label": "Python",
@@ -1057,6 +1072,7 @@ curl_close($ch);",
       "band": "Sui Generis"
     }
 )",
+            "target": "python",
           },
         ],
         "description": "Add a new legendary Argentine Rock artist. Make sure they truly deserve the title! You can view it later using the [](/operations/getArtist) endpoint.",
@@ -1730,6 +1746,7 @@ Possible Reasons
       "delete": {
         "codeSamples": [
           {
+            "client": "curl",
             "highlighter": "bash",
             "icon": "curl",
             "label": "cURL",
@@ -1737,8 +1754,10 @@ Possible Reasons
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
   --request DELETE \\
   --header 'Authorization: bearerAuth'",
+            "target": "shell",
           },
           {
+            "client": "fetch",
             "highlighter": "javascript",
             "icon": ".js",
             "label": "JavaScript",
@@ -1749,8 +1768,10 @@ Possible Reasons
     Authorization: 'bearerAuth'
   }
 })",
+            "target": "js",
           },
           {
+            "client": "curl",
             "highlighter": "php",
             "icon": ".php",
             "label": "PHP",
@@ -1762,8 +1783,10 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: bearerAuth']);
 curl_exec($ch);
 
 curl_close($ch);",
+            "target": "php",
           },
           {
+            "client": "requests",
             "highlighter": "python",
             "icon": ".py",
             "label": "Python",
@@ -1774,6 +1797,7 @@ curl_close($ch);",
       "Authorization": "bearerAuth"
     }
 )",
+            "target": "python",
           },
         ],
         "deprecated": true,
@@ -2076,20 +2100,25 @@ Developers should use this information to understand what went wrong and how to 
       "get": {
         "codeSamples": [
           {
+            "client": "curl",
             "highlighter": "bash",
             "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
+            "target": "shell",
           },
           {
+            "client": "fetch",
             "highlighter": "javascript",
             "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1')",
+            "target": "js",
           },
           {
+            "client": "curl",
             "highlighter": "php",
             "icon": ".php",
             "label": "PHP",
@@ -2099,8 +2128,10 @@ Developers should use this information to understand what went wrong and how to 
 curl_exec($ch);
 
 curl_close($ch);",
+            "target": "php",
           },
           {
+            "client": "requests",
             "highlighter": "python",
             "icon": ".py",
             "label": "Python",
@@ -2108,6 +2139,7 @@ curl_close($ch);",
             "source": "requests.get(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1"
 )",
+            "target": "python",
           },
         ],
         "description": "Learn more about a specific Argentine Rock artist and their legacy. You can update it using the [](/operations/updateArtist) endpoint.",
@@ -2449,6 +2481,7 @@ Possible Reasons
       "put": {
         "codeSamples": [
           {
+            "client": "curl",
             "highlighter": "bash",
             "icon": "curl",
             "label": "cURL",
@@ -2464,8 +2497,10 @@ Possible Reasons
   "image": "https://cdn.rock-legends.com/photos/charly.jpg",
   "band": "Sui Generis"
 }'",
+            "target": "shell",
           },
           {
+            "client": "fetch",
             "highlighter": "javascript",
             "icon": ".js",
             "label": "JavaScript",
@@ -2484,8 +2519,10 @@ Possible Reasons
     band: 'Sui Generis'
   })
 })",
+            "target": "js",
           },
           {
+            "client": "curl",
             "highlighter": "php",
             "icon": ".php",
             "label": "PHP",
@@ -2504,8 +2541,10 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 curl_exec($ch);
 
 curl_close($ch);",
+            "target": "php",
           },
           {
+            "client": "requests",
             "highlighter": "python",
             "icon": ".py",
             "label": "Python",
@@ -2524,6 +2563,7 @@ curl_close($ch);",
       "band": "Sui Generis"
     }
 )",
+            "target": "python",
           },
         ],
         "description": "Update the information of a legendary Argentine Rock artist. Make sure to provide accurate data. You can get the current data using the [](/operations/getArtist) endpoint.",
@@ -3175,20 +3215,25 @@ Possible Reasons
       "get": {
         "codeSamples": [
           {
+            "client": "curl",
             "highlighter": "bash",
             "icon": "curl",
             "label": "cURL",
             "lang": "curl",
             "source": "curl 'https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1'",
+            "target": "shell",
           },
           {
+            "client": "fetch",
             "highlighter": "javascript",
             "icon": ".js",
             "label": "JavaScript",
             "lang": "javascript",
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1')",
+            "target": "js",
           },
           {
+            "client": "curl",
             "highlighter": "php",
             "icon": ".php",
             "label": "PHP",
@@ -3198,8 +3243,10 @@ Possible Reasons
 curl_exec($ch);
 
 curl_close($ch);",
+            "target": "php",
           },
           {
+            "client": "requests",
             "highlighter": "python",
             "icon": ".py",
             "label": "Python",
@@ -3211,6 +3258,7 @@ curl_close($ch);",
       "offset": "1"
     }
 )",
+            "target": "python",
           },
         ],
         "description": "Get a list of all albums from a legendary Argentine Rock artist. You can add a new album using the [](/operations/createAlbum) endpoint.",
@@ -3560,6 +3608,7 @@ The response includes:
       "post": {
         "codeSamples": [
           {
+            "client": "curl",
             "highlighter": "bash",
             "icon": "curl",
             "label": "cURL",
@@ -3574,8 +3623,10 @@ The response includes:
   "year": 1976,
   "image": "https://cdn.rock-legends.com/photos/la-maquina.jpg"
 }'",
+            "target": "shell",
           },
           {
+            "client": "fetch",
             "highlighter": "javascript",
             "icon": ".js",
             "label": "JavaScript",
@@ -3593,8 +3644,10 @@ The response includes:
     image: 'https://cdn.rock-legends.com/photos/la-maquina.jpg'
   })
 })",
+            "target": "js",
           },
           {
+            "client": "curl",
             "highlighter": "php",
             "icon": ".php",
             "label": "PHP",
@@ -3613,8 +3666,10 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 curl_exec($ch);
 
 curl_close($ch);",
+            "target": "php",
           },
           {
+            "client": "requests",
             "highlighter": "python",
             "icon": ".py",
             "label": "Python",
@@ -3632,6 +3687,7 @@ curl_close($ch);",
       "image": "https://cdn.rock-legends.com/photos/la-maquina.jpg"
     }
 )",
+            "target": "python",
           },
         ],
         "description": "Add a new album to a legendary Argentine Rock artist. Make sure it's a masterpiece! You can view all albums using the [](/operations/getAllAlbums) endpoint.",
@@ -4212,6 +4268,7 @@ Possible Reasons
       "post": {
         "codeSamples": [
           {
+            "client": "curl",
             "highlighter": "bash",
             "icon": "curl",
             "label": "cURL",
@@ -4223,8 +4280,10 @@ Possible Reasons
   "email": "string",
   "password": "string"
 }'",
+            "target": "shell",
           },
           {
+            "client": "fetch",
             "highlighter": "javascript",
             "icon": ".js",
             "label": "JavaScript",
@@ -4239,8 +4298,10 @@ Possible Reasons
     password: 'string'
   })
 })",
+            "target": "js",
           },
           {
+            "client": "curl",
             "highlighter": "php",
             "icon": ".php",
             "label": "PHP",
@@ -4257,8 +4318,10 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 curl_exec($ch);
 
 curl_close($ch);",
+            "target": "php",
           },
           {
+            "client": "requests",
             "highlighter": "python",
             "icon": ".py",
             "label": "Python",
@@ -4273,6 +4336,7 @@ curl_close($ch);",
       "password": "string"
     }
 )",
+            "target": "python",
           },
         ],
         "description": "Authenticate with your credentials to access protected endpoints in the Argentine Rock Legends API.",
@@ -4819,6 +4883,7 @@ Possible Reasons
       "post": {
         "codeSamples": [
           {
+            "client": "curl",
             "highlighter": "bash",
             "icon": "curl",
             "label": "cURL",
@@ -4831,8 +4896,10 @@ Possible Reasons
   "email": "carlos@rock-legends.com",
   "password": "i-love-rock"
 }'",
+            "target": "shell",
           },
           {
+            "client": "fetch",
             "highlighter": "javascript",
             "icon": ".js",
             "label": "JavaScript",
@@ -4848,8 +4915,10 @@ Possible Reasons
     password: 'i-love-rock'
   })
 })",
+            "target": "js",
           },
           {
+            "client": "curl",
             "highlighter": "php",
             "icon": ".php",
             "label": "PHP",
@@ -4867,8 +4936,10 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
 curl_exec($ch);
 
 curl_close($ch);",
+            "target": "php",
           },
           {
+            "client": "requests",
             "highlighter": "python",
             "icon": ".py",
             "label": "Python",
@@ -4884,6 +4955,7 @@ curl_close($ch);",
       "password": "i-love-rock"
     }
 )",
+            "target": "python",
           },
         ],
         "description": "Create a user account to access exclusive content about Argentine Rock legends. After signing up, you can access endpoints like [](/operations/getAllArtists) to explore the data.",

@@ -1,6 +1,10 @@
+import type { LanguageConfig } from '../../../src/composables/useTheme'
 import { describe, expect, it } from 'vitest'
+import { availableLanguages } from '../../../src/composables/useTheme'
 import { buildRequest } from '../../../src/lib/codeSamples/buildRequest'
 import { generateCodeSample } from '../../../src/lib/codeSamples/generateCodeSample'
+
+const langConfigs = Object.fromEntries(availableLanguages.map(l => [l.lang, l]))
 
 describe('javascript', () => {
   it('generates code sample for GET request without query, headers, or body', async () => {
@@ -8,7 +12,7 @@ describe('javascript', () => {
       baseUrl: 'https://api.example.com',
       path: '/resource',
     })
-    const result = await generateCodeSample('javascript', request)
+    const result = await generateCodeSample(langConfigs.javascript, request)
     expect(result).toBe(`fetch('https://api.example.com/resource')`)
   })
 
@@ -19,7 +23,7 @@ describe('javascript', () => {
       method: 'POST',
       body: { key: 'value' },
     })
-    const result = await generateCodeSample('javascript', request)
+    const result = await generateCodeSample(langConfigs.javascript, request)
     expect(result).toBe(`fetch('https://api.example.com/resource', {
   method: 'POST',
   headers: {
@@ -38,7 +42,7 @@ describe('javascript', () => {
       method: 'POST',
       body: { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } },
     })
-    const result = await generateCodeSample('javascript', request)
+    const result = await generateCodeSample(langConfigs.javascript, request)
     expect(result).toBe(`fetch('https://api.example.com/resource', {
   method: 'POST',
   headers: {
@@ -61,7 +65,7 @@ describe('javascript', () => {
       path: '/resource',
       headers: { Authorization: 'Bearer token' },
     })
-    const result = await generateCodeSample('javascript', request)
+    const result = await generateCodeSample(langConfigs.javascript, request)
     expect(result).toBe(`fetch('https://api.example.com/resource', {
   headers: {
     Authorization: 'Bearer token'
@@ -80,7 +84,7 @@ describe('javascript', () => {
         search: 'query',
       },
     })
-    const result = await generateCodeSample('javascript', request)
+    const result = await generateCodeSample(langConfigs.javascript, request)
     expect(result).toBe(`fetch('https://api.example.com/resource?search=query')`)
   })
 
@@ -98,7 +102,7 @@ describe('javascript', () => {
         search: 'query',
       },
     })
-    const result = await generateCodeSample('javascript', request)
+    const result = await generateCodeSample(langConfigs.javascript, request)
     expect(result).toBe(`fetch('https://api.example.com/resource?search=query', {
   method: 'PUT',
   headers: {
@@ -118,7 +122,7 @@ describe('curl', () => {
       path: '/resource',
       method: 'GET',
     })
-    const result = await generateCodeSample('curl', request)
+    const result = await generateCodeSample(langConfigs.curl, request)
     expect(result).toBe(`curl https://api.example.com/resource`)
   })
 
@@ -129,7 +133,7 @@ describe('curl', () => {
       method: 'POST',
       body: { key: 'value' },
     })
-    const result = await generateCodeSample('curl', request)
+    const result = await generateCodeSample(langConfigs.curl, request)
     expect(result).toBe(`curl https://api.example.com/resource \\
   --request POST \\
   --header 'Content-Type: application/json' \\
@@ -145,7 +149,7 @@ describe('curl', () => {
       method: 'POST',
       body: { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } },
     })
-    const result = await generateCodeSample('curl', request)
+    const result = await generateCodeSample(langConfigs.curl, request)
     expect(result).toBe(`curl https://api.example.com/resource \\
   --request POST \\
   --header 'Content-Type: application/json' \\
@@ -170,7 +174,7 @@ describe('curl', () => {
       method: 'GET',
       headers: { Authorization: 'Bearer token' },
     })
-    const result = await generateCodeSample('curl', request)
+    const result = await generateCodeSample(langConfigs.curl, request)
     expect(result).toBe(`curl https://api.example.com/resource \\
   --header 'Authorization: Bearer token'`)
   })
@@ -183,7 +187,7 @@ describe('curl', () => {
       parameters: [{ name: 'search', in: 'query' }],
       variables: { search: 'query' },
     })
-    const result = await generateCodeSample('curl', request)
+    const result = await generateCodeSample(langConfigs.curl, request)
     expect(result).toBe(`curl 'https://api.example.com/resource?search=query'`)
   })
 
@@ -197,7 +201,7 @@ describe('curl', () => {
       parameters: [{ name: 'search', in: 'query' }],
       variables: { search: 'query' },
     })
-    const result = await generateCodeSample('curl', request)
+    const result = await generateCodeSample(langConfigs.curl, request)
     expect(result).toBe(`curl 'https://api.example.com/resource?search=query' \\
   --request PUT \\
   --header 'Content-Type: application/json' \\
@@ -215,7 +219,7 @@ describe('curl', () => {
       parameters: [{ name: 'search', in: 'query' }, { name: 'page', in: 'query' }],
       variables: { search: 'query', page: '2' },
     })
-    const result = await generateCodeSample('curl', request)
+    const result = await generateCodeSample(langConfigs.curl, request)
     expect(result).toBe(`curl 'https://api.example.com/path/testOperation?search=query&page=2' \\
   --header 'Authorization: Bearer token' \\
   --header 'Content-Type: application/json'`)
@@ -227,7 +231,7 @@ describe('curl', () => {
       path: '/users/{userId}/posts',
       method: 'GET',
     })
-    const result = await generateCodeSample('curl', request)
+    const result = await generateCodeSample(langConfigs.curl, request)
     expect(result).toBe(`curl 'https://api.example.com/users/{userId}/posts'`)
   })
 })
@@ -239,7 +243,7 @@ describe('php', () => {
       path: '/resource',
       method: 'GET',
     })
-    const result = await generateCodeSample('php', request)
+    const result = await generateCodeSample(langConfigs.php, request)
     expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
 
 curl_exec($ch);
@@ -254,7 +258,7 @@ curl_close($ch);`)
       method: 'POST',
       body: { key: 'value' },
     })
-    const result = await generateCodeSample('php', request)
+    const result = await generateCodeSample(langConfigs.php, request)
     expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
 
 curl_setopt($ch, CURLOPT_POST, true);
@@ -275,7 +279,7 @@ curl_close($ch);`)
       method: 'POST',
       body: { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } },
     })
-    const result = await generateCodeSample('php', request)
+    const result = await generateCodeSample(langConfigs.php, request)
     expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
 
 curl_setopt($ch, CURLOPT_POST, true);
@@ -305,7 +309,7 @@ curl_close($ch);`)
       method: 'GET',
       headers: { Authorization: 'Bearer token' },
     })
-    const result = await generateCodeSample('php', request)
+    const result = await generateCodeSample(langConfigs.php, request)
     expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer token']);
@@ -323,7 +327,7 @@ curl_close($ch);`)
       parameters: [{ name: 'search', in: 'query' }],
       variables: { search: 'query' },
     })
-    const result = await generateCodeSample('php', request)
+    const result = await generateCodeSample(langConfigs.php, request)
     expect(result).toBe(`$ch = curl_init("https://api.example.com/resource?search=query");
 
 curl_exec($ch);
@@ -341,7 +345,7 @@ curl_close($ch);`)
       parameters: [{ name: 'search', in: 'query' }],
       variables: { search: 'query' },
     })
-    const result = await generateCodeSample('php', request)
+    const result = await generateCodeSample(langConfigs.php, request)
     expect(result).toBe(`$ch = curl_init("https://api.example.com/resource?search=query");
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -362,7 +366,7 @@ describe('python', () => {
       path: '/resource',
       method: 'GET',
     })
-    const result = await generateCodeSample('python', request)
+    const result = await generateCodeSample(langConfigs.python, request)
     expect(result).toBe(`requests.get("https://api.example.com/resource")`)
   })
 
@@ -373,7 +377,7 @@ describe('python', () => {
       method: 'POST',
       body: { key: 'value' },
     })
-    const result = await generateCodeSample('python', request)
+    const result = await generateCodeSample(langConfigs.python, request)
     expect(result).toBe(`requests.post("https://api.example.com/resource",
     headers={
       "Content-Type": "application/json"
@@ -391,7 +395,7 @@ describe('python', () => {
       method: 'POST',
       body: { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } },
     })
-    const result = await generateCodeSample('python', request)
+    const result = await generateCodeSample(langConfigs.python, request)
     expect(result).toBe(`requests.post("https://api.example.com/resource",
     headers={
       "Content-Type": "application/json"
@@ -418,7 +422,7 @@ describe('python', () => {
       method: 'GET',
       headers: { Authorization: 'Bearer token' },
     })
-    const result = await generateCodeSample('python', request)
+    const result = await generateCodeSample(langConfigs.python, request)
     expect(result).toBe(`requests.get("https://api.example.com/resource",
     headers={
       "Authorization": "Bearer token"
@@ -434,7 +438,7 @@ describe('python', () => {
       parameters: [{ name: 'search', in: 'query' }],
       variables: { search: 'query' },
     })
-    const result = await generateCodeSample('python', request)
+    const result = await generateCodeSample(langConfigs.python, request)
     expect(result).toBe(`requests.get("https://api.example.com/resource",
     params={
       "search": "query"
@@ -452,7 +456,7 @@ describe('python', () => {
       parameters: [{ name: 'search', in: 'query' }],
       variables: { search: 'query' },
     })
-    const result = await generateCodeSample('python', request)
+    const result = await generateCodeSample(langConfigs.python, request)
     expect(result).toBe(`requests.put("https://api.example.com/resource",
     headers={
       "Content-Type": "application/json"
@@ -464,6 +468,57 @@ describe('python', () => {
       "key": "value"
     }
 )`)
+  })
+})
+
+describe('custom languages', () => {
+  it('uses custom language config with target and client', async () => {
+    const nodeConfig: LanguageConfig = { lang: 'node', label: 'Node.js', highlighter: 'javascript', target: 'node', client: 'undici' }
+
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+    })
+    const result = await generateCodeSample(nodeConfig, request)
+    expect(result).toContain('undici')
+  })
+
+  it('generates code for POST request with custom language', async () => {
+    const nodeConfig: LanguageConfig = { lang: 'node', label: 'Node.js', highlighter: 'javascript', target: 'node', client: 'undici' }
+
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'POST',
+      body: { key: 'value' },
+    })
+    const result = await generateCodeSample(nodeConfig, request)
+    expect(result).toContain('undici')
+  })
+
+  it('allows overriding default language client', async () => {
+    const axiosConfig: LanguageConfig = { lang: 'javascript', label: 'JavaScript', highlighter: 'javascript', target: 'js', client: 'axios' }
+
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+    })
+    const result = await generateCodeSample(axiosConfig, request)
+    expect(result).toContain('axios')
+  })
+
+  it('returns empty string for language missing target/client', async () => {
+    const customConfig: LanguageConfig = { lang: 'custom', label: 'Custom', highlighter: 'plaintext' }
+
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+    })
+    const result = await generateCodeSample(customConfig, request)
+    expect(result).toBe('')
   })
 })
 
@@ -498,7 +553,7 @@ describe('update request', () => {
     },
     )
 
-    const result = await generateCodeSample('javascript', fixedRequest)
+    const result = await generateCodeSample(langConfigs.javascript, fixedRequest)
     expect(result).toBe(`fetch('https://api.example.com/resource?search=query', {
   method: 'PUT',
   headers: {

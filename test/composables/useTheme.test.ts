@@ -790,11 +790,6 @@ describe('codeSamples configuration', () => {
     themeConfig.reset()
   })
 
-  it('returns the default code samples languages', () => {
-    const result = themeConfig.getCodeSamplesLangs()
-    expect(result).toEqual(['curl', 'javascript', 'php', 'python'])
-  })
-
   it('returns the default code samples default language', () => {
     const result = themeConfig.getCodeSamplesDefaultLang()
     expect(result).toBe('curl')
@@ -808,24 +803,32 @@ describe('codeSamples configuration', () => {
         label: 'cURL',
         highlighter: 'bash',
         icon: 'curl',
+        target: 'shell',
+        client: 'curl',
       },
       {
         lang: 'javascript',
         label: 'JavaScript',
         highlighter: 'javascript',
         icon: '.js',
+        target: 'js',
+        client: 'fetch',
       },
       {
         lang: 'php',
         label: 'PHP',
         highlighter: 'php',
         icon: '.php',
+        target: 'php',
+        client: 'curl',
       },
       {
         lang: 'python',
         label: 'Python',
         highlighter: 'python',
         icon: '.py',
+        target: 'python',
+        client: 'requests',
       },
     ])
   })
@@ -845,30 +848,69 @@ describe('codeSamples configuration', () => {
     const customHeaders = { 'X-Custom-Header': 'value' }
 
     themeConfig.setCodeSamplesConfig({
-      langs: ['javascript', 'python', 'go'],
       defaultLang: 'python',
       availableLanguages: [
+        {
+          lang: 'javascript',
+          label: 'JavaScript',
+          highlighter: 'javascript',
+          icon: '.js',
+          target: 'js',
+          client: 'fetch',
+        },
+        {
+          lang: 'python',
+          label: 'Python',
+          highlighter: 'python',
+          icon: '.py',
+          target: 'python',
+          client: 'requests',
+        },
         {
           lang: 'go',
           label: 'Go',
           highlighter: 'go',
           icon: '.go',
+          target: 'go',
+          client: 'native',
         },
       ],
       generator: customGenerator,
       defaultHeaders: customHeaders,
     })
 
-    expect(themeConfig.getCodeSamplesLangs()).toEqual(['javascript', 'python', 'go'])
+    expect(themeConfig.getCodeSamplesAvailableLanguages()).toEqual([
+      expect.objectContaining({ lang: 'javascript' }),
+      expect.objectContaining({ lang: 'python' }),
+      expect.objectContaining({ lang: 'go' }),
+    ])
     expect(themeConfig.getCodeSamplesDefaultLang()).toBe('python')
 
     const availableLanguages = themeConfig.getCodeSamplesAvailableLanguages()
     expect(availableLanguages).toEqual([
       {
+        lang: 'javascript',
+        label: 'JavaScript',
+        highlighter: 'javascript',
+        icon: '.js',
+        target: 'js',
+        client: 'fetch',
+      },
+      {
+        lang: 'python',
+        label: 'Python',
+        highlighter: 'python',
+        icon: '.py',
+        target: 'python',
+        client: 'requests',
+      },
+      {
         lang: 'go',
         label: 'Go',
         highlighter: 'go',
         icon: '.go',
+        target: 'go',
+        client: 'native',
       },
     ])
 
@@ -876,21 +918,12 @@ describe('codeSamples configuration', () => {
     expect(themeConfig.getCodeSamplesDefaultHeaders()).toEqual(customHeaders)
   })
 
-  it('handles duplicate languages in langs array', () => {
-    themeConfig.setCodeSamplesConfig({
-      langs: ['javascript', 'javascript', 'python'],
-    })
-
-    expect(themeConfig.getCodeSamplesLangs()).toEqual(['javascript', 'python'])
-  })
-
   it('falls back to first available language when default language is not in available languages', () => {
     themeConfig.setCodeSamplesConfig({
-      langs: ['javascript', 'python'],
       defaultLang: 'ruby', // Not in the available languages
     })
 
-    expect(themeConfig.getCodeSamplesDefaultLang()).toBe('javascript')
+    expect(themeConfig.getCodeSamplesDefaultLang()).toBe('curl')
   })
 
   it('can setup icons', () => {
@@ -915,24 +948,32 @@ describe('codeSamples configuration', () => {
         label: 'cURL',
         highlighter: 'bash',
         icon: 'curl',
+        target: 'shell',
+        client: 'curl',
       },
       {
         lang: 'javascript',
         label: 'JavaScript',
         highlighter: 'javascript',
         icon: 'custom-js-icon',
+        target: 'js',
+        client: 'fetch',
       },
       {
         lang: 'php',
         label: 'PHP',
         highlighter: 'php',
         icon: '.php',
+        target: 'php',
+        client: 'curl',
       },
       {
         lang: 'python',
         label: 'Python',
         highlighter: 'python',
         icon: '.py',
+        target: 'python',
+        client: 'requests',
       },
     ])
   })
