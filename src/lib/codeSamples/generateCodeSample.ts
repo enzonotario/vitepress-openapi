@@ -1,32 +1,33 @@
-import type { ClientId, TargetId } from '@scalar/types/snippetz'
+import type { LanguageConfig } from '../../composables/useTheme'
 import { snippetz } from '@scalar/snippetz'
 import { buildHarRequest } from './buildHarRequest'
 import { buildRequest } from './buildRequest'
 import { OARequest } from './request'
 
-const languagesMap: Record<string, TargetId> = {
-  curl: 'shell',
-  javascript: 'js',
-  php: 'php',
-  python: 'python',
-}
-
-const clientsMap: Record<string, ClientId<TargetId>> = {
-  curl: 'curl',
-  javascript: 'fetch',
-  php: 'curl',
-  python: 'requests',
-}
-
-export async function generateCodeSample(lang: string, request: OARequest | any): Promise<string> {
+export async function generateCodeSample(
+  langConfig: LanguageConfig,
+  request: OARequest | any,
+): Promise<string> {
   const oaRequest = request instanceof OARequest
     ? request
     : buildRequest(request)
 
   const harRequest = buildHarRequest(oaRequest)
 
+  const { lang, target, client } = langConfig
+
+  if (!target) {
+    console.error(`Language "${lang}" has missing property "target" in availableLanguages`)
+    return ''
+  }
+
+  if (!client) {
+    console.error(`Language "${lang}" has missing property "client" in availableLanguages`)
+    return ''
+  }
+
   try {
-    return snippetz().print(languagesMap[lang], clientsMap[lang], harRequest) ?? ''
+    return snippetz().print(target as any, client as any, harRequest) ?? ''
   } catch (e) {
     console.error(e, request)
     return ''

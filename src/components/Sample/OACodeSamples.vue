@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import type { OperationData } from '@/lib/operation/operationData'
+import type { LanguageConfig } from '../../composables/useTheme'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
-import { computed, inject, ref, watch } from 'vue'
+import { inject, ref, watch } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OACodeBlock from '../Common/OACodeBlock.vue'
+
+type Sample = LanguageConfig & {
+  key: string
+  tabId: string
+  highlighter: string
+  source: string
+}
 
 const props = defineProps({
   operationId: {
     type: String,
     required: true,
-  },
-  codeSamples: {
-    type: Object,
-    default: () => ({}),
   },
 })
 
@@ -22,45 +26,74 @@ const themeConfig = useTheme()
 
 const availableLanguages = themeConfig.getCodeSamplesAvailableLanguages()
 
-const configuredLanguages = themeConfig.getCodeSamplesLangs()
-
 const generator = themeConfig.getCodeSamplesGenerator()
 
-const samples = ref(typeof props.codeSamples === 'object' && !Array.isArray(props.codeSamples)
-  ? Object.entries(props.codeSamples).map(([lang, source]) => ({
-      lang,
-      source,
-    }))
-  : props.codeSamples)
+const samples = ref<Sample[]>([])
 
-const defaultLang = computed(() => {
-  const defaultValue = themeConfig.getCodeSamplesDefaultLang()
+const activeSampleKey = ref('')
 
-  if (!samples.value?.find(sample => sample.lang === defaultValue)) {
-    return samples.value?.[0]?.lang
-  }
+const radioGroupName = `group-${props.operationId}`
 
-  return defaultValue
-})
+watch(operationData.playground.request, async (playgroundRequest, _, onInvalidate) => {
+  let cancelled = false
+  onInvalidate(() => {
+    cancelled = true
+  })
 
-const activeSample = ref(samples.value?.find(sample => sample.lang === defaultLang.value)?.lang)
-
-watch(operationData.playground.request, async (request) => {
-  if (!availableLanguages || !configuredLanguages || !generator) {
+  if (!availableLanguages || !generator) {
     return
   }
 
-  samples.value = await Promise.all(
-    availableLanguages
-      .filter(availableLanguage => configuredLanguages.includes(availableLanguage.lang))
-      .map(async availableLanguage => ({
-        ...availableLanguage,
-        source: await generator(availableLanguage.lang, request),
-      })),
+  const nextSamples = await Promise.all(
+    availableLanguages.map(async (langConfig) => {
+      const { lang, target, client, highlighter } = langConfig
+      const key = [lang, target, client]
+        .filter(Boolean)
+        .join('-')
+      const tabId = `tab-${props.operationId}-${key}`
+
+      try {
+        const source = await generator(langConfig, playgroundRequest)
+        if (!source) {
+          throw new Error('Code generator returned empty result.')
+        }
+
+        return {
+          ...langConfig,
+          key,
+          tabId,
+          highlighter: highlighter || 'plain',
+          source,
+        }
+      }
+      catch (error) {
+        console.error(`Failed to generate code sample for '${lang}'`, { langConfig, error })
+        return {
+          ...langConfig,
+          key,
+          tabId,
+          highlighter: 'shell',
+          source: `// Failed to generate sample.\n// Please check the console for details.`,
+        }
+      }
+    }),
   )
+
+  // Guard against stale data due to rapid updates of `operationData.playground.request`
+  if (cancelled) {
+    return
+  }
+  samples.value = nextSamples
+
+  if (!activeSampleKey.value || !samples.value.some(s => s.key === activeSampleKey.value)) {
+    const defaultLang = themeConfig.getCodeSamplesDefaultLang()
+    const defaultSample = samples.value.find(s => s.lang === defaultLang) || samples.value[0]
+    if (defaultSample) {
+      activeSampleKey.value = defaultSample.key
+    }
+  }
 }, {
   deep: true,
-  immediate: true,
 })
 </script>
 
@@ -71,30 +104,30 @@ watch(operationData.playground.request, async (request) => {
       class="vp-code-group vp-adaptive-theme mt-0"
     >
       <div class="tabs !m-0">
-        <template v-for="sample in samples" :key="sample.lang">
+        <template v-for="sample in samples" :key="sample.key">
           <input
-            :id="`tab-${props.operationId}-${sample.lang}`"
+            :id="sample.tabId"
             type="radio"
-            :name="`group-${props.operationId}`"
-            :checked="sample.lang === defaultLang"
-            @change="activeSample = sample.lang"
+            :name="radioGroupName"
+            :checked="activeSampleKey === sample.key"
+            @change="activeSampleKey = sample.key"
           >
           <label
-            :for="`tab-${props.operationId}-${sample.lang}`"
+            :for="sample.tabId"
             :data-title="sample.icon"
-          >{{ sample.label || sample.lang }}</label>
+          >{{ sample.label }}</label>
         </template>
       </div>
 
       <div class="blocks">
         <OACodeBlock
           v-for="sample in samples"
-          :key="sample.lang"
+          :key="sample.key"
           :code="sample.source"
           :lang="sample.highlighter"
           :label="sample.label"
-          :active="activeSample === sample.lang"
-          :class="{ active: sample.lang === defaultLang }"
+          :active="activeSampleKey === sample.key"
+          :class="{ active: activeSampleKey === sample.key }"
           class="!m-0"
         />
       </div>

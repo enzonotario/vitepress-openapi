@@ -175,7 +175,6 @@ export interface UseThemeConfig {
 }
 
 export interface CodeSamplesConfig {
-  langs: string[]
   defaultLang: string
   availableLanguages: LanguageConfig[]
   generator: GeneratorFunction
@@ -187,16 +186,24 @@ export interface LinksPrefixesConfig {
   operations: string
 }
 
-interface LanguageConfig {
+export interface LanguageConfig {
+  /** Unique identifier and Shiki highlighter language (e.g., 'curl', 'javascript', 'php') */
   lang: string
+  /** Display name shown in the UI */
   label: string
-  highlighter: string
+  /** Target language for @scalar/snippetz code generation (e.g., 'js', 'shell', 'python') */
+  target?: string
+  /** HTTP client for the target language (e.g., 'fetch', 'axios', 'curl') */
+  client?: string
+  /** Icon identifier for vitepress-plugin-group-icons */
   icon?: string
+  /** Shiki language for syntax highlighting (defaults to 'plain') */
+  highlighter?: string
 }
 
 export type PartialUseThemeConfig = Partial<UnwrapNestedRefs<UseThemeConfig>>
 
-type GeneratorFunction = (lang: string, request: OARequest) => Promise<string>
+type GeneratorFunction = (langConfig: LanguageConfig, request: OARequest) => Promise<string>
 
 type GetServersFunction = ({ method, path, operation }: { method: string, path: string, operation: ParsedOperation }) => string[] | null
 
@@ -220,24 +227,32 @@ export const availableLanguages: LanguageConfig[] = [
   {
     lang: 'curl',
     label: 'cURL',
+    target: 'shell',
+    client: 'curl',
     highlighter: 'bash',
     icon: 'curl',
   },
   {
     lang: 'javascript',
     label: 'JavaScript',
+    target: 'js',
+    client: 'fetch',
     highlighter: 'javascript',
     icon: '.js',
   },
   {
     lang: 'php',
     label: 'PHP',
+    target: 'php',
+    client: 'curl',
     highlighter: 'php',
     icon: '.php',
   },
   {
     lang: 'python',
     label: 'Python',
+    target: 'python',
+    client: 'requests',
     highlighter: 'python',
     icon: '.py',
   },
@@ -338,15 +353,9 @@ const defaultValues = {
     disableDownload: false,
   },
   codeSamples: {
-    langs: [
-      'curl',
-      'javascript',
-      'php',
-      'python',
-    ],
     defaultLang: 'curl',
     availableLanguages,
-    generator: (lang: string, request: OARequest) => generateCodeSample(lang, request),
+    generator: (langConfig: LanguageConfig, request: OARequest) => generateCodeSample(langConfig, request),
     defaultHeaders: {},
   },
   linksPrefixes: {
@@ -433,7 +442,6 @@ const themeConfig: UseThemeConfig = {
     disableDownload: ref(defaultValues.spec.disableDownload),
   },
   codeSamples: {
-    langs: defaultValues.codeSamples.langs,
     defaultLang: defaultValues.codeSamples.defaultLang,
     availableLanguages: defaultValues.codeSamples.availableLanguages,
     generator: defaultValues.codeSamples.generator,
@@ -884,19 +892,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     }
   }
 
-  function getCodeSamplesLangs() {
-    const codeSamples = ensureNestedProperty(themeConfig, 'codeSamples')
-
-    if (!codeSamples.langs) {
-      codeSamples.langs = defaultValues.codeSamples.langs
-    }
-
-    return codeSamples.langs.filter((lang, index, self) => self.indexOf(lang) === index)
-  }
-
   function getCodeSamplesDefaultLang() {
-    const availableLangs = getCodeSamplesLangs() || []
+    const availableLanguages = getCodeSamplesAvailableLanguages()
     const codeSamples = ensureNestedProperty(themeConfig, 'codeSamples')
+    const availableLangs = availableLanguages.map(l => l.lang)
 
     if (codeSamples.defaultLang && availableLangs.includes(codeSamples.defaultLang)) {
       return codeSamples.defaultLang
@@ -905,10 +904,12 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     return availableLangs[0]
   }
 
-  function getCodeSamplesAvailableLanguages() {
+  function getCodeSamplesAvailableLanguages(filter: Array<string> = []) {
     const codeSamples = ensureNestedProperty(themeConfig, 'codeSamples')
-
-    return codeSamples.availableLanguages
+    if (filter.length) {
+      return codeSamples.availableLanguages?.filter(lang => filter.includes(lang.lang)) || []
+    }
+    return codeSamples.availableLanguages || []
   }
 
   function getCodeSamplesGenerator() {
@@ -930,10 +931,6 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   function setCodeSamplesConfig(config: Partial<UnwrapNestedRefs<CodeSamplesConfig>>) {
     const codeSamples = ensureNestedProperty(themeConfig, 'codeSamples')
 
-    if (config.langs) {
-      codeSamples.langs = config.langs.filter((lang, index, self) => self.indexOf(lang) === index)
-    }
-
     if (config.defaultLang) {
       codeSamples.defaultLang = config.defaultLang
     }
@@ -953,20 +950,7 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
   function setCodeSamplesAvailableLanguages(languages: LanguageConfig[]) {
     const codeSamples = ensureNestedProperty(themeConfig, 'codeSamples')
-
-    if (!codeSamples.availableLanguages) {
-      codeSamples.availableLanguages = defaultValues.codeSamples.availableLanguages
-    }
-
-    const uniqueLanguages = [...new Set(languages.map(({ lang }) => lang))]
-
-    codeSamples.availableLanguages = uniqueLanguages.map((lang) => {
-      const language
-        = languages.find(l => l.lang === lang)
-          ?? availableLanguages.find(l => l.lang === lang)
-
-      return language || { lang, label: lang, highlighter: 'plaintext' }
-    })
+    codeSamples.availableLanguages = languages
   }
 
   function getLinksPrefixesConfig() {
@@ -1109,7 +1093,6 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     getWrapExamples,
     getSpecDisableDownload,
     setSpecConfig,
-    getCodeSamplesLangs,
     getCodeSamplesDefaultLang,
     getCodeSamplesAvailableLanguages,
     getCodeSamplesGenerator,

@@ -23,10 +23,10 @@ const shiki = useShiki()
 const html = ref(null)
 
 watch(
-  [() => props.code, () => isDark.value],
+  [() => props.code, () => props.lang, () => isDark.value],
   async () => {
     const codeToHighlight = typeof props.code === 'string' ? props.code : JSON.stringify(props.code, null, 2)
-    await shiki.init()
+    await shiki.ensureLanguage(props.lang)
     const highlightedCode = shiki.renderShiki(codeToHighlight, {
       lang: props.lang,
       theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',

@@ -56,7 +56,7 @@ export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOp
         availableLanguages.map(async (language) => {
           return {
             ...language,
-            source: await generateCodeSample(language.lang, request),
+            source: await generateCodeSample(language, request),
           }
         }),
       )
