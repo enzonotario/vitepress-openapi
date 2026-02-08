@@ -13,6 +13,7 @@
   "keywords": [
     "vitepress",
     "vitepress-theme",
+    "vitepress-plugin",
     "openapi"
   ],
   "exports": {
