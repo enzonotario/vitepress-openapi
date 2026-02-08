@@ -3,6 +3,7 @@ import type { OperationData } from '@/lib/operation/operationData'
 import type { LanguageConfig } from '../../composables/useTheme'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { inject, ref, watch } from 'vue'
+import { useShiki } from '../../composables/useShiki'
 import { useTheme } from '../../composables/useTheme'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
@@ -23,6 +24,8 @@ const props = defineProps({
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
 
 const themeConfig = useTheme()
+
+const shiki = useShiki()
 
 const availableLanguages = themeConfig.getCodeSamplesAvailableLanguages()
 
@@ -83,6 +86,15 @@ watch(operationData.playground.request, async (playgroundRequest, _, onInvalidat
   if (cancelled) {
     return
   }
+
+  // Preload all highlighter languages
+  const uniqueHighlighters = [...new Set(nextSamples.map(s => s.highlighter).filter(Boolean))]
+  await Promise.all(uniqueHighlighters.map(lang => shiki.ensureLanguage(lang)))
+
+  if (cancelled) {
+    return
+  }
+
   samples.value = nextSamples
 
   if (!activeSampleKey.value || !samples.value.some(s => s.key === activeSampleKey.value)) {
@@ -94,6 +106,7 @@ watch(operationData.playground.request, async (playgroundRequest, _, onInvalidat
   }
 }, {
   deep: true,
+  immediate: true,
 })
 </script>
 
