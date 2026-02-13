@@ -46,9 +46,18 @@ const selectPlaceholder = computed(() =>
   formatValueForPlaceholder(parameterExample.value ?? t('Select')),
 )
 
-const inputPlaceholder = computed(() =>
-  formatValueForPlaceholder(parameterExample.value ?? ''),
-)
+const inputPlaceholder = computed(() => {
+  if (parameterExample.value) {
+    return formatValueForPlaceholder(parameterExample.value)
+  }
+  // When x-playground-example is empty, fall back to the raw example for
+  // placeholder display so users still see the expected format as a hint.
+  const rawExample = props.parameter?.example ?? props.parameter?.schema?.example
+  if (rawExample != null) {
+    return formatValueForPlaceholder(rawExample)
+  }
+  return ''
+})
 
 const displayValue = computed(() => {
   if (typeof props.modelValue === 'object' && props.modelValue !== null) {
