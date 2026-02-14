@@ -103,7 +103,7 @@ export interface PlaygroundConfig {
   }
 
   examples?: {
-    behavior?: PlaygroundExampleBehavior
+    behavior?: Ref<PlaygroundExampleBehavior>
   }
 }
 
