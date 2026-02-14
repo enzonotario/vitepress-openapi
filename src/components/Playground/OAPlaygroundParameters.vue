@@ -2,11 +2,13 @@
 import type { OperationData } from '@/lib/operation/operationData'
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { ComputedRef } from 'vue'
+import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
 import { buildRequest } from '@/lib/codeSamples/buildRequest'
 import { getPropertyExample } from '@/lib/examples/getPropertyExample'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { createCompositeKey } from '@/lib/playground/createCompositeKey'
+import { useExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import { isLocalStorageAvailable } from '@/lib/utils/utils'
 import { useI18n } from '@byjohann/vue-i18n'
 import { useStorage } from '@vueuse/core'
@@ -50,6 +52,10 @@ const props = defineProps({
   examples: {
     type: Object,
     required: false,
+  },
+  exampleBehavior: {
+    type: String as () => PlaygroundExampleBehavior,
+    default: 'value',
   },
   requestBody: {
     type: Object,
@@ -121,14 +127,14 @@ const customServer = isLocalStorageAvailable()
   ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
   : ref(selectedServer.value)
 
-function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
+function initializeVariables(parameters: OpenAPIV3.ParameterObject[], behavior: PlaygroundExampleBehavior) {
+  const useValue = useExampleForValue(behavior)
   return parameters
     .reduce((acc: Record<string, string>, parameter: OpenAPIV3.ParameterObject) => {
       if (!parameter.name) {
         return acc
       }
-
-      acc[parameter.name] = getPropertyExample(parameter) ?? ''
+      acc[parameter.name] = useValue ? (getPropertyExample(parameter) ?? '') : ''
       return acc
     }, {})
 }
@@ -136,9 +142,9 @@ function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
 const variables = operationData.playground.parameterValues
 
 const initialVariables = {
-  ...initializeVariables(headerParameters),
-  ...initializeVariables(pathParameters),
-  ...initializeVariables(queryParameters),
+  ...initializeVariables(headerParameters, props.exampleBehavior),
+  ...initializeVariables(pathParameters, props.exampleBehavior),
+  ...initializeVariables(queryParameters, props.exampleBehavior),
 }
 
 if (Object.keys(variables.value).length === 0) {
@@ -191,9 +197,11 @@ watch(selectedSchemeId, (schemeId) => {
     return
   }
 
+  const useValue = useExampleForValue(props.exampleBehavior)
   authorizations.value = Object.keys(schemes).map((name) => {
     const scheme = schemes[name] as PlaygroundSecurityScheme
-    const example = getPropertyExample(scheme) ?? usePlayground().getSecuritySchemeDefaultValue(scheme)
+    const defaultVal = usePlayground().getSecuritySchemeDefaultValue(scheme)
+    const example = useValue ? (getPropertyExample(scheme) ?? defaultVal) : defaultVal
     return {
       type: scheme.type,
       scheme: scheme.scheme,
@@ -295,6 +303,7 @@ watch(selectedSchemeId, (schemeId) => {
             v-model="variables[parameter.name ?? '']"
             :parameter="parameter"
             :composite-key="createCompositeKey({ parameter, operationId: props.operationId })"
+            :example-behavior="props.exampleBehavior"
             :enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })]"
             @update:enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })] = $event"
             @submit="emits('submit')"
@@ -327,6 +336,7 @@ watch(selectedSchemeId, (schemeId) => {
           v-model="variables[parameter.name ?? '']"
           :parameter="parameter"
           :composite-key="createCompositeKey({ parameter, operationId: props.operationId })"
+          :example-behavior="props.exampleBehavior"
           :enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })]"
           @update:enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })] = $event"
           @submit="emits('submit')"
@@ -346,6 +356,7 @@ watch(selectedSchemeId, (schemeId) => {
         :request-body="props.requestBody"
         :enabled-parameters="enabledParameters"
         :examples="props.examples"
+        :example-behavior="props.exampleBehavior"
         @update:body="body = $event"
         @update:enabled="(key, value) => enabledParameters[key] = value"
         @submit="emits('submit')"

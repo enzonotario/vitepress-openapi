@@ -533,6 +533,38 @@ describe('playground configuration', () => {
   })
 })
 
+describe('playground examples behavior', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns default value', () => {
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('value')
+  })
+
+  it('initializes with custom playground.examples.behavior', () => {
+    useTheme({
+      playground: {
+        examples: {
+          behavior: 'placeholder',
+        },
+      },
+    })
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('placeholder')
+  })
+
+  it('sets and gets playground examples behavior', () => {
+    themeConfig.setPlaygroundExamplesBehavior('ignore')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('ignore')
+    themeConfig.setPlaygroundExamplesBehavior('placeholder')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('placeholder')
+    themeConfig.setPlaygroundExamplesBehavior('value')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('value')
+  })
+})
+
 describe('operation configuration', () => {
   const themeConfig = useTheme()
 

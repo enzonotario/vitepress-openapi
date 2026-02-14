@@ -92,12 +92,18 @@ export interface ResponseConfig {
   }
 }
 
+export type PlaygroundExampleBehavior = 'placeholder' | 'value' | 'ignore'
+
 export interface PlaygroundConfig {
   jsonEditor?: {
     mode?: Ref<PlaygroundJsonEditorMode>
     mainMenuBar?: Ref<boolean>
     navigationBar?: Ref<boolean>
     statusBar?: Ref<boolean>
+  }
+
+  examples?: {
+    behavior?: PlaygroundExampleBehavior
   }
 }
 
@@ -302,6 +308,9 @@ const defaultValues = {
       navigationBar: false,
       statusBar: false,
     },
+    examples: {
+      behavior: 'value' as PlaygroundExampleBehavior,
+    },
   },
   security: {
     defaultScheme: null as string | null,
@@ -411,6 +420,9 @@ const themeConfig: UseThemeConfig = {
       mainMenuBar: ref(defaultValues.playground.jsonEditor.mainMenuBar),
       navigationBar: ref(defaultValues.playground.jsonEditor.navigationBar),
       statusBar: ref(defaultValues.playground.jsonEditor.statusBar),
+    },
+    examples: {
+      behavior: ref(defaultValues.playground.examples?.behavior ?? 'value'),
     },
   },
   security: {
@@ -532,6 +544,9 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     }
     if (config.playground?.jsonEditor?.statusBar !== undefined) {
       ensureNestedRefProperty(themeConfig, ['playground', 'jsonEditor'], 'statusBar', config.playground.jsonEditor.statusBar)
+    }
+    if (config.playground?.examples?.behavior !== undefined) {
+      ensureNestedRefProperty(themeConfig, ['playground', 'examples'], 'behavior', config.playground.examples.behavior)
     }
 
     // Security
@@ -751,6 +766,14 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
   function setPlaygroundJsonEditorStatusBar(value: boolean) {
     ensureNestedRefProperty(themeConfig, ['playground', 'jsonEditor'], 'statusBar', value)
+  }
+
+  function getPlaygroundExamplesBehavior(): PlaygroundExampleBehavior {
+    return themeConfig?.playground?.examples?.behavior?.value ?? 'value'
+  }
+
+  function setPlaygroundExamplesBehavior(value: PlaygroundExampleBehavior) {
+    ensureNestedRefProperty(themeConfig, ['playground', 'examples'], 'behavior', value)
   }
 
   function getSecurityDefaultScheme(): string | null | undefined {
@@ -1075,6 +1098,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setPlaygroundJsonEditorNavigationBar,
     getPlaygroundJsonEditorStatusBar,
     setPlaygroundJsonEditorStatusBar,
+    getPlaygroundExamplesBehavior,
+    setPlaygroundExamplesBehavior,
     getSecurityDefaultScheme,
     setSecurityDefaultScheme,
     getOperationBadges,

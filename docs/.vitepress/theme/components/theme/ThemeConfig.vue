@@ -25,6 +25,7 @@ const responseBodyViews = requestBodyViews
 const jsonViewerRenderers = ['vue-json-pretty', 'shiki']
 const responseCodeSelectors = ['select', 'tabs']
 const playgroundModes = ['text', 'tree', 'table']
+const playgroundExampleBehaviors = ['value', 'placeholder', 'ignore'] as const
 const operationBadges = ['deprecated', 'operationId']
 
 const toggleBadge = (badge: string) => {
@@ -326,6 +327,19 @@ const toggleBadge = (badge: string) => {
           >
           {{ mode }}
         </label>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span>Examples behavior</span>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4">
+          <label v-for="behavior in playgroundExampleBehaviors" :key="behavior" class="flex items-center gap-2">
+            <input
+              type="radio"
+              :checked="themeConfig.getPlaygroundExamplesBehavior() === behavior"
+              @change="themeConfig.setPlaygroundExamplesBehavior(behavior)"
+            >
+            {{ behavior }}
+          </label>
+        </div>
       </div>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4">
         <label for="playgroundMainMenuBar" class="flex items-center gap-2">
