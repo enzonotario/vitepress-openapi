@@ -57,6 +57,30 @@ The Playground will prioritize examples in the following order:
 5. `example` at the schema level
 6. First item in `examples` array at the schema level
 
+## Examples behavior
+
+You can control how examples are used in the Playground with `playground.examples.behavior`:
+
+| Value | Description |
+|-------|-------------|
+| `value` | Example is used as both the placeholder and the initial value (default). |
+| `placeholder` | Example is shown only as placeholder text; inputs start empty. |
+| `ignore` | Example is not used for placeholder or initial value. |
+
+Configure it via `useTheme` in your theme or in a page:
+
+```ts
+useTheme({
+  playground: {
+    examples: {
+      behavior: 'placeholder',
+    },
+  },
+})
+```
+
+This applies to parameters, request body, and security scheme inputs.
+
 ## Example
 
 You can see a live example of this in action in the [Playground Examples API](/tests/playground-examples).
