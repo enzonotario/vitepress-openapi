@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import type { OAExampleObject } from '../../types'
 import { createCompositeKey } from '@/lib/playground/createCompositeKey'
+import { useExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import {
   isFormUrlEncoded,
   isJson,
@@ -29,6 +31,7 @@ interface Props {
   examples?: {
     [key: string]: OAExampleObject
   }
+  exampleBehavior?: PlaygroundExampleBehavior
 }
 
 const props = defineProps<Props>()
@@ -55,12 +58,13 @@ const shouldUseInput = computed(() => !props.requestBody?.content?.[props.conten
 
 const bodyParameters = computed<BodyParameter[]>(() => {
   if (shouldUseInput.value) {
+    const useValue = useExampleForValue(props.exampleBehavior ?? 'value')
     return [
       {
         name: 'body',
         in: 'body',
         schema: props.requestBody?.content?.[props.contentType]?.schema,
-        example: props.examples ? Object.values(props.examples)[0]?.value : null,
+        example: useValue && props.examples ? Object.values(props.examples)[0]?.value : null,
       } as BodyParameter,
     ]
   }
@@ -176,7 +180,8 @@ watch(() => props.body, (newBody: any) => {
 
 // Watch for changes in content type to update body value.
 watch(() => props.contentType, () => {
-  bodyValue.value = Object.values(props.examples ?? {})[0]?.value
+  const useValue = useExampleForValue(props.exampleBehavior ?? 'value')
+  bodyValue.value = useValue ? Object.values(props.examples ?? {})[0]?.value : null
 }, { immediate: true })
 </script>
 
@@ -216,6 +221,7 @@ watch(() => props.contentType, () => {
         :model-value="getParameterValue(item.parameter)"
         :parameter="item.parameter"
         :composite-key="item.compositeKey"
+        :example-behavior="props.exampleBehavior ?? 'value'"
         :enabled="item.enabled"
         :hide-label="parametersWithKeys.length === 1"
         @update:model-value="updateParameterValue(item.parameter, $event)"

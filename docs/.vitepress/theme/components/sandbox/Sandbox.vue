@@ -46,6 +46,7 @@ function share() {
     ...themeConfig.getState(),
     theme: undefined,
     i18n: undefined,
+    highlighterTheme: undefined,
   }))
 
   const sandboxDataQuery = compressToURL(JSON.stringify({

@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import { getPropertyExample } from '@/lib/examples/getPropertyExample'
 import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
+import { useExampleForPlaceholder, useExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineEmits, defineProps, onMounted } from 'vue'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
@@ -22,6 +24,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  exampleBehavior: {
+    type: String as () => PlaygroundExampleBehavior,
+    default: 'value',
+  },
   enabled: {
     type: Boolean,
     default: true,
@@ -42,12 +48,20 @@ const { t } = useI18n()
 
 const parameterExample = computed(() => getPropertyExample(props.parameter))
 
+const exampleForPlaceholder = computed(() =>
+  useExampleForPlaceholder(props.exampleBehavior) ? parameterExample.value : null,
+)
+
+const exampleForValue = computed(() =>
+  useExampleForValue(props.exampleBehavior) ? parameterExample.value : null,
+)
+
 const selectPlaceholder = computed(() =>
-  formatValueForPlaceholder(parameterExample.value ?? t('Select')),
+  formatValueForPlaceholder(exampleForPlaceholder.value ?? t('Select')),
 )
 
 const inputPlaceholder = computed(() =>
-  formatValueForPlaceholder(parameterExample.value ?? ''),
+  formatValueForPlaceholder(exampleForPlaceholder.value ?? ''),
 )
 
 const displayValue = computed(() => {
@@ -59,7 +73,7 @@ const displayValue = computed(() => {
 
 onMounted(() => {
   if (props.parameter.schema?.enum) {
-    emits('update:modelValue', parameterExample.value ?? props.parameter.schema.enum[0])
+    emits('update:modelValue', exampleForValue.value ?? props.parameter.schema.enum[0])
   }
 })
 
