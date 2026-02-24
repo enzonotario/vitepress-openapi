@@ -14,4 +14,3 @@ describe('parseOpenapi circular references', () => {
     expect(parentProp?.meta?.isCircularReference).toBe(true)
   })
 })
-

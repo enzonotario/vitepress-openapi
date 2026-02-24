@@ -59,7 +59,7 @@ The Playground will prioritize examples in the following order:
 
 ## Examples behavior
 
-You can control how examples are used in the Playground with `playground.examples.behavior`:
+You can control how examples are used in the Playground. Both `behavior` and `playgroundExampleBehavior` accept:
 
 | Value | Description |
 |-------|-------------|
@@ -67,13 +67,22 @@ You can control how examples are used in the Playground with `playground.example
 | `placeholder` | Example is shown only as placeholder text; inputs start empty. |
 | `ignore` | Example is not used for placeholder or initial value. |
 
-Configure it via `useTheme` in your theme or in a page:
+### `behavior`
+
+Controls how the standard `example` / `examples` fields are applied. Defaults to `value`.
+
+### `playgroundExampleBehavior`
+
+Controls how `x-playground-example` is applied. Defaults to `value`.
+
+This allows you to configure each source independently. For example, to show standard examples only as placeholders while still pre-filling inputs with `x-playground-example` values:
 
 ```ts
 useTheme({
   playground: {
     examples: {
       behavior: 'placeholder',
+      playgroundExampleBehavior: 'value',
     },
   },
 })

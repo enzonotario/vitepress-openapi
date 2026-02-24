@@ -104,6 +104,7 @@ export interface PlaygroundConfig {
 
   examples?: {
     behavior?: Ref<PlaygroundExampleBehavior>
+    playgroundExampleBehavior?: Ref<PlaygroundExampleBehavior>
   }
 }
 
@@ -310,6 +311,7 @@ const defaultValues = {
     },
     examples: {
       behavior: 'value' as PlaygroundExampleBehavior,
+      playgroundExampleBehavior: 'value' as PlaygroundExampleBehavior,
     },
   },
   security: {
@@ -423,6 +425,7 @@ const themeConfig: UseThemeConfig = {
     },
     examples: {
       behavior: ref(defaultValues.playground.examples?.behavior ?? 'value'),
+      playgroundExampleBehavior: ref(defaultValues.playground.examples?.playgroundExampleBehavior ?? 'value'),
     },
   },
   security: {
@@ -547,6 +550,9 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     }
     if (config.playground?.examples?.behavior !== undefined) {
       ensureNestedRefProperty(themeConfig, ['playground', 'examples'], 'behavior', config.playground.examples.behavior)
+    }
+    if (config.playground?.examples?.playgroundExampleBehavior !== undefined) {
+      ensureNestedRefProperty(themeConfig, ['playground', 'examples'], 'playgroundExampleBehavior', config.playground.examples.playgroundExampleBehavior)
     }
 
     // Security
@@ -774,6 +780,14 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
   function setPlaygroundExamplesBehavior(value: PlaygroundExampleBehavior) {
     ensureNestedRefProperty(themeConfig, ['playground', 'examples'], 'behavior', value)
+  }
+
+  function getPlaygroundXExampleBehavior(): PlaygroundExampleBehavior {
+    return themeConfig?.playground?.examples?.playgroundExampleBehavior?.value ?? 'value'
+  }
+
+  function setPlaygroundXExampleBehavior(value: PlaygroundExampleBehavior) {
+    ensureNestedRefProperty(themeConfig, ['playground', 'examples'], 'playgroundExampleBehavior', value)
   }
 
   function getSecurityDefaultScheme(): string | null | undefined {
@@ -1100,6 +1114,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setPlaygroundJsonEditorStatusBar,
     getPlaygroundExamplesBehavior,
     setPlaygroundExamplesBehavior,
+    getPlaygroundXExampleBehavior,
+    setPlaygroundXExampleBehavior,
     getSecurityDefaultScheme,
     setSecurityDefaultScheme,
     getOperationBadges,

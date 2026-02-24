@@ -321,4 +321,3 @@ describe('useShiki error handling', () => {
     expect(mockedCreate).toHaveBeenCalledTimes(2)
   })
 })
-

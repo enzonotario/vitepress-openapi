@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
-import { getPropertyExample } from '@/lib/examples/getPropertyExample'
 import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
-import { useExampleForPlaceholder, useExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
+import { resolveExampleForPlaceholder, resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineEmits, defineProps, onMounted } from 'vue'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
@@ -28,6 +27,10 @@ const props = defineProps({
     type: String as () => PlaygroundExampleBehavior,
     default: 'value',
   },
+  xExampleBehavior: {
+    type: String as () => PlaygroundExampleBehavior,
+    default: 'value',
+  },
   enabled: {
     type: Boolean,
     default: true,
@@ -46,14 +49,12 @@ const emits = defineEmits([
 
 const { t } = useI18n()
 
-const parameterExample = computed(() => getPropertyExample(props.parameter))
-
 const exampleForPlaceholder = computed(() =>
-  useExampleForPlaceholder(props.exampleBehavior) ? parameterExample.value : null,
+  resolveExampleForPlaceholder(props.parameter, props.exampleBehavior, props.xExampleBehavior),
 )
 
 const exampleForValue = computed(() =>
-  useExampleForValue(props.exampleBehavior) ? parameterExample.value : null,
+  resolveExampleForValue(props.parameter, props.exampleBehavior, props.xExampleBehavior),
 )
 
 const selectPlaceholder = computed(() =>

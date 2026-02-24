@@ -341,34 +341,50 @@ const toggleBadge = (badge: string) => {
           </label>
         </div>
       </div>
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4">
-        <label for="playgroundMainMenuBar" class="flex items-center gap-2">
-          <input
-            id="playgroundMainMenuBar"
-            type="checkbox"
-            :checked="themeConfig.getPlaygroundJsonEditorMainMenuBar()"
-            @change="themeConfig.setPlaygroundJsonEditorMainMenuBar(($event.target as HTMLInputElement).checked)"
-          >
-          Main menu bar
-        </label>
-        <label for="playgroundNavigationBar" class="flex items-center gap-2">
-          <input
-            id="playgroundNavigationBar"
-            type="checkbox"
-            :checked="themeConfig.getPlaygroundJsonEditorNavigationBar()"
-            @change="themeConfig.setPlaygroundJsonEditorNavigationBar(($event.target as HTMLInputElement).checked)"
-          >
-          Navigation bar
-        </label>
-        <label for="playgroundStatusBar" class="flex items-center gap-2">
-          <input
-            id="playgroundStatusBar"
-            type="checkbox"
-            :checked="themeConfig.getPlaygroundJsonEditorStatusBar()"
-            @change="themeConfig.setPlaygroundJsonEditorStatusBar(($event.target as HTMLInputElement).checked)"
-          >
-          Status bar
-        </label>
+      <div class="flex flex-col gap-1">
+        <span>x-playground-example behavior</span>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4">
+          <label v-for="behavior in playgroundExampleBehaviors" :key="`x-${behavior}`" class="flex items-center gap-2">
+            <input
+              type="radio"
+              :checked="themeConfig.getPlaygroundXExampleBehavior() === behavior"
+              @change="themeConfig.setPlaygroundXExampleBehavior(behavior)"
+            >
+            {{ behavior }}
+          </label>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1">
+        <span>JSON editor UI elements</span>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4">
+          <label for="playgroundMainMenuBar" class="flex items-center gap-2">
+            <input
+              id="playgroundMainMenuBar"
+              type="checkbox"
+              :checked="themeConfig.getPlaygroundJsonEditorMainMenuBar()"
+              @change="themeConfig.setPlaygroundJsonEditorMainMenuBar(($event.target as HTMLInputElement).checked)"
+            >
+            Main menu bar
+          </label>
+          <label for="playgroundNavigationBar" class="flex items-center gap-2">
+            <input
+              id="playgroundNavigationBar"
+              type="checkbox"
+              :checked="themeConfig.getPlaygroundJsonEditorNavigationBar()"
+              @change="themeConfig.setPlaygroundJsonEditorNavigationBar(($event.target as HTMLInputElement).checked)"
+            >
+            Navigation bar
+          </label>
+          <label for="playgroundStatusBar" class="flex items-center gap-2">
+            <input
+              id="playgroundStatusBar"
+              type="checkbox"
+              :checked="themeConfig.getPlaygroundJsonEditorStatusBar()"
+              @change="themeConfig.setPlaygroundJsonEditorStatusBar(($event.target as HTMLInputElement).checked)"
+            >
+            Status bar
+          </label>
+        </div>
       </div>
     </div>
 

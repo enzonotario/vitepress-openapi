@@ -74,6 +74,8 @@ const operationCols = computed(() => themeConfig.getOperationCols())
 
 const exampleBehavior = computed(() => themeConfig.getPlaygroundExamplesBehavior())
 
+const xExampleBehavior = computed(() => themeConfig.getPlaygroundXExampleBehavior())
+
 const examples = computed(() => {
   const selectedContentTypeValue = operationData.requestBody.selectedContentType.value
 
@@ -126,6 +128,7 @@ onBeforeUnmount(() => {
       :security-ui="props.securityUi"
       :examples="examples"
       :example-behavior="exampleBehavior"
+      :x-example-behavior="xExampleBehavior"
       :request-body="props.requestBody"
       @submit="onSubmit"
     />

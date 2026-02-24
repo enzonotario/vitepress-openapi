@@ -32,6 +32,7 @@ interface Props {
     [key: string]: OAExampleObject
   }
   exampleBehavior?: PlaygroundExampleBehavior
+  xExampleBehavior?: PlaygroundExampleBehavior
 }
 
 const props = defineProps<Props>()
@@ -222,6 +223,7 @@ watch(() => props.contentType, () => {
         :parameter="item.parameter"
         :composite-key="item.compositeKey"
         :example-behavior="props.exampleBehavior ?? 'value'"
+        :x-example-behavior="props.xExampleBehavior ?? 'value'"
         :enabled="item.enabled"
         :hide-label="parametersWithKeys.length === 1"
         @update:model-value="updateParameterValue(item.parameter, $event)"
