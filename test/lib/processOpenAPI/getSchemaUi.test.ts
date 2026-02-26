@@ -105,6 +105,85 @@ const fixtures: Record<string, FixtureTest> = {
     },
   },
 
+  'schema with additionalProperties referencing nested object': {
+    jsonSchema: {
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          active: { type: 'boolean' },
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        {
+          meta: {
+            isAdditionalProperties: true,
+          },
+          name: 'additionalProperties',
+          required: false,
+          types: ['object'],
+          properties: [
+            { name: 'name', types: ['string'], required: false },
+            { name: 'active', types: ['boolean'], required: false },
+          ],
+        },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      additionalProperties: {
+        name: 'string',
+        active: true,
+      },
+    },
+  },
+
+  'schema with x-additionalPropertiesName': {
+    jsonSchema: {
+      type: 'object',
+      'x-additionalPropertiesName': '{key}',
+      additionalProperties: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      meta: {
+        extra: {
+          'x-additionalPropertiesName': '{key}',
+        },
+      },
+      properties: [
+        {
+          meta: {
+            isAdditionalProperties: true,
+          },
+          name: '{key}',
+          required: false,
+          types: ['object'],
+          properties: [
+            { name: 'name', types: ['string'], required: false },
+          ],
+        },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      '{key}': {
+        name: 'string',
+      },
+    },
+  },
+
   'empty schema returns empty array': {
     jsonSchema: {},
     schemaUi: [],
