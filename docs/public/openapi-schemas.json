@@ -218,6 +218,44 @@
         }
       }
     },
+    "/additional-properties-nested": {
+      "get": {
+        "summary": "Get a map with nested object values",
+        "operationId": "getAdditionalPropertiesNested",
+        "description": "Example of a JSON object using additionalProperties with a complex nested schema.",
+        "responses": {
+          "200": {
+            "description": "A map of string keys to nested objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NestedAdditionalProperties"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/additional-properties-named": {
+      "get": {
+        "summary": "Get a map with x-additionalPropertiesName",
+        "operationId": "getAdditionalPropertiesNamed",
+        "description": "Example of a JSON object using additionalProperties with a custom key name via x-additionalPropertiesName extension.",
+        "responses": {
+          "200": {
+            "description": "A map keyed by ACCESS_UUID to permission objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessPermissionsMap"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user-role": {
       "get": {
         "summary": "Get user role using oneOf constants",
@@ -1457,6 +1495,82 @@
             "processingTime": 235.45,
             "region": "us-west-1",
             "version": "v2.3.1"
+          }
+        }
+      },
+      "NestedAdditionalProperties": {
+        "type": "object",
+        "description": "A map where each key is a dynamic string and each value is a nested object with multiple properties. Demonstrates additionalProperties with a complex schema.",
+        "additionalProperties": {
+          "type": "object",
+          "description": "Nested object value for each map entry",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Display name for this entry"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Whether this entry is currently active"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Timestamp when the entry was created"
+            }
+          }
+        },
+        "example": {
+          "entry-1": {
+            "name": "First Entry",
+            "active": true,
+            "createdAt": "2024-01-01T00:00:00Z"
+          },
+          "entry-2": {
+            "name": "Second Entry",
+            "active": false,
+            "createdAt": "2024-06-15T12:30:00Z"
+          }
+        }
+      },
+      "AccessPermissionsMap": {
+        "type": "object",
+        "description": "A map of access UUIDs to permission objects. Uses x-additionalPropertiesName to label the key as {ACCESS_UUID} instead of the generic 'additionalProperties'.",
+        "x-additionalPropertiesName": "{ACCESS_UUID}",
+        "additionalProperties": {
+          "type": "object",
+          "description": "Permission set associated with a given access UUID",
+          "properties": {
+            "role": {
+              "type": "string",
+              "description": "The role granted by this access entry",
+              "enum": ["read", "write", "admin"]
+            },
+            "expiresAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When this access permission expires"
+            },
+            "scopes": {
+              "type": "array",
+              "description": "List of permission scopes granted",
+              "items": {
+                "type": "string",
+                "description": "A single permission scope"
+              }
+            }
+          }
+        },
+        "example": {
+          "550e8400-e29b-41d4-a716-446655440000": {
+            "role": "admin",
+            "expiresAt": "2025-12-31T23:59:59Z",
+            "scopes": ["read", "write", "delete"]
+          },
+          "6ba7b810-9dad-11d1-80b4-00c04fd430c8": {
+            "role": "read",
+            "expiresAt": "2024-06-30T23:59:59Z",
+            "scopes": ["read"]
           }
         }
       },
