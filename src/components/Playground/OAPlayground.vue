@@ -3,7 +3,7 @@ import type { OperationData } from '@/lib/operation/operationData'
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { useI18n } from '@byjohann/vue-i18n'
-import { computed, defineProps, inject, onBeforeUnmount } from 'vue'
+import { computed, inject, onBeforeUnmount } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
 import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'
@@ -72,6 +72,10 @@ const themeConfig = useTheme()
 
 const operationCols = computed(() => themeConfig.getOperationCols())
 
+const exampleBehavior = computed(() => themeConfig.getPlaygroundExamplesBehavior())
+
+const xExampleBehavior = computed(() => themeConfig.getPlaygroundXExampleBehavior())
+
 const examples = computed(() => {
   const selectedContentTypeValue = operationData.requestBody.selectedContentType.value
 
@@ -123,6 +127,8 @@ onBeforeUnmount(() => {
       :parameters="props.parameters"
       :security-ui="props.securityUi"
       :examples="examples"
+      :example-behavior="exampleBehavior"
+      :x-example-behavior="xExampleBehavior"
       :request-body="props.requestBody"
       @submit="onSubmit"
     />

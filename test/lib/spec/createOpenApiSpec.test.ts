@@ -341,4 +341,3 @@ describe('createOpenApiSpec with different servers for specific path', () => {
     ])
   })
 })
-

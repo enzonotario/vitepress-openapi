@@ -63,7 +63,7 @@ function firstFromExamples(
   }
 }
 
-export function getPropertyExample(property: any): any {
+export function getPlaygroundSpecificExample(property: any): any {
   if (property?.['x-playground-example'] !== undefined) {
     return property['x-playground-example']
   }
@@ -72,6 +72,10 @@ export function getPropertyExample(property: any): any {
     return property.schema['x-playground-example']
   }
 
+  return null
+}
+
+export function getStandardExample(property: any): any {
   if (property?.example !== undefined) {
     return property.example
   }
@@ -103,4 +107,8 @@ export function getPropertyExample(property: any): any {
   }
 
   return null
+}
+
+export function getPropertyExample(property: any): any {
+  return getPlaygroundSpecificExample(property) ?? getStandardExample(property)
 }

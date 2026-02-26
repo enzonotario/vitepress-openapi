@@ -533,6 +533,77 @@ describe('playground configuration', () => {
   })
 })
 
+describe('playground examples behavior', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns default value', () => {
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('value')
+  })
+
+  it('initializes with custom playground.examples.behavior', () => {
+    useTheme({
+      playground: {
+        examples: {
+          behavior: 'placeholder',
+        },
+      },
+    })
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('placeholder')
+  })
+
+  it('sets and gets playground examples behavior', () => {
+    themeConfig.setPlaygroundExamplesBehavior('ignore')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('ignore')
+    themeConfig.setPlaygroundExamplesBehavior('placeholder')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('placeholder')
+    themeConfig.setPlaygroundExamplesBehavior('value')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('value')
+  })
+})
+
+describe('playground x-playground-example behavior', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns default value', () => {
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('value')
+  })
+
+  it('initializes with custom playground.examples.playgroundExampleBehavior', () => {
+    useTheme({
+      playground: {
+        examples: {
+          playgroundExampleBehavior: 'placeholder',
+        },
+      },
+    })
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('placeholder')
+  })
+
+  it('sets and gets x-playground-example behavior independently from behavior', () => {
+    themeConfig.setPlaygroundExamplesBehavior('placeholder')
+    themeConfig.setPlaygroundXExampleBehavior('value')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('placeholder')
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('value')
+  })
+
+  it('sets and gets playground x-example behavior', () => {
+    themeConfig.setPlaygroundXExampleBehavior('ignore')
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('ignore')
+    themeConfig.setPlaygroundXExampleBehavior('placeholder')
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('placeholder')
+    themeConfig.setPlaygroundXExampleBehavior('value')
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('value')
+  })
+})
+
 describe('operation configuration', () => {
   const themeConfig = useTheme()
 
