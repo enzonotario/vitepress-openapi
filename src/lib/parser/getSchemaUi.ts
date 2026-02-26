@@ -234,6 +234,7 @@ class UiPropertyFactory {
               schema.items.properties,
               schema.items.required || [],
               schema.items.additionalProperties,
+              schema.items['x-additionalPropertiesName'],
             )
           : undefined
 
@@ -334,6 +335,7 @@ class UiPropertyFactory {
         schema.properties,
         schema.required || [],
         schema.additionalProperties,
+        schema['x-additionalPropertiesName'],
       )
     } else if (schema.type === undefined) {
       if (schema.properties || schema.additionalProperties) {
@@ -342,6 +344,7 @@ class UiPropertyFactory {
           schema.properties,
           schema.required || [],
           schema.additionalProperties,
+          schema['x-additionalPropertiesName'],
         )
       }
     }
@@ -353,6 +356,7 @@ class UiPropertyFactory {
     propertiesNode?: Record<string, OpenAPI.SchemaObject>,
     requiredProperties: string[] = [],
     additionalPropertiesNode?: OpenAPI.SchemaObject | boolean,
+    additionalPropertiesName?: string,
   ): OAProperty[] {
     const properties: OAProperty[] = []
 
@@ -368,12 +372,11 @@ class UiPropertyFactory {
         ? additionalPropertiesNode
         : { type: 'string' }
 
-      properties.push({
-        name: 'additionalProperties',
-        types: [additionalProps.type as JSONSchemaType],
-        required: false,
-        meta: { isAdditionalProperties: true },
-      })
+      const name = additionalPropertiesName || 'additionalProperties'
+      const property = UiPropertyFactory.schemaToUiProperty(name, additionalProps)
+      property.required = false
+      property.meta = { ...(property.meta || {}), isAdditionalProperties: true }
+      properties.push(property)
     }
 
     return properties
