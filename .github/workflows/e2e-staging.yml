@@ -28,22 +28,26 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
 
+      - name: Wait for Vercel deployment
+        run: sleep 120
+
       - name: Get Vercel Preview URL
         id: get-vercel-preview-url
-        uses: ViktorJT/Get-vercel-preview-url@1.2.2
+        uses: zentered/vercel-preview-url@v1.4.0
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
         with:
-          vercel_access_token: ${{ secrets.VERCEL_ACCESS_TOKEN }}
+          vercel_project_id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel_team_id: ${{ secrets.VERCEL_TEAM_ID }}
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Display Vercel Preview URL
         run: |
-          echo "Vercel Preview URL: ${{ steps.get-vercel-preview-url.outputs.preview_url }}"
+          echo "Vercel Preview URL: https://${{ steps.get-vercel-preview-url.outputs.preview_url }}"
 
       - name: Run Playwright tests against Vercel Preview
         run: pnpm exec playwright test staging
         env:
-          PLAYWRIGHT_BASE_URL: ${{ steps.get-vercel-preview-url.outputs.preview_url }}
+          PLAYWRIGHT_BASE_URL: https://${{ steps.get-vercel-preview-url.outputs.preview_url }}
 
       - uses: actions/upload-artifact@v4
         if: always()
