@@ -224,9 +224,10 @@ export default {
 
 ## Storage Configuration
 
-| Function           | Description                          | Default Value | Allowed Values |
-|--------------------|--------------------------------------|---------------|----------------|
-| `setStorageConfig` | Sets the localStorage key prefix.    | `'--oa'`      | `string`       |
+| Function           | Description                               | Default Value | Allowed Values |
+|--------------------|-------------------------------------------|---------------|----------------|
+| `setStorageConfig` | Sets the localStorage key prefix.         | `'--oa'`      | `string`       |
+| `getStoragePrefix` | Returns the current localStorage key prefix. | `'--oa'`   | `string`       |
 
 ## Markdown Configuration
 
