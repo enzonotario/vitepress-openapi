@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { DEFAULT_BASE_URL, DEFAULT_OPERATION_SLOTS, useTheme } from '../../src/composables/useTheme'
+import { DEFAULT_BASE_URL, DEFAULT_OPERATION_SLOTS, DEFAULT_STORAGE_PREFIX, useTheme } from '../../src/composables/useTheme'
 
 describe('initialization and reset', () => {
   it('initializes with custom configuration', () => {
@@ -68,6 +68,9 @@ describe('initialization and reset', () => {
         groupByTags: false,
         collapsePaths: true,
         showPathsSummary: false,
+      },
+      storage: {
+        prefix: 'my-app',
       },
       markdown: {
         operationLink: {
@@ -146,6 +149,9 @@ describe('initialization and reset', () => {
     expect(theme.getSpecConfig().disableDownload.value).toBe(false)
     expect(theme.getWrapExamples()).toBe(true)
     expect(theme.getSpecDisableDownload()).toBe(false)
+
+    // Storage
+    expect(theme.getStoragePrefix()).toBe('my-app')
 
     // Markdown
     expect(theme.getMarkdownConfig().operationLink?.linkPrefix).toBe('/custom-operations/')
@@ -230,6 +236,7 @@ describe('initialization and reset', () => {
     expect(theme.getServerAllowCustomServer()).toBe(false)
     expect(theme.getI18nConfig().locale.value).toBe('en')
     expect(theme.getResponseBodyDefaultView()).toBe('contentType')
+    expect(theme.getStoragePrefix()).toBe(DEFAULT_STORAGE_PREFIX)
   })
 
   it('returns the current state', () => {
@@ -251,6 +258,7 @@ describe('initialization and reset', () => {
     expect(state.codeSamples).toBeDefined()
     expect(state.linksPrefixes).toBeDefined()
     expect(state.server).toBeDefined()
+    expect(state.storage).toBeDefined()
     expect(state.markdown).toBeDefined()
   })
 })
@@ -991,7 +999,7 @@ describe('codeSamples configuration', () => {
 
   it('falls back to first available language when default language is not in available languages', () => {
     themeConfig.setCodeSamplesConfig({
-      defaultLang: 'ruby', // Not in the available languages
+      defaultLang: 'ruby',
     })
 
     expect(themeConfig.getCodeSamplesDefaultLang()).toBe('curl')
@@ -1047,5 +1055,33 @@ describe('codeSamples configuration', () => {
         client: 'requests',
       },
     ])
+  })
+})
+
+describe('storage configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns the default storage prefix', () => {
+    expect(themeConfig.getStoragePrefix()).toBe(DEFAULT_STORAGE_PREFIX)
+  })
+
+  it('sets and gets the storage prefix', () => {
+    themeConfig.setStorageConfig({ prefix: 'my-app' })
+    expect(themeConfig.getStoragePrefix()).toBe('my-app')
+  })
+
+  it('resets to default storage prefix', () => {
+    themeConfig.setStorageConfig({ prefix: 'my-app' })
+    themeConfig.reset()
+    expect(themeConfig.getStoragePrefix()).toBe(DEFAULT_STORAGE_PREFIX)
+  })
+
+  it('initializes with custom storage prefix', () => {
+    useTheme({ storage: { prefix: 'custom' } })
+    expect(themeConfig.getStoragePrefix()).toBe('custom')
   })
 })

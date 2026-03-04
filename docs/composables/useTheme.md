@@ -126,6 +126,10 @@ export default {
                 // Allow custom servers.
                 allowCustomServer: true,
             },
+            storage: {
+                // Set the localStorage key prefix.
+                prefix: '--oa',
+            },
             markdown: {
                 operationLink: {
                     // Link prefix to search for operations.
@@ -217,6 +221,12 @@ export default {
 | `setServerConfig`             | Sets the server configuration.           | `{ getServers: null, allowCustomServer: false }` | `{ getServers: ({ method, path, operation }) => Array<string>, allowCustomServer: boolean }` |
 | `getServers`                  | Gets the servers for an operation.       | `({ method, path, operation }) => Array<string>` | `({ method, path, operation }) => Array<string>` |
 | `getServerAllowCustomServer`  | Gets whether custom servers are allowed. | `false`                                     | `true`, `false`                                                        |
+
+## Storage Configuration
+
+| Function           | Description                          | Default Value | Allowed Values |
+|--------------------|--------------------------------------|---------------|----------------|
+| `setStorageConfig` | Sets the localStorage key prefix.    | `'--oa'`      | `string`       |
 
 ## Markdown Configuration
 

@@ -36,7 +36,9 @@ export function initOperationData({
 }): OperationData {
   const firstSecurityScheme = operation.securityUi?.[0]?.id || ''
 
-  const defaultSecurityScheme = useTheme().getSecurityDefaultScheme() || firstSecurityScheme
+  const theme = useTheme()
+  const defaultSecurityScheme = theme.getSecurityDefaultScheme() || firstSecurityScheme
+  const storagePrefix = theme.getStoragePrefix()
 
   return {
     operationId: operation.operationId,
@@ -46,7 +48,7 @@ export function initOperationData({
     playground: {
       request: ref(request || {} as OARequest),
       selectedServer: isLocalStorageAvailable()
-        ? useStorage(`--oa-operation-${operation.operationId}-selectedServer`, selectedServer, localStorage, {
+        ? useStorage(`${storagePrefix}-operation-${operation.operationId}-selectedServer`, selectedServer, localStorage, {
             mergeDefaults: true,
           })
         : ref(selectedServer),
