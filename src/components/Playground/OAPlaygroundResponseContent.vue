@@ -2,6 +2,7 @@
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { getDownloadFileNameFromContentDisposition } from '@/lib/playground/getDownloadFileName'
+import { isResponseDownloadable } from '@/lib/playground/responseDownloadable'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
 interface ResponseType {
@@ -18,12 +19,6 @@ const { t } = useI18n()
 
 const isType = (regex: RegExp) => computed(() => regex.test(props.response.type))
 
-const isHeader = (header: string, regex: RegExp) =>
-  props.response.headers
-  && Object.entries(props.response.headers).some(
-    ([k, v]) => k.toLowerCase() === header && regex.test(v),
-  )
-
 const isJson = isType(/json/i)
 const isXml = isType(/xml/i)
 const isHtml = isType(/text\/html/i)
@@ -31,12 +26,19 @@ const isPlainText = isType(/text\/plain/i)
 const isCsv = isType(/text\/csv/i)
 const isImage = isType(/^image\//i)
 const isAudio = isType(/^audio\//i)
-const RE_OCTET_STREAM = /^application\/octet-stream/i
-const RE_ATTACHMENT = /attachment|download/i
+
+const contentDisposition = computed(() => {
+  if (!props.response.headers) {
+    return ''
+  }
+  const entry = Object.entries(props.response.headers).find(
+    ([k]) => k.toLowerCase() === 'content-disposition',
+  )
+  return entry?.[1] ?? ''
+})
 
 const isDownloadable = computed(() =>
-  RE_OCTET_STREAM.test(props.response.type)
-  || isHeader('content-disposition', RE_ATTACHMENT),
+  isResponseDownloadable(props.response.type, contentDisposition.value),
 )
 
 const lang = computed(() => {

@@ -2,6 +2,7 @@ import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationData } from '../lib/operation/operationData'
 import { inject, ref } from 'vue'
 import { OPERATION_DATA_KEY } from '../lib/operation/operationData'
+import { isResponseDownloadable } from '../lib/playground/responseDownloadable'
 
 export interface SecuritySchemeDefaultValues {
   'http-basic': string
@@ -33,9 +34,6 @@ const RE_HTML_CT = /html/i
 const RE_TEXT_PLAIN_CT = /text\/plain/i
 const RE_IMAGE_CT = /^image\//i
 const RE_AUDIO_CT = /^audio\//i
-const RE_OCTET_STREAM_CT = /^application\/octet-stream/i
-const RE_ATTACHMENT = /attachment|download/i
-
 let securitySchemeDefaultValues: SecuritySchemeDefaultValues = {
   'http-basic': 'Basic Auth',
   'http-bearer': 'Token',
@@ -148,7 +146,7 @@ export function usePlayground() {
         imageUrls.value.push(innerResponse.body)
       } else if (RE_AUDIO_CT.test(contentType)) {
         innerResponse.body = await data.blob()
-      } else if (RE_OCTET_STREAM_CT.test(contentType) || RE_ATTACHMENT.test(contentDisposition)) {
+      } else if (isResponseDownloadable(contentType, contentDisposition)) {
         innerResponse.body = await data.blob()
       } else {
         innerResponse.body = await data.text()
