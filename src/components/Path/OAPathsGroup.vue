@@ -19,7 +19,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const slots = defineSlots<Record<string, OperationSlot>>()
+const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
 
 const themeConfig = useTheme()
 const { t } = useI18n()

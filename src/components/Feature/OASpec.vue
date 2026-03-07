@@ -61,7 +61,7 @@ const emits = defineEmits([
   'update:spec',
 ])
 
-const slots = defineSlots<Record<string, OperationSlot>>()
+const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
 </script>
 
 <template>
