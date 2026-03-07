@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
-import { computed, defineProps, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { getDownloadFileNameFromContentDisposition } from '@/lib/playground/getDownloadFileName'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
@@ -31,9 +31,12 @@ const isPlainText = isType(/text\/plain/i)
 const isCsv = isType(/text\/csv/i)
 const isImage = isType(/^image\//i)
 const isAudio = isType(/^audio\//i)
+const RE_OCTET_STREAM = /^application\/octet-stream/i
+const RE_ATTACHMENT = /attachment|download/i
+
 const isDownloadable = computed(() =>
-  /^application\/octet-stream/i.test(props.response.type)
-  || isHeader('content-disposition', /attachment|download/i),
+  RE_OCTET_STREAM.test(props.response.type)
+  || isHeader('content-disposition', RE_ATTACHMENT),
 )
 
 const lang = computed(() => {

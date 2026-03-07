@@ -14,6 +14,8 @@ const props = defineProps({
   },
 })
 
+const RE_BG_COLOR = /background-color:[^;]+;/g
+
 const themeConfig = useTheme()
 
 const isDark = themeConfig.isDark
@@ -31,7 +33,7 @@ watch(
       lang: props.lang,
       theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
     })
-    html.value = highlightedCode.replace(/background-color:[^;]+;/g, 'background-color:transparent;')
+    html.value = highlightedCode.replace(RE_BG_COLOR, 'background-color:transparent;')
   },
   { immediate: true },
 )

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
-import { computed, defineProps } from 'vue'
+import { computed } from 'vue'
 import OACodeValue from '../Common/OACodeValue.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAParameterAttribute from '../Parameter/OAParameterAttribute.vue'

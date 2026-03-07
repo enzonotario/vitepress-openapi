@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
-import { defineProps } from 'vue'
+
 import { Badge } from '../ui/badge'
 import OAPlaygroundResponseContent from './OAPlaygroundResponseContent.vue'
 

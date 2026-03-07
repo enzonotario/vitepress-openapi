@@ -53,7 +53,7 @@ const props = defineProps({
   },
 })
 
-const slots = defineSlots<Record<string, OperationSlot>>()
+const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
 
 const { t } = useI18n()
 

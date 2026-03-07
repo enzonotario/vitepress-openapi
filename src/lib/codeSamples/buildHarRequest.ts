@@ -2,6 +2,8 @@ import type { HarRequest } from '@scalar/snippetz'
 import type { OARequest } from './request'
 import { isFormUrlEncoded, isMultipartFormData } from '../utils/contentTypeUtils'
 
+const RE_TITLE_CASE = /\b\w/g
+
 export function buildHarRequest(
   oaRequest: OARequest,
 ): HarRequest {
@@ -10,7 +12,7 @@ export function buildHarRequest(
     url: decodeURI(oaRequest.url.toString()),
     httpVersion: 'HTTP/1.1',
     headers: Object.entries(oaRequest.headers).map(([name, value]) => ({
-      name: name.replace(/\b\w/g, letter => letter.toUpperCase()), // Convert to title case.
+      name: name.replace(RE_TITLE_CASE, letter => letter.toUpperCase()), // Convert to title case.
       value,
     })),
     queryString: [

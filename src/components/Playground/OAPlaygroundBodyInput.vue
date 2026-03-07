@@ -15,7 +15,7 @@ import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import { Textarea } from '../ui/textarea'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
 
-interface BodyParameter extends Partial<OpenAPIV3.ParameterObject> {
+interface BodyParameter extends Omit<Partial<OpenAPIV3.ParameterObject>, 'in'> {
   name: string
   in: string
   schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject

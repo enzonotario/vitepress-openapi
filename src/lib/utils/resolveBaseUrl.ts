@@ -1,12 +1,7 @@
 export function resolveBaseUrl(url: string, defaultUrl: string = 'http://localhost') {
-  try {
-    // Ensure that the URL is valid.
-    // eslint-disable-next-line no-new
-    new URL(url)
-
+  if (URL.canParse(url)) {
     return url
-  } catch (error: Error | any) {
-    console.error('Failed to resolve base URL:', error?.message)
-    return defaultUrl
   }
+  console.error('Failed to resolve base URL:', url)
+  return defaultUrl
 }
