@@ -30,7 +30,7 @@ export interface SubmitOptions {
 const RE_JSON_CT = /json/i
 const RE_XML_CT = /xml/i
 const RE_HTML_CT = /html/i
-const RE_TEXT_PLAIN_CT = /text\/plain/
+const RE_TEXT_PLAIN_CT = /text\/plain/i
 const RE_IMAGE_CT = /^image\//i
 const RE_AUDIO_CT = /^audio\//i
 const RE_OCTET_STREAM_CT = /^application\/octet-stream/i
