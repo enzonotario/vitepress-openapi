@@ -1,7 +1,7 @@
 <script setup>
-import { cn } from '@/lib/utils/utils'
 import slugify from '@sindresorhus/slugify'
 import { computed, useSlots } from 'vue'
+import { cn } from '@/lib/utils/utils'
 import { useTheme } from '../../composables/useTheme'
 
 const props = defineProps({

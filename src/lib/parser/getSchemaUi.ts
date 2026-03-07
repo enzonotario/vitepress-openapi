@@ -47,8 +47,8 @@ export interface OAProperty {
 class UiPropertyFactory {
   static createBaseProperty(
     name: string,
-      property: Partial<OpenAPI.SchemaObject> = {},
-      required = false,
+    property: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
   ): OAProperty {
     const nodeTypes = Array.isArray(property.type)
       ? property.type
@@ -110,13 +110,11 @@ class UiPropertyFactory {
       required,
     )
 
-    const unionTypes = Array.from(
-      new Set(
-        unionProperties
-          .map(prop => determineSchemaType(prop as OpenAPI.SchemaObject))
-          .filter(Boolean),
-      ),
-    ) as JSONSchemaType[]
+    const unionTypes = [...new Set(
+      unionProperties
+        .map(prop => determineSchemaType(prop as OpenAPI.SchemaObject))
+        .filter(Boolean),
+    )] as JSONSchemaType[]
 
     if (unionTypes.length > 0) {
       baseProperty.types = unionTypes
@@ -416,7 +414,7 @@ function inferTypesFromEnum(values: unknown[]): JSONSchemaType[] {
     types.delete('integer')
   }
 
-  return Array.from(types)
+  return [...types]
 }
 
 function determineSchemaType(schema: OpenAPI.SchemaObject): JSONSchemaType {

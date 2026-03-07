@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { OperationData } from '@/lib/operation/operationData'
 import type { OARequestBody } from '../../types'
-import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
+import type { OperationData } from '@/lib/operation/operationData'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, inject } from 'vue'
+import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { useTheme } from '../../composables/useTheme'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
 import OAHeading from '../Common/OAHeading.vue'

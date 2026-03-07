@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { OperationData } from '@/lib/operation/operationData'
 import type { LanguageConfig } from '../../composables/useTheme'
-import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
+import type { OperationData } from '@/lib/operation/operationData'
 import { inject, ref, watch } from 'vue'
+import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { useShiki } from '../../composables/useShiki'
 import { useTheme } from '../../composables/useTheme'
 import OACodeBlock from '../Common/OACodeBlock.vue'

@@ -4,23 +4,23 @@ import type { RemovableRef } from '@vueuse/core'
 /**
  * Slots required for OAOperation component.
  */
-export type OperationSlot =
-  | 'header'
-  | 'tags'
-  | 'path'
-  | 'description'
-  | 'security'
-  | 'parameters'
-  | 'request-body'
-  | 'responses'
-  | 'playground'
-  | 'try-it' // @deprecated. TODO: Remove this slot.
-  | 'code-samples'
-  | 'branding'
-  | 'footer'
-  // TODO: Implement these slots.
-  // | 'summary'
-  // | 'servers'
+export type OperationSlot
+  = | 'header'
+    | 'tags'
+    | 'path'
+    | 'description'
+    | 'security'
+    | 'parameters'
+    | 'request-body'
+    | 'responses'
+    | 'playground'
+    | 'try-it' // @deprecated. TODO: Remove this slot.
+    | 'code-samples'
+    | 'branding'
+    | 'footer'
+// TODO: Implement these slots.
+// | 'summary'
+// | 'servers'
 
 export type OpenAPIDocument = OpenAPIV3.Document & OpenAPIV3_1.Document
 

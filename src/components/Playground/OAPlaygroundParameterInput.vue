@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
-import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
-import { resolveExampleForPlaceholder, resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineEmits, defineProps, onMounted } from 'vue'
+import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
+import { resolveExampleForPlaceholder, resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import { Checkbox } from '../ui/checkbox'
 import { Input } from '../ui/input'

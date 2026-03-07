@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { OperationData } from '@/lib/operation/operationData'
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
+import type { OperationData } from '@/lib/operation/operationData'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, inject, onBeforeUnmount } from 'vue'
+import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { usePlayground } from '../../composables/usePlayground'
 import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'

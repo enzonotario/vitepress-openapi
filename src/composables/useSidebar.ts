@@ -16,7 +16,7 @@ export interface SidebarItemTemplateParams {
 }
 
 export type SidebarItemTemplateFn = (
-  params: SidebarItemTemplateParams
+  params: SidebarItemTemplateParams,
 ) => string
 
 export interface SidebarGroupTemplateParams {
@@ -25,7 +25,7 @@ export interface SidebarGroupTemplateParams {
 }
 
 export type SidebarGroupTemplateFn = (
-  params: SidebarGroupTemplateParams
+  params: SidebarGroupTemplateParams,
 ) => string
 
 export interface SidebarItemTemplateForMethodPathParams {
@@ -187,8 +187,8 @@ export function useSidebar({
             }
 
             const shouldInclude
-                  = includeTags.length === 0
-                    || includeTags.every(tagName => operation.tags?.includes(tagName))
+              = includeTags.length === 0
+                || includeTags.every(tagName => operation.tags?.includes(tagName))
 
             if (shouldInclude) {
               return generateSidebarItem(method as OpenAPIV3.HttpMethods, path, groupLinkPrefix, localItemTemplate)

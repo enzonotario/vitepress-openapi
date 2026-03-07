@@ -6,12 +6,12 @@ import { getPropertyExample } from '../examples/getPropertyExample'
 import { resolveBaseUrl } from '../utils/resolveBaseUrl'
 import { OARequest } from './request'
 
-type ParameterValue =
-  | string
-  | number
-  | boolean
-  | Record<string, unknown>
-  | Array<string | number | boolean | Record<string, unknown>>
+type ParameterValue
+  = | string
+    | number
+    | boolean
+    | Record<string, unknown>
+    | Array<string | number | boolean | Record<string, unknown>>
 
 function processParameters(
   variables: Record<string, ParameterValue>,
