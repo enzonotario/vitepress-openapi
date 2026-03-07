@@ -49,7 +49,7 @@ export function parseOpenapi() {
     specContent.servers = specContent.servers || []
     specContent.tags = specContent.tags || []
 
-    return Object.assign({}, specContent)
+    return { ...specContent }
   }
 
   async function transformAsync({
@@ -76,7 +76,7 @@ export function parseOpenapi() {
   }): ParsedOpenAPI {
     const specContent = parseSpec(spec)
 
-    let parsedSpec = Object.assign({}, specContent) as ParsedOpenAPI
+    let parsedSpec = { ...specContent } as ParsedOpenAPI
 
     const [mergedSpec, errMerge] = $trycatch(() => merge(
       transformSync({
@@ -104,7 +104,7 @@ export function parseOpenapi() {
     parsedSpec.servers = parsedSpec.servers || parsedSpec.servers || []
     parsedSpec.tags = parsedSpec.tags || parsedSpec.tags || []
 
-    return Object.assign({}, parsedSpec)
+    return { ...parsedSpec }
   }
 
   async function parseAsync({

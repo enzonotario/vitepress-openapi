@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
-import { defineProps } from 'vue'
+
 import OAHeading from '../Common/OAHeading.vue'
 import OASecurityContent from '../Security/OASecurityContent.vue'
 

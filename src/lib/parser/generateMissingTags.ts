@@ -30,7 +30,8 @@ export function generateMissingTags({
   spec.tags = spec.tags || []
   if (
     operationTags.has(defaultTag)
-    && !spec.tags.find((tag: any) => tag.name === defaultTag)) {
+    && !spec.tags.some((tag: any) => tag.name === defaultTag)
+  ) {
     spec.tags.push({
       name: defaultTag,
       description: defaultTagDescription,

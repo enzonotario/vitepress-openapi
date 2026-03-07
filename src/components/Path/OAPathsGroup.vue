@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { OperationSlot, PathsGroupView } from '../../types'
-import { scrollToHash } from '@/lib/utils/utils'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, nextTick, ref } from 'vue'
+import { scrollToHash } from '@/lib/utils/utils'
 import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
@@ -19,7 +19,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const slots = defineSlots<Record<string, OperationSlot>>()
+const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
 
 const themeConfig = useTheme()
 const { t } = useI18n()

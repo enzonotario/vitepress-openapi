@@ -2,6 +2,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import type { OAExampleObject } from '../../types'
+import { computed, ref, watch } from 'vue'
 import { createCompositeKey } from '@/lib/playground/createCompositeKey'
 import { useExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import {
@@ -10,12 +11,11 @@ import {
   isMultipartFormData,
   isXml,
 } from '@/lib/utils/contentTypeUtils'
-import { computed, ref, watch } from 'vue'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import { Textarea } from '../ui/textarea'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
 
-interface BodyParameter extends Partial<OpenAPIV3.ParameterObject> {
+interface BodyParameter extends Omit<Partial<OpenAPIV3.ParameterObject>, 'in'> {
   name: string
   in: string
   schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject

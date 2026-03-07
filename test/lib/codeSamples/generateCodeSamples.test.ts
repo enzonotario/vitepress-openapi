@@ -51,9 +51,13 @@ describe('javascript', () => {
   body: JSON.stringify({
     key: {
       nested: 'value',
-      nestedArray: [1,     2,     {
-        deep: 'value'
-      }]
+      nestedArray: [
+        1,
+        2,
+        {
+          deep: 'value'
+        }
+      ]
     }
   })
 })`)

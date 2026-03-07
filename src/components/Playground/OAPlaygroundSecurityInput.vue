@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps } from 'vue'
+import { computed } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
 import { Input } from '../ui/input'
 

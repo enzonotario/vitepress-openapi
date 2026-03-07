@@ -226,15 +226,14 @@ export function createOpenApiSpec(options: {
     const operationsTags = getOperationsTags()
     const tags = getTags()
       .filter(tag => operationsTags.includes(tag.name ?? ''))
-    return tags
-      .concat([
-        ...operationsTags
-          .filter(tag => !tags.map(tag => tag.name).includes(tag))
-          .map(tag => ({
-            name: tag,
-            description: null,
-          })),
-      ])
+    return [...tags, ...[
+      ...operationsTags
+        .filter(tag => !tags.map(tag => tag.name).includes(tag))
+        .map(tag => ({
+          name: tag,
+          description: null,
+        })),
+    ]]
   }
 
   return {

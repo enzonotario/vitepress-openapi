@@ -10,6 +10,8 @@ const props = defineProps({
   },
 })
 
+const RE_TITLE_SANITIZE = /[^\w\-]/g
+
 const { t } = useI18n()
 
 function downloadSpec(format: 'json' | 'yaml'): void {
@@ -35,7 +37,7 @@ function downloadSpec(format: 'json' | 'yaml'): void {
     a.href = url
 
     const title = (props.openapi.spec.info?.title || 'openapi')
-      .replace(/[^\w\-]/g, '_')
+      .replace(RE_TITLE_SANITIZE, '_')
       .toLowerCase()
 
     a.download = `${title}.${format}`

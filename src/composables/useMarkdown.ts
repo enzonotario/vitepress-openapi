@@ -3,6 +3,8 @@ import linkAttributes from 'markdown-it-link-attributes'
 import { operationLink } from '../lib/markdown/operationLink'
 import { useTheme } from './useTheme'
 
+const RE_EXTERNAL_LINK = /^https?:\/\//
+
 export function useMarkdown() {
   const theme = useTheme()
   const operationLinkConfig = theme.getOperationLinkConfig()
@@ -17,7 +19,7 @@ export function useMarkdown() {
     md.use(linkAttributes, [
       {
         matcher(href: string) {
-          return /^https?:\/\//.test(href)
+          return RE_EXTERNAL_LINK.test(href)
         },
         attrs: {
           target: '_blank',

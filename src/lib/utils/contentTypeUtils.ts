@@ -1,21 +1,28 @@
+const RE_JSON = /^(?:application|text)\/.*json(?:$|;|\+)/
+const RE_XML = /^(?:text|application)\/.*xml(?:$|;|\+)/
+const RE_FORM_URLENCODED = /^application\/x-www-form-urlencoded(?:$|;|\+)/
+const RE_MULTIPART = /^multipart\/form-data(?:$|;|\+)/
+const RE_PLAIN_TEXT = /^text\/plain(?:$|;|\+)/
+const RE_FILE = /^(?:application|image|video|audio)\/.*$/
+
 export function isJson(contentType: string): boolean {
-  return contentType.toLowerCase().match(/^(application|text)\/.*json($|;|\+)/) !== null
+  return RE_JSON.test(contentType.toLowerCase())
 }
 
 export function isXml(contentType: string): boolean {
-  return contentType.toLowerCase().match(/^(text|application)\/.*xml($|;|\+)/) !== null
+  return RE_XML.test(contentType.toLowerCase())
 }
 
 export function isFormUrlEncoded(contentType: string): boolean {
-  return contentType.toLowerCase().match(/^application\/x-www-form-urlencoded($|;|\+)/) !== null
+  return RE_FORM_URLENCODED.test(contentType.toLowerCase())
 }
 
 export function isMultipartFormData(contentType: string): boolean {
-  return contentType.toLowerCase().match(/^multipart\/form-data($|;|\+)/) !== null
+  return RE_MULTIPART.test(contentType.toLowerCase())
 }
 
 export function isPlainText(contentType: string): boolean {
-  return contentType.toLowerCase().match(/^text\/plain($|;|\+)/) !== null
+  return RE_PLAIN_TEXT.test(contentType.toLowerCase())
 }
 
 export function isFile(contentType: string): boolean {
@@ -23,5 +30,5 @@ export function isFile(contentType: string): boolean {
     return false
   }
 
-  return contentType.toLowerCase().match(/^(application|image|video|audio)\/.*$/) !== null
+  return RE_FILE.test(contentType.toLowerCase())
 }

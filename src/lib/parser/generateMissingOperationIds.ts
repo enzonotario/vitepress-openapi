@@ -2,6 +2,8 @@ import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OpenAPIDocument } from '../../types'
 import { httpVerbs } from '../../index'
 
+const RE_SLASH = /\//g
+
 export function generateMissingOperationIds(spec: OpenAPIDocument): OpenAPIDocument {
   spec.paths = spec.paths || {}
 
@@ -16,7 +18,7 @@ export function generateMissingOperationIds(spec: OpenAPIDocument): OpenAPIDocum
       }
 
       if (!operation.operationId) {
-        operation.operationId = `${verb}${path.replace(/\//g, '-')}`
+        operation.operationId = `${verb}${path.replace(RE_SLASH, '-')}`
       }
     }
   }

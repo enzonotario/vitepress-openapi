@@ -14,7 +14,7 @@ const props = defineProps({
   },
 })
 
-const slots = defineSlots<Record<string, OperationSlot>>()
+const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
 
 const themeConfig = useTheme()
 const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value

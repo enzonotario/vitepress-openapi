@@ -1,3 +1,6 @@
+const RE_FILENAME_STAR = /filename\*\s*=\s*([^;]+)/i
+const RE_FILENAME = /filename\s*=\s*([^;]+)/i
+
 export function getDownloadFileNameFromContentDisposition(
   cd: string | null | undefined,
   fallback = 'response_file',
@@ -6,7 +9,7 @@ export function getDownloadFileNameFromContentDisposition(
     return fallback
   }
 
-  const starMatch = cd.match(/filename\*\s*=\s*([^;]+)/i)
+  const starMatch = cd.match(RE_FILENAME_STAR)
   if (starMatch) {
     let v = starMatch[1].trim()
     if (v.startsWith('"') && v.endsWith('"')) {
@@ -31,7 +34,7 @@ export function getDownloadFileNameFromContentDisposition(
     }
   }
 
-  const fnameMatch = cd.match(/filename\s*=\s*([^;]+)/i)
+  const fnameMatch = cd.match(RE_FILENAME)
   if (fnameMatch) {
     let v = fnameMatch[1].trim()
     if (v.startsWith('"') && v.endsWith('"')) {

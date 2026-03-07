@@ -2,6 +2,7 @@ import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationData } from '../lib/operation/operationData'
 import { inject, ref } from 'vue'
 import { OPERATION_DATA_KEY } from '../lib/operation/operationData'
+import { isResponseDownloadable } from '../lib/playground/responseDownloadable'
 
 export interface SecuritySchemeDefaultValues {
   'http-basic': string
@@ -27,6 +28,12 @@ export interface SubmitOptions {
   operationId: string
 }
 
+const RE_JSON_CT = /json/i
+const RE_XML_CT = /xml/i
+const RE_HTML_CT = /html/i
+const RE_TEXT_PLAIN_CT = /text\/plain/i
+const RE_IMAGE_CT = /^image\//i
+const RE_AUDIO_CT = /^audio\//i
 let securitySchemeDefaultValues: SecuritySchemeDefaultValues = {
   'http-basic': 'Basic Auth',
   'http-bearer': 'Token',
@@ -128,18 +135,18 @@ export function usePlayground() {
         innerResponse.headers = hdrs
       }
 
-      if (/json/i.test(contentType)) {
+      if (RE_JSON_CT.test(contentType)) {
         innerResponse.body = await data.json()
-      } else if (/xml/i.test(contentType) || /html/i.test(contentType) || /text\/plain/.test(contentType)) {
+      } else if (RE_XML_CT.test(contentType) || RE_HTML_CT.test(contentType) || RE_TEXT_PLAIN_CT.test(contentType)) {
         innerResponse.body = await data.text()
-      } else if (/^image\//i.test(contentType)) {
+      } else if (RE_IMAGE_CT.test(contentType)) {
         const blob = await data.blob()
         innerResponse.body = URL.createObjectURL(blob)
         // Store the blob URL to release it later.
         imageUrls.value.push(innerResponse.body)
-      } else if (/^audio\//i.test(contentType)) {
+      } else if (RE_AUDIO_CT.test(contentType)) {
         innerResponse.body = await data.blob()
-      } else if (/^application\/octet-stream/i.test(contentType) || /attachment|download/i.test(contentDisposition)) {
+      } else if (isResponseDownloadable(contentType, contentDisposition)) {
         innerResponse.body = await data.blob()
       } else {
         innerResponse.body = await data.text()

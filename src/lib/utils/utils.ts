@@ -10,6 +10,8 @@ export function isLocalStorageAvailable(): boolean {
   return typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function'
 }
 
+const RE_HASH_BRACES = /([{}])/g
+
 export function scrollToHash({
   hash,
 }: {
@@ -23,8 +25,8 @@ export function scrollToHash({
 
   const element = document.querySelector(
     hash
-      // . escape { and } characters
-      .replace(/([{}])/g, '\\$1'),
+      // escape { and } characters
+      .replace(RE_HASH_BRACES, '\\$1'),
   )
 
   if (!element) {

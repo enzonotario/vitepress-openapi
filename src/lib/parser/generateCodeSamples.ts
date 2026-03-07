@@ -1,3 +1,4 @@
+import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OAExampleObject, ParsedOpenAPI, ParsedOperation, PlaygroundSecurityScheme } from '../../types'
 import { availableLanguages, useTheme } from '../../composables/useTheme'
 import { httpVerbs } from '../../index'
@@ -36,7 +37,7 @@ export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOp
         path,
         method: verb,
         baseUrl,
-        parameters: operation.parameters || [],
+        parameters: (operation.parameters || []).filter((p): p is OpenAPIV3.ParameterObject => !('$ref' in p)),
         authorizations: Object.entries(authorizations).map(([name, value]: [string, any]) => {
           return {
             ...value,

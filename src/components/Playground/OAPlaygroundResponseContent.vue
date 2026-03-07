@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { getDownloadFileNameFromContentDisposition } from '@/lib/playground/getDownloadFileName'
 import { useI18n } from '@byjohann/vue-i18n'
-import { computed, defineProps, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { getDownloadFileNameFromContentDisposition } from '@/lib/playground/getDownloadFileName'
+import { isResponseDownloadable } from '@/lib/playground/responseDownloadable'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
 interface ResponseType {
@@ -18,12 +19,6 @@ const { t } = useI18n()
 
 const isType = (regex: RegExp) => computed(() => regex.test(props.response.type))
 
-const isHeader = (header: string, regex: RegExp) =>
-  props.response.headers
-  && Object.entries(props.response.headers).some(
-    ([k, v]) => k.toLowerCase() === header && regex.test(v),
-  )
-
 const isJson = isType(/json/i)
 const isXml = isType(/xml/i)
 const isHtml = isType(/text\/html/i)
@@ -31,9 +26,19 @@ const isPlainText = isType(/text\/plain/i)
 const isCsv = isType(/text\/csv/i)
 const isImage = isType(/^image\//i)
 const isAudio = isType(/^audio\//i)
+
+const getHeader = (name: string): string | null => {
+  if (!props.response.headers) {
+    return null
+  }
+  const entry = Object.entries(props.response.headers).find(([k]) => k.toLowerCase() === name.toLowerCase())
+  return entry ? entry[1] : null
+}
+
+const contentDisposition = computed(() => getHeader('content-disposition') ?? '')
+
 const isDownloadable = computed(() =>
-  /^application\/octet-stream/i.test(props.response.type)
-  || isHeader('content-disposition', /attachment|download/i),
+  isResponseDownloadable(props.response.type, contentDisposition.value),
 )
 
 const lang = computed(() => {
@@ -97,14 +102,6 @@ onBeforeUnmount(() => {
 const disableHtmlTransform = computed(
   () => props.response.body && JSON.stringify(props.response.body).length > 1000,
 )
-
-const getHeader = (name: string): string | null => {
-  if (!props.response.headers) {
-    return null
-  }
-  const entry = Object.entries(props.response.headers).find(([k]) => k.toLowerCase() === name.toLowerCase())
-  return entry ? entry[1] : null
-}
 
 const downloadFileName = computed<string>(() => {
   const cd = getHeader('content-disposition')
