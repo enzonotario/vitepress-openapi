@@ -27,15 +27,15 @@ const isCsv = isType(/text\/csv/i)
 const isImage = isType(/^image\//i)
 const isAudio = isType(/^audio\//i)
 
-const contentDisposition = computed(() => {
+const getHeader = (name: string): string | null => {
   if (!props.response.headers) {
-    return ''
+    return null
   }
-  const entry = Object.entries(props.response.headers).find(
-    ([k]) => k.toLowerCase() === 'content-disposition',
-  )
-  return entry?.[1] ?? ''
-})
+  const entry = Object.entries(props.response.headers).find(([k]) => k.toLowerCase() === name.toLowerCase())
+  return entry ? entry[1] : null
+}
+
+const contentDisposition = computed(() => getHeader('content-disposition') ?? '')
 
 const isDownloadable = computed(() =>
   isResponseDownloadable(props.response.type, contentDisposition.value),
@@ -102,14 +102,6 @@ onBeforeUnmount(() => {
 const disableHtmlTransform = computed(
   () => props.response.body && JSON.stringify(props.response.body).length > 1000,
 )
-
-const getHeader = (name: string): string | null => {
-  if (!props.response.headers) {
-    return null
-  }
-  const entry = Object.entries(props.response.headers).find(([k]) => k.toLowerCase() === name.toLowerCase())
-  return entry ? entry[1] : null
-}
 
 const downloadFileName = computed<string>(() => {
   const cd = getHeader('content-disposition')
