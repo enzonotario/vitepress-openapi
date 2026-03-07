@@ -106,8 +106,10 @@ const request = computed({
 
 const allowCustomServer = computed(() => useTheme().getServerAllowCustomServer())
 
+const storagePrefix = useTheme().getStoragePrefix()
+
 const useCustomServer = isLocalStorageAvailable()
-  ? useStorage('--oa-use-custom-server', allowCustomServer.value, localStorage)
+  ? useStorage(`${storagePrefix}-use-custom-server`, allowCustomServer.value, localStorage)
   : ref(false)
 
 const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
@@ -127,7 +129,7 @@ const serversUrls: ComputedRef<string[]> = computed(() =>
 )
 
 const customServer = isLocalStorageAvailable()
-  ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
+  ? useStorage(`${storagePrefix}-custom-server-url`, selectedServer.value, localStorage)
   : ref(selectedServer.value)
 
 function initializeVariables(parameters: OpenAPIV3.ParameterObject[], behavior: PlaygroundExampleBehavior, xBehavior: PlaygroundExampleBehavior) {
@@ -209,7 +211,7 @@ watch(selectedSchemeId, (schemeId) => {
       in: scheme.in,
       name: scheme.name ?? name,
       value: isLocalStorageAvailable()
-        ? useStorage(`--oa-authorization-${name}`, example, localStorage)
+        ? useStorage(`${storagePrefix}-authorization-${name}`, example, localStorage)
         : example,
       label: name,
       example,

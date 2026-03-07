@@ -151,6 +151,10 @@ export interface ServerConfig {
   getServers?: GetServersFunction | null
 }
 
+export interface StorageConfig {
+  prefix?: string
+}
+
 export interface OperationLinkConfig {
   linkPrefix?: string
   transformHref?: (href: string) => string
@@ -178,6 +182,7 @@ export interface UseThemeConfig {
   codeSamples?: Partial<CodeSamplesConfig>
   linksPrefixes?: Partial<LinksPrefixesConfig>
   server?: Partial<ServerConfig>
+  storage?: Partial<StorageConfig>
   markdown?: Partial<MarkdownConfig>
 }
 
@@ -229,6 +234,7 @@ export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
 ]
 
 export const DEFAULT_BASE_URL = 'http://localhost'
+export const DEFAULT_STORAGE_PREFIX = '--oa'
 
 export const availableLanguages: LanguageConfig[] = [
   {
@@ -377,6 +383,9 @@ const defaultValues = {
     allowCustomServer: false,
     getServers: null,
   },
+  storage: {
+    prefix: DEFAULT_STORAGE_PREFIX,
+  },
   markdown: {
     operationLink: {
       linkPrefix: DEFAULT_OPERATIONS_PREFIX,
@@ -469,6 +478,9 @@ const themeConfig: UseThemeConfig = {
   server: {
     allowCustomServer: defaultValues.server.allowCustomServer,
     getServers: defaultValues.server.getServers,
+  },
+  storage: {
+    prefix: defaultValues.storage.prefix,
   },
   markdown: {
     operationLink: {
@@ -603,6 +615,11 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     // Server
     if (config.server !== undefined) {
       setServerConfig(config.server)
+    }
+
+    // Storage
+    if (config.storage !== undefined) {
+      setStorageConfig(config.storage)
     }
 
     // Markdown
@@ -1073,6 +1090,17 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     return themeConfig.markdown?.operationLink
   }
 
+  function getStoragePrefix(): string {
+    return themeConfig?.storage?.prefix ?? DEFAULT_STORAGE_PREFIX
+  }
+
+  function setStorageConfig(config: Partial<StorageConfig>) {
+    const storage = ensureNestedProperty(themeConfig, 'storage')
+    if (config.prefix !== undefined) {
+      storage.prefix = config.prefix
+    }
+  }
+
   return {
     isDark,
     schemaConfig: themeConfig.requestBody,
@@ -1150,5 +1178,7 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     getExternalLinksNewTab,
     setMarkdownConfig,
     getOperationLinkConfig,
+    getStoragePrefix,
+    setStorageConfig,
   }
 }

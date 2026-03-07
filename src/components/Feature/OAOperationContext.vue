@@ -54,8 +54,10 @@ const defaultServer = computed(
     : themeConfig.getOperationDefaultBaseUrl(),
 )
 
+const storagePrefix = themeConfig.getStoragePrefix()
+
 const customServer = isLocalStorageAvailable()
-  ? useStorage('--oa-custom-server-url', null, localStorage)
+  ? useStorage(`${storagePrefix}-custom-server-url`, null, localStorage)
   : ref(defaultServer.value)
 
 const baseUrl = computed(() => {
