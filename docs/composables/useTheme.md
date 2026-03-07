@@ -147,6 +147,28 @@ export default {
 }
 ```
 
+## Theme / Highlighter Configuration
+
+Configures the syntax highlighter (Shiki) theme for code blocks. You can set different themes for light and dark mode.
+
+| Function               | Description                          |
+|------------------------|--------------------------------------|
+| `setHighlighterTheme`  | Sets the highlighter theme config.   |
+| `getHighlighterTheme`  | Returns the current theme config.   |
+
+Config shape: `{ light?: ShikiTheme, dark?: ShikiTheme }`. Use `theme.highlighterTheme.light` and `theme.highlighterTheme.dark` in your `useTheme()` config. Shiki theme names (e.g. from `@shikijs/themes`) or theme objects are supported.
+
+```ts
+useTheme({
+  theme: {
+    highlighterTheme: {
+      light: 'vitesse-light',
+      dark: 'vitesse-dark',
+    },
+  },
+})
+```
+
 ## Schema Configuration
 
 | Function               | Description                         | Default Value | Allowed Values              |
@@ -195,12 +217,80 @@ export default {
 | `setPlaygroundJsonEditorNavigationBar` | Sets the visibility of the navigation bar. | `false`       | `true`, `false`               |
 | `setPlaygroundJsonEditorStatusBar`     | Sets the visibility of the status bar.     | `false`       | `true`, `false`               |
 
+## Playground Examples Configuration
+
+Controls how example values from the OpenAPI spec are applied in the playground (e.g. from `example` or `x-example`).
+
+| Function                         | Description                                              | Default Value | Allowed Values                    |
+|----------------------------------|----------------------------------------------------------|---------------|-----------------------------------|
+| `setPlaygroundExamplesBehavior`  | Sets the behavior for standard `example` values.         | `'value'`     | `'placeholder'`, `'value'`, `'ignore'` |
+| `getPlaygroundExamplesBehavior`  | Gets the current behavior for standard examples.         | —             | —                                 |
+| `setPlaygroundXExampleBehavior`  | Sets the behavior for `x-example` / vendor examples.     | —             | `'placeholder'`, `'value'`, `'ignore'` |
+| `getPlaygroundXExampleBehavior`  | Gets the current behavior for x-example values.          | —             | —                                 |
+
+- **`placeholder`** — show as placeholder text only.
+- **`value`** — pre-fill the field with the example value.
+- **`ignore`** — do not use the example.
+
+## Security Configuration
+
+Sets the default security scheme used when multiple schemes are available (e.g. in the playground).
+
+| Function                    | Description                           | Default Value | Allowed Values   |
+|-----------------------------|---------------------------------------|---------------|------------------|
+| `setSecurityDefaultScheme`  | Sets the default security scheme ID.  | `null`        | `string \| null` |
+| `getSecurityDefaultScheme`  | Gets the current default scheme.      | —             | —                |
+
+## Code Samples Configuration
+
+Configures how code samples are generated and displayed (languages, generator, default headers).
+
+| Function                        | Description                                      |
+|---------------------------------|--------------------------------------------------|
+| `setCodeSamplesConfig`          | Sets the full code samples config.               |
+| `getCodeSamplesDefaultLang`     | Gets the default language for the code samples UI. |
+| `getCodeSamplesAvailableLanguages` | Gets the list of available languages.         |
+| `getCodeSamplesGenerator`      | Gets the custom generator function.              |
+| `getCodeSamplesDefaultHeaders` | Gets the default headers used when generating samples. |
+
+Config shape: `{ defaultLang?, availableLanguages?, generator?, defaultHeaders? }`. Use `setCodeSamplesConfig({ ... })` in `useTheme()`.
+
+Example:
+
+```ts
+useTheme({
+  codeSamples: {
+    defaultLang: 'curl',
+    availableLanguages: [/* LanguageConfig[] */],
+    generator: async (langConfig, request) => { /* return generated code string */ },
+    defaultHeaders: { 'X-Custom': 'value' },
+  },
+})
+```
+
+## Links Prefixes Configuration
+
+Configures URL prefixes used for generated navigation links (tags and operations). Affects how links to tags and operations are built in the spec UI.
+
+| Function                 | Description                              |
+|--------------------------|------------------------------------------|
+| `setLinksPrefixesConfig` | Sets `{ tags: string, operations: string }`. |
+| `getLinksPrefixesConfig` | Gets the current links prefixes config. |
+| `getTagsLinkPrefix`      | Gets the prefix used for tag links.     |
+| `getOperationsLinkPrefix`| Gets the prefix used for operation links. |
+
 ## Operation Configuration
 
-| Function                     | Description                                        | Default Value        | Allowed Values                  |
-|------------------------------|----------------------------------------------------|----------------------|---------------------------------|
-| `setOperationBadges`         | Sets the operation badges. The order is respected. | `['deprecated']`     | `['deprecated', 'operationId']` |
-| `setOperationDefaultBaseUrl` | Sets the default base URL.                         | `'http://localhost'` | `string`                        |
+| Function                       | Description                                            | Default Value        | Allowed Values                  |
+|--------------------------------|--------------------------------------------------------|----------------------|---------------------------------|
+| `setOperationBadges`           | Sets the operation badges. The order is respected.    | `['deprecated']`     | `['deprecated', 'operationId']` |
+| `setOperationSlots`            | Sets which slots are rendered (order is respected).   | See Custom Slots     | `OperationSlot[]`               |
+| `getOperationSlots`           | Gets the list of slots to render.                      | —                    | —                               |
+| `setOperationHiddenSlots`     | Sets which slots are hidden (filtered out from render). | `[]`                | `OperationSlot[]`               |
+| `getOperationHiddenSlots`     | Gets the list of hidden slots.                        | —                    | —                               |
+| `setOperationCols`             | Sets the operation layout columns (1 or 2).            | `2`                  | `1 \| 2`                        |
+| `getOperationCols`             | Gets the current column layout.                        | —                    | —                               |
+| `setOperationDefaultBaseUrl`  | Sets the default base URL.                             | `'http://localhost'` | `string`                        |
 
 ## I18n Configuration
 

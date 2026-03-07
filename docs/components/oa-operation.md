@@ -47,6 +47,10 @@ The `OAOperation` component supports the following slots for customization:
 | `branding` | Custom branding footer |
 | `footer` | Custom footer content |
 
+::: info Cross-references
+For detailed slot usage examples and slot props documentation, see [Custom Slots](/customizations/custom-slots). The same slots are available on the [OASpec](/components/oa-spec) component, which uses OAOperation internally for each operation.
+:::
+
 ## Loading Indicator
 
 When the `specUrl` prop is provided, the component will show a loading indicator while fetching the specification.
