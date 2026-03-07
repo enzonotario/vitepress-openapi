@@ -3,6 +3,9 @@
   "type": "module",
   "version": "0.1.16",
   "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
+  },
   "homepage": "https://vitepress-openapi.vercel.app/",
   "repository": {
     "type": "git",
