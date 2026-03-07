@@ -1,5 +1,5 @@
 export const RE_OCTET_STREAM = /^application\/octet-stream/i
-export const RE_ATTACHMENT = /attachment|download/i
+export const RE_ATTACHMENT = /^\s*(?:attachment|download)(?:;|$)/i
 
 export function isResponseDownloadable(
   contentType: string,
