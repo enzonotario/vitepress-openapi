@@ -1,4 +1,4 @@
-import { OpenAPIV3 } from '@scalar/openapi-types'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
 import { createOpenApiSpec } from './lib/spec/createOpenApiSpec'
 
 export {
@@ -11,7 +11,7 @@ export { useSidebar } from './composables/useSidebar'
 export { createOpenApiSpec, type OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
 export { parseSpec } from './lib/utils/parseSpec'
 
-export const httpVerbs: readonly OpenAPIV3.HttpMethods[] = Object.values(OpenAPIV3.HttpMethods)
+export const httpVerbs: readonly OpenAPIV3.HttpMethods[] = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'] as const
 
 export const literalTypes = ['string', 'number', 'integer', 'boolean', 'null']
 
