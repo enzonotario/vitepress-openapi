@@ -204,6 +204,7 @@ function onFileChange(e: Event) {
             :model-value="displayValue as any"
             :type="inputType(parameter)"
             :placeholder="inputPlaceholder"
+            clearable
             class="bg-muted"
             @update:model-value="handleInputChange($event)"
             @keydown.enter="emits('submit')"
