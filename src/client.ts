@@ -46,6 +46,7 @@ export const theme = {
   },
 } as VPTheme
 
+export * from './components'
 export { useOpenapi } from './composables/useOpenapi'
 export { usePlayground } from './composables/usePlayground'
 export { DEFAULT_OPERATION_SLOTS }
