@@ -153,6 +153,7 @@ export interface ServerConfig {
 
 export interface StorageConfig {
   prefix?: string
+  persistAuth?: boolean
 }
 
 export interface OperationLinkConfig {
@@ -235,6 +236,7 @@ export const DEFAULT_OPERATION_SLOTS: OperationSlot[] = [
 
 export const DEFAULT_BASE_URL = 'http://localhost'
 export const DEFAULT_STORAGE_PREFIX = '--oa'
+export const DEFAULT_STORAGE_PERSIST_AUTH = true
 
 export const availableLanguages: LanguageConfig[] = [
   {
@@ -385,6 +387,7 @@ const defaultValues = {
   },
   storage: {
     prefix: DEFAULT_STORAGE_PREFIX,
+    persistAuth: DEFAULT_STORAGE_PERSIST_AUTH,
   },
   markdown: {
     operationLink: {
@@ -481,6 +484,7 @@ const themeConfig: UseThemeConfig = {
   },
   storage: {
     prefix: defaultValues.storage.prefix,
+    persistAuth: defaultValues.storage.persistAuth,
   },
   markdown: {
     operationLink: {
@@ -1099,6 +1103,13 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     if (config.prefix !== undefined) {
       storage.prefix = config.prefix
     }
+    if (config.persistAuth !== undefined) {
+      storage.persistAuth = config.persistAuth
+    }
+  }
+
+  function getStoragePersistAuth(): boolean {
+    return themeConfig?.storage?.persistAuth ?? DEFAULT_STORAGE_PERSIST_AUTH
   }
 
   return {
@@ -1179,6 +1190,7 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setMarkdownConfig,
     getOperationLinkConfig,
     getStoragePrefix,
+    getStoragePersistAuth,
     setStorageConfig,
   }
 }
