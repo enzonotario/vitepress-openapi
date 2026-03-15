@@ -106,7 +106,9 @@ const request = computed({
 
 const allowCustomServer = computed(() => useTheme().getServerAllowCustomServer())
 
-const storagePrefix = useTheme().getStoragePrefix()
+const { getStoragePrefix, getStoragePersistAuth } = useTheme()
+const storagePrefix = getStoragePrefix()
+const persistAuth = getStoragePersistAuth()
 
 const useCustomServer = isLocalStorageAvailable()
   ? useStorage(`${storagePrefix}-use-custom-server`, allowCustomServer.value, localStorage)
@@ -210,7 +212,7 @@ watch(selectedSchemeId, (schemeId) => {
       scheme: scheme.scheme,
       in: scheme.in,
       name: scheme.name ?? name,
-      value: isLocalStorageAvailable()
+      value: isLocalStorageAvailable() && persistAuth
         ? useStorage(`${storagePrefix}-authorization-${name}`, example, localStorage)
         : example,
       label: name,

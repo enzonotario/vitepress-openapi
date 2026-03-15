@@ -129,6 +129,8 @@ export default {
             storage: {
                 // Set the localStorage key prefix.
                 prefix: '--oa',
+                // Set to false to disable persisting auth values to localStorage.
+                persistAuth: true,
             },
             markdown: {
                 operationLink: {
@@ -314,10 +316,11 @@ Configures URL prefixes used for generated navigation links (tags and operations
 
 ## Storage Configuration
 
-| Function           | Description                               | Default Value | Allowed Values |
-|--------------------|-------------------------------------------|---------------|----------------|
-| `setStorageConfig` | Sets the localStorage key prefix.         | `'--oa'`      | `string`       |
-| `getStoragePrefix` | Returns the current localStorage key prefix. | `'--oa'`   | `string`       |
+| Function                 | Description                                                        | Default Value | Allowed Values   |
+|--------------------------|--------------------------------------------------------------------|---------------|------------------|
+| `setStorageConfig`       | Sets the storage configuration.                                    | —             | —                |
+| `getStoragePrefix`       | Returns the current localStorage key prefix.                       | `'--oa'`      | `string`         |
+| `getStoragePersistAuth`  | Returns whether auth values are persisted to localStorage.         | `true`        | `true`, `false`  |
 
 ## Markdown Configuration
 

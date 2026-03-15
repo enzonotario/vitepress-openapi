@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { DEFAULT_BASE_URL, DEFAULT_OPERATION_SLOTS, DEFAULT_STORAGE_PREFIX, useTheme } from '../../src/composables/useTheme'
+import { DEFAULT_BASE_URL, DEFAULT_OPERATION_SLOTS, DEFAULT_STORAGE_PERSIST_AUTH, DEFAULT_STORAGE_PREFIX, useTheme } from '../../src/composables/useTheme'
 
 describe('initialization and reset', () => {
   it('initializes with custom configuration', () => {
@@ -152,6 +152,7 @@ describe('initialization and reset', () => {
 
     // Storage
     expect(theme.getStoragePrefix()).toBe('my-app')
+    expect(theme.getStoragePersistAuth()).toBe(true)
 
     // Markdown
     expect(theme.getMarkdownConfig().operationLink?.linkPrefix).toBe('/custom-operations/')
@@ -1083,5 +1084,25 @@ describe('storage configuration', () => {
   it('initializes with custom storage prefix', () => {
     useTheme({ storage: { prefix: 'custom' } })
     expect(themeConfig.getStoragePrefix()).toBe('custom')
+  })
+
+  it('returns the default storage persistAuth', () => {
+    expect(themeConfig.getStoragePersistAuth()).toBe(DEFAULT_STORAGE_PERSIST_AUTH)
+  })
+
+  it('sets and gets the storage persistAuth', () => {
+    themeConfig.setStorageConfig({ persistAuth: false })
+    expect(themeConfig.getStoragePersistAuth()).toBe(false)
+  })
+
+  it('resets to default storage persistAuth', () => {
+    themeConfig.setStorageConfig({ persistAuth: false })
+    themeConfig.reset()
+    expect(themeConfig.getStoragePersistAuth()).toBe(DEFAULT_STORAGE_PERSIST_AUTH)
+  })
+
+  it('initializes with custom storage persistAuth', () => {
+    useTheme({ storage: { persistAuth: false } })
+    expect(themeConfig.getStoragePersistAuth()).toBe(false)
   })
 })
