@@ -6,7 +6,7 @@ import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
 import type { OperationData } from '@/lib/operation/operationData'
 import { useI18n } from '@byjohann/vue-i18n'
 import { useStorage } from '@vueuse/core'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, isRef, ref, watch } from 'vue'
 import { buildRequest } from '@/lib/codeSamples/buildRequest'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { createCompositeKey } from '@/lib/playground/createCompositeKey'
@@ -220,6 +220,21 @@ watch(selectedSchemeId, (schemeId) => {
     }
   })
 }, { immediate: true })
+
+watch(operationData.security.securityValues, (values) => {
+  for (const [schemeId, value] of Object.entries(values)) {
+    const auth = authorizations.value.find(a => a.label === schemeId)
+    if (!auth) {
+      continue
+    }
+    if (isRef(auth.value)) {
+      auth.value.value = value
+    }
+    else {
+      auth.value = value
+    }
+  }
+}, { deep: true })
 </script>
 
 <template>

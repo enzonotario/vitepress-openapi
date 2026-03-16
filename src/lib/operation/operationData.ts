@@ -10,6 +10,7 @@ export interface OperationData {
   operationId: string
   security: {
     selectedSchemeId: Ref<string>
+    securityValues: Ref<Record<string, any>>
   }
   playground: {
     request: Ref<OARequest>
@@ -44,6 +45,7 @@ export function initOperationData({
     operationId: operation.operationId,
     security: {
       selectedSchemeId: ref(operation.securityUi?.some(s => s.id === defaultSecurityScheme) ? defaultSecurityScheme : firstSecurityScheme),
+      securityValues: ref({}),
     },
     playground: {
       request: ref(request || {} as OARequest),
