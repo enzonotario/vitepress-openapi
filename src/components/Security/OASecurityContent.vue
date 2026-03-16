@@ -99,6 +99,6 @@ const typeValue = computed(() => {
       </div>
     </div>
 
-    <OAParameterExamples :property="scheme" />
+    <OAParameterExamples :property="scheme" :security-scheme-name="name" />
   </div>
 </template>

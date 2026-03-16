@@ -2,34 +2,33 @@
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed } from 'vue'
 import { formatValueForDisplay } from '@/lib/format/formatValueForDisplay'
-import { usePlayground } from '../../composables/usePlayground'
 
 const props = defineProps({
   value: {
     type: [String, Number, Boolean, Array, Object],
     required: true,
   },
-  parameterName: {
-    type: String,
-    default: '',
-  },
   isEnum: {
     type: Boolean,
     default: false,
   },
+  onSet: {
+    type: Function,
+    default: undefined,
+  },
 })
 
-const { setParameterValue, hasOperationData } = usePlayground()
 const { t } = useI18n()
 
 function handleClick() {
-  if (hasOperationData && props.parameterName) {
-    const valueToSet = props.isEnum ? String(props.value) : props.value
-    setParameterValue(props.parameterName, valueToSet)
+  if (!props.onSet) {
+    return
   }
+  const valueToSet = props.isEnum ? String(props.value) : props.value
+  props.onSet(valueToSet)
 }
 
-const isClickable = computed(() => hasOperationData && !!props.parameterName)
+const isClickable = computed(() => !!props.onSet)
 </script>
 
 <template>

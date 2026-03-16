@@ -2,6 +2,7 @@
 import { useI18n } from '@byjohann/vue-i18n'
 import { titleCase } from 'scule'
 import { getConstraints } from '@/lib/parser/constraintsParser'
+import { usePlayground } from '../../composables/usePlayground'
 import OACodeValue from '../Common/OACodeValue.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
@@ -16,6 +17,7 @@ const props = defineProps({
 
 const constraints = getConstraints(props.parameter.schema)
 const { t } = useI18n()
+const { setParameterValue, hasOperationData } = usePlayground()
 </script>
 
 <template>
@@ -61,8 +63,8 @@ const { t } = useI18n()
               v-for="(value, idx) in props.parameter.schema.enum"
               :key="idx"
               :value="value"
-              :parameter-name="props.parameter.name"
               :is-enum="true"
+              :on-set="hasOperationData && props.parameter.name ? (v) => setParameterValue(props.parameter.name, v) : undefined"
             />
           </div>
         </template>

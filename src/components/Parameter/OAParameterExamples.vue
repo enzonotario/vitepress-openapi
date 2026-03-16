@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, ref, watch } from 'vue'
 import { getPropertyExamples } from '@/lib/examples/getPropertyExamples'
@@ -14,6 +14,10 @@ const props = defineProps({
   property: {
     type: Object,
     required: true,
+  },
+  securitySchemeName: {
+    type: String,
+    default: undefined,
   },
 })
 
@@ -34,12 +38,26 @@ const selectedExample = computed(() => {
   return examples.value[index] ?? null
 })
 
-const { setParameterValue, hasOperationData } = usePlayground()
+const { setParameterValue, setSecurityValue, hasOperationData } = usePlayground()
+
+const setValueFn = computed(() => {
+  if (!hasOperationData) {
+    return undefined
+  }
+  if (props.securitySchemeName) {
+    return (v: any) => setSecurityValue(props.securitySchemeName, v)
+  }
+  if (props.property.name) {
+    return (v: any) => setParameterValue(props.property.name, v)
+  }
+  return undefined
+})
 
 watch(selectedExampleIndex, () => {
-  if (hasOperationData && props.property.name && selectedExample.value) {
-    setParameterValue(props.property.name, selectedExample.value.value)
+  if (!hasOperationData || !selectedExample.value) {
+    return
   }
+  setValueFn.value?.(selectedExample.value.value)
 })
 
 watch(examples, () => {
@@ -65,7 +83,7 @@ const { t } = useI18n()
     <span class="text-sm">{{ t('Example') }}</span>
     <OACodeValue
       :value="examples[0]?.value"
-      :parameter-name="props.property.name"
+      :on-set="setValueFn"
     />
   </div>
 
@@ -78,7 +96,7 @@ const { t } = useI18n()
         <OACodeValue
           v-if="selectedExample"
           :value="selectedExample.value"
-          :parameter-name="props.property.name"
+          :on-set="setValueFn"
         />
       </template>
 
@@ -128,7 +146,7 @@ const { t } = useI18n()
             v-for="(example, idx) in examples"
             :key="idx"
             :value="example.value"
-            :parameter-name="props.property.name"
+            :on-set="setValueFn"
           />
         </div>
       </template>

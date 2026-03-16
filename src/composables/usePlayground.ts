@@ -197,6 +197,19 @@ export function usePlayground() {
     operationData.playground.parameterValues.value[parameterName] = parsedValue
   }
 
+  function setSecurityValue(schemeId: string, value: any) {
+    if (!operationData || !schemeId) {
+      return
+    }
+
+    // Replace the object reference so the watcher always fires,
+    // even when the value for this key hasn't changed.
+    operationData.security.securityValues.value = {
+      ...operationData.security.securityValues.value,
+      [schemeId]: value,
+    }
+  }
+
   return {
     loading,
     response,
@@ -206,6 +219,7 @@ export function usePlayground() {
     submitRequest,
     cleanupImageUrls,
     setParameterValue,
+    setSecurityValue,
     hasOperationData: !!operationData,
   }
 }
