@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { NormalizedExample } from '@/lib/examples/normalizeExamples'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, ref, watch } from 'vue'
 import { getPropertyExamples } from '@/lib/examples/getPropertyExamples'
@@ -45,7 +46,8 @@ const setValueFn = computed(() => {
     return undefined
   }
   if (props.securitySchemeName) {
-    return (v: any) => setSecurityValue(props.securitySchemeName, v)
+    const schemeName = props.securitySchemeName
+    return (v: any) => setSecurityValue(schemeName, v)
   }
   if (props.property.name) {
     return (v: any) => setParameterValue(props.property.name, v)
@@ -64,7 +66,7 @@ watch(examples, () => {
   selectedExampleIndex.value = '0'
 })
 
-function getOptionLabel(example) {
+function getOptionLabel(example: NormalizedExample) {
   if (example.summary) {
     return `${example.name} - ${example.summary}`
   }
@@ -88,7 +90,7 @@ const { t } = useI18n()
   </div>
 
   <div
-    v-if="examples?.length > 1 && isNamedExamples"
+    v-if="(examples?.length ?? 0) > 1 && isNamedExamples"
     class="flex flex-row items-center gap-2"
   >
     <OAParameterAttribute :name="t('Examples')" class="flex-1">
@@ -127,7 +129,7 @@ const { t } = useI18n()
   </div>
 
   <div
-    v-if="examples?.length > 1 && !isNamedExamples"
+    v-if="(examples?.length ?? 0) > 1 && !isNamedExamples"
     class="flex flex-row flex-wrap gap-2"
     :class="{
       'items-center': wrapExamples,
