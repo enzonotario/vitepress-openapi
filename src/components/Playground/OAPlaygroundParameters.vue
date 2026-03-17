@@ -221,7 +221,7 @@ watch(selectedSchemeId, (schemeId) => {
   })
 }, { immediate: true })
 
-watch(operationData.security.securityValues, (values) => {
+watch([operationData.security.securityValues, authorizations], ([values]) => {
   for (const [schemeId, value] of Object.entries(values)) {
     const auth = authorizations.value.find(a => a.label === schemeId)
     if (!auth) {
