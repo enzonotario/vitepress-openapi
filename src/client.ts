@@ -52,6 +52,7 @@ export { usePlayground } from './composables/usePlayground'
 export { DEFAULT_OPERATION_SLOTS }
 export { useShiki } from './composables/useShiki'
 export { useTheme } from './composables/useTheme'
+export { minifyHtml } from './lib/utils/minifyHtml'
 export { generateCodeSample } from './lib/codeSamples/generateCodeSample'
 export { OARequest } from './lib/codeSamples/request'
 export { createOpenApiSpec } from './lib/spec/createOpenApiSpec'

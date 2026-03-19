@@ -123,6 +123,19 @@ export default defineConfigWithTheme({
           ],
         },
         {
+          text: 'Utilities',
+          items: [
+            {
+              items: [
+                {
+                  text: 'minifyHtml',
+                  link: '/utils/minifyHtml',
+                },
+              ],
+            },
+          ],
+        },
+        {
           text: 'Customizations',
           items: [
             {
