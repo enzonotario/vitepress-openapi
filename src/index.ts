@@ -8,8 +8,8 @@ export {
 } from './composables/useOpenapi'
 export { usePaths } from './composables/usePaths'
 export { useSidebar } from './composables/useSidebar'
-export { minifyHtml } from './lib/utils/minifyHtml'
 export { createOpenApiSpec, type OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
+export { minifyHtml } from './lib/utils/minifyHtml'
 export { parseSpec } from './lib/utils/parseSpec'
 
 export const httpVerbs: readonly OpenAPIV3.HttpMethods[] = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'] as const
