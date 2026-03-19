@@ -6,6 +6,7 @@ import { parseOpenapi } from '../lib/parser/parseOpenapi'
 import { cleanSidebarItems } from '../lib/sidebar/cleanSidebarItems'
 import { generateSidebarItemsByPaths } from '../lib/sidebar/generateSidebarItemsByPaths'
 import { createOpenApiSpec } from '../lib/spec/createOpenApiSpec'
+import { minifyHtml } from '../lib/utils/minifyHtml'
 
 type MethodAliases = Record<string, string>
 
@@ -111,10 +112,12 @@ export function useSidebar({
   const _globalItemTemplate: SidebarItemTemplateFn = sidebarItemTemplate || (({ method, path, title }) => {
     const resolvedMethod = methodAliases[method] || method.toUpperCase()
     const displayText = title || path
-    return `<span class="OASidebarItem group/oaOperationLink">
+    return minifyHtml(`
+      <span class="OASidebarItem group/oaOperationLink">
         <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${resolvedMethod}</span>
         <span class="OASidebarItem-text text">${displayText}</span>
-      </span>`
+      </span>
+    `)
   })
 
   const _globalGroupTemplate: SidebarGroupTemplateFn = sidebarGroupTemplate || defaultGroupTemplate

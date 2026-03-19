@@ -8,7 +8,7 @@ function cleanResult(result: (DefaultTheme.SidebarItem | DefaultTheme.SidebarIte
     return result.map(cleanResult)
   }
 
-  if (result.text && result.text.includes('<span')) {
+  if (result.text && result.text.includes('<')) {
     delete result.text
   }
 
