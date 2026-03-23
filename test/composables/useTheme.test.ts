@@ -603,7 +603,7 @@ describe('playground x-playground-example behavior', () => {
     expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('value')
   })
 
-  it('sets and gets playground x-example behavior', () => {
+  it('sets and gets playground x-playground-example behavior', () => {
     themeConfig.setPlaygroundXExampleBehavior('ignore')
     expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('ignore')
     themeConfig.setPlaygroundXExampleBehavior('placeholder')
