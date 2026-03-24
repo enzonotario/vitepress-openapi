@@ -27,14 +27,17 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
         },
-         manualChunks: {
-          // 'json-editor': ['json-editor-vue'],
-          // 'ui': ['reka-ui'],
-          // // 'vue-core': ['vue'],
-          // 'shiki-core': ['shiki'],
-          // 'highlighters': ['shiki/langs/javascript', 'shiki/langs/typescript', 'shiki/langs/json'],
-        },
+        manualChunks: {},
+        minifyInternalExports: true,
+        compact: true
       },
     },
+    // minify: 'terser',
+    // terserOptions: {
+    //   format: {
+    //     comments: false,
+    //     beautify: false
+    //   }
+    // },
   },
 })
