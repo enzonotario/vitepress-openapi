@@ -1,4 +1,4 @@
-import type { OpenAPIDocument, ParsedOpenAPI, ParsedPaths } from '../../types'
+import type { OpenAPIDocument, ParsedPaths } from '../../types'
 import { parseYAML } from 'confbox'
 
 export function parseSpecSync(spec: OpenAPIDocument | string): OpenAPIDocument {

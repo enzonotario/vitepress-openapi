@@ -27,6 +27,8 @@ const LANGUAGE_IMPORTERS: Record<string, () => Promise<LanguageInput>> = {
   typescript: () => import('@shikijs/langs/typescript').then(m => m.default),
   javascript: () => import('@shikijs/langs/javascript').then(m => m.default),
   bash: () => import('@shikijs/langs/bash').then(m => m.default),
+  python: () => import('@shikijs/langs/python').then(m => m.default),
+  php: () => import('@shikijs/langs/php').then(m => m.default),
 }
 
 const CORE_LANGUAGES: Array<keyof typeof LANGUAGE_IMPORTERS> = [
