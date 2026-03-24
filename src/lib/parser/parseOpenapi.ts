@@ -27,7 +27,8 @@ export function parseOpenapi() {
       console.warn('Transforming OpenAPI spec:', spec)
     }
 
-    let specContent = parseSpec(spec)
+    // need sync function or better alternative
+    let specContent = parseSpec(spec) as any
 
     if (!specContent) {
       return {}
@@ -57,7 +58,7 @@ export function parseOpenapi() {
   }: {
     spec: ParsedOpenAPI | string
   }): Promise<ParsedOpenAPI> {
-    let specContent = parseSpec(spec) as ParsedOpenAPI
+    let specContent = parseSpec(spec) as any
 
     const [result, err] = await $trycatch(() => generateCodeSamples(specContent))
     specContent = err ? specContent : result
@@ -76,7 +77,8 @@ export function parseOpenapi() {
   }): ParsedOpenAPI {
     const specContent = parseSpec(spec)
 
-    let parsedSpec = { ...specContent } as ParsedOpenAPI
+    // need sync function or better alternative
+    let parsedSpec = { ...specContent } as any
 
     const [mergedSpec, errMerge] = $trycatch(() => merge(
       transformSync({
