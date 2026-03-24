@@ -27,48 +27,12 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
         },
-         manualChunks(id) {
-          // ---------- JSON EDITOR (BIGGEST WIN)
-          // if (id.includes('json-editor-vue')) {
-          //   return 'json-editor'
-          // }
-
-          // ---------- OPENAPI CORE
-          // if (
-          //   id.includes('@scalar') ||
-          //   id.includes('openapi') ||
-          //   id.includes('useOpenapi')
-          // ) {
-          //   return 'openapi-core'
-          // }
-
-          // ---------- MARKDOWN + HIGHLIGHTING
-          // if (
-          //   id.includes('shiki') ||
-          //   id.includes('markdown-it') ||
-          //   id.includes('OAMarkdown')
-          // ) {
-          //   return 'markdown'
-          // }
-
-          // ---------- SYNTAX GRAMMARS
-          // if (
-          //   id.match(/(typescript|javascript|python|php|bash)/)
-          // ) {
-          //   return 'syntax-langs'
-          // }
-
-          // ---------- UI / COMPONENTS
-          if (id.includes('reka-ui') || id.includes('lucide')) {
-            return 'ui'
-          }
-
-          // ---------- VUE CORE
-          if (id.includes('node_modules/vue')) {
-            return 'vue-core'
-          }
-
-          // ---------- DEFAULT
+         manualChunks: {
+          // 'json-editor': ['json-editor-vue'],
+          // 'ui': ['reka-ui'],
+          // // 'vue-core': ['vue'],
+          // 'shiki-core': ['shiki'],
+          // 'highlighters': ['shiki/langs/javascript', 'shiki/langs/typescript', 'shiki/langs/json'],
         },
       },
     },
