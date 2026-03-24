@@ -6,9 +6,6 @@ import { bundledLanguages as highlighterImports } from 'shiki/langs'
 import { ref } from 'vue'
 import { useTheme } from './useTheme'
 
-// Core highlighters always loaded for response body highlighting (not shown in code samples UI)
-const CORE_HIGHLIGHTERS: BundledLanguage[] = ['json', 'xml', 'markdown']
-
 let shiki: HighlighterCore | null = null
 let initPromise: Promise<void> | null = null
 
@@ -38,18 +35,11 @@ export function useShiki() {
 
         // Load only core highlighters during init
         const coreLangModules = await Promise.all(
-          CORE_HIGHLIGHTERS.map(async (lang) => {
-            const importer = highlighterImports[lang]
-            if (!importer) {
-              return []
-            }
-            try {
-              const mod = await importer()
-              return mod.default
-            } catch {
-              return []
-            }
-          }),
+          [
+            async () => (await import('@shikijs/langs/json')).default,
+            async () => (await import('@shikijs/langs/xml')).default,
+            async () => (await import('@shikijs/langs/markdown')).default,
+          ]
         )
 
         shiki = await createHighlighterCore({
