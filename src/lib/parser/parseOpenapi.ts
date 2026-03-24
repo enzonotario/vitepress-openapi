@@ -3,7 +3,7 @@ import type { OpenAPIDocument, ParsedOpenAPI } from '../../types'
 
 import { $trycatch } from '@tszen/trycatch'
 import { merge } from 'allof-merge'
-import { parseSpec } from '../utils/parseSpec'
+import { parseSpec, parseSpecSync } from '../utils/parseSpec'
 import { dereferenceWithAnnotationsSync } from './dereferenceWithAnnotations'
 import { generateCodeSamples } from './generateCodeSamples'
 import { generateMissingOperationIds } from './generateMissingOperationIds'
@@ -28,14 +28,14 @@ export function parseOpenapi() {
     }
 
     // need sync function or better alternative
-    let specContent = parseSpec(spec) as any
+    let specContent = parseSpecSync(spec)
 
     if (!specContent) {
       return {}
     }
 
     if (!specContent.openapi || !String(specContent.openapi).startsWith('3.')) {
-      console.warn('Only OpenAPI 3.x is supported')
+      console.warn('Only OpenAPI 3.x is supported', JSON.stringify(specContent))
       return {}
     }
 
@@ -58,12 +58,12 @@ export function parseOpenapi() {
   }: {
     spec: ParsedOpenAPI | string
   }): Promise<ParsedOpenAPI> {
-    let specContent = parseSpec(spec) as any
+    let specContent = await parseSpec(spec)
 
-    const [result, err] = await $trycatch(() => generateCodeSamples(specContent))
+    const [result, err] = await $trycatch(() => generateCodeSamples(specContent as ParsedOpenAPI))
     specContent = err ? specContent : result
 
-    return specContent
+    return specContent as ParsedOpenAPI
   }
 
   function parseSync({
@@ -75,7 +75,7 @@ export function parseOpenapi() {
     defaultTag?: string
     defaultTagDescription?: string
   }): ParsedOpenAPI {
-    const specContent = parseSpec(spec)
+    const specContent = parseSpecSync(spec)
 
     // need sync function or better alternative
     let parsedSpec = { ...specContent } as any
