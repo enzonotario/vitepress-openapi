@@ -5,6 +5,12 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      vercel_url:
+        description: 'Vercel Preview URL to test against (e.g. my-project-abc123.vercel.app)'
+        required: true
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,10 +41,12 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Wait for Vercel deployment
+        if: github.event_name != 'workflow_dispatch'
         run: sleep 60
 
       - name: Get Vercel Preview URL
         id: get-vercel-preview-url
+        if: github.event_name != 'workflow_dispatch'
         uses: zentered/vercel-preview-url@v1.4.0
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
@@ -46,14 +54,22 @@ jobs:
           vercel_project_id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel_team_id: ${{ secrets.VERCEL_TEAM_ID }}
 
-      - name: Display Vercel Preview URL
+      - name: Resolve Vercel Preview URL
+        id: resolve-url
         run: |
-          echo "Vercel Preview URL: https://${{ steps.get-vercel-preview-url.outputs.preview_url }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "url=https://${{ inputs.vercel_url }}" >> $GITHUB_OUTPUT
+          else
+            echo "url=https://${{ steps.get-vercel-preview-url.outputs.preview_url }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Display Vercel Preview URL
+        run: echo "Vercel Preview URL: ${{ steps.resolve-url.outputs.url }}"
 
       - name: Run Playwright tests against Vercel Preview
         run: pnpm exec playwright test staging
         env:
-          PLAYWRIGHT_BASE_URL: https://${{ steps.get-vercel-preview-url.outputs.preview_url }}
+          PLAYWRIGHT_BASE_URL: ${{ steps.resolve-url.outputs.url }}
 
       - uses: actions/upload-artifact@v4
         if: always()
