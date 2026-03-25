@@ -2,10 +2,6 @@
 import { computed, defineAsyncComponent } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 
-const JsonEditorVue = defineAsyncComponent(() => {
-  return import('json-editor-vue')
-})
-
 const props = defineProps({
   modelValue: {
     type: Object,
@@ -18,6 +14,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
+
+const JsonEditorVue = defineAsyncComponent(() => {
+  return import('json-editor-vue')
+})
 
 const value = computed({
   get: () => props.modelValue,

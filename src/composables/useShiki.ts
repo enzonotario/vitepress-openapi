@@ -15,8 +15,8 @@ const loading = ref(true)
 /**
  * Vite will only bundle chunks for languages explicitly listed.
  *
- * Using granular @shikijs/langs/* imports instead of the bundledLanguages registry 
- * 
+ * Using granular @shikijs/langs/* imports instead of the bundledLanguages registry
+ *
  * The registry alone pulls every language into the build.
  */
 const LANGUAGE_IMPORTERS: Record<string, () => Promise<LanguageInput>> = {
@@ -32,7 +32,9 @@ const LANGUAGE_IMPORTERS: Record<string, () => Promise<LanguageInput>> = {
 }
 
 const CORE_LANGUAGES: Array<keyof typeof LANGUAGE_IMPORTERS> = [
-  'json', 'xml', 'markdown',
+  'json',
+  'xml',
+  'markdown',
 ]
 
 export function useShiki() {
@@ -56,7 +58,7 @@ export function useShiki() {
 
         // invoke the importers and await them
         const coreLangModules = await Promise.all(
-          CORE_LANGUAGES.map(lang => LANGUAGE_IMPORTERS[lang]())
+          CORE_LANGUAGES.map(lang => LANGUAGE_IMPORTERS[lang]()),
         )
 
         shiki = await createHighlighterCore({
@@ -121,7 +123,7 @@ export function useShiki() {
     const loadPromise = importer()
       .then(mod => shiki!.loadLanguage(mod)
         .then(() => true))
-      .catch(e => {
+      .catch((e) => {
         console.error(`Failed to load Shiki language "${lang}":`, e)
         return false
       })
@@ -141,7 +143,7 @@ export function useShiki() {
 
   function renderShiki(
     content: string,
-    { lang, theme }: { lang: string; theme: string },
+    { lang, theme }: { lang: string, theme: string },
   ): string {
     if (shiki && shiki?.getLoadedLanguages().includes(lang)) {
       return shiki.codeToHtml(content, {
@@ -170,7 +172,7 @@ export function useShiki() {
     reset,
     /** @deprecated use init() */
     initShiki: async () => {
-      console.warn('initShiki is deprecated, use init instead');
+      console.warn('initShiki is deprecated, use init instead')
       await init()
     },
   }

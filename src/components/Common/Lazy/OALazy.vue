@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, nextTick, onMounted, onUnmounted, useTemplateRef } from 'vue'
 import { useIntersectionObserver } from '@vueuse/core'
+import { nextTick, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 
 import { lazyBus } from './lazyBus'
 
@@ -31,7 +31,7 @@ const sentinel = useTemplateRef('sentinel')
 
 const emitLoaded = () => {
   const { id } = props
-  if (id) nextTick(() => lazyBus.emit({ id }))
+  if (id) { nextTick(() => lazyBus.emit({ id })) }
 }
 
 // useIntersectionObserver is SSR-safe and self-cleans on unmount,
@@ -39,7 +39,7 @@ const emitLoaded = () => {
 const { stop, isSupported } = useIntersectionObserver(
   sentinel,
   ([entry]) => {
-    if (!entry.isIntersecting) return
+    if (!entry.isIntersecting) { return }
     shouldRender.value = true
     emitLoaded()
     stop()
@@ -69,7 +69,6 @@ onUnmounted(() => {
   stop()
 })
 </script>
-
 
 <template>
   <slot v-if="shouldRender" />

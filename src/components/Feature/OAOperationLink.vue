@@ -2,7 +2,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { Slots } from 'vue'
 import { computed, useSlots } from 'vue'
-import {OAMarkdown} from '../index'
+import { OAMarkdown } from '../index'
 
 interface Props {
   href?: string

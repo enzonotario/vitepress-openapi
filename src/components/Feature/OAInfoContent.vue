@@ -1,8 +1,7 @@
 <script setup>
 import { useI18n } from '@byjohann/vue-i18n'
 import { useTheme } from '../../composables/useTheme'
-import {OAHeading} from '../index'
-import {OAMarkdown} from '../index'
+import { OAHeading, OAMarkdown } from '../index'
 import { Badge } from '../ui/badge/index'
 import OADownloadSpec from './OADownloadSpec.vue'
 

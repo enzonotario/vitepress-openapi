@@ -2,7 +2,7 @@
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed } from 'vue'
 import OACodeValue from '../Common/OACodeValue.vue'
-import {OAMarkdown} from '../index'
+import { OAMarkdown } from '../index'
 import OAParameterAttribute from '../Parameter/OAParameterAttribute.vue'
 import OAParameterExamples from '../Parameter/OAParameterExamples.vue'
 

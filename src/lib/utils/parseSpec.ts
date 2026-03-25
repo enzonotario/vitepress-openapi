@@ -21,7 +21,6 @@ export function parseSpecSync(spec: OpenAPIDocument | string): OpenAPIDocument {
   return {} as OpenAPIDocument
 }
 
-
 export async function parseSpec(spec: OpenAPIDocument | string): Promise<OpenAPIDocument> {
   if (typeof spec === 'string') {
     try {

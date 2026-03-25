@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { OpenAPIDocument } from '../../types'
-import { parseYAML } from 'confbox'
 import { provide } from 'vue'
 import { parseOpenapi } from '@/lib/parser/parseOpenapi'
 import { createOpenApiSpec } from '@/lib/spec/createOpenApiSpec'
