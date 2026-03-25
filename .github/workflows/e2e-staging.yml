@@ -5,12 +5,8 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
-  workflow_dispatch:
-    inputs:
-      vercel_url:
-        description: 'Vercel Preview URL to test against (e.g. my-project-abc123.vercel.app)'
-        required: true
-        type: string
+  issue_comment:
+    types: [created]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -21,9 +17,20 @@ jobs:
     name: Run E2E Tests on Vercel Preview
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    # For issue_comment: only run when a maintainer comments /run-e2e <url> on a PR
+    if: |
+      github.event_name != 'issue_comment' ||
+      (
+        github.event.issue.pull_request != null &&
+        startsWith(github.event.comment.body, '/run-e2e') &&
+        (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR')
+      )
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          # For PR comments, checkout the PR's branch (works with forks too)
+          ref: ${{ github.event_name == 'issue_comment' && format('refs/pull/{0}/head', github.event.issue.number) || github.ref }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4.0.0
@@ -41,12 +48,12 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Wait for Vercel deployment
-        if: github.event_name != 'workflow_dispatch'
+        if: github.event_name != 'issue_comment'
         run: sleep 60
 
       - name: Get Vercel Preview URL
         id: get-vercel-preview-url
-        if: github.event_name != 'workflow_dispatch'
+        if: github.event_name != 'issue_comment'
         uses: zentered/vercel-preview-url@v1.4.0
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
@@ -57,14 +64,17 @@ jobs:
       - name: Resolve Vercel Preview URL
         id: resolve-url
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "url=https://${{ inputs.vercel_url }}" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "issue_comment" ]; then
+            # Extract URL from comment: /run-e2e https://my-project-abc123.vercel.app
+            URL=$(echo "${{ github.event.comment.body }}" | grep -oP 'https?://\S+' | head -1)
+            echo "url=$URL" >> $GITHUB_OUTPUT
           else
             echo "url=https://${{ steps.get-vercel-preview-url.outputs.preview_url }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Display Vercel Preview URL
-        run: echo "Vercel Preview URL: ${{ steps.resolve-url.outputs.url }}"
+        run: |
+          echo "Vercel Preview URL: ${{ steps.resolve-url.outputs.url }}"
 
       - name: Run Playwright tests against Vercel Preview
         run: pnpm exec playwright test staging
