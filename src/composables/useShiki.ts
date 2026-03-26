@@ -145,7 +145,7 @@ export function useShiki() {
     content: string,
     { lang, theme }: { lang: string, theme: string },
   ): string {
-    if (shiki && shiki?.getLoadedLanguages().includes(lang)) {
+    if (shiki && shiki.getLoadedLanguages().includes(lang)) {
       return shiki.codeToHtml(content, {
         lang,
         theme,

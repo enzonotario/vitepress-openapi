@@ -27,7 +27,7 @@ async function downloadSpec(format: 'json' | 'yaml'): Promise<void> {
       content = JSON.stringify(originalSpec, null, 2)
     } else {
       const yaml = await import('js-yaml')
-      content = yaml.dump(originalSpec)
+      content = yaml.default.dump(originalSpec)
     }
 
     const mimeType = format === 'json'

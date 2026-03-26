@@ -22,22 +22,12 @@ export function parseSpecSync(spec: OpenAPIDocument | string): OpenAPIDocument {
 }
 
 export async function parseSpec(spec: OpenAPIDocument | string): Promise<OpenAPIDocument> {
-  if (typeof spec === 'string') {
+  return new Promise<OpenAPIDocument>((resolve, reject) => {
     try {
-      const { parseYAML } = await import('confbox')
-      const parsed = parseYAML(spec)
-      return (parsed ?? {}) as OpenAPIDocument & { paths: ParsedPaths }
+      const parsed = parseSpecSync(spec)
+      resolve(parsed)
+    } catch (error) {
+      reject(error)
     }
-    catch (e) {
-      console.error('Error parsing spec', e)
-      return {} as OpenAPIDocument
-    }
-  }
-
-  if (typeof spec === 'object' && spec !== null) {
-    return spec as OpenAPIDocument
-  }
-
-  console.error('Invalid spec format')
-  return {} as OpenAPIDocument
+  })
 }

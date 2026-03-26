@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { parseSpecSync } from '../../../src/lib/utils/parseSpec'
-import { OpenAPIDocument } from '../../../src/types'
+import type { OpenAPIDocument } from '../../../src/types'
 
 describe('parseSpec', () => {
   it('parses JSON string spec', () => {

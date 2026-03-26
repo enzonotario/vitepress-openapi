@@ -4,14 +4,12 @@ import type { Slots } from 'vue'
 import { computed, useSlots } from 'vue'
 import { OAMarkdown } from '../index'
 
-interface Props {
+const props = withDefaults(defineProps<{
   href?: string
   method?: OpenAPIV3.HttpMethods | string
   title?: string
   operationId?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
   href: undefined,
   method: '',
   title: '',

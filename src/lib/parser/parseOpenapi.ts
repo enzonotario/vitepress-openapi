@@ -78,7 +78,7 @@ export function parseOpenapi() {
     const specContent = parseSpecSync(spec)
 
     // need sync function or better alternative
-    let parsedSpec = { ...specContent } as any
+    let parsedSpec = { ...specContent } as ParsedOpenAPI
 
     const [mergedSpec, errMerge] = $trycatch(() => merge(
       transformSync({

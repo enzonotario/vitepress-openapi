@@ -1,6 +1,7 @@
 <script setup>
 import { computed, defineAsyncComponent } from 'vue'
 import { useTheme } from '../../composables/useTheme'
+import OALazy from './Lazy/OALazy.vue'
 
 const props = defineProps({
   modelValue: {
@@ -30,16 +31,18 @@ const isDark = themeConfig.isDark
 </script>
 
 <template>
-  <JsonEditorVue
-    v-model="value"
-    :main-menu-bar="themeConfig.getPlaygroundJsonEditorMainMenuBar()"
-    :navigation-bar="themeConfig.getPlaygroundJsonEditorNavigationBar()"
-    :mode="themeConfig.getPlaygroundJsonEditorMode()"
-    :status-bar="themeConfig.getPlaygroundJsonEditorStatusBar()"
-    class="oa-jse"
-    :class="{
-      'oa-jse-theme-dark': isDark,
-      'oa-jse-theme-light': !isDark,
-    }"
-  />
+  <OALazy>
+    <JsonEditorVue
+      v-model="value"
+      :main-menu-bar="themeConfig.getPlaygroundJsonEditorMainMenuBar()"
+      :navigation-bar="themeConfig.getPlaygroundJsonEditorNavigationBar()"
+      :mode="themeConfig.getPlaygroundJsonEditorMode()"
+      :status-bar="themeConfig.getPlaygroundJsonEditorStatusBar()"
+      class="oa-jse"
+      :class="{
+        'oa-jse-theme-dark': isDark,
+        'oa-jse-theme-light': !isDark,
+      }"
+    />
+  </OALazy>
 </template>
