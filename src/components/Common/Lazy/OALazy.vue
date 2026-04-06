@@ -79,4 +79,3 @@ onMounted(() => {
   <slot v-if="shouldRender" />
   <span v-else ref="sentinel" aria-hidden="true" style="display: block; height: 0; overflow: hidden" />
 </template>
-
