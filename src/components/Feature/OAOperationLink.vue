@@ -50,16 +50,3 @@ const slotContent = computed<string>(() => {
     <span v-else class="OAOperationLink-title">{{ props.title }}</span>
   </component>
 </template>
-
-<style>
-.OAOperationLink {
-  @apply inline-block px-1 space-x-1 rounded cursor-pointer;
-}
-
-.OAOperationLink-badge {
-  @apply px-1 py-0.5 text-xs rounded;
-  font-weight: normal !important;
-  text-decoration: none !important;
-  display: inline-block;
-}
-</style>
