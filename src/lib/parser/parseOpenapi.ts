@@ -3,7 +3,7 @@ import type { OpenAPIDocument, ParsedOpenAPI } from '../../types'
 
 import { $trycatch } from '@tszen/trycatch'
 import { merge } from 'allof-merge'
-import { parseSpec, parseSpecSync } from '../utils/parseSpec'
+import { getParseYAML, parseSpec, parseSpecSync } from '../utils/parseSpec'
 import { dereferenceWithAnnotationsSync } from './dereferenceWithAnnotations'
 import { generateCodeSamples } from './generateCodeSamples'
 import { generateMissingOperationIds } from './generateMissingOperationIds'
@@ -118,6 +118,9 @@ export function parseOpenapi() {
     defaultTag?: string
     defaultTagDescription?: string
   }): Promise<ParsedOpenAPI> {
+    if (typeof spec === 'string') {
+      await getParseYAML()
+    }
     let parsedSpec = parseSync({
       spec,
       defaultTag,

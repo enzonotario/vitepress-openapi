@@ -1,8 +1,12 @@
-import { describe, expect, it, vi } from 'vitest'
-import { parseSpecSync } from '../../../src/lib/utils/parseSpec'
 import type { OpenAPIDocument } from '../../../src/types'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
+import { parseSpecSync, preloadParseYAML } from '../../../src/lib/utils/parseSpec'
 
 describe('parseSpec', () => {
+  beforeAll(async () => {
+    await preloadParseYAML()
+  })
+
   it('parses JSON string spec', () => {
     const jsonSpec = JSON.stringify({
       openapi: '3.0.0',

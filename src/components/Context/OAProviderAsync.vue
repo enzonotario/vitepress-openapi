@@ -4,6 +4,7 @@ import { provide } from 'vue'
 import { parseOpenapi } from '@/lib/parser/parseOpenapi'
 import { createOpenApiSpec } from '@/lib/spec/createOpenApiSpec'
 import { OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
+import { getParseYAML } from '../../lib/utils/parseSpec'
 
 const props = defineProps({
   spec: {
@@ -33,7 +34,7 @@ async function fetchSpec(url: string): Promise<OpenAPIDocument | string> {
 
 async function parseSpecToDocument(spec: object | string): Promise<OpenAPIDocument> {
   if (typeof spec === 'string') {
-    const { parseYAML } = await import('confbox')
+    const parseYAML = await getParseYAML()
     return parseYAML(spec) as OpenAPIDocument
   }
   return spec as OpenAPIDocument
