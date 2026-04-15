@@ -27,6 +27,9 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
         },
+        manualChunks: {},
+        minifyInternalExports: true,
+        compact: true,
       },
     },
   },
