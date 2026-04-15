@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { OpenAPIDocument } from '../../types'
-import { parseYAML } from 'confbox'
 import { provide } from 'vue'
 import { parseOpenapi } from '@/lib/parser/parseOpenapi'
 import { createOpenApiSpec } from '@/lib/spec/createOpenApiSpec'
 import { OPENAPI_LOCAL_KEY } from '../../composables/useOpenapi'
+import { getParseYAML } from '../../lib/utils/parseSpec'
 
 const props = defineProps({
   spec: {
@@ -32,8 +32,9 @@ async function fetchSpec(url: string): Promise<OpenAPIDocument | string> {
   return res.json()
 }
 
-function parseSpecToDocument(spec: object | string): OpenAPIDocument {
+async function parseSpecToDocument(spec: object | string): Promise<OpenAPIDocument> {
   if (typeof spec === 'string') {
+    const parseYAML = await getParseYAML()
     return parseYAML(spec) as OpenAPIDocument
   }
   return spec as OpenAPIDocument
@@ -49,7 +50,7 @@ const parsedSpec = spec ? await parseOpenapi().parseAsync({ spec }) : {}
 
 const openapiInstance = createOpenApiSpec({
   spec: parsedSpec,
-  originalSpec: spec ? parseSpecToDocument(spec) : null,
+  originalSpec: spec ? await parseSpecToDocument(spec) : null,
 })
 
 provide(OPENAPI_LOCAL_KEY, openapiInstance)

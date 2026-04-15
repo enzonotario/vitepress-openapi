@@ -5,7 +5,7 @@ import type { PartialUseThemeConfig } from './useTheme'
 import { inject } from 'vue'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
 import { createOpenApiSpec } from '../lib/spec/createOpenApiSpec'
-import { parseSpec } from '../lib/utils/parseSpec'
+import { parseSpec, parseSpecSync } from '../lib/utils/parseSpec'
 import { useTheme } from './useTheme'
 
 export const OPENAPI_LOCAL_KEY: InjectionKey<OpenApiSpecInstance> = Symbol('openapiLocal')
@@ -24,7 +24,7 @@ function createInstance(options: {
   defaultTag?: string
   defaultTagDescription?: string
 }): OpenApiSpecInstance {
-  const originalSpec = parseSpec(options.spec)
+  const originalSpec = parseSpecSync(options.spec)
   const parsedSpec = parseOpenapi().parseSync({
     spec: options.spec,
     defaultTag: options.defaultTag,
@@ -38,7 +38,7 @@ async function createInstanceAsync(options: {
   defaultTag?: string
   defaultTagDescription?: string
 }): Promise<OpenApiSpecInstance> {
-  const originalSpec = parseSpec(options.spec)
+  const originalSpec = await parseSpec(options.spec)
   const parsedSpec = await parseOpenapi().parseAsync({
     spec: options.spec,
     defaultTag: options.defaultTag,
