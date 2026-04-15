@@ -1,6 +1,6 @@
 <script setup>
 import { useI18n } from '@byjohann/vue-i18n'
-import OAHeading from '../Common/OAHeading.vue'
+import { OAHeading } from '../index'
 
 const props = defineProps({
   openapi: {

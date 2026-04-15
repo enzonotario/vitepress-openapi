@@ -1,49 +1,25 @@
-import OAVueJsonPretty from './Common/Highlight/OAVueJsonPretty.vue'
-import OAFooter from './Common/OAFooter.vue'
-import OAHeaderBadges from './Common/OAHeaderBadges.vue'
-import OAHeading from './Common/OAHeading.vue'
-import OAMarkdown from './Common/OAMarkdown.vue'
-import OAInfo from './Feature/OAInfo.vue'
-import OAIntroduction from './Feature/OAIntroduction.vue'
-import OALocaleSelect from './Feature/OALocaleSelect.vue'
-import OAOperation from './Feature/OAOperation.vue'
-import OAOperationContext from './Feature/OAOperationContext.vue'
-import OAOperationLink from './Feature/OAOperationLink.vue'
-import OAServers from './Feature/OAServers.vue'
-import OASpec from './Feature/OASpec.vue'
-import OASpecSkeleton from './Feature/OASpecSkeleton.vue'
-import OAOperationTags from './Operation/OAOperationTags.vue'
-import OAParameter from './Parameter/OAParameter.vue'
-import OAParameters from './Parameter/OAParameters.vue'
-import OAPathEndpoint from './Path/OAPathEndpoint.vue'
-import OAPlayground from './Playground/OAPlayground.vue'
-import OARequestBody from './Request/OARequestBody.vue'
-import OAResponses from './Response/OAResponses.vue'
-import OACodeSamples from './Sample/OACodeSamples.vue'
-import OASecurity from './Security/OASecurity.vue'
+import { defineAsyncComponent } from 'vue'
 
-export {
-  OACodeSamples,
-  OAFooter,
-  OAHeaderBadges,
-  OAHeading,
-  OAInfo,
-  OAIntroduction,
-  OALocaleSelect,
-  OAMarkdown,
-  OAOperation,
-  OAOperationContext,
-  OAOperationLink,
-  OAOperationTags,
-  OAParameter,
-  OAParameters,
-  OAPathEndpoint,
-  OAPlayground,
-  OARequestBody,
-  OAResponses,
-  OASecurity,
-  OAServers,
-  OASpec,
-  OASpecSkeleton,
-  OAVueJsonPretty,
-}
+export const OAVueJsonPretty = defineAsyncComponent(() => import('./Common/Highlight/OAVueJsonPretty.vue'))
+export const OAHeading = defineAsyncComponent(() => import('./Common/OAHeading.vue'))
+export const OAMarkdown = defineAsyncComponent(() => import('./Common/OAMarkdown.vue'))
+export const OAInfo = defineAsyncComponent(() => import('./Feature/OAInfo.vue'))
+export const OAIntroduction = defineAsyncComponent(() => import('./Feature/OAIntroduction.vue'))
+export const OALocaleSelect = defineAsyncComponent(() => import('./Feature/OALocaleSelect.vue'))
+export const OAOperation = defineAsyncComponent(() => import('./Feature/OAOperation.vue'))
+export const OAOperationContext = defineAsyncComponent(() => import('./Feature/OAOperationContext.vue'))
+export const OAOperationLink = defineAsyncComponent(() => import('./Feature/OAOperationLink.vue'))
+export const OAServers = defineAsyncComponent(() => import('./Feature/OAServers.vue'))
+export const OASpec = defineAsyncComponent(() => import('./Feature/OASpec.vue'))
+export const OASpecSkeleton = defineAsyncComponent(() => import('./Feature/OASpecSkeleton.vue'))
+export const OAParameter = defineAsyncComponent(() => import('./Parameter/OAParameter.vue'))
+export const OAParameters = defineAsyncComponent(() => import('./Parameter/OAParameters.vue'))
+export const OAPathEndpoint = defineAsyncComponent(() => import('./Path/OAPathEndpoint.vue'))
+export const OAPlayground = defineAsyncComponent(() => import('./Playground/OAPlayground.vue'))
+export const OARequestBody = defineAsyncComponent(() => import('./Request/OARequestBody.vue'))
+export const OAResponses = defineAsyncComponent(() => import('./Response/OAResponses.vue'))
+export const OACodeSamples = defineAsyncComponent(() => import('./Sample/OACodeSamples.vue'))
+export const OASecurity = defineAsyncComponent(() => import('./Security/OASecurity.vue'))
+export const OAOperationTags = defineAsyncComponent(() => import('./Operation/OAOperationTags.vue'))
+export const OAFooter = defineAsyncComponent(() => import('./Common/OAFooter.vue'))
+export const OAHeaderBadges = defineAsyncComponent(() => import('./Common/OAHeaderBadges.vue'))

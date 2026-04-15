@@ -3,7 +3,7 @@ import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
-import OAMarkdown from '../Common/OAMarkdown.vue'
+import { OAMarkdown } from '../index'
 import OASchemaTabs from '../Schema/OASchemaTabs.vue'
 import { Label } from '../ui/label'
 
