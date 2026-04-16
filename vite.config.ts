@@ -32,6 +32,7 @@ export default defineConfig({
         compact: true
       },
     },
+    cssCodeSplit: true,
     // minify: 'terser',
     // terserOptions: {
     //   format: {
