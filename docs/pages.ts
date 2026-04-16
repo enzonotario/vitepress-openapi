@@ -56,6 +56,16 @@ export const testsPages = [
     specPath: './public/openapi-files.json',
     themeConfig: {},
   },
+  {
+    slug: 'one-page-lazy-loading',
+    label: 'One Page Lazy Loading',
+    specUrl: 'https://argentinadatos.com/openapi.json',
+    themeConfig: {
+      spec: {
+        lazyRendering: true,
+      },
+    },
+  },
 ]
 
 export const examplesPages = [

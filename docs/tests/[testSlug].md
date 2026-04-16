@@ -12,7 +12,10 @@ import { useTheme } from 'vitepress-openapi/client'
 const route = useRoute()
 
 const testSlug = route.data.params.testSlug
-const spec = JSON.parse(JSON.stringify(route.data.params.spec))
+const spec = route.data.params.spec
+  ? JSON.parse(JSON.stringify(route.data.params.spec))
+  : undefined
+const specUrl = route.data.params.specUrl
 const themeConfig = route.data.params.themeConfig
 
 useTheme(themeConfig)
@@ -22,4 +25,4 @@ onUnmounted(() => {
 })
 </script>
 
-<OASpec :spec="spec" />
+<OASpec :spec="spec" :spec-url="specUrl" />
