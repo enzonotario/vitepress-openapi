@@ -1,7 +1,7 @@
 <script setup>
 import { computed, defineAsyncComponent } from 'vue'
 import { useTheme } from '../../composables/useTheme'
-import OALazy from './Lazy/OALazy.vue'
+
 
 const props = defineProps({
   modelValue: {
@@ -31,7 +31,6 @@ const isDark = themeConfig.isDark
 </script>
 
 <template>
-  <OALazy>
     <JsonEditorVue
       v-model="value"
       :main-menu-bar="themeConfig.getPlaygroundJsonEditorMainMenuBar()"
@@ -44,5 +43,4 @@ const isDark = themeConfig.isDark
         'oa-jse-theme-light': !isDark,
       }"
     />
-  </OALazy>
 </template>
