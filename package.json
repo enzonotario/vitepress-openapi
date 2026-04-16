@@ -1,7 +1,7 @@
 {
   "name": "vitepress-openapi",
   "type": "module",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "packageManager": "pnpm@10.30.3",
   "engines": {
     "node": "^20.19.0 || ^22.13.0 || >=24.0.0"

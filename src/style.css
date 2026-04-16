@@ -72,6 +72,9 @@
 .OASidebarItem-badge {
   @apply px-1 py-0.5 text-xs rounded;
 }
+.pager-link .OASidebarItem {
+  @apply px-0;
+}
 
 /**
   Method badges
