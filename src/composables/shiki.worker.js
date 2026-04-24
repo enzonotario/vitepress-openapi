@@ -17,8 +17,10 @@ const LANGUAGE_IMPORTERS = {
   json: () => import('@shikijs/langs/json').then(m => m.default),
   xml: () => import('@shikijs/langs/xml').then(m => m.default),
   markdown: () => import('@shikijs/langs/markdown').then(m => m.default),
+}
+
+const ADDITIONAL_LANGUAGES = {
   yaml: () => import('@shikijs/langs/yaml').then(m => m.default),
-  typescript: () => import('@shikijs/langs/typescript').then(m => m.default),
   javascript: () => import('@shikijs/langs/javascript').then(m => m.default),
   bash: () => import('@shikijs/langs/bash').then(m => m.default),
   python: () => import('@shikijs/langs/python').then(m => m.default),
@@ -60,7 +62,11 @@ globalThis.onmessage = async (e) => {
           throw new Error('Shiki not initialized')
         }
         if (!shiki.getLoadedLanguages().includes(payload.lang)) {
-          const mod = await LANGUAGE_IMPORTERS[payload.lang]()
+          const importer = LANGUAGE_IMPORTERS[payload.lang] || ADDITIONAL_LANGUAGES[payload.lang]
+          if (!importer) {
+            throw new Error(`Language "${payload.lang}" not supported`)
+          }
+          const mod = await importer()
           await shiki.loadLanguage(mod)
         }
         globalThis.postMessage({ type: 'load-lang-success', id, lang: payload.lang })
@@ -77,6 +83,9 @@ globalThis.onmessage = async (e) => {
       case 'render':
         if (!shiki) {
           throw new Error('Shiki not initialized')
+        }
+        if (!shiki.getLoadedLanguages().includes(payload.lang)) {
+          throw new Error(`Language "${payload.lang}" not loaded`)
         }
         html = shiki.codeToHtml(payload.content, {
           lang: payload.lang,

@@ -17,6 +17,10 @@ const { post, data } = useWebWorker(
   { type: 'module' },
 )
 
+let initPromise: Promise<void> | null = null
+const loadedLanguageMap: Record<string, boolean> = {}
+const languageLoadPromises: Record<string, Promise<boolean>> = {}
+
 export function useShiki() {
   const themeConfig = useTheme()
 
@@ -54,22 +58,30 @@ export function useShiki() {
    * Additional languages are loaded on-demand via ensureLanguage().
    */
   async function init(): Promise<void> {
-    if (initialized.value) {
-      return
+    if (initPromise) {
+      return initPromise
     }
 
-    try {
-      const themes = [
-        themeConfig.getHighlighterTheme()?.light,
-        themeConfig.getHighlighterTheme()?.dark,
-      ]
-      await callWorker('init', { themes })
-      initialized.value = true
-      loading.value = false
-    } catch (err) {
-      console.error('Shiki worker init failed:', err)
-      throw err
-    }
+    initPromise = (async () => {
+      try {
+        const themes = [
+          themeConfig.getHighlighterTheme()?.light,
+          themeConfig.getHighlighterTheme()?.dark,
+        ]
+        await callWorker('init', { themes })
+        initialized.value = true
+        loadedLanguageMap.xml = true
+        loadedLanguageMap.json = true
+        loadedLanguageMap.markdown = true
+      } catch (err) {
+        console.error('Shiki worker init failed:', err)
+        throw err
+      } finally {
+        loading.value = false
+      }
+    })()
+
+    return initPromise
   }
 
   async function ensureLanguage(lang: string): Promise<boolean> {
@@ -98,18 +110,24 @@ export function useShiki() {
     }
   }
 
-  async function isLanguageLoaded(lang: string): Promise<boolean> {
-    try {
-      const response = await callWorker('loaded-lang', { lang })
-      return !!response?.loaded
-    } catch {
-      return false
+  function isLanguageLoaded(lang: string): boolean {
+    if (loadedLanguageMap[lang]) {
+      return true
     }
+    if (!languageLoadPromises[lang]) {
+      languageLoadPromises[lang] = languageLoadPromises[lang] || ensureLanguage(lang).then((loaded) => {
+        loadedLanguageMap[lang] = loaded
+        return loaded
+      })
+    }
+    return loadedLanguageMap[lang] || false
   }
 
   async function reset() {
     try {
       await callWorker('reset')
+      initialized.value = false
+      initPromise = null
     } catch {
     }
   }
@@ -119,7 +137,7 @@ export function useShiki() {
     renderShiki,
     init,
     ensureLanguage,
-    get isReady() { return initialized.value },
+    isReady() { return initialized.value },
     isLanguageLoaded,
     reset,
     /** @deprecated use init() */
