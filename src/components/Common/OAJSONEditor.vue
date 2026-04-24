@@ -2,7 +2,6 @@
 import { computed, defineAsyncComponent } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 
-
 const props = defineProps({
   modelValue: {
     type: Object,
@@ -31,16 +30,16 @@ const isDark = themeConfig.isDark
 </script>
 
 <template>
-    <JsonEditorVue
-      v-model="value"
-      :main-menu-bar="themeConfig.getPlaygroundJsonEditorMainMenuBar()"
-      :navigation-bar="themeConfig.getPlaygroundJsonEditorNavigationBar()"
-      :mode="themeConfig.getPlaygroundJsonEditorMode()"
-      :status-bar="themeConfig.getPlaygroundJsonEditorStatusBar()"
-      class="oa-jse"
-      :class="{
-        'oa-jse-theme-dark': isDark,
-        'oa-jse-theme-light': !isDark,
-      }"
-    />
+  <JsonEditorVue
+    v-model="value"
+    :main-menu-bar="themeConfig.getPlaygroundJsonEditorMainMenuBar()"
+    :navigation-bar="themeConfig.getPlaygroundJsonEditorNavigationBar()"
+    :mode="themeConfig.getPlaygroundJsonEditorMode()"
+    :status-bar="themeConfig.getPlaygroundJsonEditorStatusBar()"
+    class="oa-jse"
+    :class="{
+      'oa-jse-theme-dark': isDark,
+      'oa-jse-theme-light': !isDark,
+    }"
+  />
 </template>

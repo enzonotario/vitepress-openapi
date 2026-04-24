@@ -77,7 +77,7 @@ onMounted(() => {
 
 <template>
   <template v-if="shouldRender">
-    <slot></slot>
+    <slot />
   </template>
   <span ref="sentinel" aria-hidden="true" style="display: block; height: 0; overflow: hidden" />
 </template>

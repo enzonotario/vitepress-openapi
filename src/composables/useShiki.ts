@@ -1,16 +1,20 @@
-import { ref, watch } from 'vue'
 import { useWebWorker } from '@vueuse/core'
+import { ref, watch } from 'vue'
 import { useTheme } from './useTheme'
 
 // A map to keep track of pending promises for the worker RPC
-const pendingRequests = new Map<string, { resolve: Function, reject: Function }>()
+interface PendingRequest {
+  resolve: (value: unknown | PromiseLike<unknown>) => void
+  reject: (reason?: any) => void
+}
+const pendingRequests = new Map<string, PendingRequest>()
 const loading = ref(true)
 const initialized = ref(false)
 
 // Initialize worker
 const { post, data } = useWebWorker(
   new URL('./shiki.worker.js', import.meta.url).toString(),
-  { type: 'module' }
+  { type: 'module' },
 )
 
 export function useShiki() {
@@ -18,9 +22,13 @@ export function useShiki() {
 
   // Watch for messages returning from the worker
   watch(data, (message) => {
-    if (!message || !message.id) return
+    if (!message || !message.id) {
+      return
+    }
     const request = pendingRequests.get(message.id)
-    if (!request) return
+    if (!request) {
+      return
+    }
 
     if (message.type === 'error') {
       request.reject(message.error)
@@ -46,7 +54,9 @@ export function useShiki() {
    * Additional languages are loaded on-demand via ensureLanguage().
    */
   async function init(): Promise<void> {
-    if (initialized.value) return
+    if (initialized.value) {
+      return
+    }
 
     try {
       const themes = [
@@ -67,7 +77,7 @@ export function useShiki() {
     try {
       await callWorker('load-lang', { lang })
       return true
-    } catch (e) {
+    } catch {
       return false
     }
   }
@@ -76,21 +86,23 @@ export function useShiki() {
     content: string,
     { lang, theme }: { lang: string, theme: string },
   ): Promise<string> {
-    if (!initialized.value) await init()
+    if (!initialized.value) {
+      await init()
+    }
 
     try {
       const response = await callWorker('render', { content, lang, theme })
       return response.html
-    } catch (error) {
+    } catch {
       return `<pre><code>${content}</code></pre>`
     }
   }
 
   async function isLanguageLoaded(lang: string): Promise<boolean> {
     try {
-      const response = await callWorker("loaded-lang", {  })
+      const response = await callWorker('loaded-lang', { lang })
       return !!response?.loaded
-    } catch(error) {
+    } catch {
       return false
     }
   }
