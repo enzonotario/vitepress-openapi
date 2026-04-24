@@ -27,7 +27,17 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
         },
+        manualChunks: {},
+        minifyInternalExports: true,
+        compact: true
       },
     },
+    // minify: 'terser',
+    // terserOptions: {
+    //   format: {
+    //     comments: false,
+    //     beautify: false
+    //   }
+    // },
   },
 })

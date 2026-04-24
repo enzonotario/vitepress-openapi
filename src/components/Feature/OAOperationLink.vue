@@ -2,16 +2,14 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { Slots } from 'vue'
 import { computed, useSlots } from 'vue'
-import OAMarkdown from '../Common/OAMarkdown.vue'
+import { OAMarkdown } from '../index'
 
-interface Props {
+const props = withDefaults(defineProps<{
   href?: string
   method?: OpenAPIV3.HttpMethods | string
   title?: string
   operationId?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
   href: undefined,
   method: '',
   title: '',
@@ -52,16 +50,3 @@ const slotContent = computed<string>(() => {
     <span v-else class="OAOperationLink-title">{{ props.title }}</span>
   </component>
 </template>
-
-<style>
-.OAOperationLink {
-  @apply inline-block px-1 space-x-1 rounded cursor-pointer;
-}
-
-.OAOperationLink-badge {
-  @apply px-1 py-0.5 text-xs rounded;
-  font-weight: normal !important;
-  text-decoration: none !important;
-  display: inline-block;
-}
-</style>

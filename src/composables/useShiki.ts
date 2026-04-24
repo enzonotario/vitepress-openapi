@@ -1,159 +1,135 @@
-import type { HighlighterCore } from 'shiki/core'
-import type { BundledLanguage } from 'shiki/langs'
-import { createHighlighterCore } from 'shiki/core'
-import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
-import { bundledLanguages as highlighterImports } from 'shiki/langs'
-import { ref } from 'vue'
+import { useWebWorker } from '@vueuse/core'
+import { ref, watch } from 'vue'
 import { useTheme } from './useTheme'
 
-// Core highlighters always loaded for response body highlighting (not shown in code samples UI)
-const CORE_HIGHLIGHTERS: BundledLanguage[] = ['json', 'xml', 'markdown']
-
-let shiki: HighlighterCore | null = null
-let initPromise: Promise<void> | null = null
-
-// Track in-flight language loads to avoid duplicate requests
-const languageLoadPromises = new Map<string, Promise<boolean>>()
-
+// A map to keep track of pending promises for the worker RPC
+interface PendingRequest {
+  resolve: (value: unknown | PromiseLike<unknown>) => void
+  reject: (reason?: any) => void
+}
+const pendingRequests = new Map<string, PendingRequest>()
 const loading = ref(true)
+const initialized = ref(false)
+
+// Initialize worker
+const { post, data } = useWebWorker(
+  new URL('./shiki.worker.js', import.meta.url).toString(),
+  { type: 'module' },
+)
+
+let initPromise: Promise<void> | null = null
+const loadedLanguageMap: Record<string, boolean> = {}
+const languageLoadPromises: Record<string, Promise<boolean>> = {}
 
 export function useShiki() {
+  const themeConfig = useTheme()
+
+  // Watch for messages returning from the worker
+  watch(data, (message) => {
+    if (!message || !message.id) {
+      return
+    }
+    const request = pendingRequests.get(message.id)
+    if (!request) {
+      return
+    }
+
+    if (message.type === 'error') {
+      request.reject(message.error)
+    } else {
+      request.resolve(message)
+    }
+    pendingRequests.delete(message.id)
+  })
+
+  /**
+   * Helper to send a command to the worker and return a promise
+   */
+  function callWorker(type: string, payload?: any): Promise<any> {
+    const id = Date.now().toString(32)
+    return new Promise((resolve, reject) => {
+      pendingRequests.set(id, { resolve, reject })
+      post({ type, id, payload })
+    })
+  }
+
   /**
    * Initialize Shiki with core highlighters only (json, xml, markdown).
    * Additional languages are loaded on-demand via ensureLanguage().
    */
-  function init(): Promise<void> {
+  async function init(): Promise<void> {
     if (initPromise) {
       return initPromise
     }
 
     initPromise = (async () => {
       try {
-        if (shiki) {
-          loading.value = false
-          return
-        }
-
-        const themeConfig = useTheme()
-
-        // Load only core highlighters during init
-        const coreLangModules = await Promise.all(
-          CORE_HIGHLIGHTERS.map(async (lang) => {
-            const importer = highlighterImports[lang]
-            if (!importer) {
-              return []
-            }
-            try {
-              const mod = await importer()
-              return mod.default
-            } catch {
-              return []
-            }
-          }),
-        )
-
-        shiki = await createHighlighterCore({
-          themes: [
-            themeConfig.getHighlighterTheme()?.light,
-            themeConfig.getHighlighterTheme()?.dark,
-          ],
-          langs: coreLangModules.filter(Boolean).flat(),
-          engine: createJavaScriptRegexEngine({
-            target: 'ES2018',
-          }),
-        })
-
-        if (!shiki) {
-          throw new Error('Failed to create Shiki highlighter')
-        }
-
+        const themes = [
+          themeConfig.getHighlighterTheme()?.light,
+          themeConfig.getHighlighterTheme()?.dark,
+        ]
+        await callWorker('init', { themes })
+        initialized.value = true
+        loadedLanguageMap.xml = true
+        loadedLanguageMap.json = true
+        loadedLanguageMap.markdown = true
+      } catch (err) {
+        console.error('Shiki worker init failed:', err)
+        throw err
+      } finally {
         loading.value = false
-      } catch (error) {
-        initPromise = null
-        throw error
       }
     })()
 
     return initPromise
   }
 
-  /**
-   * Ensure a language is loaded. Loads it on-demand if not already available.
-   * Returns true if the language is ready, false if it couldn't be loaded.
-   */
   async function ensureLanguage(lang: string): Promise<boolean> {
-    // Make sure shiki is initialized first
+    await init()
     try {
-      await init()
-    } catch (e) {
-      console.error('Failed to initialize Shiki:', e)
-      return false
-    }
-
-    if (!shiki) {
-      return false
-    }
-
-    // Already loaded
-    if (shiki.getLoadedLanguages().includes(lang)) {
+      await callWorker('load-lang', { lang })
       return true
+    } catch {
+      return false
+    }
+  }
+
+  async function renderShiki(
+    content: string,
+    { lang, theme }: { lang: string, theme: string },
+  ): Promise<string> {
+    if (!initialized.value) {
+      await init()
     }
 
-    // Check if already loading
-    const existingPromise = languageLoadPromises.get(lang)
-    if (existingPromise) {
-      return existingPromise
-    }
-
-    // Start loading
-    const loadPromise = (async () => {
-      const importer = highlighterImports[lang as BundledLanguage]
-
-      if (!importer) {
-        console.warn(`Shiki language "${lang}" not available.`)
-        return false
-      }
-
-      try {
-        const mod = await importer()
-        await shiki!.loadLanguage(mod.default)
-        return true
-      } catch (e) {
-        console.error(`Failed to load Shiki language "${lang}":`, e)
-        return false
-      } finally {
-        languageLoadPromises.delete(lang)
-      }
-    })()
-
-    languageLoadPromises.set(lang, loadPromise)
-    return loadPromise
-  }
-
-  function isReady(): boolean {
-    return shiki !== null
-  }
-
-  function isLanguageLoaded(lang: string): boolean {
-    return shiki?.getLoadedLanguages().includes(lang) ?? false
-  }
-
-  function renderShiki(content: string, { lang, theme }: { lang: string, theme: string }) {
-    if (shiki && shiki.getLoadedLanguages().includes(lang)) {
-      return shiki.codeToHtml(content, {
-        lang,
-        theme,
-      })
-    } else {
+    try {
+      const response = await callWorker('render', { content, lang, theme })
+      return response.html
+    } catch {
       return `<pre><code>${content}</code></pre>`
     }
   }
 
-  function reset() {
-    shiki = null
-    initPromise = null
-    languageLoadPromises.clear()
-    loading.value = true
+  function isLanguageLoaded(lang: string): boolean {
+    if (loadedLanguageMap[lang]) {
+      return true
+    }
+    if (!languageLoadPromises[lang]) {
+      languageLoadPromises[lang] = languageLoadPromises[lang] || ensureLanguage(lang).then((loaded) => {
+        loadedLanguageMap[lang] = loaded
+        return loaded
+      })
+    }
+    return loadedLanguageMap[lang] || false
+  }
+
+  async function reset() {
+    try {
+      await callWorker('reset')
+      initialized.value = false
+      initPromise = null
+    } catch {
+    }
   }
 
   return {
@@ -161,9 +137,10 @@ export function useShiki() {
     renderShiki,
     init,
     ensureLanguage,
-    isReady,
+    isReady() { return initialized.value },
     isLanguageLoaded,
     reset,
+    /** @deprecated use init() */
     initShiki: async () => {
       console.warn('initShiki is deprecated, use init instead')
       await init()

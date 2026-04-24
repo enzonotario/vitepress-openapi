@@ -1,8 +1,7 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OAShiki from './Highlight/OAShiki.vue'
-import OAVueJsonPretty from './Highlight/OAVueJsonPretty.vue'
 
 const props = defineProps({
   code: {
@@ -27,6 +26,8 @@ const props = defineProps({
   },
 })
 
+const OAVueJsonPretty = defineAsyncComponent(() => import('./Highlight/OAVueJsonPretty.vue'))
+
 const themeConfig = useTheme()
 
 const jsonViewerRenderer = computed(() => {
@@ -48,10 +49,7 @@ const shouldUseShiki = computed(() => {
 
 <template>
   <div class="vp-adaptive-theme min-h-16" :class="[`language-${props.lang}`]">
-    <button
-      title="Copy Code"
-      class="copy"
-    />
+    <button title="Copy Code" class="copy" />
     <span class="lang">{{ props.label }}</span>
 
     <OAVueJsonPretty v-if="shouldUseVueJsonPretty" :code="props.code" />

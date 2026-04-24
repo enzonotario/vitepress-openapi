@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { nextTick, ref } from 'vue'
+import { useIntersectionObserver } from '@vueuse/core'
+import { nextTick, onMounted, ref, useTemplateRef } from 'vue'
 
 import { lazyBus } from './lazyBus'
 
@@ -25,31 +26,58 @@ const props = withDefaults(
   },
 )
 
-const onIdle = (cb = () => {}) => {
-  if (typeof window === 'undefined') {
-    // Do nothing and load on the client only
-  } else if ('requestIdleCallback' in window) {
-    setTimeout(() => window.requestIdleCallback(cb), props.lazyTimeout)
-  } else {
-    setTimeout(nextTick, props.lazyTimeout ?? 300, cb)
+const shouldRender = ref(!props.isLazy)
+const sentinel = useTemplateRef('sentinel')
+
+const emitLoaded = () => {
+  const { id } = props
+  if (id) {
+    nextTick(() => {
+      lazyBus.emit({ id })
+    })
   }
 }
 
-const shouldRender = ref(!props.isLazy)
-
-// Fire the event for non-lazy components as well to keep track of loading
-if (props.isLazy) {
-  onIdle(() => {
-    shouldRender.value = true
-    if (props.id) {
-      nextTick(() => lazyBus.emit({ id: props.id! }))
+// useIntersectionObserver is SSR-safe and self-cleans on unmount,
+// so there's no need for manual onMounted/onUnmounted guards.
+const { stop, isSupported } = useIntersectionObserver(
+  sentinel,
+  ([entry]) => {
+    if (!entry.isIntersecting) {
+      return
     }
-  })
-} else if (props.id) {
-  nextTick(() => lazyBus.emit({ id: props.id! }))
-}
+    if (!entry.isIntersecting) {
+      return
+    }
+    shouldRender.value = true
+    emitLoaded()
+    stop()
+  },
+  {
+    rootMargin: '200px',
+    threshold: 0,
+  },
+)
+
+onMounted(() => {
+  if (!props.isLazy) {
+    emitLoaded()
+    return
+  }
+
+  // If IntersectionObserver is unsupported, VueUse won't trigger the
+  // callback, so fall back to rendering immediately.
+  if (!isSupported.value) {
+    shouldRender.value = true
+    emitLoaded()
+    stop()
+  }
+})
 </script>
 
 <template>
-  <slot v-if="shouldRender" />
+  <template v-if="shouldRender">
+    <slot />
+  </template>
+  <span ref="sentinel" aria-hidden="true" style="display: block; height: 0; overflow: hidden" />
 </template>
