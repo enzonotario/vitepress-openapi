@@ -66,7 +66,7 @@ const tabsSelector = computed(() => {
             <TabsList class="bg-transparent text-muted-foreground p-0">
               <div class="relative flex flex-row">
                 <template v-if="tabsSelector === 'tabs'">
-                  <TabsIndicator class="absolute left-0 h-full bottom-0 w-[--reka-tabs-indicator-size] translate-x-[--reka-tabs-indicator-position] rounded transition-[width,transform] duration-300 bg-muted" />
+                  <TabsIndicator class="absolute left-0 h-full bottom-0 w-[var(--reka-tabs-indicator-size)] translate-x-[var(--reka-tabs-indicator-position)] rounded transition-[width,transform] duration-300 bg-muted" />
 
                   <TabsTrigger
                     v-for="responseCode in responsesCodes"

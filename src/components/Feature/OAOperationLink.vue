@@ -54,6 +54,8 @@ const slotContent = computed<string>(() => {
 </template>
 
 <style>
+@reference "tailwindcss";
+
 .OAOperationLink {
   @apply inline-block px-1 space-x-1 rounded cursor-pointer;
 }

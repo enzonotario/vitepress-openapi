@@ -492,10 +492,12 @@ const toggleBadge = (badge: string) => {
 </template>
 
 <style scoped>
+@reference "../../style.css";
+
 h3 {
   @apply mt-0 font-semibold;
 }
 .theme-input {
-  @apply bg-[--vp-input-bg-color] rounded p-2;
+  @apply rounded p-2 bg-[var(--vp-input-bg-color)];
 }
 </style>

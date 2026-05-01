@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { resolve, dirname } from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfigWithTheme } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import { examplesPages, testsPages } from '../pages'
@@ -297,6 +298,7 @@ export default defineConfigWithTheme({
     ],
   ],
   vite: {
+    plugins: [tailwindcss()],
     resolve: {
       alias: {
         '@': resolve(rootDir, 'src'),

@@ -77,6 +77,8 @@ function downloadSpec(format: 'json' | 'yaml'): void {
 </template>
 
 <style scoped>
+@reference "tailwindcss";
+
 .download-container:has(:focus-visible):before,
 .download-container:hover:before {
   content: '';

@@ -1,7 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss" important;
+@config "../../tailwind.config.mjs";
 
 .VPDoc .content .content-container {
-    max-width: none !important;
+  max-width: none !important;
 }
