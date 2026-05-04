@@ -9,6 +9,7 @@ const { t } = useI18n()
     {{ t('Powered by') }} <a
       href="https://github.com/enzonotario/vitepress-openapi"
       target="_blank"
+      rel="noopener noreferrer"
       class="text-primary no-underline hover:underline"
     >
       VitePress OpenAPI
