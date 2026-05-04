@@ -17,9 +17,9 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="bg-muted rounded border divide-y divide-[var(--vp-c-divider)] overflow-hidden">
+  <div class="bg-muted rounded border divide-y divide-(--vp-c-divider) overflow-hidden">
     <div class="px-4 py-2">
-      <OAHeading level="h3" class="mt-0! text-sm! font-semibold text-[var(--vp-c-text-1)]">
+      <OAHeading level="h3" class="mt-0! text-sm! font-semibold text-(--vp-c-text-1)">
         {{ t('Operations') }}
       </OAHeading>
     </div>

@@ -498,6 +498,6 @@ h3 {
   @apply mt-0 font-semibold;
 }
 .theme-input {
-  @apply rounded p-2 bg-[var(--vp-input-bg-color)];
+  @apply rounded p-2 bg-(--vp-input-bg-color);
 }
 </style>
