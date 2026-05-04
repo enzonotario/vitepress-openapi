@@ -19,7 +19,7 @@ const { t } = useI18n()
 <template>
   <div class="bg-muted rounded border divide-y divide-[var(--vp-c-divider)] overflow-hidden">
     <div class="px-4 py-2">
-      <OAHeading level="h3" class="!mt-0 !text-sm font-semibold text-[var(--vp-c-text-1)]">
+      <OAHeading level="h3" class="mt-0! text-sm! font-semibold text-[var(--vp-c-text-1)]">
         {{ t('Operations') }}
       </OAHeading>
     </div>
@@ -32,7 +32,7 @@ const { t } = useI18n()
         <a
           v-for="method in Object.keys(props.paths[path])"
           :key="`${path}-${method}`"
-          class="grid min-w-0 grid-cols-[3rem_minmax(0,1fr)] items-center gap-x-3 px-4 !text-foreground !no-underline cursor-pointer"
+          class="grid min-w-0 grid-cols-[3rem_minmax(0,1fr)] items-center gap-x-3 px-4 text-foreground! no-underline! cursor-pointer"
           :aria-label="`${method.toUpperCase()} ${path}`"
           :title="`${method.toUpperCase()} ${path}`"
           @click="emit('pathClick', `#${props.paths[path][method].operationId}`)"

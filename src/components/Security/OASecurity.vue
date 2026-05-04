@@ -31,8 +31,8 @@ const { t } = useI18n()
         <OAHeading
           level="h2"
           :prefix="props.headingPrefix"
-          class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0"
-          header-anchor-class="!top-0"
+          class="text-[var(--vp-c-text-1)] my-0! py-0! border-t-0!"
+          header-anchor-class="top-0!"
         >
           {{ t('Authorizations') }}
         </OAHeading>

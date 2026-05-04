@@ -136,7 +136,7 @@ const downloadBlob = (data: any, fileName: string) => {
       :label="label"
       :disable-html-transform="disableHtmlTransform"
       active
-      class="!m-0"
+      class="m-0!"
     />
     <img
       v-else-if="isImage"

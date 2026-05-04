@@ -28,7 +28,7 @@
   JSON Viewer
  */
 .vjs-carets {
-  @apply !text-gray-500 dark:!text-gray-400;
+  @apply text-gray-500! dark:text-gray-400!;
 }
 .vjs-tree-node .vjs-indent-unit.has-line {
   border-color: var(--vp-c-divider) !important;

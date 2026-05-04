@@ -157,7 +157,7 @@
   OAMarkdown
  */
 .OAMarkdown.oa-doc p {
-  @apply !my-1;
+  @apply my-1!;
 }
 .OAMarkdown.oa-doc pre {
   @apply max-w-full overflow-x-auto my-1 p-2 rounded;

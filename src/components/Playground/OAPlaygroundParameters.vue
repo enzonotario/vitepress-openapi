@@ -398,6 +398,6 @@ watch([operationData.security.securityValues, authorizations], ([values]) => {
   @apply flex flex-col gap-2;
 }
 .OAPlaygroundParameters > details > summary {
-  @apply !my-0 text-lg font-bold cursor-pointer;
+  @apply my-0! text-lg font-bold cursor-pointer;
 }
 </style>

@@ -56,7 +56,7 @@ function downloadSpec(format: 'json' | 'yaml'): void {
   <div class="download-container group relative">
     <a
       href="#"
-      class="download-button relative flex items-center gap-2 !no-underline"
+      class="download-button relative flex items-center gap-2 no-underline!"
       aria-label="Download OpenAPI Document as JSON"
       @click.prevent="downloadSpec('json')"
     >
@@ -66,7 +66,7 @@ function downloadSpec(format: 'json' | 'yaml'): void {
 
     <a
       href="#"
-      class="download-button yaml-button absolute hidden group-hover:flex items-center gap-2 !no-underline"
+      class="download-button yaml-button absolute hidden group-hover:flex items-center gap-2 no-underline!"
       aria-label="Download OpenAPI Document as YAML"
       @click.prevent="downloadSpec('yaml')"
     >

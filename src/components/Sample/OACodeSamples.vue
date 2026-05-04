@@ -116,7 +116,7 @@ watch(operationData.playground.request, async (playgroundRequest, _, onInvalidat
       v-if="samples.length"
       class="vp-code-group vp-adaptive-theme mt-0"
     >
-      <div class="tabs !m-0">
+      <div class="tabs m-0!">
         <template v-for="sample in samples" :key="sample.key">
           <input
             :id="sample.tabId"
@@ -141,7 +141,7 @@ watch(operationData.playground.request, async (playgroundRequest, _, onInvalidat
           :label="sample.label"
           :active="activeSampleKey === sample.key"
           :class="{ active: activeSampleKey === sample.key }"
-          class="!m-0"
+          class="m-0!"
         />
       </div>
     </div>
