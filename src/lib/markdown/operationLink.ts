@@ -1,7 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { PluginWithOptions } from 'markdown-it'
 import { getGlobalOpenapi } from '../../composables/useOpenapi'
-import { createOpenApiSpec } from '../../lib/spec/createOpenApiSpec'
 
 export interface OperationLinkPluginOptions {
   /**
@@ -118,7 +117,10 @@ const operationLink: PluginWithOptions<OperationLinkPluginOptions> = (md, option
 
   // Override the link renderer.
   md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
-    const openapi = getGlobalOpenapi() ?? createOpenApiSpec({})
+    const openapi = getGlobalOpenapi()
+    if (!openapi) {
+      return defaultRender(tokens, idx, options, env, self)
+    }
 
     const hrefIndex = tokens[idx].attrIndex('href')
     if (hrefIndex < 0) {
