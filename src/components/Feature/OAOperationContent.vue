@@ -110,7 +110,7 @@ function hasSlot(name: OperationSlot): boolean {
           :class="{
             'line-through': header.deprecated,
           }"
-          class="scroll-m-[var(--vp-nav-height)]"
+          class="scroll-m-(--vp-nav-height)"
         >
           {{ header.operation.summary }}
         </OAHeading>

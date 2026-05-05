@@ -66,7 +66,7 @@ const typeValue = computed(() => {
           :key="flow"
         >
           <details>
-            <summary class="!my-1 cursor-pointer hover:text-[var(--vp-c-brand-1)]">
+            <summary class="my-1! cursor-pointer hover:text-[color:var(--vp-c-brand-1)]">
               {{ flow }} Flow
             </summary>
 
@@ -83,7 +83,7 @@ const typeValue = computed(() => {
 
               <div v-if="url.scopes">
                 <span class="text-sm">Scopes:</span>
-                <ul class="pl-2 !my-0">
+                <ul class="pl-2 my-0!">
                   <li
                     v-for="(description, scope) in url.scopes"
                     :key="scope"

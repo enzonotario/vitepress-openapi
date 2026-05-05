@@ -64,12 +64,12 @@ const examples = computed(() => {
 
 <template>
   <div>
-    <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)] flex flex-row items-center">
+    <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-(--vp-c-divider) flex flex-row items-center">
       <OAHeading
         level="h2"
         :prefix="headingPrefix"
-        class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0 inline-block"
-        header-anchor-class="!top-0"
+        class="text-[color:var(--vp-c-text-1)] my-0! py-0! border-t-0! inline-block"
+        header-anchor-class="top-0!"
       >
         {{ t('Request Body') }}
       </OAHeading>

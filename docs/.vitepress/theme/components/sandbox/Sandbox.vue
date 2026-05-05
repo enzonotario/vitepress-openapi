@@ -84,7 +84,7 @@ watch(hash, () => {
 
 <template>
   <div class="overflow-hidden">
-    <SandboxNav v-show="!sandboxData.hideSandboxNav.value" class="fixed w-full top-0 z-[var(--vp-z-index-nav)] ">
+    <SandboxNav v-show="!sandboxData.hideSandboxNav.value" class="fixed w-full top-0 z-(--vp-z-index-nav) ">
       <template #start>
         <SandboxRemoteFetch />
         <ThemeConfigPopover />

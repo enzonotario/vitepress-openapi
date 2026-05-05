@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 :root {
   --vjs-caret-color: #6b7280;
   --vjs-border-color: #9ca3af;
@@ -26,7 +28,7 @@
   JSON Viewer
  */
 .vjs-carets {
-  @apply text-gray-500 dark:text-gray-400 !important;
+  @apply text-gray-500! dark:text-gray-400!;
 }
 .vjs-tree-node .vjs-indent-unit.has-line {
   border-color: var(--vp-c-divider) !important;

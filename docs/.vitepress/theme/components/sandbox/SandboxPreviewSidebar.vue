@@ -75,6 +75,8 @@ watch([
 </template>
 
 <style scoped>
+@reference "../../style.css";
+
 .SandboxPreviewSidebar {
   position: absolute;
   width: var(--vp-sidebar-width);
