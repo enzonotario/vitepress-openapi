@@ -27,7 +27,7 @@ import VPSwitchAppearance from '../vitepress/VPSwitchAppearance.vue'
           <VPSwitchAppearance />
           <div class="VPSocialLinks VPNavBarSocialLinks social-links">
             <a
-              class="VPSocialLink no-icon flex items-center justify-center w-[36px] h-[36px] text-(--vp-c-text-2) hover:text-(--vp-c-text-1)"
+              class="VPSocialLink no-icon flex items-center justify-center w-[36px] h-[36px] text-[color:var(--vp-c-text-2)] hover:text-[color:var(--vp-c-text-1)]"
               href="https://github.com/enzonotario/vitepress-openapi"
               aria-label="github"
               target="_blank"

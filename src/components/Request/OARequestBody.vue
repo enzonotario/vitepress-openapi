@@ -68,7 +68,7 @@ const examples = computed(() => {
       <OAHeading
         level="h2"
         :prefix="headingPrefix"
-        class="text-(--vp-c-text-1) my-0! py-0! border-t-0! inline-block"
+        class="text-[color:var(--vp-c-text-1)] my-0! py-0! border-t-0! inline-block"
         header-anchor-class="top-0!"
       >
         {{ t('Request Body') }}

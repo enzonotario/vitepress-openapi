@@ -66,7 +66,7 @@ const typeValue = computed(() => {
           :key="flow"
         >
           <details>
-            <summary class="my-1! cursor-pointer hover:text-(--vp-c-brand-1)">
+            <summary class="my-1! cursor-pointer hover:text-[color:var(--vp-c-brand-1)]">
               {{ flow }} Flow
             </summary>
 
