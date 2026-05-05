@@ -14,6 +14,7 @@ export default defineConfig({
     },
   },
   build: {
+    target: 'es2019',
     lib: {
       entry: {
         client: resolve(__dirname, 'src/client.ts'),
