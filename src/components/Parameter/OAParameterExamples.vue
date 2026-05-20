@@ -106,7 +106,7 @@ const { t } = useI18n()
         <Select v-model="selectedExampleIndex">
           <SelectTrigger
             :aria-label="t('Select an example')"
-            class="h-6 max-w-28 bg-[var(--vp-code-bg)]"
+            class="h-6 max-w-28 bg-(--vp-code-bg)"
           >
             <SelectValue :placeholder="t('Select an example')" class="truncate">
               {{ selectedExample?.name }}

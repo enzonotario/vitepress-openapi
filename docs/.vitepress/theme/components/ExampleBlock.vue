@@ -29,7 +29,7 @@ function hasSlot(name: string): boolean {
 <template>
   <div class="ExampleBlock flex flex-col gap-4">
     <div v-if="hasSlot('code')" class="flex flex-col gap-1">
-      <h3 v-if="props.codeSectionTitle" class="!my-0">
+      <h3 v-if="props.codeSectionTitle" class="my-0!">
         {{ props.codeSectionTitle }}
       </h3>
 
@@ -37,7 +37,7 @@ function hasSlot(name: string): boolean {
     </div>
 
     <div class="flex flex-col gap-1">
-      <h3 v-if="props.exampleSectionTitle" class="!my-0">
+      <h3 v-if="props.exampleSectionTitle" class="my-0!">
         {{ props.exampleSectionTitle }}
       </h3>
 

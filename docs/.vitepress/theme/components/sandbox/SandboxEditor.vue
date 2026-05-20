@@ -60,6 +60,8 @@ watch(innerValue, () => {
 </template>
 
 <style>
+@reference "../../style.css";
+
 .SandboxEditor {
   position: relative;
   height: 100%;

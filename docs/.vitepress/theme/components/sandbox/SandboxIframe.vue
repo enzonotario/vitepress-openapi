@@ -75,7 +75,7 @@ const openSandboxUrl = `${baseUrl}?themeConfig=${themeConfigCompressed}&sandboxD
         :href="openSandboxUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="!no-underline"
+        class="no-underline!"
       >
         <button class="text-muted-foreground flex items-center gap-2 hover:text-primary">
           <ExternalLink class="w-4 h-4" />

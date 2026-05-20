@@ -26,15 +26,15 @@ const propsArray = computed(() => {
 
 <template>
   <div class="p-2 rounded border border-dashed hover:border-primary">
-    <h3 class="!mt-0">
+    <h3 class="mt-0!">
       <code>{{ title }}</code> slot
     </h3>
 
-    <details class="!mt-2">
-      <summary class="!my-0 cursor-pointer">
+    <details class="mt-2!">
+      <summary class="my-0! cursor-pointer">
         Slot Props
       </summary>
-      <table class="!my-0 !mt-2">
+      <table class="my-0! mt-2!">
         <thead>
           <tr>
             <th>Property</th>

@@ -267,7 +267,7 @@ watch([operationData.security.securityValues, authorizations], ([values]) => {
           <Select v-model="selectedSchemeId">
             <SelectTrigger
               aria-label="Security Scheme"
-              class="h-9 px-3 py-1.5 text-foreground font-normal"
+              class="h-9 px-3 py-1.5 text-foreground font-normal bg-muted"
             >
               <SelectValue :placeholder="selectedSchemeId ?? t('Select')" />
             </SelectTrigger>
@@ -389,6 +389,8 @@ watch([operationData.security.securityValues, authorizations], ([values]) => {
 </template>
 
 <style scoped>
+@reference "tailwindcss";
+
 .OAPlaygroundParameters {
   @apply flex flex-col gap-2;
 }
@@ -396,6 +398,6 @@ watch([operationData.security.securityValues, authorizations], ([values]) => {
   @apply flex flex-col gap-2;
 }
 .OAPlaygroundParameters > details > summary {
-  @apply !my-0 text-lg font-bold cursor-pointer;
+  @apply my-0! text-lg font-bold cursor-pointer;
 }
 </style>

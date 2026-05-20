@@ -36,7 +36,7 @@ const isClickable = computed(() => !!props.onSet)
     <code
       v-for="(item, attributeIdx) in value"
       :key="attributeIdx"
-      class="!text-xs text-wrap break-all"
+      class="text-xs! text-wrap break-all"
       :class="{
         'cursor-pointer hover:opacity-80': isClickable,
       }"
@@ -50,7 +50,7 @@ const isClickable = computed(() => !!props.onSet)
 
   <code
     v-else
-    class="!text-xs break-all"
+    class="text-xs! break-all"
     :class="{
       'text-wrap': !value || typeof value !== 'object',
       'whitespace-pre-wrap': value && typeof value === 'object',

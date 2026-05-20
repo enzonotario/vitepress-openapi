@@ -20,7 +20,7 @@ const { t } = useI18n()
 
 <template>
   <details v-if="response || loading" open>
-    <summary class="!my-0 text-lg font-bold cursor-pointer">
+    <summary class="my-0! text-lg font-bold cursor-pointer">
       <div class="inline-flex items-center gap-2 w-[calc(100%-24px)]">
         <span>{{ loading ? t('Loading') : t('Response') }}</span>
 

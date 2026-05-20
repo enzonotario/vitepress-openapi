@@ -34,10 +34,10 @@ const { t } = useI18n()
 
 <template>
   <div class="flex flex-col gap-2 text-sm bg-muted rounded p-1.5">
-    <div class="language-bash !overflow-hidden !m-0 h-8 flex flex-row items-center gap-1.5">
+    <div class="language-bash overflow-hidden! m-0! h-8 flex flex-row items-center gap-1.5">
       <button
         :title="t('Copy endpoint')"
-        class="copy absolute !top-1 z-50 OAPathEndpoint__copy"
+        class="copy absolute top-1! z-50 OAPathEndpoint__copy"
       />
 
       <OAMethodBadge :method="props.method" />

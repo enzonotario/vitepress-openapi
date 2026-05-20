@@ -148,7 +148,7 @@ const shouldBuildRequest = computed(
             <div
               class="OAPathContentEnd sticky top-[100px] inset-x-0 flex flex-col"
               :class="{
-                '!px-0': operationCols === 1,
+                'px-0!': operationCols === 1,
               }"
             >
               <div

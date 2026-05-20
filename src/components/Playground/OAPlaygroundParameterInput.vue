@@ -164,7 +164,7 @@ function onFileChange(e: Event) {
         :model-value="String(modelValue ?? '')"
         @update:model-value="handleInputChange($event)"
       >
-        <SelectTrigger :aria-label="selectPlaceholder">
+        <SelectTrigger :aria-label="selectPlaceholder" class="bg-muted">
           <SelectValue :placeholder="selectPlaceholder" />
         </SelectTrigger>
         <SelectContent>

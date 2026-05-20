@@ -19,7 +19,7 @@ const scopeConfiguration = useScopeConfiguration()
 </script>
 
 <template>
-  <div class="relative rounded border border-[var(--vp-c-divider)]">
+  <div class="relative rounded border border-(--vp-c-divider)">
     <Tabs
       :default-value="scopeConfiguration.currentScope"
     >
