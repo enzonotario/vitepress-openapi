@@ -120,7 +120,7 @@ import DefaultTheme from 'vitepress/theme'
 import { theme } from 'vitepress-openapi/client' // [!code --]
 import { theme, useOpenapi } from 'vitepress-openapi/client' // [!code ++]
 import 'vitepress-openapi/dist/style.css'
-    
+
 import spec from '../../public/openapi.json' // [!code ++]
 
 export default {
@@ -490,7 +490,7 @@ If you are using `useOpenapi` in your `.vitepress/theme/index.[js,ts]` file, you
 import DefaultTheme from 'vitepress/theme'
 import { theme, useOpenapi } from 'vitepress-openapi/client'
 import 'vitepress-openapi/dist/style.css'
-    
+
 import spec from '../../public/openapi.json'
 
 export default {
@@ -594,3 +594,26 @@ useTheme({ // [!code ++]
 </template>
 
 </ScopeConfigurationTabs>
+
+## Style Isolation
+
+If you're using the `:::raw` blocks in your documentation and want to prevent `vitepress-openapi` styles from leaking into these blocks, you can use the `postcssIsolateStyles` function from VitePress.
+
+Create a `postcss.config.mjs` file in your `docs` directory:
+
+```js
+// docs/postcss.config.mjs
+
+import { postcssIsolateStyles } from 'vitepress';
+
+export default {
+  plugins: [
+    // Make `::: raw` sections be isolated from vitepress-openapi plugin styles
+    postcssIsolateStyles({
+      includeFiles: [ /vitepress-openapi\.css/ ], // ← NOT `vitepress-openapi/dist/style.css` (!)
+    }),
+  ],
+};
+```
+
+This configuration ensures that the styles from `vitepress-openapi` don't affect the content inside raw blocks, maintaining the intended appearance of your code examples.

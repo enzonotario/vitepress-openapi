@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { OperationData } from '../../lib/operationData'
-import { computed, defineProps, inject, onBeforeUnmount } from 'vue'
+import type { OperationData } from '@/lib/operation/operationData'
+import { useI18n } from '@byjohann/vue-i18n'
+import { computed, inject, onBeforeUnmount } from 'vue'
+import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { usePlayground } from '../../composables/usePlayground'
-import { OPERATION_DATA_KEY } from '../../lib/operationData'
+import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'
 import { Button } from '../ui/button'
 import OAPlaygroundParameters from './OAPlaygroundParameters.vue'
@@ -52,6 +54,7 @@ const props = defineProps({
 const { loading, response, submitRequest, cleanupImageUrls } = usePlayground()
 
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
+const { t } = useI18n()
 
 const hasBody = computed(() =>
   Boolean(props.requestBody),
@@ -64,6 +67,14 @@ const hasSecuritySchemes = computed(() =>
 const hasParameters = computed(() =>
   Boolean(props.parameters?.length || hasBody.value || hasSecuritySchemes.value),
 )
+
+const themeConfig = useTheme()
+
+const operationCols = computed(() => themeConfig.getOperationCols())
+
+const exampleBehavior = computed(() => themeConfig.getPlaygroundExamplesBehavior())
+
+const xExampleBehavior = computed(() => themeConfig.getPlaygroundXExampleBehavior())
 
 const examples = computed(() => {
   const selectedContentTypeValue = operationData.requestBody.selectedContentType.value
@@ -99,9 +110,12 @@ onBeforeUnmount(() => {
     <OAHeading
       level="h2"
       :prefix="headingPrefix"
-      class="block sm:hidden"
+      class="block"
+      :class="{
+        'sm:hidden': operationCols === 2,
+      }"
     >
-      {{ $t('Playground') }}
+      {{ t('Playground') }}
     </OAHeading>
 
     <OAPlaygroundParameters
@@ -113,13 +127,15 @@ onBeforeUnmount(() => {
       :parameters="props.parameters"
       :security-ui="props.securityUi"
       :examples="examples"
+      :example-behavior="exampleBehavior"
+      :x-example-behavior="xExampleBehavior"
       :request-body="props.requestBody"
       @submit="onSubmit"
     />
 
     <div class="flex flex-col gap-2">
       <Button variant="primary" @click="onSubmit">
-        {{ $t('Try it out') }}
+        {{ t('Try it out') }}
       </Button>
 
       <OAPlaygroundResponse

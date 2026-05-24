@@ -1,5 +1,6 @@
 import jsBeautify from 'js-beautify'
 import { useSidebar } from 'vitepress-openapi'
+import { minifyHtml } from '../src/lib/utils/minifyHtml'
 import spec from './public/openapi.json'
 
 const sidebar = useSidebar({
@@ -58,10 +59,12 @@ export const examples = ([
           const operation = spec.paths[path]?.[method]
           const displayText = title || (operation ? operation.summary : path)
 
-          return `<div class="OASidebarItem group/oaOperationLink" style="display: grid; grid-template-columns: 1fr auto;">
-        <span class="text" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${displayText}</span>
-        <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
-      </div>`
+          return minifyHtml(`
+            <span class="OASidebarItem group/oaOperationLink" style="display: grid; grid-template-columns: 1fr auto;">
+              <span class="text" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${displayText}</span>
+              <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
+            </span>
+          `)
         },
       })
     },
@@ -73,7 +76,9 @@ export const examples = ([
       return sidebar.itemsByPaths({
         linkPrefix: '#',
         sidebarGroupTemplate: ({ path, depth }) => {
-          return `<span>${path}</span>`
+          return minifyHtml(`
+            <span>${path}</span>
+          `)
         },
       })
     },

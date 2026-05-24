@@ -1,18 +1,21 @@
 import type { Ref } from 'vue'
-import type { ParsedOperation } from '../types'
-import type { OARequest } from './codeSamples/request'
+import type { ParsedOperation } from '../../types'
+import type { OARequest } from '../codeSamples/request'
 import { useStorage } from '@vueuse/core'
 import { ref } from 'vue'
-import { useTheme } from '../composables/useTheme'
+import { useTheme } from '../../composables/useTheme'
+import { isLocalStorageAvailable } from '../utils/utils'
 
 export interface OperationData {
   operationId: string
   security: {
     selectedSchemeId: Ref<string>
+    securityValues: Ref<Record<string, any>>
   }
   playground: {
     request: Ref<OARequest>
     selectedServer: Ref<string>
+    parameterValues: Ref<Record<string, any>>
   }
   requestBody: {
     selectedContentType: Ref<string | undefined>
@@ -34,20 +37,24 @@ export function initOperationData({
 }): OperationData {
   const firstSecurityScheme = operation.securityUi?.[0]?.id || ''
 
-  const defaultSecurityScheme = useTheme().getSecurityDefaultScheme() || firstSecurityScheme
+  const theme = useTheme()
+  const defaultSecurityScheme = theme.getSecurityDefaultScheme() || firstSecurityScheme
+  const storagePrefix = theme.getStoragePrefix()
 
   return {
     operationId: operation.operationId,
     security: {
       selectedSchemeId: ref(operation.securityUi?.some(s => s.id === defaultSecurityScheme) ? defaultSecurityScheme : firstSecurityScheme),
+      securityValues: ref({}),
     },
     playground: {
       request: ref(request || {} as OARequest),
-      selectedServer: typeof localStorage !== 'undefined'
-        ? useStorage(`--oa-operation-${operation.operationId}-selectedServer`, selectedServer, localStorage, {
+      selectedServer: isLocalStorageAvailable()
+        ? useStorage(`${storagePrefix}-operation-${operation.operationId}-selectedServer`, selectedServer, localStorage, {
             mergeDefaults: true,
           })
         : ref(selectedServer),
+      parameterValues: ref({}),
     },
     requestBody: {
       selectedContentType: ref(defaultRequestContentType),

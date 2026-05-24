@@ -1,5 +1,8 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import { ref } from 'vue'
+import type { OperationData } from '../lib/operation/operationData'
+import { inject, ref } from 'vue'
+import { OPERATION_DATA_KEY } from '../lib/operation/operationData'
+import { isResponseDownloadable } from '../lib/playground/responseDownloadable'
 
 export interface SecuritySchemeDefaultValues {
   'http-basic': string
@@ -14,6 +17,7 @@ export interface PlaygroundResponse {
   type: string
   time: string | null
   status: number | null
+  headers?: Record<string, string>
 }
 
 export interface SubmitOptions {
@@ -24,6 +28,12 @@ export interface SubmitOptions {
   operationId: string
 }
 
+const RE_JSON_CT = /json/i
+const RE_XML_CT = /xml/i
+const RE_HTML_CT = /html/i
+const RE_TEXT_PLAIN_CT = /text\/plain/i
+const RE_IMAGE_CT = /^image\//i
+const RE_AUDIO_CT = /^audio\//i
 let securitySchemeDefaultValues: SecuritySchemeDefaultValues = {
   'http-basic': 'Basic Auth',
   'http-bearer': 'Token',
@@ -36,6 +46,7 @@ export function usePlayground() {
   const loading = ref(false)
   const response = ref<PlaygroundResponse | null>(null)
   const imageUrls = ref<string[]>([])
+  const operationData = inject<OperationData | undefined>(OPERATION_DATA_KEY)
 
   function setSecuritySchemeDefaultValues(values: Partial<SecuritySchemeDefaultValues>) {
     securitySchemeDefaultValues = {
@@ -90,29 +101,52 @@ export function usePlayground() {
 
       const url = new URL(request.url ?? defaultRequestUrl)
       for (const [key, value] of Object.entries(request.query)) {
-        url.searchParams.set(key, String(value))
+        if (Array.isArray(value)) {
+          // For exploded arrays, append each value separately
+          value.forEach(v => url.searchParams.append(key, String(v)))
+        } else {
+          url.searchParams.set(key, String(value))
+        }
       }
 
       const data = await fetch(url.toString(), {
         method: method.toUpperCase(),
-        headers: request.headers ?? {},
-        body: (typeof request.body === 'string' || request.body instanceof Blob) ? request.body : JSON.stringify(request.body),
+        headers: request.body instanceof FormData ? {} : (request.headers ?? {}),
+        body: request.body instanceof FormData
+          ? request.body
+          : ((typeof request.body === 'string' || request.body instanceof Blob) ? request.body : JSON.stringify(request.body)),
         signal: controller.signal,
       })
 
       const contentType = data.headers.get('Content-Type') || 'text/plain'
+      const contentDisposition = data.headers.get('Content-Disposition') || ''
       innerResponse.type = contentType
+      // Expose headers for downstream components (e.g., filename extraction).
+      try {
+        innerResponse.headers = Object.fromEntries(data.headers.entries())
+      } catch {
+        const hdrs: Record<string, string> = {}
+        if (contentType) {
+          hdrs['content-type'] = contentType
+        }
+        if (contentDisposition) {
+          hdrs['content-disposition'] = contentDisposition
+        }
+        innerResponse.headers = hdrs
+      }
 
-      if (/json/i.test(contentType)) {
+      if (RE_JSON_CT.test(contentType)) {
         innerResponse.body = await data.json()
-      } else if (/xml/i.test(contentType) || /html/i.test(contentType) || /text\/plain/.test(contentType)) {
+      } else if (RE_XML_CT.test(contentType) || RE_HTML_CT.test(contentType) || RE_TEXT_PLAIN_CT.test(contentType)) {
         innerResponse.body = await data.text()
-      } else if (/^image\//i.test(contentType)) {
+      } else if (RE_IMAGE_CT.test(contentType)) {
         const blob = await data.blob()
         innerResponse.body = URL.createObjectURL(blob)
         // Store the blob URL to release it later.
         imageUrls.value.push(innerResponse.body)
-      } else if (/^audio\//i.test(contentType)) {
+      } else if (RE_AUDIO_CT.test(contentType)) {
+        innerResponse.body = await data.blob()
+      } else if (isResponseDownloadable(contentType, contentDisposition)) {
         innerResponse.body = await data.blob()
       } else {
         innerResponse.body = await data.text()
@@ -151,6 +185,31 @@ export function usePlayground() {
     imageUrls.value = []
   }
 
+  function setParameterValue(parameterName: string, value: any) {
+    if (!operationData || !parameterName) {
+      return
+    }
+
+    const parsedValue = typeof value === 'object' && value !== null
+      ? JSON.parse(JSON.stringify(value))
+      : value
+
+    operationData.playground.parameterValues.value[parameterName] = parsedValue
+  }
+
+  function setSecurityValue(schemeId: string, value: any) {
+    if (!operationData || !schemeId) {
+      return
+    }
+
+    // Replace the object reference so the watcher always fires,
+    // even when the value for this key hasn't changed.
+    operationData.security.securityValues.value = {
+      ...operationData.security.securityValues.value,
+      [schemeId]: value,
+    }
+  }
+
   return {
     loading,
     response,
@@ -159,5 +218,8 @@ export function usePlayground() {
     getSecuritySchemeDefaultValue,
     submitRequest,
     cleanupImageUrls,
+    setParameterValue,
+    setSecurityValue,
+    hasOperationData: !!operationData,
   }
 }

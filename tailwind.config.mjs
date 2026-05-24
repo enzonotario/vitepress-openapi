@@ -1,11 +1,8 @@
-const animate = require('tailwindcss-animate')
-const colors = require('tailwindcss/colors')
+import colors from 'tailwindcss/colors'
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: ['class'],
-  safelist: ['dark'],
-  prefix: '',
+export default {
+  darkMode: 'class',
   content: [
     './src/**/*.{vue,js,ts,jsx,tsx}',
   ],
@@ -79,5 +76,4 @@ module.exports = {
       },
     },
   },
-  plugins: [animate],
 }

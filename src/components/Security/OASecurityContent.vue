@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, defineProps } from 'vue'
+import { useI18n } from '@byjohann/vue-i18n'
+import { computed } from 'vue'
 import OACodeValue from '../Common/OACodeValue.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAParameterAttribute from '../Parameter/OAParameterAttribute.vue'
@@ -15,6 +16,8 @@ const { scheme, name } = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 
 const typeValue = computed(() => {
   if (scheme.type === 'http') {
@@ -52,7 +55,7 @@ const typeValue = computed(() => {
     </div>
 
     <div class="flex flex-col gap-2">
-      <OAParameterAttribute v-if="scheme.type !== 'oauth2'" :name="$t('Type')" bold-name :value="typeValue" />
+      <OAParameterAttribute v-if="scheme.type !== 'oauth2'" :name="t('Type')" bold-name :value="typeValue" />
 
       <div
         v-if="scheme.type === 'oauth2'"
@@ -63,24 +66,24 @@ const typeValue = computed(() => {
           :key="flow"
         >
           <details>
-            <summary class="!my-1 cursor-pointer hover:text-[var(--vp-c-brand-1)]">
+            <summary class="my-1! cursor-pointer hover:text-[color:var(--vp-c-brand-1)]">
               {{ flow }} Flow
             </summary>
 
             <div class="pl-2 flex flex-col gap-1">
               <div v-if="url.authorizationUrl" class="flex flex-wrap gap-2">
-                <span class="text-sm">{{ $t('Authorization URL') }}</span>
+                <span class="text-sm">{{ t('Authorization URL') }}</span>
                 <OACodeValue :value="url.authorizationUrl" />
               </div>
 
               <div v-if="url.tokenUrl" class="flex flex-wrap gap-2">
-                <span class="text-sm">{{ $t('Token URL') }}</span>
+                <span class="text-sm">{{ t('Token URL') }}</span>
                 <OACodeValue :value="url.tokenUrl" />
               </div>
 
               <div v-if="url.scopes">
                 <span class="text-sm">Scopes:</span>
-                <ul class="pl-2 !my-0">
+                <ul class="pl-2 my-0!">
                   <li
                     v-for="(description, scope) in url.scopes"
                     :key="scope"
@@ -96,6 +99,6 @@ const typeValue = computed(() => {
       </div>
     </div>
 
-    <OAParameterExamples :property="scheme" />
+    <OAParameterExamples :property="scheme" :security-scheme-name="name" />
   </div>
 </template>

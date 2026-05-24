@@ -25,3 +25,14 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## License
 
 [MIT License](./LICENSE) © 2023-present [Enzo Notario](https://github.com/enzonotario).
+
+---
+
+### ❤️ Sponsors & Backers
+
+<a href="https://github.com/sponsors/enzonotario">
+  <img src="https://raw.githubusercontent.com/enzonotario/enzonotario/main/sponsors.png" alt="Sponsors & Backers" />
+</a>
+
+> [Become a sponsor](https://github.com/sponsors/enzonotario)
+

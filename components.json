@@ -3,7 +3,7 @@
   "style": "default",
   "typescript": true,
   "tailwind": {
-    "config": "tailwind.config.js",
+    "config": "tailwind.config.mjs",
     "css": "src/style.css",
     "baseColor": "slate",
     "cssVariables": true
@@ -11,7 +11,7 @@
   "aliases": {
     "components": "src/components",
     "composables": "src/composables",
-    "utils": "lib/utils",
+    "utils": "lib/utils/utils",
     "ui": "src/components/ui",
     "lib": "src/lib"
   },

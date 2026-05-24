@@ -8,7 +8,7 @@ import {
   useForwardPropsEmits,
 } from 'reka-ui'
 import { computed } from 'vue'
-import { cn } from '../../../../../../src/lib/utils'
+import { cn } from '../../../../../../src/lib/utils/utils'
 
 defineOptions({
   inheritAttrs: false,

@@ -68,8 +68,8 @@ function unrefObject<T extends Record<string, unknown>>(obj: T): DeepUnrefObject
 
   // Object? un-ref it!
   Object.keys(obj).forEach((key) => {
-    // @ts-expect-error: TS doesn't know that `key` is a key of `T`
-    unreffed[key as keyof T] = smartUnref(obj[key])
+    const typedKey = key as keyof T
+    unreffed[typedKey] = smartUnref(obj[typedKey]) as DeepUnref<T[keyof T]>
   })
 
   return unreffed

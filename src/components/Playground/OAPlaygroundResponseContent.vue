@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { computed, defineProps, onBeforeUnmount, ref, watch } from 'vue'
+import { useI18n } from '@byjohann/vue-i18n'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { getDownloadFileNameFromContentDisposition } from '@/lib/playground/getDownloadFileName'
+import { isResponseDownloadable } from '@/lib/playground/responseDownloadable'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 
 interface ResponseType {
@@ -12,13 +15,9 @@ const props = defineProps<{
   response: ResponseType
 }>()
 
-const isType = (regex: RegExp) => computed(() => regex.test(props.response.type))
+const { t } = useI18n()
 
-const isHeader = (header: string, regex: RegExp) =>
-  props.response.headers
-  && Object.entries(props.response.headers).some(
-    ([k, v]) => k.toLowerCase() === header && regex.test(v),
-  )
+const isType = (regex: RegExp) => computed(() => regex.test(props.response.type))
 
 const isJson = isType(/json/i)
 const isXml = isType(/xml/i)
@@ -27,9 +26,19 @@ const isPlainText = isType(/text\/plain/i)
 const isCsv = isType(/text\/csv/i)
 const isImage = isType(/^image\//i)
 const isAudio = isType(/^audio\//i)
+
+const getHeader = (name: string): string | null => {
+  if (!props.response.headers) {
+    return null
+  }
+  const entry = Object.entries(props.response.headers).find(([k]) => k.toLowerCase() === name.toLowerCase())
+  return entry ? entry[1] : null
+}
+
+const contentDisposition = computed(() => getHeader('content-disposition') ?? '')
+
 const isDownloadable = computed(() =>
-  /^application\/octet-stream/i.test(props.response.type)
-  || isHeader('content-disposition', /attachment|download/i),
+  isResponseDownloadable(props.response.type, contentDisposition.value),
 )
 
 const lang = computed(() => {
@@ -94,7 +103,21 @@ const disableHtmlTransform = computed(
   () => props.response.body && JSON.stringify(props.response.body).length > 1000,
 )
 
-const downloadBlob = (blob: Blob, fileName: string) => {
+const downloadFileName = computed<string>(() => {
+  const cd = getHeader('content-disposition')
+  return getDownloadFileNameFromContentDisposition(cd, 'response_file')
+})
+
+const downloadBlob = (data: any, fileName: string) => {
+  let blob: Blob
+  if (data instanceof Blob) {
+    blob = data
+  } else if (typeof data === 'string') {
+    blob = new Blob([data], { type: 'application/octet-stream' })
+  } else {
+    blob = new Blob([JSON.stringify(data)], { type: 'application/octet-stream' })
+  }
+
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
@@ -113,34 +136,34 @@ const downloadBlob = (blob: Blob, fileName: string) => {
       :label="label"
       :disable-html-transform="disableHtmlTransform"
       active
-      class="!m-0"
+      class="m-0!"
     />
     <img
       v-else-if="isImage"
       :src="props.response.body"
-      :alt="$t('Response Image')"
+      :alt="t('Response Image')"
       style="max-width: 100%;"
     >
     <audio
       v-else-if="isAudio"
       controls
       class="w-full mt-2"
-      :aria-label="$t('Audio response')"
+      :aria-label="t('Audio response')"
     >
       <source :src="audioUrl" :type="props.response.type">
-      {{ $t('Your browser does not support the audio element.') }}
+      {{ t('Your browser does not support the audio element.') }}
     </audio>
     <div v-else-if="isDownloadable">
       <button
         type="button"
         aria-label="Download file"
-        @click="downloadBlob(props.response.body, 'response_file')"
+        @click="downloadBlob(props.response.body, downloadFileName)"
       >
-        {{ $t('Download file') }}
+        {{ t('Download file') }}
       </button>
     </div>
     <div v-else>
-      <p>{{ $t('Unrecognized response type. Raw content:') }}</p>
+      <p>{{ t('Unrecognized response type. Raw content:') }}</p>
       <pre class="whitespace-pre-wrap">{{ props.response.body }}</pre>
     </div>
   </div>

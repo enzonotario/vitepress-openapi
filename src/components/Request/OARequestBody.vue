@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { OperationData } from '../../lib/operationData'
 import type { OARequestBody } from '../../types'
+import type { OperationData } from '@/lib/operation/operationData'
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed, inject } from 'vue'
+import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { useTheme } from '../../composables/useTheme'
-import { OPERATION_DATA_KEY } from '../../lib/operationData'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
 import OAHeading from '../Common/OAHeading.vue'
 import OASchemaTabs from '../Schema/OASchemaTabs.vue'
@@ -28,6 +29,7 @@ const defaultView = useTheme().getRequestBodyDefaultView()
 const contentTypeId = `request-body-content-type-${props.operationId}`
 
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
+const { t } = useI18n()
 
 const contentType = computed({
   get: () => operationData.requestBody.selectedContentType.value,
@@ -62,14 +64,14 @@ const examples = computed(() => {
 
 <template>
   <div>
-    <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)] flex flex-row items-center">
+    <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-(--vp-c-divider) flex flex-row items-center">
       <OAHeading
         level="h2"
         :prefix="headingPrefix"
-        class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0 inline-block"
-        header-anchor-class="!top-0"
+        class="text-[color:var(--vp-c-text-1)] my-0! py-0! border-t-0! inline-block"
+        header-anchor-class="top-0!"
       >
-        {{ $t('Request Body') }}
+        {{ t('Request Body') }}
       </OAHeading>
       <div class="relative flex-1">
         <div class="absolute inset-x-0 top-[-14px] w-full flex justify-end">

@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { ComputedRef } from 'vue'
-import type { OperationData } from '../../lib/operationData'
+import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
+import type { OperationData } from '@/lib/operation/operationData'
+import { useI18n } from '@byjohann/vue-i18n'
 import { useStorage } from '@vueuse/core'
-import { computed, defineEmits, defineProps, inject, ref, watch } from 'vue'
+import { computed, inject, isRef, ref, watch } from 'vue'
+import { buildRequest } from '@/lib/codeSamples/buildRequest'
+import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
+import { createCompositeKey } from '@/lib/playground/createCompositeKey'
+import { resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
+import { isLocalStorageAvailable } from '@/lib/utils/utils'
 import { usePlayground } from '../../composables/usePlayground'
 import { useTheme } from '../../composables/useTheme'
-import { buildRequest } from '../../lib/codeSamples/buildRequest'
-import { getPropertyExample } from '../../lib/examples/getPropertyExample'
-import { OPERATION_DATA_KEY } from '../../lib/operationData'
-import { createCompositeKey } from '../../lib/playground/createCompositeKey'
 import OAPlaygroundBodyInput from '../Playground/OAPlaygroundBodyInput.vue'
 import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
 import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
@@ -49,6 +52,14 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  exampleBehavior: {
+    type: String as () => PlaygroundExampleBehavior,
+    default: 'value',
+  },
+  xExampleBehavior: {
+    type: String as () => PlaygroundExampleBehavior,
+    default: 'value',
+  },
   requestBody: {
     type: Object,
     required: false,
@@ -60,6 +71,10 @@ const emits = defineEmits([
 ])
 
 const operationData = inject(OPERATION_DATA_KEY) as OperationData
+
+const { t } = useI18n()
+const keyLabel = t('Key')
+const valueLabel = t('Value')
 
 const selectedServer = computed({
   get: () => operationData.playground.selectedServer.value,
@@ -91,8 +106,12 @@ const request = computed({
 
 const allowCustomServer = computed(() => useTheme().getServerAllowCustomServer())
 
-const useCustomServer = typeof localStorage !== 'undefined'
-  ? useStorage('--oa-use-custom-server', allowCustomServer.value, localStorage)
+const { getStoragePrefix, getStoragePersistAuth } = useTheme()
+const storagePrefix = getStoragePrefix()
+const persistAuth = getStoragePersistAuth()
+
+const useCustomServer = isLocalStorageAvailable()
+  ? useStorage(`${storagePrefix}-use-custom-server`, allowCustomServer.value, localStorage)
   : ref(false)
 
 const headerParameters = props.parameters.filter(parameter => parameter && parameter.in === 'header')
@@ -111,15 +130,34 @@ const serversUrls: ComputedRef<string[]> = computed(() =>
     .filter(value => value !== undefined),
 )
 
-const customServer = typeof localStorage !== 'undefined'
-  ? useStorage('--oa-custom-server-url', selectedServer.value, localStorage)
+const customServer = isLocalStorageAvailable()
+  ? useStorage(`${storagePrefix}-custom-server-url`, selectedServer.value, localStorage)
   : ref(selectedServer.value)
 
-const variables = ref({
-  ...initializeVariables(headerParameters),
-  ...initializeVariables(pathParameters),
-  ...initializeVariables(queryParameters),
-})
+function initializeVariables(parameters: OpenAPIV3.ParameterObject[], behavior: PlaygroundExampleBehavior, xBehavior: PlaygroundExampleBehavior) {
+  return parameters
+    .reduce((acc: Record<string, string>, parameter: OpenAPIV3.ParameterObject) => {
+      if (!parameter.name) {
+        return acc
+      }
+      acc[parameter.name] = resolveExampleForValue(parameter, behavior, xBehavior) ?? ''
+      return acc
+    }, {})
+}
+
+const variables = operationData.playground.parameterValues
+
+const initialVariables = {
+  ...initializeVariables(headerParameters, props.exampleBehavior, props.xExampleBehavior),
+  ...initializeVariables(pathParameters, props.exampleBehavior, props.xExampleBehavior),
+  ...initializeVariables(queryParameters, props.exampleBehavior, props.xExampleBehavior),
+}
+
+if (Object.keys(variables.value).length === 0) {
+  variables.value = initialVariables
+} else {
+  variables.value = { ...initialVariables, ...variables.value }
+}
 
 const enabledParameters = ref(
   [...headerParameters, ...pathParameters, ...queryParameters].reduce((acc, parameter) => {
@@ -130,18 +168,6 @@ const enabledParameters = ref(
     return acc
   }, { body: true } as Record<string, boolean>),
 )
-
-function initializeVariables(parameters: OpenAPIV3.ParameterObject[]) {
-  return parameters
-    .reduce((acc: Record<string, string>, parameter: OpenAPIV3.ParameterObject) => {
-      if (!parameter.name) {
-        return acc
-      }
-
-      acc[parameter.name] = getPropertyExample(parameter) ?? ''
-      return acc
-    }, {})
-}
 
 const authorizations = ref<PlaygroundSecurityScheme[]>([])
 
@@ -179,26 +205,43 @@ watch(selectedSchemeId, (schemeId) => {
 
   authorizations.value = Object.keys(schemes).map((name) => {
     const scheme = schemes[name] as PlaygroundSecurityScheme
-    const example = getPropertyExample(scheme) ?? usePlayground().getSecuritySchemeDefaultValue(scheme)
+    const defaultVal = usePlayground().getSecuritySchemeDefaultValue(scheme)
+    const example = resolveExampleForValue(scheme, props.exampleBehavior, props.xExampleBehavior) ?? defaultVal
     return {
       type: scheme.type,
       scheme: scheme.scheme,
+      in: scheme.in,
       name: scheme.name ?? name,
-      value: typeof localStorage !== 'undefined'
-        ? useStorage(`--oa-authorization-${name}`, example, localStorage)
+      value: isLocalStorageAvailable() && persistAuth
+        ? useStorage(`${storagePrefix}-authorization-${name}`, example, localStorage)
         : example,
       label: name,
       example,
     }
   })
 }, { immediate: true })
+
+watch([operationData.security.securityValues, authorizations], ([values]) => {
+  for (const [schemeId, value] of Object.entries(values)) {
+    const auth = authorizations.value.find(a => a.label === schemeId)
+    if (!auth) {
+      continue
+    }
+    if (isRef(auth.value)) {
+      auth.value.value = value
+    }
+    else {
+      auth.value = value
+    }
+  }
+}, { deep: true })
 </script>
 
 <template>
   <div class="OAPlaygroundParameters">
     <details v-if="serversUrls.length > 1 || allowCustomServer" open>
       <summary>
-        {{ $t('Server') }}
+        {{ t('Server') }}
       </summary>
 
       <div class="flex flex-col gap-2">
@@ -209,9 +252,9 @@ watch(selectedSchemeId, (schemeId) => {
           :default-custom-value="customServer"
           :options="serversUrls"
           :allow-custom-option="allowCustomServer"
-          :custom-option-label="$t('Custom Server')"
-          :custom-placeholder="$t('Enter a custom server URL')"
-          :placeholder="$t('Select a server')"
+          :custom-option-label="t('Custom Server')"
+          :custom-placeholder="t('Enter a custom server URL')"
+          :placeholder="t('Select a server')"
           @submit="emits('submit')"
         />
       </div>
@@ -219,14 +262,14 @@ watch(selectedSchemeId, (schemeId) => {
 
     <details v-if="authorizations?.length" open>
       <summary>
-        {{ $t('Authorization') }}
+        {{ t('Authorization') }}
         <div v-if="props.securityUi.length > 1" class="w-full max-w-[33%] md:max-w-[50%] ml-auto -mt-8">
           <Select v-model="selectedSchemeId">
             <SelectTrigger
               aria-label="Security Scheme"
-              class="h-9 px-3 py-1.5 text-foreground font-normal"
+              class="h-9 px-3 py-1.5 text-foreground font-normal bg-muted"
             >
-              <SelectValue :placeholder="selectedSchemeId ?? $t('Select')" />
+              <SelectValue :placeholder="selectedSchemeId ?? t('Select')" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -267,7 +310,7 @@ watch(selectedSchemeId, (schemeId) => {
 
     <details v-if="headerParameters.length" open>
       <summary>
-        {{ $t('Headers') }}
+        {{ t('Headers') }}
       </summary>
 
       <div class="flex flex-col gap-2">
@@ -280,6 +323,8 @@ watch(selectedSchemeId, (schemeId) => {
             v-model="variables[parameter.name ?? '']"
             :parameter="parameter"
             :composite-key="createCompositeKey({ parameter, operationId: props.operationId })"
+            :example-behavior="props.exampleBehavior"
+            :x-example-behavior="props.xExampleBehavior"
             :enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })]"
             @update:enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })] = $event"
             @submit="emits('submit')"
@@ -290,7 +335,7 @@ watch(selectedSchemeId, (schemeId) => {
 
     <details v-if="Object.keys(queryParameters).length || Object.keys(pathParameters).length" open>
       <summary>
-        {{ $t('Variables') }}
+        {{ t('Variables') }}
       </summary>
 
       <div class="flex flex-col gap-1">
@@ -298,10 +343,10 @@ watch(selectedSchemeId, (schemeId) => {
           <div class="w-[16px]" />
           <div class="flex flex-row flex-grow gap-2">
             <div class="w-1/2 flex justify-start">
-              <span class="text-xs text-muted-foreground uppercase">{{ $t('Key') }}</span>
+              <span class="text-xs text-muted-foreground uppercase">{{ keyLabel }}</span>
             </div>
             <div class="w-1/2 flex justify-start">
-              <span class="text-xs text-muted-foreground uppercase">{{ $t('Value') }}</span>
+              <span class="text-xs text-muted-foreground uppercase">{{ valueLabel }}</span>
             </div>
           </div>
         </div>
@@ -312,6 +357,8 @@ watch(selectedSchemeId, (schemeId) => {
           v-model="variables[parameter.name ?? '']"
           :parameter="parameter"
           :composite-key="createCompositeKey({ parameter, operationId: props.operationId })"
+          :example-behavior="props.exampleBehavior"
+          :x-example-behavior="props.xExampleBehavior"
           :enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })]"
           @update:enabled="enabledParameters[createCompositeKey({ parameter, operationId: props.operationId })] = $event"
           @submit="emits('submit')"
@@ -321,7 +368,7 @@ watch(selectedSchemeId, (schemeId) => {
 
     <details v-if="props.requestBody && selectedContentType" open>
       <summary>
-        {{ $t('Body') }}
+        {{ t('Body') }}
       </summary>
 
       <OAPlaygroundBodyInput
@@ -331,6 +378,8 @@ watch(selectedSchemeId, (schemeId) => {
         :request-body="props.requestBody"
         :enabled-parameters="enabledParameters"
         :examples="props.examples"
+        :example-behavior="props.exampleBehavior"
+        :x-example-behavior="props.xExampleBehavior"
         @update:body="body = $event"
         @update:enabled="(key, value) => enabledParameters[key] = value"
         @submit="emits('submit')"
@@ -340,6 +389,8 @@ watch(selectedSchemeId, (schemeId) => {
 </template>
 
 <style scoped>
+@reference "tailwindcss";
+
 .OAPlaygroundParameters {
   @apply flex flex-col gap-2;
 }
@@ -347,6 +398,6 @@ watch(selectedSchemeId, (schemeId) => {
   @apply flex flex-col gap-2;
 }
 .OAPlaygroundParameters > details > summary {
-  @apply !my-0 text-lg font-bold cursor-pointer;
+  @apply my-0! text-lg font-bold cursor-pointer;
 }
 </style>

@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import { Badge } from '../ui/badge'
@@ -15,6 +16,8 @@ const { deprecated } = defineProps({
 })
 
 const themeConfig = useTheme()
+
+const { t } = useI18n()
 
 const operationBadges = computed(() => themeConfig.getOperationBadges().filter((badge) => {
   if (badge === 'deprecated' && !deprecated) {
@@ -33,11 +36,11 @@ const operationBadges = computed(() => themeConfig.getOperationBadges().filter((
       variant="outline"
     >
       <template v-if="badge === 'deprecated'">
-        {{ $t('Deprecated') }}
+        {{ t('Deprecated') }}
       </template>
 
       <template v-else-if="badge === 'operationId'">
-        {{ $t('operation.badgePrefix.operationId') }}{{ operation.operationId }}
+        {{ t('operation.badgePrefix.operationId') }}{{ operation.operationId }}
       </template>
     </Badge>
   </div>

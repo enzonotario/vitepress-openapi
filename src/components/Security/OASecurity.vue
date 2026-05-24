@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { useI18n } from '@byjohann/vue-i18n'
+
 import OAHeading from '../Common/OAHeading.vue'
 import OASecurityContent from '../Security/OASecurityContent.vue'
 
@@ -19,19 +20,21 @@ const props = defineProps({
     default: '',
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="flex flex-col">
-    <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-[var(--vp-c-divider)]">
+    <div class="mt-[48px] mb-[16px] pt-[24px] border-t-[1px] border-(--vp-c-divider)">
       <div class="flex flex-row items-center">
         <OAHeading
           level="h2"
           :prefix="props.headingPrefix"
-          class="text-[var(--vp-c-text-1)] !my-0 !py-0 !border-t-0"
-          header-anchor-class="!top-0"
+          class="text-[color:var(--vp-c-text-1)] my-0! py-0! border-t-0!"
+          header-anchor-class="top-0!"
         >
-          {{ $t('Authorizations') }}
+          {{ t('Authorizations') }}
         </OAHeading>
 
         <span class="flex-grow min-w-2" />
@@ -73,8 +76,8 @@ const props = defineProps({
         </div>
 
         <div v-if="Number(key) < Object.keys(props.securityUi).length - 1" class="flex flex-row items-center space-x-2">
-          <span class="text-sm font-bold">{{ $t('or') }}</span>
-          <span class="flex-grow border-t border-[var(--vp-c-divider)]" />
+          <span class="text-sm font-bold">{{ t('or') }}</span>
+          <span class="flex-grow border-t border-(--vp-c-divider)" />
         </div>
       </div>
     </div>

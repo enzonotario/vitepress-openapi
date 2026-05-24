@@ -14,6 +14,8 @@ const props = defineProps({
   },
 })
 
+const RE_BG_COLOR = /background-color:[^;]+;/g
+
 const themeConfig = useTheme()
 
 const isDark = themeConfig.isDark
@@ -23,15 +25,15 @@ const shiki = useShiki()
 const html = ref(null)
 
 watch(
-  [() => props.code, () => isDark.value],
+  [() => props.code, () => props.lang, () => isDark.value],
   async () => {
     const codeToHighlight = typeof props.code === 'string' ? props.code : JSON.stringify(props.code, null, 2)
-    await shiki.init()
+    await shiki.ensureLanguage(props.lang)
     const highlightedCode = shiki.renderShiki(codeToHighlight, {
       lang: props.lang,
       theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
     })
-    html.value = highlightedCode.replace(/background-color:[^;]+;/g, 'background-color:transparent;')
+    html.value = highlightedCode.replace(RE_BG_COLOR, 'background-color:transparent;')
   },
   { immediate: true },
 )

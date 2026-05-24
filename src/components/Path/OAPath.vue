@@ -1,5 +1,6 @@
-<script setup>
-import { computed, defineProps } from 'vue'
+<script setup lang="ts">
+import type { OperationSlot } from '../../types'
+import { computed } from 'vue'
 import { OAOperationContext } from '../../components'
 import { useTheme } from '../../composables/useTheme'
 
@@ -18,18 +19,19 @@ const props = defineProps({
   },
 })
 
+defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
+
 const themeConfig = useTheme()
 
 const operationSlots = computed(
-  () => themeConfig
-    .getOperationSlots()
-    .filter(slot => !themeConfig.getOperationHiddenSlots().includes(slot)),
+  () => (themeConfig.getOperationSlots() ?? [])
+    .filter(slot => !themeConfig.getOperationHiddenSlots()?.includes(slot)),
 )
 
 const operationCols = computed(() => themeConfig.getOperationCols())
 
 const shouldBuildRequest = computed(
-  () => ['playground', 'try-it', 'code-samples'].some(slot => operationSlots.value.includes(slot)),
+  () => ['playground', 'try-it', 'code-samples'].some(slot => (operationSlots.value as string[]).includes(slot)),
 )
 </script>
 
@@ -146,7 +148,7 @@ const shouldBuildRequest = computed(
             <div
               class="OAPathContentEnd sticky top-[100px] inset-x-0 flex flex-col"
               :class="{
-                '!px-0': operationCols === 1,
+                'px-0!': operationCols === 1,
               }"
             >
               <div

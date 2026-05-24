@@ -1,7 +1,9 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import OASchemaTabs from '../Schema/OASchemaTabs.vue'
 import { Label } from '../ui/label'
 
@@ -31,11 +33,15 @@ const examples = computed(() => props.response.content?.[contentType.value]?.exa
 const contentTypeId = `content-type-${Math.random().toString(36).substring(7)}`
 
 const defaultView = useTheme().getResponseBodyDefaultView()
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="flex flex-col space-y-4">
-    <span class="text-lg">{{ props.response.description }}</span>
+    <OAMarkdown
+      v-if="props.response.description"
+      :content="props.response.description"
+    />
 
     <div
       v-if="props.response?.content && contentTypes.length"
@@ -45,7 +51,7 @@ const defaultView = useTheme().getResponseBodyDefaultView()
         :for="contentTypeId"
         class="flex-shrink-0 text-muted-foreground"
       >
-        {{ $t('Content-Type') }}
+        {{ t('Content-Type') }}
       </Label>
       <div class="flex-shrink-0">
         <OAContentTypeSelect

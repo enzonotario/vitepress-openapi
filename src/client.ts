@@ -1,14 +1,14 @@
 import type { Awaitable } from 'vitepress'
 import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
-import type { OpenApi } from './lib/OpenApi'
+import type { OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
 import { createI18n } from '@byjohann/vue-i18n'
 import { watch } from 'vue'
 import * as components from './components'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 
 interface OAEnhanceAppContext extends EnhanceAppContext {
-  openapi?: ReturnType<typeof OpenApi> | null
+  openapi?: OpenApiSpecInstance | null
 }
 
 interface VPTheme {
@@ -24,8 +24,8 @@ export const theme = {
     const i18nConfig = themeConfig.getI18nConfig()
 
     const i18n = createI18n({
-      defaultLocale: i18nConfig.locale.value,
-      messages: i18nConfig.messages,
+      defaultLocale: i18nConfig.locale?.value || 'en',
+      messages: i18nConfig.messages || {},
     })
 
     app.use(i18n)
@@ -46,6 +46,7 @@ export const theme = {
   },
 } as VPTheme
 
+export * from './components'
 export { useOpenapi } from './composables/useOpenapi'
 export { usePlayground } from './composables/usePlayground'
 export { DEFAULT_OPERATION_SLOTS }
@@ -53,5 +54,6 @@ export { useShiki } from './composables/useShiki'
 export { useTheme } from './composables/useTheme'
 export { generateCodeSample } from './lib/codeSamples/generateCodeSample'
 export { OARequest } from './lib/codeSamples/request'
-export { OpenApi } from './lib/OpenApi'
+export { createOpenApiSpec } from './lib/spec/createOpenApiSpec'
+export { minifyHtml } from './lib/utils/minifyHtml'
 export { locales } from './locales'

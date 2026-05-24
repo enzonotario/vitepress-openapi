@@ -1,12 +1,20 @@
 import { resolve } from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     vue(),
   ],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+    },
+  },
   build: {
+    target: 'es2019',
     lib: {
       entry: {
         client: resolve(__dirname, 'src/client.ts'),
@@ -16,7 +24,7 @@ export default defineConfig({
       name: 'vitepress-openapi',
       fileName: (format: string, entryName: string) => `vitepress-openapi.${entryName}.${format}.js`,
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: ['vue', 'vitepress', 'vitepress/client'],
       output: {
         globals: {

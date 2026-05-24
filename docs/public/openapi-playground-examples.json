@@ -50,6 +50,50 @@
             }
           },
           {
+            "name": "filters",
+            "in": "query",
+            "required": false,
+            "description": "Filter criteria for fetching device points.",
+            "schema": {
+              "type": "string",
+              "format": "JSON"
+            },
+            "examples": [
+              {
+                "limit": 10,
+                "order": [
+                  "timestamp DESC"
+                ]
+              },
+              {
+                "where": {
+                  "type": "temp"
+                },
+                "limit": 10,
+                "order": [
+                  "timestamp DESC"
+                ]
+              },
+              {
+                "where": {
+                  "type": "temp",
+                  "timestamp": {
+                    "between": [
+                      "2024-12-01T00:00:00.000Z",
+                      "2024-12-01T23:59:59.999Z"
+                    ]
+                  }
+                },
+                "order": [
+                  "timestamp DESC"
+                ]
+              },
+              "{\"limit\":10,\"order\":[\"timestamp ASC\"]}",
+              "{\"where\":{\"timestamp\":{\"between\":[\"2024-12-01T00:00:00.000Z\",\"2024-12-01T23:59:59.999Z\"]}},\"order\":[\"timestamp DESC\"]}",
+              "{\"where\":{\"correlationId\":\"abc123\"}}"
+            ]
+          },
+          {
             "name": "X-Custom",
             "in": "header",
             "required": false,
@@ -203,7 +247,9 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["name"],
+                "required": [
+                  "name"
+                ],
                 "properties": {
                   "name": {
                     "type": "string",

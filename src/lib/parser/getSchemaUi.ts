@@ -1,5 +1,4 @@
 import type { OpenAPI } from '@scalar/openapi-types'
-import { literalTypes } from '../../index'
 import { getPropertyExamples } from '../examples/getPropertyExamples'
 import { getConstraints, hasConstraints } from './constraintsParser'
 import { resolveCircularRef } from './resolveCircularRef'
@@ -11,6 +10,8 @@ interface Metadata {
   isAdditionalProperties?: boolean
   isOneOf?: boolean
   isOneOfItem?: boolean
+  isAnyOf?: boolean
+  isAnyOfItem?: boolean
   isConstant?: boolean
   isPrefixItem?: boolean
   prefixItemIndex?: number
@@ -35,6 +36,7 @@ export interface OAProperty {
   docs?: DocumentationReference
   constraints?: Record<string, unknown>
   properties?: OAProperty[]
+  items?: OAProperty
   enum?: unknown[]
   subtype?: JSONSchemaType
   subexamples?: unknown[]
@@ -45,8 +47,8 @@ export interface OAProperty {
 class UiPropertyFactory {
   static createBaseProperty(
     name: string,
-      property: Partial<OpenAPI.SchemaObject> = {},
-      required = false,
+    property: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
   ): OAProperty {
     const nodeTypes = Array.isArray(property.type)
       ? property.type
@@ -95,18 +97,60 @@ class UiPropertyFactory {
     }
   }
 
-  static createOneOfProperty(oneOfProperties: Partial<OpenAPI.SchemaObject>[], name: string = ''): OAProperty {
-    return {
+  static createUnionProperty(
+    unionProperties: Partial<OpenAPI.SchemaObject>[],
+    unionType: 'oneOf' | 'anyOf',
+    name: string = '',
+    baseSchema: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
+  ): OAProperty {
+    const baseProperty = UiPropertyFactory.createBaseProperty(
       name,
-      types: ['object'],
-      required: false,
-      properties: oneOfProperties.map((prop) => {
-        const property = UiPropertyFactory.schemaToUiProperty('', prop)
-        property.meta = { ...(property.meta || {}), isOneOfItem: true }
-        return property
-      }),
-      meta: { isOneOf: true },
+      baseSchema,
+      required,
+    )
+
+    const unionTypes = [...new Set(
+      unionProperties
+        .map(prop => determineSchemaType(prop as OpenAPI.SchemaObject))
+        .filter(Boolean),
+    )] as JSONSchemaType[]
+
+    if (unionTypes.length > 0) {
+      baseProperty.types = unionTypes
     }
+
+    const isOneOf = unionType === 'oneOf'
+    const metaItemKey = isOneOf ? 'isOneOfItem' : 'isAnyOfItem'
+    const metaKey = isOneOf ? 'isOneOf' : 'isAnyOf'
+
+    baseProperty.properties = unionProperties.map((prop) => {
+      const property = UiPropertyFactory.schemaToUiProperty('', prop)
+      property.meta = { ...(property.meta || {}), [metaItemKey]: true }
+      return property
+    })
+
+    baseProperty.meta = { ...(baseProperty.meta || {}), [metaKey]: true }
+
+    return baseProperty
+  }
+
+  static createOneOfProperty(
+    oneOfProperties: Partial<OpenAPI.SchemaObject>[],
+    name: string = '',
+    baseSchema: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
+  ): OAProperty {
+    return UiPropertyFactory.createUnionProperty(oneOfProperties, 'oneOf', name, baseSchema, required)
+  }
+
+  static createAnyOfProperty(
+    anyOfProperties: Partial<OpenAPI.SchemaObject>[],
+    name: string = '',
+    baseSchema: Partial<OpenAPI.SchemaObject> = {},
+    required = false,
+  ): OAProperty {
+    return UiPropertyFactory.createUnionProperty(anyOfProperties, 'anyOf', name, baseSchema, required)
   }
 
   static schemaToUiProperty(
@@ -127,28 +171,54 @@ class UiPropertyFactory {
     }
 
     if (schema.oneOf) {
-      return UiPropertyFactory.createOneOfProperty(schema.oneOf, name)
+      return UiPropertyFactory.createOneOfProperty(schema.oneOf, name, schema, required)
+    }
+
+    if (schema.anyOf) {
+      return UiPropertyFactory.createAnyOfProperty(schema.anyOf, name, schema, required)
     }
 
     if (schema.const !== undefined) {
-      const example = getPropertyExamples(schema) || schema.const
-      return {
-        name,
-        types: [schema.type as JSONSchemaType || 'string'],
-        required: false,
-        examples: [example],
-        meta: { isConstant: true },
+      // Preserve annotations (title, description, docs, etc.) for annotated enums.
+      const baseProperty = UiPropertyFactory.createBaseProperty(name, schema, required)
+
+      // Ensure type is properly inferred from `const` when not explicitly set.
+      const inferredType = determineSchemaType(schema as OpenAPI.SchemaObject)
+      if (inferredType) {
+        baseProperty.types = [inferredType]
       }
+
+      // Ensure we have an example showing the const value.
+      const example = getPropertyExamples(schema) || schema.const
+      if (example !== undefined) {
+        baseProperty.examples = Array.isArray(example) ? example : [example]
+      }
+
+      // Mark as constant explicitly (createBaseProperty already sets it, but be explicit).
+      baseProperty.meta = { ...(baseProperty.meta || {}), isConstant: true }
+
+      return baseProperty
     }
 
-    if (literalTypes.includes(String(schema.type)) && schema.enum) {
-      return {
-        name,
-        types: [schema.type as JSONSchemaType],
-        required: false,
-        enum: schema.enum,
-        description: schema.description,
+    if (schema.enum) {
+      let types: JSONSchemaType[] = []
+
+      if (schema.type) {
+        types = Array.isArray(schema.type)
+          ? schema.type as JSONSchemaType[]
+          : [schema.type as JSONSchemaType]
+      } else {
+        types = inferTypesFromEnum(schema.enum)
       }
+
+      if (types.length === 0) {
+        types = ['string']
+      }
+
+      const property = UiPropertyFactory.createBaseProperty(name, schema, required)
+      property.enum = schema.enum
+      property.types = types
+      return property
     }
 
     const property = UiPropertyFactory.createBaseProperty(name, schema, required)
@@ -162,6 +232,7 @@ class UiPropertyFactory {
               schema.items.properties,
               schema.items.required || [],
               schema.items.additionalProperties,
+              schema.items['x-additionalPropertiesName'],
             )
           : undefined
 
@@ -178,15 +249,38 @@ class UiPropertyFactory {
           property.meta = { ...(property.meta || {}), isConstant: true }
         }
 
-        if (schema.items.oneOf) {
-          property.meta = { ...(property.meta || {}), isOneOf: true }
-          property.properties = schema.items.oneOf.map((prop: any) => {
+        if (schema.items.oneOf || schema.items.anyOf) {
+          const isOneOf = !!schema.items.oneOf
+          const unionProperties = isOneOf ? schema.items.oneOf : schema.items.anyOf
+          const metaKey = isOneOf ? 'isOneOf' : 'isAnyOf'
+          const metaItemKey = isOneOf ? 'isOneOfItem' : 'isAnyOfItem'
+
+          property.meta = { ...(property.meta || {}), [metaKey]: true }
+          property.properties = unionProperties.map((prop: any) => {
             const propSchema = { ...prop, type: schema.items.type }
             return {
               ...UiPropertyFactory.schemaToUiProperty('', propSchema),
-              meta: { ...(prop.meta || {}), isOneOfItem: true },
+              meta: { ...(prop.meta || {}), [metaItemKey]: true },
             }
           })
+        }
+
+        // store primitive item details
+        if (
+          schemaType !== 'object'
+          && schemaType !== 'array'
+          && !schema.items.oneOf
+          && !schema.items.anyOf
+        ) {
+          const itemProperty = UiPropertyFactory.schemaToUiProperty('[item]', schema.items)
+          if (
+            itemProperty.description
+            || itemProperty.enum
+            || itemProperty.constraints
+            || itemProperty.docs
+          ) {
+            property.items = itemProperty
+          }
         }
       }
 
@@ -239,6 +333,7 @@ class UiPropertyFactory {
         schema.properties,
         schema.required || [],
         schema.additionalProperties,
+        schema['x-additionalPropertiesName'],
       )
     } else if (schema.type === undefined) {
       if (schema.properties || schema.additionalProperties) {
@@ -247,6 +342,7 @@ class UiPropertyFactory {
           schema.properties,
           schema.required || [],
           schema.additionalProperties,
+          schema['x-additionalPropertiesName'],
         )
       }
     }
@@ -258,6 +354,7 @@ class UiPropertyFactory {
     propertiesNode?: Record<string, OpenAPI.SchemaObject>,
     requiredProperties: string[] = [],
     additionalPropertiesNode?: OpenAPI.SchemaObject | boolean,
+    additionalPropertiesName?: string,
   ): OAProperty[] {
     const properties: OAProperty[] = []
 
@@ -273,12 +370,11 @@ class UiPropertyFactory {
         ? additionalPropertiesNode
         : { type: 'string' }
 
-      properties.push({
-        name: 'additionalProperties',
-        types: [additionalProps.type as JSONSchemaType],
-        required: false,
-        meta: { isAdditionalProperties: true },
-      })
+      const name = additionalPropertiesName || 'additionalProperties'
+      const property = UiPropertyFactory.schemaToUiProperty(name, additionalProps)
+      property.required = false
+      property.meta = { ...(property.meta || {}), isAdditionalProperties: true }
+      properties.push(property)
     }
 
     return properties
@@ -293,6 +389,32 @@ export function getSchemaUi(jsonSchema: OpenAPI.SchemaObject): OAProperty | OAPr
   const resolvedSchema = resolveCircularRef(jsonSchema)
 
   return UiPropertyFactory.schemaToUiProperty('', resolvedSchema)
+}
+
+function inferTypesFromEnum(values: unknown[]): JSONSchemaType[] {
+  const types = new Set<JSONSchemaType>()
+
+  values.forEach((value) => {
+    if (value === null) {
+      types.add('null')
+    } else if (Array.isArray(value)) {
+      types.add('array')
+    } else if (typeof value === 'object') {
+      types.add('object')
+    } else if (typeof value === 'string') {
+      types.add('string')
+    } else if (typeof value === 'boolean') {
+      types.add('boolean')
+    } else if (typeof value === 'number') {
+      types.add(Number.isInteger(value) ? 'integer' : 'number')
+    }
+  })
+
+  if (types.has('number')) {
+    types.delete('integer')
+  }
+
+  return [...types]
 }
 
 function determineSchemaType(schema: OpenAPI.SchemaObject): JSONSchemaType {

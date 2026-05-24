@@ -4,7 +4,7 @@ import { useUrlSearchParams } from '@vueuse/core'
 import { useData } from 'vitepress'
 import { useTheme } from 'vitepress-openapi/client'
 import { provide, watch } from 'vue'
-import { deepUnref } from '../../../../../src/lib/deepUnref'
+import { deepUnref } from '../../../../../src/lib/utils/deepUnref'
 import { initSandboxData } from '../../sandboxData'
 import ThemeConfigPopover from '../theme/ThemeConfigPopover.vue'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../ui/resizable'
@@ -46,6 +46,7 @@ function share() {
     ...themeConfig.getState(),
     theme: undefined,
     i18n: undefined,
+    highlighterTheme: undefined,
   }))
 
   const sandboxDataQuery = compressToURL(JSON.stringify({
@@ -83,7 +84,7 @@ watch(hash, () => {
 
 <template>
   <div class="overflow-hidden">
-    <SandboxNav v-show="!sandboxData.hideSandboxNav.value" class="fixed w-full top-0 z-[var(--vp-z-index-nav)] ">
+    <SandboxNav v-show="!sandboxData.hideSandboxNav.value" class="fixed w-full top-0 z-(--vp-z-index-nav) ">
       <template #start>
         <SandboxRemoteFetch />
         <ThemeConfigPopover />

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed } from 'vue'
 import OAFooter from '../Common/OAFooter.vue'
 import OAHeaderBadges from '../Common/OAHeaderBadges.vue'
@@ -52,7 +53,9 @@ const props = defineProps({
   },
 })
 
-const slots = defineSlots<Record<string, OperationSlot>>()
+const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
+
+const { t } = useI18n()
 
 const operation = props.openapi.getOperation(props.operationId)
 
@@ -107,7 +110,7 @@ function hasSlot(name: OperationSlot): boolean {
           :class="{
             'line-through': header.deprecated,
           }"
-          class="scroll-m-[var(--vp-nav-height)]"
+          class="scroll-m-(--vp-nav-height)"
         >
           {{ header.operation.summary }}
         </OAHeading>
@@ -189,7 +192,7 @@ function hasSlot(name: OperationSlot): boolean {
         level="h2"
         :prefix="headingPrefix"
       >
-        {{ $t('Parameters') }}
+        {{ t('Parameters') }}
       </OAHeading>
 
       <OAParameters
@@ -313,12 +316,11 @@ function hasSlot(name: OperationSlot): boolean {
         level="h2"
         :prefix="headingPrefix"
       >
-        {{ $t('Samples') }}
+        {{ t('Samples') }}
       </OAHeading>
 
       <OACodeSamples
         :operation-id="codeSamples.operationId"
-        :code-samples="codeSamples.codeSamples"
       />
     </template>
 

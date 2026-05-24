@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { OpenApi } from '../../src/lib/OpenApi'
+import { createOpenApiSpec } from '../../src/lib/spec/createOpenApiSpec'
 
-describe('useOpenapi with no spec', () => {
-  const openapi = OpenApi()
+describe('createOpenApiSpec with no spec', () => {
+  const openapi = createOpenApiSpec()
 
   it('returns null for getOperation when paths are not defined', () => {
     const result = openapi.getOperation('someOperationId')

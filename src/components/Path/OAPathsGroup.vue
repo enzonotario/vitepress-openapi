@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { OperationSlot, PathsGroupView } from '../../types'
+import { useI18n } from '@byjohann/vue-i18n'
 import { computed, nextTick, ref } from 'vue'
+import { scrollToHash } from '@/lib/utils/utils'
 import { useTheme } from '../../composables/useTheme'
-import { scrollToHash } from '../../lib/utils'
 import OAHeading from '../Common/OAHeading.vue'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Button } from '../ui/button'
 import { Collapsible, CollapsibleTrigger } from '../ui/collapsible'
 import OAPaths from './OAPaths.vue'
@@ -17,9 +19,10 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const slots = defineSlots<Record<string, OperationSlot>>()
+const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
 
 const themeConfig = useTheme()
+const { t } = useI18n()
 
 const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
 
@@ -49,13 +52,11 @@ function onPathClick(hash: string) {
       </OAHeading>
 
       <div
-        class="grid grid-cols-1 gap-10"
+        class="grid grid-cols-1 gap-6 md:gap-10 my-[16px]"
         :class="{ 'md:grid-cols-2': showPathsSummary && hasDescription }"
       >
-        <div v-if="hasDescription">
-          <p>{{ group.description }}</p>
-        </div>
-        <div v-if="showPathsSummary" class="flex-1 my-[16px]">
+        <OAMarkdown v-if="hasDescription" :content="group.description" />
+        <div v-if="showPathsSummary" class="flex-1">
           <OAPathsSummary
             :paths="group.paths"
             @path-click="onPathClick($event)"
@@ -69,7 +70,7 @@ function onPathClick(hash: string) {
       >
         <CollapsibleTrigger>
           <Button>
-            {{ isOpen ? $t('Hide operations') : $t('Show operations') }}
+            {{ isOpen ? t('Hide operations') : t('Show operations') }}
           </Button>
         </CollapsibleTrigger>
       </div>

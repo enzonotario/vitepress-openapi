@@ -1,4 +1,69 @@
-export function getPropertyExample(property: any): any {
+function firstFromExamples(
+  examples: any,
+  unwrapArrayValue: boolean,
+): { matched: boolean, value: any } {
+  // Array form.
+  if (Array.isArray(examples)) {
+    if (examples.length === 0) {
+      return {
+        matched: false,
+        value: undefined,
+      }
+    }
+
+    const first = examples[0]
+    if (unwrapArrayValue && first && typeof first === 'object' && 'value' in first) {
+      return {
+        matched: true,
+        value: first.value,
+      }
+    }
+
+    if (unwrapArrayValue) {
+      return {
+        matched: first !== undefined && first !== null,
+        value: first,
+      }
+    }
+
+    return {
+      matched: true,
+      value: first,
+    }
+  }
+
+  // Named map form (object).
+  if (examples && typeof examples === 'object') {
+    const keys = Object.keys(examples)
+    if (keys.length === 0) {
+      return {
+        matched: false,
+        value: undefined,
+      }
+    }
+
+    const firstKey = keys[0]
+    const entry = (examples as any)[firstKey]
+    if (entry && typeof entry === 'object' && 'value' in entry) {
+      return {
+        matched: true,
+        value: entry.value,
+      }
+    }
+
+    return {
+      matched: entry !== undefined,
+      value: entry,
+    }
+  }
+
+  return {
+    matched: false,
+    value: undefined,
+  }
+}
+
+export function getPlaygroundSpecificExample(property: any): any {
   if (property?.['x-playground-example'] !== undefined) {
     return property['x-playground-example']
   }
@@ -7,23 +72,29 @@ export function getPropertyExample(property: any): any {
     return property.schema['x-playground-example']
   }
 
+  return null
+}
+
+export function getStandardExample(property: any): any {
   if (property?.example !== undefined) {
     return property.example
   }
 
-  if (property?.examples && property?.examples?.length > 0) {
-    return property.examples[0]
+  if (property?.examples !== undefined) {
+    const firstExample = firstFromExamples(property.examples, false)
+    if (firstExample.matched) {
+      return firstExample.value
+    }
   }
 
   if (property?.schema?.example !== undefined) {
     return property.schema.example
   }
 
-  if (property?.schema?.examples && property?.schema?.examples?.length > 0) {
-    const firstExample = property.schema.examples[0]
-
-    if (firstExample) {
-      return firstExample
+  if (property?.schema?.examples !== undefined) {
+    const firstExample = firstFromExamples(property.schema.examples, true)
+    if (firstExample.matched) {
+      return firstExample.value
     }
   }
 
@@ -36,4 +107,8 @@ export function getPropertyExample(property: any): any {
   }
 
   return null
+}
+
+export function getPropertyExample(property: any): any {
+  return getPlaygroundSpecificExample(property) ?? getStandardExample(property)
 }

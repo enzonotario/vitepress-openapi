@@ -82,4 +82,64 @@ describe('getPropertyExample', () => {
     const property = { subexample: '' }
     expect(getPropertyExample(property)).toBe('')
   })
+
+  it('returns first value from named examples', () => {
+    const property = {
+      examples: {
+        name_1: { value: 'parameter_value_1' },
+        name_2: { value: 'parameter_value_2' },
+      },
+      schema: {
+        type: 'string',
+        examples: ['schema_value_1', 'schema_value_2'],
+      },
+    }
+    expect(getPropertyExample(property)).toBe('parameter_value_1')
+  })
+
+  it('prioritizes parameter.examples over schema.examples', () => {
+    const property = {
+      examples: {
+        name_1: { value: 'parameter_value_1' },
+        name_2: { value: 'parameter_value_2' },
+      },
+      schema: {
+        examples: {
+          name_3: { value: 'schema_value_3' },
+          name_4: { value: 'schema_value_4' },
+        },
+      },
+    }
+    expect(getPropertyExample(property)).toBe('parameter_value_1')
+  })
+
+  it('returns first .value from ExampleObject entries in schema.examples array', () => {
+    const property = { schema: { examples: [{ value: 'schema_obj_value_1', summary: 'a' }, { value: 'schema_obj_value_2' }] } }
+    expect(getPropertyExample(property)).toBe('schema_obj_value_1')
+  })
+
+  it('returns first entry value from named schema.examples map with ExampleObject', () => {
+    const property = { schema: { examples: { ex1: { value: 'schema_named_value_1' }, ex2: { value: 'schema_named_value_2' } } } }
+    expect(getPropertyExample(property)).toBe('schema_named_value_1')
+  })
+
+  it('returns first entry from named schema.examples map with raw values', () => {
+    const property = { schema: { examples: { ex1: 'raw_1', ex2: 'raw_2' } } }
+    expect(getPropertyExample(property)).toBe('raw_1')
+  })
+
+  it('does not skip falsy values in schema.examples array (0)', () => {
+    const property = { schema: { examples: [0, 1] } }
+    expect(getPropertyExample(property)).toBe(0)
+  })
+
+  it('does not skip falsy values in schema.examples array (empty string)', () => {
+    const property = { schema: { examples: ['', 'x'] } }
+    expect(getPropertyExample(property)).toBe('')
+  })
+
+  it('does not skip falsy values in named schema.examples map', () => {
+    const property = { schema: { examples: { a: 0, b: 1 } } }
+    expect(getPropertyExample(property)).toBe(0)
+  })
 })

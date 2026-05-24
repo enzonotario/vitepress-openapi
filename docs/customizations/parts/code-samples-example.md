@@ -5,12 +5,6 @@ import { useTheme, generateCodeSample } from 'vitepress-openapi/client'
 onBeforeMount(() => {
     useTheme({
         codeSamples: {
-            // List of languages to show in Code Samples section.
-            langs: [
-                'bruno',
-                ...useTheme().getCodeSamplesLangs(),
-            ],
-            // List of available languages to select from.
             availableLanguages: [
                 {
                     lang: 'bruno',
@@ -20,12 +14,12 @@ onBeforeMount(() => {
                 ...useTheme().getCodeSamplesAvailableLanguages(),
             ],
             defaultLang: 'bruno',
-            generator: async (lang, request) => {
-                if (lang === 'bruno') {
+            generator: async (langConfig, request) => {
+                if (langConfig.lang === 'bruno') {
                     return generateBruRequest(request)
                 }
-    
-                return generateCodeSample(lang, request)
+
+                return generateCodeSample(langConfig, request)
             },
         },
     })

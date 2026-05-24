@@ -1,6 +1,6 @@
-import { theme, useOpenapi, useShiki } from 'vitepress-openapi/client'
+import { theme, useOpenapi } from 'vitepress-openapi/client'
 import DefaultTheme from 'vitepress/theme'
-import spec from '../../public/openapi.json' with {type: 'json'}
+import spec from '../../public/openapi.json' with { type: 'json' }
 import ExampleBlock from './components/ExampleBlock.vue'
 import SandboxIframe from './components/sandbox/SandboxIframe.vue'
 import ScopeConfigurationTabs from './components/ScopeConfigurationTabs.vue'
@@ -10,7 +10,7 @@ import './style.css'
 
 export default {
   extends: DefaultTheme,
-  async enhanceApp({ app }) {
+  enhanceApp({ app }) {
     // Set the OpenAPI specification.
     useOpenapi({
       spec,
@@ -24,9 +24,6 @@ export default {
         },
       },
     })
-
-    // Initialize Shiki for syntax highlighting.
-    await useShiki().init()
 
     // Use the theme.
     theme.enhanceApp({ app })

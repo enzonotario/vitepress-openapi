@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { DEFAULT_BASE_URL, useTheme } from '../../src/composables/useTheme'
+import { DEFAULT_BASE_URL, DEFAULT_OPERATION_SLOTS, DEFAULT_STORAGE_PERSIST_AUTH, DEFAULT_STORAGE_PREFIX, useTheme } from '../../src/composables/useTheme'
 
-describe('composition API', () => {
-  it('can config', () => {
+describe('initialization and reset', () => {
+  it('initializes with custom configuration', () => {
     const theme = useTheme({
       highlighterTheme: {
         light: {},
@@ -16,6 +16,7 @@ describe('composition API', () => {
       },
       jsonViewer: {
         deep: 5,
+        renderer: 'shiki',
       },
       schemaViewer: {
         deep: 3,
@@ -25,6 +26,7 @@ describe('composition API', () => {
           mode: 'text',
           mainMenuBar: true,
           navigationBar: true,
+          statusBar: true,
         },
       },
       headingLevels: {
@@ -34,7 +36,10 @@ describe('composition API', () => {
       operation: {
         badges: ['operationId'],
         defaultBaseUrl: 'https://app.local',
-        getServers: ({ method, path, operation }) => (`https://app.local/${method}${path}`),
+        getServers: ({ method, path, operation }) => `https://app.local/${method}${path}`,
+        slots: ['header', 'path', 'description'],
+        hiddenSlots: ['branding'],
+        cols: 1,
       },
       server: {
         allowCustomServer: true,
@@ -43,6 +48,9 @@ describe('composition API', () => {
       response: {
         maxTabs: 10,
         responseCodeSelector: 'select',
+        body: {
+          defaultView: 'schema',
+        },
       },
       security: {
         defaultScheme: 'bearer',
@@ -61,20 +69,42 @@ describe('composition API', () => {
         collapsePaths: true,
         showPathsSummary: false,
       },
+      storage: {
+        prefix: 'my-app',
+      },
+      markdown: {
+        operationLink: {
+          linkPrefix: '/custom-operations/',
+          transformHref: href => `/transformed${href}`,
+        },
+      },
     })
 
+    // Theme and highlighter
     expect(theme.getHighlighterTheme()).toEqual({
       light: {},
       dark: {},
     })
+
+    // Request body and schema
     expect(theme.getSchemaDefaultView()).toBe('schema')
     expect(theme.getRequestBodyDefaultView()).toBe('schema')
+
+    // Path
     expect(theme.getShowBaseURL()).toBe(true)
+
+    // JSON and Schema viewers
     expect(theme.getJsonViewerDeep()).toBe(5)
+    expect(theme.getJsonViewerRenderer()).toBe('shiki')
     expect(theme.getSchemaViewerDeep()).toBe(3)
+
+    // Playground
     expect(theme.getPlaygroundJsonEditorMode()).toBe('text')
     expect(theme.getPlaygroundJsonEditorMainMenuBar()).toBe(true)
     expect(theme.getPlaygroundJsonEditorNavigationBar()).toBe(true)
+    expect(theme.getPlaygroundJsonEditorStatusBar()).toBe(true)
+
+    // Headings
     expect(theme.getHeadingLevels()).toEqual({
       h1: 2,
       h2: 3,
@@ -83,15 +113,31 @@ describe('composition API', () => {
       h5: 5,
       h6: 6,
     })
+
+    // Operation
     expect(theme.getOperationBadges()).toEqual(['operationId'])
     expect(theme.getOperationDefaultBaseUrl()).toBe('https://app.local')
     expect(theme.getOperationServers()).toBeTypeOf('function')
+    expect(theme.getOperationSlots()).toEqual(['header', 'path', 'description'])
+    expect(theme.getOperationHiddenSlots()).toEqual(['branding'])
+    expect(theme.getOperationCols()).toBe(1)
+
+    // Server
     expect(theme.getServerAllowCustomServer()).toBe(true)
     expect(theme.getServerConfig().getServers).toBeTypeOf('function')
+
+    // Response
     expect(theme.getResponseCodeMaxTabs()).toBe(10)
     expect(theme.getResponseCodeSelector()).toBe('select')
+    expect(theme.getResponseBodyDefaultView()).toBe('schema')
+
+    // Security
     expect(theme.getSecurityDefaultScheme()).toBe('bearer')
+
+    // i18n
     expect(theme.getI18nConfig().locale.value).toBe('es')
+
+    // Spec
     expect(theme.getSpecConfig().groupByTags.value).toBe(false)
     expect(theme.getSpecConfig().collapsePaths.value).toBe(true)
     expect(theme.getSpecConfig().showPathsSummary.value).toBe(false)
@@ -103,12 +149,21 @@ describe('composition API', () => {
     expect(theme.getSpecConfig().disableDownload.value).toBe(false)
     expect(theme.getWrapExamples()).toBe(true)
     expect(theme.getSpecDisableDownload()).toBe(false)
+
+    // Storage
+    expect(theme.getStoragePrefix()).toBe('my-app')
+    expect(theme.getStoragePersistAuth()).toBe(true)
+
+    // Markdown
+    expect(theme.getMarkdownConfig().operationLink?.linkPrefix).toBe('/custom-operations/')
+    expect(theme.getOperationLinkConfig()?.transformHref).toBeTypeOf('function')
   })
 
-  it('can reset', () => {
+  it('can reset to default configuration', () => {
     const theme = useTheme({
       jsonViewer: {
         deep: 7,
+        renderer: 'shiki',
       },
       schemaViewer: {
         deep: 5,
@@ -120,7 +175,10 @@ describe('composition API', () => {
       operation: {
         badges: ['operationId'],
         defaultBaseUrl: 'https://app.local',
-        getServers: ({ method, path, operation }) => (`https://app.local/${method}${path}`),
+        getServers: ({ method, path, operation }) => `https://app.local/${method}${path}`,
+        slots: ['header', 'path'],
+        hiddenSlots: ['branding'],
+        cols: 1,
       },
       server: {
         allowCustomServer: true,
@@ -129,9 +187,15 @@ describe('composition API', () => {
       i18n: {
         locale: 'es',
       },
+      response: {
+        body: {
+          defaultView: 'schema',
+        },
+      },
     })
 
     expect(theme.getJsonViewerDeep()).toBe(7)
+    expect(theme.getJsonViewerRenderer()).toBe('shiki')
     expect(theme.getSchemaViewerDeep()).toBe(5)
     expect(theme.getHeadingLevels()).toEqual({
       h1: 3,
@@ -144,13 +208,18 @@ describe('composition API', () => {
     expect(theme.getOperationBadges()).toEqual(['operationId'])
     expect(theme.getOperationDefaultBaseUrl()).toBe('https://app.local')
     expect(theme.getOperationServers()).toBeTypeOf('function')
+    expect(theme.getOperationSlots()).toEqual(['header', 'path'])
+    expect(theme.getOperationHiddenSlots()).toEqual(['branding'])
+    expect(theme.getOperationCols()).toBe(1)
     expect(theme.getServerAllowCustomServer()).toBe(true)
     expect(theme.getI18nConfig().locale.value).toBe('es')
+    expect(theme.getResponseBodyDefaultView()).toBe('schema')
 
     theme.reset()
 
     expect(theme.getJsonViewerDeep()).toBe(Number.POSITIVE_INFINITY)
-    expect(theme.getSchemaViewerDeep()).toBe(Number.POSITIVE_INFINITY)
+    expect(theme.getJsonViewerRenderer()).toBe('vue-json-pretty')
+    expect(theme.getSchemaViewerDeep()).toBe(1)
     expect(theme.getHeadingLevels()).toEqual({
       h1: 1,
       h2: 2,
@@ -162,12 +231,40 @@ describe('composition API', () => {
     expect(theme.getOperationBadges()).toEqual(['deprecated'])
     expect(theme.getOperationDefaultBaseUrl()).toBe(DEFAULT_BASE_URL)
     expect(theme.getOperationServers()).toBe(null)
+    expect(theme.getOperationSlots()).toEqual(DEFAULT_OPERATION_SLOTS)
+    expect(theme.getOperationHiddenSlots()).toEqual([])
+    expect(theme.getOperationCols()).toBe(2)
     expect(theme.getServerAllowCustomServer()).toBe(false)
     expect(theme.getI18nConfig().locale.value).toBe('en')
+    expect(theme.getResponseBodyDefaultView()).toBe('contentType')
+    expect(theme.getStoragePrefix()).toBe(DEFAULT_STORAGE_PREFIX)
+  })
+
+  it('returns the current state', () => {
+    const theme = useTheme()
+    const state = theme.getState()
+    expect(state).toBeDefined()
+    expect(state.theme).toBeDefined()
+    expect(state.path).toBeDefined()
+    expect(state.requestBody).toBeDefined()
+    expect(state.jsonViewer).toBeDefined()
+    expect(state.schemaViewer).toBeDefined()
+    expect(state.headingLevels).toBeDefined()
+    expect(state.response).toBeDefined()
+    expect(state.playground).toBeDefined()
+    expect(state.security).toBeDefined()
+    expect(state.operation).toBeDefined()
+    expect(state.i18n).toBeDefined()
+    expect(state.spec).toBeDefined()
+    expect(state.codeSamples).toBeDefined()
+    expect(state.linksPrefixes).toBeDefined()
+    expect(state.server).toBeDefined()
+    expect(state.storage).toBeDefined()
+    expect(state.markdown).toBeDefined()
   })
 })
 
-describe('useTheme', () => {
+describe('i18n configuration', () => {
   const themeConfig = useTheme()
 
   beforeEach(() => {
@@ -179,10 +276,43 @@ describe('useTheme', () => {
     expect(result).toBe('en')
   })
 
-  it('sets and gets the locale', () => {
+  it('sets and gets the locale (deprecated method)', () => {
     themeConfig.setLocale('es')
     const result = themeConfig.getLocale()
     expect(result).toBe('es')
+  })
+
+  it('returns the i18n config', () => {
+    const result = themeConfig.getI18nConfig()
+    expect(result).toEqual({
+      locale: expect.any(Object),
+      fallbackLocale: expect.any(Object),
+      messages: expect.any(Object),
+      availableLocales: expect.arrayContaining([
+        {
+          code: 'en',
+          label: 'English',
+        },
+        {
+          code: 'es',
+          label: 'Español',
+        },
+      ]),
+    })
+  })
+
+  it('sets and gets the i18n config', () => {
+    themeConfig.setI18nConfig({ locale: 'es' })
+    const result = themeConfig.getI18nConfig()
+    expect(result.locale.value).toBe('es')
+  })
+})
+
+describe('theme and highlighter', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
   })
 
   it('returns the highlighter themeConfig', () => {
@@ -192,11 +322,18 @@ describe('useTheme', () => {
       dark: expect.any(Object),
     })
   })
+})
+
+describe('request body and schema', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
 
   it('returns the default schema view', () => {
     const result = themeConfig.getSchemaDefaultView()
     expect(result).toBe('contentType')
-
     expect(themeConfig.getRequestBodyDefaultView()).toBe('contentType')
   })
 
@@ -204,8 +341,15 @@ describe('useTheme', () => {
     themeConfig.setRequestBodyDefaultView('schema')
     const result = themeConfig.getSchemaDefaultView()
     expect(result).toBe('schema')
-
     expect(themeConfig.getRequestBodyDefaultView()).toBe('schema')
+  })
+})
+
+describe('path configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
   })
 
   it('returns the default showBaseURL value', () => {
@@ -217,6 +361,14 @@ describe('useTheme', () => {
     themeConfig.setShowBaseURL(true)
     const result = themeConfig.getShowBaseURL()
     expect(result).toBe(true)
+  })
+})
+
+describe('jSON and Schema viewers', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
   })
 
   it('returns the default jsonViewer deep value', () => {
@@ -230,15 +382,34 @@ describe('useTheme', () => {
     expect(result).toBe(5)
   })
 
+  it('returns the default jsonViewer renderer', () => {
+    const result = themeConfig.getJsonViewerRenderer()
+    expect(result).toBe('vue-json-pretty')
+  })
+
+  it('sets and gets the jsonViewer renderer', () => {
+    themeConfig.setJsonViewerRenderer('shiki')
+    const result = themeConfig.getJsonViewerRenderer()
+    expect(result).toBe('shiki')
+  })
+
   it('returns the default schemaViewer deep value', () => {
     const result = themeConfig.getSchemaViewerDeep()
-    expect(result).toBe(Number.POSITIVE_INFINITY)
+    expect(result).toBe(1)
   })
 
   it('sets and gets the schemaViewer deep value', () => {
     themeConfig.setSchemaViewerDeep(3)
     const result = themeConfig.getSchemaViewerDeep()
     expect(result).toBe(3)
+  })
+})
+
+describe('heading levels', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
   })
 
   it('returns the heading levels', () => {
@@ -271,6 +442,20 @@ describe('useTheme', () => {
     })
   })
 
+  it('throws an error when setting invalid heading level', () => {
+    expect(() => {
+      themeConfig.setHeadingLevels({ h1: 7 })
+    }).toThrow('Heading level for h1 must be between 1 and 6.')
+  })
+})
+
+describe('response configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
   it('returns the default response code selector', () => {
     const result = themeConfig.getResponseCodeSelector()
     expect(result).toBe('tabs')
@@ -291,6 +476,25 @@ describe('useTheme', () => {
     themeConfig.setResponseCodeMaxTabs(10)
     const result = themeConfig.getResponseCodeMaxTabs()
     expect(result).toBe(10)
+  })
+
+  it('returns the default response body default view', () => {
+    const result = themeConfig.getResponseBodyDefaultView()
+    expect(result).toBe('contentType')
+  })
+
+  it('sets and gets the response body default view', () => {
+    themeConfig.setResponseBodyDefaultView('schema')
+    const result = themeConfig.getResponseBodyDefaultView()
+    expect(result).toBe('schema')
+  })
+})
+
+describe('playground configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
   })
 
   it('returns the default playground json editor mode', () => {
@@ -326,6 +530,96 @@ describe('useTheme', () => {
     expect(result).toBe(true)
   })
 
+  it('returns the default playground json editor status bar value', () => {
+    const result = themeConfig.getPlaygroundJsonEditorStatusBar()
+    expect(result).toBe(false)
+  })
+
+  it('sets and gets the playground json editor status bar value', () => {
+    themeConfig.setPlaygroundJsonEditorStatusBar(true)
+    const result = themeConfig.getPlaygroundJsonEditorStatusBar()
+    expect(result).toBe(true)
+  })
+})
+
+describe('playground examples behavior', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns default value', () => {
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('value')
+  })
+
+  it('initializes with custom playground.examples.behavior', () => {
+    useTheme({
+      playground: {
+        examples: {
+          behavior: 'placeholder',
+        },
+      },
+    })
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('placeholder')
+  })
+
+  it('sets and gets playground examples behavior', () => {
+    themeConfig.setPlaygroundExamplesBehavior('ignore')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('ignore')
+    themeConfig.setPlaygroundExamplesBehavior('placeholder')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('placeholder')
+    themeConfig.setPlaygroundExamplesBehavior('value')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('value')
+  })
+})
+
+describe('playground x-playground-example behavior', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns default value', () => {
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('value')
+  })
+
+  it('initializes with custom playground.examples.playgroundExampleBehavior', () => {
+    useTheme({
+      playground: {
+        examples: {
+          playgroundExampleBehavior: 'placeholder',
+        },
+      },
+    })
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('placeholder')
+  })
+
+  it('sets and gets x-playground-example behavior independently from behavior', () => {
+    themeConfig.setPlaygroundExamplesBehavior('placeholder')
+    themeConfig.setPlaygroundXExampleBehavior('value')
+    expect(themeConfig.getPlaygroundExamplesBehavior()).toBe('placeholder')
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('value')
+  })
+
+  it('sets and gets playground x-playground-example behavior', () => {
+    themeConfig.setPlaygroundXExampleBehavior('ignore')
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('ignore')
+    themeConfig.setPlaygroundXExampleBehavior('placeholder')
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('placeholder')
+    themeConfig.setPlaygroundXExampleBehavior('value')
+    expect(themeConfig.getPlaygroundXExampleBehavior()).toBe('value')
+  })
+})
+
+describe('operation configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
   it('returns the operation badges', () => {
     const result = themeConfig.getOperationBadges()
     expect(result).toEqual(['deprecated'])
@@ -337,29 +631,74 @@ describe('useTheme', () => {
     expect(result).toEqual(['operationId'])
   })
 
-  it('returns the i18n config', () => {
-    const result = themeConfig.getI18nConfig()
-    expect(result).toEqual({
-      locale: expect.any(Object),
-      fallbackLocale: expect.any(Object),
-      messages: expect.any(Object),
-      availableLocales: expect.arrayContaining([
-        {
-          code: 'en',
-          label: 'English',
-        },
-        {
-          code: 'es',
-          label: 'Español',
-        },
-      ]),
-    })
+  it('returns the default operation slots', () => {
+    const result = themeConfig.getOperationSlots()
+    expect(result).toEqual(DEFAULT_OPERATION_SLOTS)
   })
 
-  it('sets and gets the i18n config', () => {
-    themeConfig.setI18nConfig({ locale: 'es' })
-    const result = themeConfig.getI18nConfig()
-    expect(result.locale.value).toBe('es')
+  it('sets and gets the operation slots', () => {
+    themeConfig.setOperationSlots(['header', 'path', 'description'])
+    const result = themeConfig.getOperationSlots()
+    expect(result).toEqual(['header', 'path', 'description'])
+  })
+
+  it('returns the default operation hidden slots', () => {
+    const result = themeConfig.getOperationHiddenSlots()
+    expect(result).toEqual([])
+  })
+
+  it('sets and gets the operation hidden slots', () => {
+    themeConfig.setOperationHiddenSlots(['branding'])
+    const result = themeConfig.getOperationHiddenSlots()
+    expect(result).toEqual(['branding'])
+  })
+
+  it('returns the default operation columns', () => {
+    const result = themeConfig.getOperationCols()
+    expect(result).toBe(2)
+  })
+
+  it('sets and gets the operation columns', () => {
+    themeConfig.setOperationCols(1)
+    const result = themeConfig.getOperationCols()
+    expect(result).toBe(1)
+  })
+
+  it('returns the default operation base URL', () => {
+    const result = themeConfig.getOperationDefaultBaseUrl()
+    expect(result).toBe(DEFAULT_BASE_URL)
+  })
+
+  it('returns the default operation servers', () => {
+    const result = themeConfig.getOperationServers()
+    expect(result).toBe(null)
+  })
+})
+
+describe('security configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns the default security scheme', () => {
+    const result = themeConfig.getSecurityDefaultScheme()
+    expect(result).toBe(null)
+  })
+
+  it('sets and gets the security scheme', () => {
+    themeConfig.setSecurityDefaultScheme('bearer')
+    const result = themeConfig.getSecurityDefaultScheme()
+    expect(result).toBe('bearer')
+  })
+})
+
+describe('spec configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
   })
 
   it('returns the spec config', () => {
@@ -395,6 +734,14 @@ describe('useTheme', () => {
     result.disableDownload.value = true
     expect(themeConfig.getWrapExamples()).toBe(false)
     expect(themeConfig.getSpecDisableDownload()).toBe(true)
+  })
+})
+
+describe('links prefixes configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
   })
 
   it('returns the default links prefixes config', () => {
@@ -463,16 +810,64 @@ describe('server configuration', () => {
   })
 })
 
-describe('codeSamples configuration', () => {
+describe('markdown configuration', () => {
   const themeConfig = useTheme()
 
   beforeEach(() => {
     themeConfig.reset()
   })
 
-  it('returns the default code samples languages', () => {
-    const result = themeConfig.getCodeSamplesLangs()
-    expect(result).toEqual(['curl', 'javascript', 'php', 'python'])
+  it('returns the default markdown config', () => {
+    const result = themeConfig.getMarkdownConfig()
+    expect(result.operationLink).toBeDefined()
+    expect(result.operationLink?.linkPrefix).toBe('/operations/')
+    expect(result.externalLinksNewTab).toBe(false)
+  })
+
+  it('sets and gets the markdown config', () => {
+    themeConfig.setMarkdownConfig({
+      operationLink: {
+        linkPrefix: '/custom-operations/',
+        transformHref: href => `/transformed${href}`,
+      },
+      externalLinksNewTab: true,
+    })
+    const result = themeConfig.getMarkdownConfig()
+    expect(result.operationLink?.linkPrefix).toBe('/custom-operations/')
+    expect(result.operationLink?.transformHref).toBeTypeOf('function')
+    expect(result.externalLinksNewTab).toBe(true)
+  })
+
+  it('returns the operation link config', () => {
+    const result = themeConfig.getOperationLinkConfig()
+    expect(result?.linkPrefix).toBe('/operations/')
+  })
+
+  it('returns the externalLinksNewTab value', () => {
+    themeConfig.setMarkdownConfig({ externalLinksNewTab: true })
+    const result = themeConfig.getExternalLinksNewTab()
+    expect(result).toBe(true)
+  })
+
+  it('allows disabling operation link processing', () => {
+    themeConfig.setMarkdownConfig({ operationLink: false })
+    const result = themeConfig.getOperationLinkConfig()
+    expect(result).toBe(false)
+  })
+
+  it('stores the markdown config callback', () => {
+    const configFn = () => {}
+    themeConfig.setMarkdownConfig({ config: configFn })
+    const result = themeConfig.getMarkdownConfig()
+    expect(result.config).toBe(configFn)
+  })
+})
+
+describe('codeSamples configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
   })
 
   it('returns the default code samples default language', () => {
@@ -488,24 +883,32 @@ describe('codeSamples configuration', () => {
         label: 'cURL',
         highlighter: 'bash',
         icon: 'curl',
+        target: 'shell',
+        client: 'curl',
       },
       {
         lang: 'javascript',
         label: 'JavaScript',
         highlighter: 'javascript',
         icon: '.js',
+        target: 'js',
+        client: 'fetch',
       },
       {
         lang: 'php',
         label: 'PHP',
         highlighter: 'php',
         icon: '.php',
+        target: 'php',
+        client: 'curl',
       },
       {
         lang: 'python',
         label: 'Python',
         highlighter: 'python',
         icon: '.py',
+        target: 'python',
+        client: 'requests',
       },
     ])
   })
@@ -525,30 +928,69 @@ describe('codeSamples configuration', () => {
     const customHeaders = { 'X-Custom-Header': 'value' }
 
     themeConfig.setCodeSamplesConfig({
-      langs: ['javascript', 'python', 'go'],
       defaultLang: 'python',
       availableLanguages: [
+        {
+          lang: 'javascript',
+          label: 'JavaScript',
+          highlighter: 'javascript',
+          icon: '.js',
+          target: 'js',
+          client: 'fetch',
+        },
+        {
+          lang: 'python',
+          label: 'Python',
+          highlighter: 'python',
+          icon: '.py',
+          target: 'python',
+          client: 'requests',
+        },
         {
           lang: 'go',
           label: 'Go',
           highlighter: 'go',
           icon: '.go',
+          target: 'go',
+          client: 'native',
         },
       ],
       generator: customGenerator,
       defaultHeaders: customHeaders,
     })
 
-    expect(themeConfig.getCodeSamplesLangs()).toEqual(['javascript', 'python', 'go'])
+    expect(themeConfig.getCodeSamplesAvailableLanguages()).toEqual([
+      expect.objectContaining({ lang: 'javascript' }),
+      expect.objectContaining({ lang: 'python' }),
+      expect.objectContaining({ lang: 'go' }),
+    ])
     expect(themeConfig.getCodeSamplesDefaultLang()).toBe('python')
 
     const availableLanguages = themeConfig.getCodeSamplesAvailableLanguages()
     expect(availableLanguages).toEqual([
       {
+        lang: 'javascript',
+        label: 'JavaScript',
+        highlighter: 'javascript',
+        icon: '.js',
+        target: 'js',
+        client: 'fetch',
+      },
+      {
+        lang: 'python',
+        label: 'Python',
+        highlighter: 'python',
+        icon: '.py',
+        target: 'python',
+        client: 'requests',
+      },
+      {
         lang: 'go',
         label: 'Go',
         highlighter: 'go',
         icon: '.go',
+        target: 'go',
+        client: 'native',
       },
     ])
 
@@ -556,61 +998,111 @@ describe('codeSamples configuration', () => {
     expect(themeConfig.getCodeSamplesDefaultHeaders()).toEqual(customHeaders)
   })
 
-  it('handles duplicate languages in langs array', () => {
-    themeConfig.setCodeSamplesConfig({
-      langs: ['javascript', 'javascript', 'python'],
-    })
-
-    expect(themeConfig.getCodeSamplesLangs()).toEqual(['javascript', 'python'])
-  })
-
   it('falls back to first available language when default language is not in available languages', () => {
     themeConfig.setCodeSamplesConfig({
-      langs: ['javascript', 'python'],
-      defaultLang: 'ruby', // Not in the available languages
+      defaultLang: 'ruby',
     })
 
-    expect(themeConfig.getCodeSamplesDefaultLang()).toBe('javascript')
+    expect(themeConfig.getCodeSamplesDefaultLang()).toBe('curl')
   })
 
   it('can setup icons', () => {
+    themeConfig.reset()
+
+    const defaultLanguages = themeConfig.getCodeSamplesAvailableLanguages()
+
     themeConfig.setCodeSamplesConfig({
-      availableLanguages: [
-        ...themeConfig.getCodeSamplesAvailableLanguages().map((lang) => {
-          if (lang.lang === 'javascript') {
-            return { ...lang, icon: 'custom-js-icon' }
-          }
-          return lang
-        }),
-      ],
+      availableLanguages: defaultLanguages.map((lang) => {
+        if (lang.lang === 'javascript') {
+          return { ...lang, icon: 'custom-js-icon' }
+        }
+        return lang
+      }),
     })
 
     const result = themeConfig.getCodeSamplesAvailableLanguages()
+
     expect(result).toEqual([
       {
         lang: 'curl',
         label: 'cURL',
         highlighter: 'bash',
         icon: 'curl',
+        target: 'shell',
+        client: 'curl',
       },
       {
         lang: 'javascript',
         label: 'JavaScript',
         highlighter: 'javascript',
         icon: 'custom-js-icon',
+        target: 'js',
+        client: 'fetch',
       },
       {
         lang: 'php',
         label: 'PHP',
         highlighter: 'php',
         icon: '.php',
+        target: 'php',
+        client: 'curl',
       },
       {
         lang: 'python',
         label: 'Python',
         highlighter: 'python',
         icon: '.py',
+        target: 'python',
+        client: 'requests',
       },
     ])
+  })
+})
+
+describe('storage configuration', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('returns the default storage prefix', () => {
+    expect(themeConfig.getStoragePrefix()).toBe(DEFAULT_STORAGE_PREFIX)
+  })
+
+  it('sets and gets the storage prefix', () => {
+    themeConfig.setStorageConfig({ prefix: 'my-app' })
+    expect(themeConfig.getStoragePrefix()).toBe('my-app')
+  })
+
+  it('resets to default storage prefix', () => {
+    themeConfig.setStorageConfig({ prefix: 'my-app' })
+    themeConfig.reset()
+    expect(themeConfig.getStoragePrefix()).toBe(DEFAULT_STORAGE_PREFIX)
+  })
+
+  it('initializes with custom storage prefix', () => {
+    useTheme({ storage: { prefix: 'custom' } })
+    expect(themeConfig.getStoragePrefix()).toBe('custom')
+  })
+
+  it('returns the default storage persistAuth', () => {
+    expect(themeConfig.getStoragePersistAuth()).toBe(DEFAULT_STORAGE_PERSIST_AUTH)
+  })
+
+  it('sets and gets the storage persistAuth', () => {
+    themeConfig.setStorageConfig({ persistAuth: false })
+    expect(themeConfig.getStoragePersistAuth()).toBe(false)
+  })
+
+  it('resets to default storage persistAuth', () => {
+    themeConfig.setStorageConfig({ persistAuth: false })
+    themeConfig.reset()
+    expect(themeConfig.getStoragePersistAuth()).toBe(DEFAULT_STORAGE_PERSIST_AUTH)
+  })
+
+  it('initializes with custom storage persistAuth', () => {
+    useTheme({ storage: { persistAuth: false } })
+    expect(themeConfig.getStoragePersistAuth()).toBe(false)
   })
 })

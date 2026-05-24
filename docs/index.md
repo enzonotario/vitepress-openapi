@@ -21,7 +21,3 @@ features:
     details: "Customize the layout of your documentation with custom slots."
 
 ---
-
-## Notice
-
-This project is still under development. Please report any issues or suggestions in the [GitHub repository](https://github.com/enzonotario/vitepress-openapi/issues).

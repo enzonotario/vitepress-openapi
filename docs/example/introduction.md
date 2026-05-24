@@ -18,6 +18,6 @@ const paths = useOpenapi().getPathsByVerbs()
 
 <template v-for="path in paths">
 
-- <OAOperationLink :operationId="path.operationId" :method="path.verb" :title="path.summary" :href="`/example/operations/${path.operationId}`" :key="path.operationId" />
+- <OAOperationLink :operationId="path.operationId" :method="path.verb" :title="path.summary" :href="`/example/operations/${path.operationId}`" :key="path.operationId">[{{path.summary}}]() `{{path.path}}`</OAOperationLink>
 
 </template>

@@ -4,7 +4,7 @@ import type { HTMLAttributes } from 'vue'
 import { GripVertical } from 'lucide-vue-next'
 import { SplitterResizeHandle, useForwardPropsEmits } from 'reka-ui'
 import { computed } from 'vue'
-import { cn } from '../../../../../../src/lib/utils'
+import { cn } from '../../../../../../src/lib/utils/utils'
 
 const props = defineProps<SplitterResizeHandleProps & { class?: HTMLAttributes['class'], withHandle?: boolean }>()
 const emits = defineEmits<SplitterResizeHandleEmits>()

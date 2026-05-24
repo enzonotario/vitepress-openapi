@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { OpenApi } from '../../src'
+import { createOpenApiSpec } from '../../src'
 import { useOpenapi } from '../../src/composables/useOpenapi'
 import { spec, specWithSchemaAndContentTypes } from '../testsConstants'
 
 describe('openapi with spec', () => {
-  const openapi = OpenApi({ spec })
+  const openapi = createOpenApiSpec({ spec })
 
   it('setSpec and getSpec work correctly', () => {
-    const customOpenapi = OpenApi()
+    const customOpenapi = createOpenApiSpec()
 
     expect(customOpenapi.getSpec()).toEqual({})
 
@@ -23,7 +23,7 @@ describe('openapi with spec', () => {
     const originalSpec = { openapi: '3.0.0', info: { title: 'Original API', version: '1.0.0' } }
     const parsedSpec = { openapi: '3.0.0', info: { title: 'Parsed API', version: '1.0.0' } }
 
-    const customOpenapi = OpenApi({
+    const customOpenapi = createOpenApiSpec({
       spec: parsedSpec,
       originalSpec,
     })
@@ -237,7 +237,6 @@ describe('openapi with spec', () => {
     const result = openapi.getOperationServers('getUsers')
     expect(result).toEqual([
       ...spec.paths['/users'].get.servers,
-      ...spec.servers,
     ])
   })
 
@@ -331,18 +330,12 @@ describe('spec with different servers for specific path', () => {
       {
         url: 'https://api.path.com',
       },
-      {
-        url: 'https://api.example.com',
-      },
     ])
 
     const useLocalServer = openapi.getOperationServers('useLocalServer')
     expect(useLocalServer).toEqual([
       {
         url: 'https://api.local.com',
-      },
-      {
-        url: 'https://api.example.com',
       },
     ])
   })

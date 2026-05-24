@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from '@byjohann/vue-i18n'
 import yaml from 'js-yaml'
 import { Badge } from '../ui/badge/index'
 
@@ -8,6 +9,10 @@ const props = defineProps({
     required: true,
   },
 })
+
+const RE_TITLE_SANITIZE = /[^\w\-]/g
+
+const { t } = useI18n()
 
 function downloadSpec(format: 'json' | 'yaml'): void {
   try {
@@ -32,7 +37,7 @@ function downloadSpec(format: 'json' | 'yaml'): void {
     a.href = url
 
     const title = (props.openapi.spec.info?.title || 'openapi')
-      .replace(/[^\w\-]/g, '_')
+      .replace(RE_TITLE_SANITIZE, '_')
       .toLowerCase()
 
     a.download = `${title}.${format}`
@@ -51,27 +56,29 @@ function downloadSpec(format: 'json' | 'yaml'): void {
   <div class="download-container group relative">
     <a
       href="#"
-      class="download-button relative flex items-center gap-2 !no-underline"
+      class="download-button relative flex items-center gap-2 no-underline!"
       aria-label="Download OpenAPI Document as JSON"
       @click.prevent="downloadSpec('json')"
     >
-      <span class="underline mr-2">{{ $t('Download OpenAPI Document') }}</span>
+      <span class="underline mr-2">{{ t('Download OpenAPI Document') }}</span>
       <Badge variant="outline" class="hidden group-hover:inline-block">JSON</Badge>
     </a>
 
     <a
       href="#"
-      class="download-button yaml-button absolute hidden group-hover:flex items-center gap-2 !no-underline"
+      class="download-button yaml-button absolute hidden group-hover:flex items-center gap-2 no-underline!"
       aria-label="Download OpenAPI Document as YAML"
       @click.prevent="downloadSpec('yaml')"
     >
-      <span class="underline mr-2">{{ $t('Download OpenAPI Document') }}</span>
+      <span class="underline mr-2">{{ t('Download OpenAPI Document') }}</span>
       <Badge variant="outline">YAML</Badge>
     </a>
   </div>
 </template>
 
 <style scoped>
+@reference "tailwindcss";
+
 .download-container:has(:focus-visible):before,
 .download-container:hover:before {
   content: '';

@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import type { OAExampleObject } from '../../types'
 import { computed, ref, watch } from 'vue'
+import { createCompositeKey } from '@/lib/playground/createCompositeKey'
+import { useExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import {
   isFormUrlEncoded,
   isJson,
   isMultipartFormData,
   isXml,
-} from '../../lib/contentTypeUtils'
-import { createCompositeKey } from '../../lib/playground/createCompositeKey'
+} from '@/lib/utils/contentTypeUtils'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import { Textarea } from '../ui/textarea'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
 
-interface BodyParameter extends Partial<OpenAPIV3.ParameterObject> {
+interface BodyParameter extends Omit<Partial<OpenAPIV3.ParameterObject>, 'in'> {
   name: string
   in: string
   schema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject
@@ -29,6 +31,8 @@ interface Props {
   examples?: {
     [key: string]: OAExampleObject
   }
+  exampleBehavior?: PlaygroundExampleBehavior
+  xExampleBehavior?: PlaygroundExampleBehavior
 }
 
 const props = defineProps<Props>()
@@ -55,12 +59,13 @@ const shouldUseInput = computed(() => !props.requestBody?.content?.[props.conten
 
 const bodyParameters = computed<BodyParameter[]>(() => {
   if (shouldUseInput.value) {
+    const useValue = useExampleForValue(props.exampleBehavior ?? 'value')
     return [
       {
         name: 'body',
         in: 'body',
         schema: props.requestBody?.content?.[props.contentType]?.schema,
-        example: props.examples ? Object.values(props.examples)[0]?.value : null,
+        example: useValue && props.examples ? Object.values(props.examples)[0]?.value : null,
       } as BodyParameter,
     ]
   }
@@ -75,12 +80,12 @@ const bodyParameters = computed<BodyParameter[]>(() => {
 
 const getParameterValue = computed(() => (parameter: BodyParameter) => {
   if (isFormUrlEncodedContent.value || isMultipartFormDataContent.value) {
-    return paramValues.value[parameter.name] || ''
+    return (paramValues.value as Record<string, string | File>)[parameter.name] || ''
   }
   return bodyValue.value
 })
 
-const paramValues = ref<Record<string, string>>({})
+const paramValues = ref<Record<string, string | File>>({})
 
 const getEnabledParams = computed(() => {
   return Object.keys(paramValues.value).filter((key) => {
@@ -110,12 +115,17 @@ const parametersWithKeys = computed(() =>
 function createFormData(enabledParams: string[]): Record<string, string> | FormData {
   if (isFormUrlEncodedContent.value) {
     return Object.fromEntries(
-      enabledParams.map(key => [key, paramValues.value[key]]),
+      enabledParams.map(key => [key, paramValues.value[key] as string]),
     )
   } else if (isMultipartFormDataContent.value) {
     const formData = new FormData()
     enabledParams.forEach((key) => {
-      formData.append(key, paramValues.value[key] || '')
+      const v = paramValues.value[key]
+      if (v instanceof File) {
+        formData.append(key, v, v.name)
+      } else {
+        formData.append(key, v || '')
+      }
     })
     return formData
   }
@@ -123,7 +133,7 @@ function createFormData(enabledParams: string[]): Record<string, string> | FormD
   return {}
 }
 
-function updateParameterValue(parameter: BodyParameter, value: string): void {
+function updateParameterValue(parameter: BodyParameter, value: any): void {
   paramValues.value[parameter.name] = value
 
   if (isFormUrlEncodedContent.value || isMultipartFormDataContent.value) {
@@ -171,14 +181,15 @@ watch(() => props.body, (newBody: any) => {
 
 // Watch for changes in content type to update body value.
 watch(() => props.contentType, () => {
-  bodyValue.value = Object.values(props.examples ?? {})[0]?.value
+  const useValue = useExampleForValue(props.exampleBehavior ?? 'value')
+  bodyValue.value = useValue ? Object.values(props.examples ?? {})[0]?.value : null
 }, { immediate: true })
 </script>
 
 <template>
   <div>
     <div v-if="isJsonContent" class="bg-muted p-1 rounded">
-      <div v-if="bodyValue !== null" class="!m-0 vp-adaptive-theme min-h-16 language-json">
+      <div v-if="bodyValue !== null" class="m-0! vp-adaptive-theme min-h-16 language-json">
         <button
           title="Copy Code"
           class="copy"
@@ -211,6 +222,8 @@ watch(() => props.contentType, () => {
         :model-value="getParameterValue(item.parameter)"
         :parameter="item.parameter"
         :composite-key="item.compositeKey"
+        :example-behavior="props.exampleBehavior ?? 'value'"
+        :x-example-behavior="props.xExampleBehavior ?? 'value'"
         :enabled="item.enabled"
         :hide-label="parametersWithKeys.length === 1"
         @update:model-value="updateParameterValue(item.parameter, $event)"

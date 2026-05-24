@@ -1,6 +1,8 @@
 import type { HarRequest } from '@scalar/snippetz'
 import type { OARequest } from './request'
-import { isFormUrlEncoded, isMultipartFormData } from '../contentTypeUtils'
+import { isFormUrlEncoded, isMultipartFormData } from '../utils/contentTypeUtils'
+
+const RE_TITLE_CASE = /\b\w/g
 
 export function buildHarRequest(
   oaRequest: OARequest,
@@ -10,14 +12,17 @@ export function buildHarRequest(
     url: decodeURI(oaRequest.url.toString()),
     httpVersion: 'HTTP/1.1',
     headers: Object.entries(oaRequest.headers).map(([name, value]) => ({
-      name: name.replace(/\b\w/g, letter => letter.toUpperCase()), // Convert to title case.
+      name: name.replace(RE_TITLE_CASE, letter => letter.toUpperCase()), // Convert to title case.
       value,
     })),
     queryString: [
-      ...Object.entries(oaRequest.query).map(([name, value]) => ({
-        name,
-        value,
-      })),
+      ...Object.entries(oaRequest.query).flatMap(([name, value]) => {
+        if (Array.isArray(value)) {
+          // Exploded arrays: create multiple entries with same name
+          return value.map(v => ({ name, value: String(v) }))
+        }
+        return [{ name, value: typeof value === 'object' ? JSON.stringify(value) : String(value) }]
+      }),
     ],
     cookies: Object.entries(oaRequest.cookies).map(([name, value]) => ({
       name,

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
     "rootDir": "./",
     "target": "ESNext",
     "module": "ESNext",
@@ -13,7 +12,10 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "outDir": "dist/types",
     "declaration": true,
-    "types": ["vite"]
+    "types": ["vite"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["vite.config.*", "vite-env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["vite.config.*", "vite-env.d.ts", "src/**/*", "src/**/*.vue"]
 }

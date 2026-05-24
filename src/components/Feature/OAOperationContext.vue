@@ -3,10 +3,11 @@ import type { ComputedRef } from 'vue'
 import type { PlaygroundSecurityScheme, SecurityUi } from '../../types'
 import { useStorage } from '@vueuse/core'
 import { computed, provide, ref } from 'vue'
+import { buildRequest } from '@/lib/codeSamples/buildRequest'
+import { initOperationData, OPERATION_DATA_KEY } from '@/lib/operation/operationData'
+import { resolveBaseUrl } from '@/lib/utils/resolveBaseUrl'
+import { isLocalStorageAvailable } from '@/lib/utils/utils'
 import { useTheme } from '../../composables/useTheme'
-import { buildRequest } from '../../lib/codeSamples/buildRequest'
-import { initOperationData, OPERATION_DATA_KEY } from '../../lib/operationData'
-import { resolveBaseUrl } from '../../lib/resolveBaseUrl'
 
 const props = defineProps({
   operationId: {
@@ -53,8 +54,10 @@ const defaultServer = computed(
     : themeConfig.getOperationDefaultBaseUrl(),
 )
 
-const customServer = typeof localStorage !== 'undefined'
-  ? useStorage('--oa-custom-server-url', null, localStorage)
+const storagePrefix = themeConfig.getStoragePrefix()
+
+const customServer = isLocalStorageAvailable()
+  ? useStorage(`${storagePrefix}-custom-server-url`, null, localStorage)
   : ref(defaultServer.value)
 
 const baseUrl = computed(() => {

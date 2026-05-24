@@ -1,6 +1,6 @@
 <script setup>
+import { cn } from '@/lib/utils/utils'
 import { useMarkdown } from '../../composables/useMarkdown'
-import { cn } from '../../lib/utils'
 
 const props = defineProps({
   content: {
@@ -19,7 +19,7 @@ const { render } = useMarkdown()
 
 <template>
   <div
-    :class="cn('oa-doc', props.class)"
+    :class="cn('OAMarkdown oa-doc', props.class)"
     v-html="render(props.content)"
   />
 </template>

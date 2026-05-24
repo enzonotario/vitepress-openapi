@@ -12,7 +12,7 @@ export interface IOARequest {
   body?: any
   variables?: Record<string, string>
   headers: Record<string, string>
-  query: Record<string, string>
+  query: Record<string, string | string[]>
   contentType?: string
   cookies?: Record<string, string>
 }
@@ -27,7 +27,7 @@ export class OARequest {
   public readonly body: any | undefined
   public readonly variables: Record<string, any>
   public readonly headers: Record<string, string>
-  public readonly query: Record<string, string>
+  public readonly query: Record<string, string | string[]>
   public readonly contentType: string | undefined
   public readonly cookies: Record<string, string>
 

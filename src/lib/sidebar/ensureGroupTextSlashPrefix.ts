@@ -9,7 +9,7 @@ export function ensureGroupTextSlashPrefix(items: OASidebarItem[]): OASidebarIte
       item.items = ensureGroupTextSlashPrefix(item.items)
 
       item.text = item.text?.startsWith('/') ? item.text : `/${item.text}`
-    } else if (item.text && !item.isOperation && !item.text.startsWith('/') && !item.text.includes('<span')) {
+    } else if (item.text && !item.isOperation && !item.text.startsWith('/') && !item.text.includes('<')) {
       item.text = `/${item.text}`
     }
 

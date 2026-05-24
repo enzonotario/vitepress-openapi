@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { PluginWithOptions } from 'markdown-it'
-import { useOpenapi } from '../../composables/useOpenapi'
+import { getGlobalOpenapi } from '../../composables/useOpenapi'
 
 export interface OperationLinkPluginOptions {
   /**
@@ -68,7 +68,7 @@ function createOperationLinkHtml(
 ): string {
   return `<a href="${href}" class="OAOperationLink group/oaOperationLink">`
     + `<span class="OAOperationLink-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>`
-    + `<span>${title}</span>`
+    + `<span class="OAOperationLink-title">${title}</span>`
     + `</a>`
 }
 
@@ -115,10 +115,13 @@ const operationLink: PluginWithOptions<OperationLinkPluginOptions> = (md, option
     createOperationLinkHtml: customCreateOperationLinkHtml,
   } = options
 
-  const openapi = useOpenapi()
-
   // Override the link renderer.
   md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+    const openapi = getGlobalOpenapi()
+    if (!openapi) {
+      return defaultRender(tokens, idx, options, env, self)
+    }
+
     const hrefIndex = tokens[idx].attrIndex('href')
     if (hrefIndex < 0) {
       return defaultRender(tokens, idx, options, env, self)

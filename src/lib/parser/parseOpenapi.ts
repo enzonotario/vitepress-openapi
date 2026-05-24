@@ -1,9 +1,10 @@
 import type { JSONSchema } from '@trojs/openapi-dereference'
 import type { OpenAPIDocument, ParsedOpenAPI } from '../../types'
-import { dereferenceSync } from '@trojs/openapi-dereference'
+
 import { $trycatch } from '@tszen/trycatch'
 import { merge } from 'allof-merge'
-import { parseYAML } from 'confbox'
+import { parseSpec } from '../utils/parseSpec'
+import { dereferenceWithAnnotationsSync } from './dereferenceWithAnnotations'
 import { generateCodeSamples } from './generateCodeSamples'
 import { generateMissingOperationIds } from './generateMissingOperationIds'
 import { generateMissingSummary } from './generateMissingSummary'
@@ -13,23 +14,6 @@ import { generateResponseUi } from './generateResponseUi'
 import { generateSecurityUi } from './generateSecurityUi'
 
 export function parseOpenapi() {
-  function parseSpecContent(spec: OpenAPIDocument | string): OpenAPIDocument | null {
-    if (typeof spec === 'string') {
-      try {
-        const parsed = parseYAML(spec)
-        return parsed as OpenAPIDocument
-      } catch (e) {
-        console.error('Error parsing spec', e)
-      }
-    } else if (typeof spec === 'object') {
-      return spec as OpenAPIDocument
-    } else {
-      console.error('Invalid spec format')
-    }
-
-    return {} as OpenAPIDocument
-  }
-
   function transformSync({
     spec,
     defaultTag = undefined,
@@ -43,7 +27,7 @@ export function parseOpenapi() {
       console.warn('Transforming OpenAPI spec:', spec)
     }
 
-    let specContent = parseSpecContent(spec)
+    let specContent = parseSpec(spec)
 
     if (!specContent) {
       return {}
@@ -65,7 +49,7 @@ export function parseOpenapi() {
     specContent.servers = specContent.servers || []
     specContent.tags = specContent.tags || []
 
-    return Object.assign({}, specContent)
+    return { ...specContent }
   }
 
   async function transformAsync({
@@ -73,7 +57,7 @@ export function parseOpenapi() {
   }: {
     spec: ParsedOpenAPI | string
   }): Promise<ParsedOpenAPI> {
-    let specContent = parseSpecContent(spec) as ParsedOpenAPI
+    let specContent = parseSpec(spec) as ParsedOpenAPI
 
     const [result, err] = await $trycatch(() => generateCodeSamples(specContent))
     specContent = err ? specContent : result
@@ -90,9 +74,9 @@ export function parseOpenapi() {
     defaultTag?: string
     defaultTagDescription?: string
   }): ParsedOpenAPI {
-    const specContent = parseSpecContent(spec)
+    const specContent = parseSpec(spec)
 
-    let parsedSpec = Object.assign({}, specContent) as ParsedOpenAPI
+    let parsedSpec = { ...specContent } as ParsedOpenAPI
 
     const [mergedSpec, errMerge] = $trycatch(() => merge(
       transformSync({
@@ -103,7 +87,7 @@ export function parseOpenapi() {
     ) as ParsedOpenAPI)
     parsedSpec = errMerge ? parsedSpec : mergedSpec
 
-    const [dereferencedSpec, errDereference] = $trycatch(() => dereferenceSync(parsedSpec as JSONSchema) as ParsedOpenAPI)
+    const [dereferencedSpec, errDereference] = $trycatch(() => dereferenceWithAnnotationsSync(parsedSpec as JSONSchema) as ParsedOpenAPI)
     parsedSpec = errDereference ? parsedSpec : dereferencedSpec
 
     const [securitySpec, errSecurity] = $trycatch(() => generateSecurityUi(parsedSpec))
@@ -120,7 +104,7 @@ export function parseOpenapi() {
     parsedSpec.servers = parsedSpec.servers || parsedSpec.servers || []
     parsedSpec.tags = parsedSpec.tags || parsedSpec.tags || []
 
-    return Object.assign({}, parsedSpec)
+    return { ...parsedSpec }
   }
 
   async function parseAsync({

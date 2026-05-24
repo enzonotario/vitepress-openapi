@@ -1,11 +1,8 @@
-const animate = require('tailwindcss-animate')
-const base = require('../tailwind.config')
+import base from '../tailwind.config.mjs'
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: ['class'],
-  safelist: ['dark'],
-  prefix: '',
+export default {
+  ...base,
   content: [
     './.vitepress/theme/**/*.{vue,js,ts,jsx,tsx}',
     './node_modules/vitepress-openapi/src/**/*.{vue,js,ts,jsx,tsx}',
@@ -14,6 +11,4 @@ module.exports = {
     './customizations/*.md',
     './example/playground.md',
   ],
-  theme: base.theme,
-  plugins: [animate],
 }

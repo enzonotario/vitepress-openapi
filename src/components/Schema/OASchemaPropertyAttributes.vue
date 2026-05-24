@@ -1,4 +1,5 @@
 <script setup>
+import { useI18n } from '@byjohann/vue-i18n'
 import { titleCase } from 'scule'
 import OACodeValue from '../Common/OACodeValue.vue'
 
@@ -8,6 +9,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 
 const keysToIgnore = ['name', 'types', 'description', 'properties', 'required', 'items', 'xml', 'allOf', 'anyOf', 'oneOf', 'not']
 
@@ -26,7 +29,7 @@ const isNonEmptyValue = (value) => {
 
 const properties = Object.keys(props.property)
   .filter(key => !keysToIgnore.includes(key)) // Exclude specified keys
-  .filter(key => isNonEmptyValue(props.property[key])) // Keep only non-empty values
+  .filter(key => isNonEmptyValue(props.property[key]) || (key === 'default' && props.property[key] !== undefined)) // Keep only non-empty values except for "default"
 </script>
 
 <template>
@@ -36,7 +39,7 @@ const properties = Object.keys(props.property)
     class="flex flex-row flex-wrap items-center gap-2"
   >
     <span class="text-xs text-muted-foreground">
-      {{ titleCase(key) }}
+      {{ t(titleCase(key)) }}
     </span>
 
     <OACodeValue :value="props.property[key]" />

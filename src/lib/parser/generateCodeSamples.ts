@@ -1,9 +1,10 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OAExampleObject, ParsedOpenAPI, ParsedOperation, PlaygroundSecurityScheme } from '../../types'
 import { availableLanguages, useTheme } from '../../composables/useTheme'
+import { httpVerbs } from '../../index'
 import { buildRequest } from '../codeSamples/buildRequest'
 import { generateCodeSample } from '../codeSamples/generateCodeSample'
-import { resolveBaseUrl } from '../resolveBaseUrl'
+import { resolveBaseUrl } from '../utils/resolveBaseUrl'
 
 export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOpenAPI> {
   if (!spec?.paths) {
@@ -13,8 +14,8 @@ export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOp
   const baseUrl = resolveBaseUrl(spec.servers?.[0]?.url || '')
 
   for (const [path, pathObject] of Object.entries(spec.paths)) {
-    for (const verb of Object.keys(pathObject) as OpenAPIV3.HttpMethods[]) {
-      const operation = pathObject[verb] as ParsedOperation
+    for (const verb of httpVerbs) {
+      const operation = (pathObject as Record<string, any>)[verb] as ParsedOperation
 
       if (!operation) {
         continue
@@ -36,7 +37,7 @@ export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOp
         path,
         method: verb,
         baseUrl,
-        parameters: operation.parameters || [],
+        parameters: (operation.parameters || []).filter((p): p is OpenAPIV3.ParameterObject => !('$ref' in p)),
         authorizations: Object.entries(authorizations).map(([name, value]: [string, any]) => {
           return {
             ...value,
@@ -56,7 +57,7 @@ export async function generateCodeSamples(spec: ParsedOpenAPI): Promise<ParsedOp
         availableLanguages.map(async (language) => {
           return {
             ...language,
-            source: await generateCodeSample(language.lang, request),
+            source: await generateCodeSample(language, request),
           }
         }),
       )

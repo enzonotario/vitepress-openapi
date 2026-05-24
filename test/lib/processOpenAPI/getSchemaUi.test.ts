@@ -105,6 +105,85 @@ const fixtures: Record<string, FixtureTest> = {
     },
   },
 
+  'schema with additionalProperties referencing nested object': {
+    jsonSchema: {
+      type: 'object',
+      additionalProperties: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          active: { type: 'boolean' },
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        {
+          meta: {
+            isAdditionalProperties: true,
+          },
+          name: 'additionalProperties',
+          required: false,
+          types: ['object'],
+          properties: [
+            { name: 'name', types: ['string'], required: false },
+            { name: 'active', types: ['boolean'], required: false },
+          ],
+        },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      additionalProperties: {
+        name: 'string',
+        active: true,
+      },
+    },
+  },
+
+  'schema with x-additionalPropertiesName': {
+    jsonSchema: {
+      type: 'object',
+      'x-additionalPropertiesName': '{key}',
+      additionalProperties: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      meta: {
+        extra: {
+          'x-additionalPropertiesName': '{key}',
+        },
+      },
+      properties: [
+        {
+          meta: {
+            isAdditionalProperties: true,
+          },
+          name: '{key}',
+          required: false,
+          types: ['object'],
+          properties: [
+            { name: 'name', types: ['string'], required: false },
+          ],
+        },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      '{key}': {
+        name: 'string',
+      },
+    },
+  },
+
   'empty schema returns empty array': {
     jsonSchema: {},
     schemaUi: [],
@@ -123,6 +202,59 @@ const fixtures: Record<string, FixtureTest> = {
       required: false,
       enum: ['foo', 'bar'],
       description: 'enum description',
+    },
+    schemaUiJson: 'string',
+  },
+
+  'schema with enum without explicit type': {
+    jsonSchema: {
+      enum: ['red', 'amber', 'green'],
+    },
+    schemaUi: {
+      name: '',
+      types: ['string'],
+      required: false,
+      enum: ['red', 'amber', 'green'],
+    },
+    schemaUiJson: 'string',
+  },
+
+  'schema with mixed enum without explicit type': {
+    jsonSchema: {
+      enum: ['red', 'amber', 'green', false, null, 42, 42.0],
+    },
+    schemaUi: {
+      name: '',
+      types: ['string', 'boolean', 'null', 'integer'],
+      required: false,
+      enum: ['red', 'amber', 'green', false, null, 42, 42.0],
+    },
+    schemaUiJson: 'string',
+  },
+
+  'schema with mixed integer+number enum without explicit type': {
+    jsonSchema: {
+      enum: [42, 42.1],
+    },
+    schemaUi: {
+      name: '',
+      types: ['number'],
+      required: false,
+      enum: [42, 42.1],
+    },
+    schemaUiJson: 0,
+  },
+
+  'schema with enum and defined types': {
+    jsonSchema: {
+      type: ['string', 'number'],
+      enum: ['red', 42],
+    },
+    schemaUi: {
+      name: '',
+      types: ['string', 'number'],
+      required: false,
+      enum: ['red', 42],
     },
     schemaUiJson: 'string',
   },
@@ -364,6 +496,182 @@ const fixtures: Record<string, FixtureTest> = {
     schemaUiJson: {
       name: 'string',
       age: 0,
+    },
+  },
+
+  'anyOf schema': {
+    jsonSchema: {
+      anyOf: [
+        {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            age: { type: 'integer' },
+          },
+          required: ['name'],
+        },
+        {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            age: { type: 'integer' },
+            addresses: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  street: { type: 'string' },
+                },
+              },
+            },
+          },
+          required: ['name'],
+        },
+      ],
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      properties: [
+        {
+          name: '',
+          properties: [
+            { name: 'name', types: ['string'], required: true },
+            { name: 'age', types: ['integer'], required: false },
+          ],
+          types: ['object'],
+          required: false,
+          meta: {
+            isAnyOfItem: true,
+          },
+        },
+        {
+          name: '',
+          properties: [
+            { name: 'name', types: ['string'], required: true },
+            { name: 'age', types: ['integer'], required: false },
+            {
+              name: 'addresses',
+              properties: [
+                { name: 'street', types: ['string'], required: false },
+              ],
+              required: false,
+              types: ['array'],
+              subtype: 'object',
+            },
+          ],
+          types: ['object'],
+          required: false,
+          meta: {
+            isAnyOfItem: true,
+          },
+        },
+      ],
+      required: false,
+      meta: {
+        isAnyOf: true,
+      },
+    },
+    // Takes first anyOf schema as default.
+    schemaUiJson: {
+      name: 'string',
+      age: 0,
+    },
+  },
+
+  'anyOf schema with description': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        foo: {
+          anyOf: [
+            {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+            {
+              type: 'null',
+            },
+          ],
+          description: 'Some description here...',
+        },
+      },
+      required: ['foo'],
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'foo',
+          types: ['array', 'null'],
+          required: true,
+          description: 'Some description here...',
+          properties: [
+            {
+              name: '',
+              types: ['array'],
+              required: false,
+              subtype: 'string',
+              meta: {
+                isAnyOfItem: true,
+              },
+            },
+            {
+              name: '',
+              types: ['null'],
+              required: false,
+              meta: {
+                isAnyOfItem: true,
+              },
+            },
+          ],
+          meta: {
+            isAnyOf: true,
+          },
+        },
+      ],
+    },
+    schemaUiJson: {
+      foo: ['string'],
+    },
+  },
+
+  'required oneOf property': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        foo: {
+          oneOf: [
+            { type: 'string' },
+            { type: 'null' },
+          ],
+        },
+      },
+      required: ['foo'],
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'foo',
+          types: ['string', 'null'],
+          required: true,
+          properties: [
+            { name: '', types: ['string'], required: false, meta: { isOneOfItem: true } },
+            { name: '', types: ['null'], required: false, meta: { isOneOfItem: true } },
+          ],
+          meta: { isOneOf: true },
+        },
+      ],
+    },
+    schemaUiJson: {
+      foo: 'string',
     },
   },
 
@@ -771,6 +1079,45 @@ const fixtures: Record<string, FixtureTest> = {
     },
   },
 
+  'array of strings with description and constraint': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        tags: {
+          type: 'array',
+          items: {
+            type: 'string',
+            description: 'tag name',
+            maxLength: 30,
+          },
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'tags',
+          types: ['array'],
+          required: false,
+          subtype: 'string',
+          items: {
+            name: '[item]',
+            types: ['string'],
+            required: false,
+            description: 'tag name',
+            constraints: { maxLength: 30 },
+          },
+        },
+      ],
+    },
+    schemaUiJson: {
+      tags: ['string'],
+    },
+  },
+
   'nested object schema': {
     jsonSchema: {
       type: 'object',
@@ -1110,8 +1457,8 @@ const fixtures: Record<string, FixtureTest> = {
         },
         {
           name: 'success',
-          required: false,
-          types: ['string'],
+          required: true,
+          types: ['boolean'],
           meta: { isConstant: true },
           examples: [true],
         },
@@ -1317,6 +1664,49 @@ const fixtures: Record<string, FixtureTest> = {
     },
   },
 
+  'enum with default value': {
+    jsonSchema: {
+      type: 'string',
+      enum: ['cat', 'dog'],
+      default: 'cat',
+    },
+    schemaUi: {
+      name: '',
+      types: ['string'],
+      required: false,
+      enum: ['cat', 'dog'],
+      constraints: { default: 'cat' },
+      defaultValue: 'cat',
+    },
+    schemaUiJson: 'cat',
+  },
+
+  'object with null default': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        hasFur: { type: ['boolean', 'null'], default: null },
+      },
+    },
+    schemaUi: {
+      name: '',
+      properties: [
+        {
+          name: 'hasFur',
+          required: false,
+          types: ['boolean', 'null'],
+          constraints: { default: null },
+          defaultValue: null,
+        },
+      ],
+      types: ['object'],
+      required: false,
+    },
+    schemaUiJson: {
+      hasFur: null,
+    },
+  },
+
   'object nullable': {
     jsonSchema: {
       type: ['object', 'null'],
@@ -1483,6 +1873,79 @@ const fixtures: Record<string, FixtureTest> = {
     },
     schemaUiJson: {
       file: '',
+    },
+  },
+
+  'oneOf constants': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        role: {
+          type: 'object',
+          oneOf: [
+            {
+              const: 'admin',
+              title: 'Administrator',
+              description: 'Full access role',
+            },
+            {
+              const: 'editor',
+              title: 'Editor',
+              description: 'Can edit content',
+            },
+            {
+              const: 'viewer',
+              title: 'Viewer',
+              description: 'Read-only access',
+            },
+          ],
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'role',
+          types: ['string'],
+          required: false,
+          properties: [
+            {
+              name: '',
+              types: ['string'],
+              required: false,
+              title: 'Administrator',
+              description: 'Full access role',
+              examples: ['admin'],
+              meta: { isConstant: true, isOneOfItem: true },
+            },
+            {
+              name: '',
+              types: ['string'],
+              required: false,
+              title: 'Editor',
+              description: 'Can edit content',
+              examples: ['editor'],
+              meta: { isConstant: true, isOneOfItem: true },
+            },
+            {
+              name: '',
+              types: ['string'],
+              required: false,
+              title: 'Viewer',
+              description: 'Read-only access',
+              examples: ['viewer'],
+              meta: { isConstant: true, isOneOfItem: true },
+            },
+          ],
+          meta: { isOneOf: true },
+        },
+      ],
+    },
+    schemaUiJson: {
+      role: 'string',
     },
   },
 }

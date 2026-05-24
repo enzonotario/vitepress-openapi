@@ -16,7 +16,7 @@ const showcasesList = showcases.map(showcase => ({
       :href="showcase.url"
       target="_blank"
       rel="noreferrer noopener"
-      class="flex aspect-[1.91/1] flex-col rounded border text-center !no-underline"
+      class="flex aspect-[1.91/1] flex-col rounded border text-center no-underline!"
     >
       <div v-if="showcase.image" class="relative">
         <img :src="showcase.image" alt="showcase" class="w-full h-full object-cover rounded">
@@ -36,7 +36,7 @@ const showcasesList = showcases.map(showcase => ({
       href="https://github.com/search?q=vitepress-openapi+path%3Apackage.json&type=code"
       target="_blank"
       rel="noreferrer noopener"
-      class="py-2 px-3 bg-muted rounded-full !text-muted-foreground !no-underline flex items-center gap-2"
+      class="py-2 px-3 bg-muted rounded-full text-muted-foreground! no-underline! flex items-center gap-2"
     >
       <Icon icon="mdi:github" class="w-6 h-6" />
       View more
@@ -45,7 +45,7 @@ const showcasesList = showcases.map(showcase => ({
       href="https://github.com/enzonotario/vitepress-openapi/edit/main/docs/public/showcases.json"
       target="_blank"
       rel="noreferrer noopener"
-      class="py-2 px-3 bg-primary rounded-full !text-primary-foreground !no-underline flex items-center gap-2"
+      class="py-2 px-3 bg-primary rounded-full text-primary-foreground! no-underline! flex items-center gap-2"
     >
       <Icon icon="mdi:plus" class="w-6 h-6" />
       Add your own

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
-import OAContextProvider from '../Context/OAContextProvider.vue'
+import OAProvider from '../Context/OAProvider.vue'
 import OAOperationContent from './OAOperationContent.vue'
 
 const props = defineProps({
@@ -49,11 +49,11 @@ const emits = defineEmits([
   'update:spec',
 ])
 
-const slots = defineSlots<Record<string, OperationSlot>>()
+const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
 </script>
 
 <template>
-  <OAContextProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
+  <OAProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
     <template #default="{ openapi }">
       <OAOperationContent
         v-bind="{
@@ -71,5 +71,5 @@ const slots = defineSlots<Record<string, OperationSlot>>()
         </template>
       </OAOperationContent>
     </template>
-  </OAContextProvider>
+  </OAProvider>
 </template>

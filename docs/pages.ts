@@ -15,7 +15,16 @@ export const testsPages = [
     slug: 'schemas',
     label: 'Schemas',
     specPath: './public/openapi-schemas.json',
-    themeConfig: {},
+    themeConfig: {
+      requestBody: {
+        defaultView: 'schema',
+      },
+      response: {
+        body: {
+          defaultView: 'schema',
+        },
+      },
+    },
   },
   {
     slug: 'parameters',
@@ -39,6 +48,12 @@ export const testsPages = [
     slug: 'content-types',
     label: 'Content Types',
     specPath: './public/openapi-content-types.json',
+    themeConfig: {},
+  },
+  {
+    slug: 'files',
+    label: 'Files',
+    specPath: './public/openapi-files.json',
     themeConfig: {},
   },
 ]

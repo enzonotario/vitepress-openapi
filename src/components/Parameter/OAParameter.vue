@@ -1,5 +1,8 @@
 <script setup>
-import { getConstraints } from '../../lib/parser/constraintsParser'
+import { useI18n } from '@byjohann/vue-i18n'
+import { titleCase } from 'scule'
+import { getConstraints } from '@/lib/parser/constraintsParser'
+import { usePlayground } from '../../composables/usePlayground'
 import OACodeValue from '../Common/OACodeValue.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAParameterAttribute from './OAParameterAttribute.vue'
@@ -13,6 +16,8 @@ const props = defineProps({
 })
 
 const constraints = getConstraints(props.parameter.schema)
+const { t } = useI18n()
+const { setParameterValue, hasOperationData } = usePlayground()
 </script>
 
 <template>
@@ -40,7 +45,7 @@ const constraints = getConstraints(props.parameter.schema)
       <div class="flex flex-row gap-2">
         <OAParameterAttribute
           v-if="props.parameter.schema.type"
-          :name="$t('Type')"
+          :name="t('Type')"
           :value="props.parameter.schema.type"
           bold-name
         />
@@ -48,16 +53,18 @@ const constraints = getConstraints(props.parameter.schema)
         <span
           v-if="props.parameter.required"
           class="text-sm text-destructive"
-        >{{ $t('Required') }}</span>
+        >{{ t('Required') }}</span>
       </div>
 
-      <OAParameterAttribute v-if="props.parameter.schema.enum" :name="$t('Enum')" :value="props.parameter.schema.enum.join(', ')">
+      <OAParameterAttribute v-if="props.parameter.schema.enum" :name="t('Valid values')" :value="props.parameter.schema.enum.join(', ')">
         <template #value>
           <div class="flex flex-wrap gap-2">
             <OACodeValue
               v-for="(value, idx) in props.parameter.schema.enum"
               :key="idx"
               :value="value"
+              :is-enum="true"
+              :on-set="hasOperationData && props.parameter.name ? (v) => setParameterValue(props.parameter.name, v) : undefined"
             />
           </div>
         </template>
@@ -69,7 +76,7 @@ const constraints = getConstraints(props.parameter.schema)
         <OAParameterAttribute
           v-for="(value, name) in constraints"
           :key="name"
-          :name="name"
+          :name="t(titleCase(name))"
         >
           <template #value>
             <OACodeValue :value="value" />
