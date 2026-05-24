@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OperationSlot } from '../../types'
-import OAContextProvider from '../Context/OAContextProvider.vue'
+import OAProvider from '../Context/OAProvider.vue'
 import OAPlaygroundContext from './OAPlaygroundContext.vue'
 import OASpecPlaygroundContent from './OASpecPlaygroundContent.vue'
 
@@ -29,7 +29,7 @@ const slots = defineSlots<Record<string, OperationSlot>>()
 </script>
 
 <template>
-  <OAContextProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
+  <OAProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
     <template #default="{ openapi }">
       <OAPlaygroundContext :openapi="openapi">
         <OASpecPlaygroundContent
@@ -46,5 +46,5 @@ const slots = defineSlots<Record<string, OperationSlot>>()
         </OASpecPlaygroundContent>
       </OAPlaygroundContext>
     </template>
-  </OAContextProvider>
+  </OAProvider>
 </template>
