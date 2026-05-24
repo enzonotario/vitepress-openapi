@@ -24,6 +24,8 @@ export interface OpenApiSpecInstance {
   getPathsWithoutTags: () => OpenAPIV3.PathsObject
   getTags: () => { name: string | null, description: string | null }[]
   getFilteredTags: () => { name: string | null, description: string | null }[]
+  getOperationByMethodAndPath: (method: string, path: string) => any | null
+  getOperations: () => any[]
 }
 
 export function createOpenApiSpec(options: {

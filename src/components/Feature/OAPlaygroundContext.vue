@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import type { ParsedOperation } from '../../types'
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { resolveSelectedPlaygroundOperation } from '../../lib/playground/resolveSelectedPlaygroundOperation'
 import { providePlaygroundData } from '../../lib/playgroundData'
 
 const props = defineProps({
@@ -12,12 +13,35 @@ const props = defineProps({
 })
 
 const operations = props.openapi.getOperations()
+const currentHash = ref(typeof window !== 'undefined' ? window.location.hash : '')
 
-const selectedOperation: Ref<ParsedOperation | null> = ref(
-  operations.length > 0
-    ? operations[0]
-    : null,
+const selectedOperation: Ref<ParsedOperation | null> = ref(null)
+
+watch(
+  currentHash,
+  (hash) => {
+    selectedOperation.value = resolveSelectedPlaygroundOperation({
+      hash,
+      operations,
+    })
+  },
+  {
+    immediate: true,
+  },
 )
+
+function syncHashFromLocation() {
+  currentHash.value = window.location.hash
+}
+
+onMounted(() => {
+  syncHashFromLocation()
+  window.addEventListener('hashchange', syncHashFromLocation)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('hashchange', syncHashFromLocation)
+})
 
 providePlaygroundData({
   selectedOperation,
