@@ -2,19 +2,19 @@ export const testsPages = [
   {
     slug: 'response-types',
     label: 'Response Types',
-    specPath: './public/openapi-response-types.json',
+    specPath: './docs/public/openapi-response-types.json',
     themeConfig: {},
   },
   {
     slug: 'response-statuses',
     label: 'Response Statuses',
-    specPath: './public/openapi-response-statuses.json',
+    specPath: './docs/public/openapi-response-statuses.json',
     themeConfig: {},
   },
   {
     slug: 'schemas',
     label: 'Schemas',
-    specPath: './public/openapi-schemas.json',
+    specPath: './docs/public/openapi-schemas.json',
     themeConfig: {
       requestBody: {
         defaultView: 'schema',
@@ -29,31 +29,31 @@ export const testsPages = [
   {
     slug: 'parameters',
     label: 'Parameters',
-    specPath: './public/openapi-parameters.json',
+    specPath: './docs/public/openapi-parameters.json',
     themeConfig: {},
   },
   {
     slug: 'security',
     label: 'Security',
-    specPath: './public/openapi-security.json',
+    specPath: './docs/public/openapi-security.json',
     themeConfig: {},
   },
   {
     slug: 'playground-examples',
     label: 'Playground Examples',
-    specPath: './public/openapi-playground-examples.json',
+    specPath: './docs/public/openapi-playground-examples.json',
     themeConfig: {},
   },
   {
     slug: 'content-types',
     label: 'Content Types',
-    specPath: './public/openapi-content-types.json',
+    specPath: './docs/public/openapi-content-types.json',
     themeConfig: {},
   },
   {
     slug: 'files',
     label: 'Files',
-    specPath: './public/openapi-files.json',
+    specPath: './docs/public/openapi-files.json',
     themeConfig: {},
   },
 ]
