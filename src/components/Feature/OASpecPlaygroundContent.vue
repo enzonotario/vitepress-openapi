@@ -50,7 +50,7 @@ const { selectedOperation } = usePlaygroundData()
     </template>
     <template v-else>
       <div class="OAContent has-sidebar vp-doc">
-        <div class="OADoc w-full max-w-3xl mx-auto">
+        <div class="OADoc w-full max-w-3xl mx-auto flex flex-col space-y-4">
           <OAOperationPlayground
             v-if="selectedOperation"
             :key="selectedOperation.operationId"

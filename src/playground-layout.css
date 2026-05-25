@@ -16,7 +16,7 @@
 
 @media (min-width: 960px) {
   .OADoc {
-    padding: 48px 32px 0;
+    padding: 48px 32px;
   }
 
   .OADoc:not(.has-sidebar) .content {
