@@ -18,8 +18,7 @@ onMounted(() => {
 
 // Scroll into the operation when the operationId changes.
 watch(sandboxData.operationId, () => {
-  if (sandboxData.previewComponent.value === 'PagesByOperation') {
-  } else if (sandboxData.previewComponent.value === 'PagesBySpec') {
+  if (sandboxData.previewComponent.value === 'PagesBySpec') {
     scrollToHash({
       hash: `#${sandboxData.operationId.value}`,
     })

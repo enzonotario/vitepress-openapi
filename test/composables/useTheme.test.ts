@@ -36,14 +36,14 @@ describe('initialization and reset', () => {
       operation: {
         badges: ['operationId'],
         defaultBaseUrl: 'https://app.local',
-        getServers: ({ method, path, operation }) => `https://app.local/${method}${path}`,
+        getServers: ({ method, path, operation: _operation }) => `https://app.local/${method}${path}`,
         slots: ['header', 'path', 'description'],
         hiddenSlots: ['branding'],
         cols: 1,
       },
       server: {
         allowCustomServer: true,
-        getServers: ({ method, path, operation }) => [`https://app.local/${method}${path}`],
+        getServers: ({ method, path, operation: _operation }) => [`https://app.local/${method}${path}`],
       },
       response: {
         maxTabs: 10,
@@ -175,14 +175,14 @@ describe('initialization and reset', () => {
       operation: {
         badges: ['operationId'],
         defaultBaseUrl: 'https://app.local',
-        getServers: ({ method, path, operation }) => `https://app.local/${method}${path}`,
+        getServers: ({ method, path, operation: _operation }) => `https://app.local/${method}${path}`,
         slots: ['header', 'path'],
         hiddenSlots: ['branding'],
         cols: 1,
       },
       server: {
         allowCustomServer: true,
-        getServers: ({ method, path, operation }) => [`https://app.local/${method}${path}`],
+        getServers: ({ method, path, operation: _operation }) => [`https://app.local/${method}${path}`],
       },
       i18n: {
         locale: 'es',

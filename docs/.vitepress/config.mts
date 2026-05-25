@@ -102,6 +102,10 @@ export default defineConfigWithTheme({
                   text: 'OAOperation',
                   link: '/components/oa-operation',
                 },
+                {
+                  text: 'OASpecPlayground',
+                  link: '/components/oa-spec-playground',
+                },
               ],
             },
           ],

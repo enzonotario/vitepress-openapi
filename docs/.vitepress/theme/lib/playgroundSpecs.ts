@@ -47,3 +47,43 @@ export function getDefaultPlaygroundSpecUrl(specs: PlaygroundSpecOption[]): stri
     ?? specs[0]?.url
     ?? ''
 }
+
+export function resolvePlaygroundSpecUrl({
+  search,
+  specs,
+  defaultSpecUrl,
+}: {
+  search: string
+  specs: PlaygroundSpecOption[]
+  defaultSpecUrl: string
+}): string {
+  const selectedSpecUrl = new URLSearchParams(search).get('spec')
+
+  if (selectedSpecUrl && specs.some(spec => spec.url === selectedSpecUrl)) {
+    return selectedSpecUrl
+  }
+
+  return defaultSpecUrl
+}
+
+export function getPlaygroundSpecSearch({
+  currentSearch,
+  selectedSpecUrl,
+  defaultSpecUrl,
+}: {
+  currentSearch: string
+  selectedSpecUrl: string
+  defaultSpecUrl: string
+}): string {
+  const searchParams = new URLSearchParams(currentSearch)
+
+  if (!selectedSpecUrl || selectedSpecUrl === defaultSpecUrl) {
+    searchParams.delete('spec')
+  }
+  else {
+    searchParams.set('spec', selectedSpecUrl)
+  }
+
+  const search = searchParams.toString()
+  return search ? `?${search}` : ''
+}

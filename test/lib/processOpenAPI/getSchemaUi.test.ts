@@ -145,9 +145,9 @@ const fixtures: Record<string, FixtureTest> = {
 
   'schema with x-additionalPropertiesName': {
     jsonSchema: {
-      type: 'object',
+      'type': 'object',
       'x-additionalPropertiesName': '{key}',
-      additionalProperties: {
+      'additionalProperties': {
         type: 'object',
         properties: {
           name: { type: 'string' },

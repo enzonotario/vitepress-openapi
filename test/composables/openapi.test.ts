@@ -253,7 +253,7 @@ describe('openapi with spec', () => {
 
 describe('getOperations', () => {
   it('returns all operations from the spec', () => {
-    const openapi = OpenApi({ spec })
+    const openapi = createOpenApiSpec({ spec })
     const operations = openapi.getOperations()
 
     expect(operations).toHaveLength(3)
@@ -264,14 +264,14 @@ describe('getOperations', () => {
   })
 
   it('returns empty array for spec with no paths', () => {
-    const openapi = OpenApi({ spec: { openapi: '3.0.0' } })
+    const openapi = createOpenApiSpec({ spec: { openapi: '3.0.0' } })
     const operations = openapi.getOperations()
 
     expect(operations).toEqual([])
   })
 
   it('returns empty array for empty spec', () => {
-    const openapi = OpenApi({ spec: {} })
+    const openapi = createOpenApiSpec({ spec: {} })
     const operations = openapi.getOperations()
 
     expect(operations).toEqual([])

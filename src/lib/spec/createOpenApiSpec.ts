@@ -1,5 +1,5 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { OpenAPIDocument, ParsedOpenAPI, ParsedPaths } from '../../types'
+import type { OpenAPIDocument, ParsedOpenAPI, ParsedOperation, ParsedPaths } from '../../types'
 import { httpVerbs } from '../../index'
 
 export interface OpenApiSpecInstance {
@@ -24,8 +24,8 @@ export interface OpenApiSpecInstance {
   getPathsWithoutTags: () => OpenAPIV3.PathsObject
   getTags: () => { name: string | null, description: string | null }[]
   getFilteredTags: () => { name: string | null, description: string | null }[]
-  getOperationByMethodAndPath: (method: string, path: string) => any | null
-  getOperations: () => any[]
+  getOperationByMethodAndPath: (method: string, path: string) => ParsedOperation | null
+  getOperations: () => ParsedOperation[]
 }
 
 export function createOpenApiSpec(options: {
@@ -238,17 +238,17 @@ export function createOpenApiSpec(options: {
     ]]
   }
 
-  function getOperationByMethodAndPath(method: string, path: string) {
+  function getOperationByMethodAndPath(method: string, path: string): ParsedOperation | null {
     const paths = getSpec().paths as OpenAPIV3.PathsObject
 
     if (!paths || !paths[path]) {
       return null
     }
 
-    return paths[path][method] || null
+    return (paths[path][method] as ParsedOperation | undefined) || null
   }
 
-  function getOperations() {
+  function getOperations(): ParsedOperation[] {
     const paths = getSpec().paths as OpenAPIV3.PathsObject
 
     if (!paths) {
@@ -258,9 +258,7 @@ export function createOpenApiSpec(options: {
     return Object.entries(paths).flatMap(([_, methods]) => {
       return httpVerbs
         .filter(verb => methods && methods[verb])
-        .map((verb) => {
-          return methods ? methods[verb] : null
-        })
+        .map(verb => methods?.[verb] as ParsedOperation)
     })
   }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OperationSlot } from '../../types'
+import type { SpecPlaygroundSlot } from '../../types'
 import OAProvider from '../Context/OAProvider.vue'
 import OAPlaygroundContext from './OAPlaygroundContext.vue'
 import OASpecPlaygroundContent from './OASpecPlaygroundContent.vue'
@@ -25,7 +25,7 @@ const emits = defineEmits([
   'update:spec',
 ])
 
-const slots = defineSlots<Record<string, OperationSlot>>()
+const slots = defineSlots<{ [K in SpecPlaygroundSlot]?: (props: any) => any }>()
 </script>
 
 <template>

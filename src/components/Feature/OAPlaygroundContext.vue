@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import type { ParsedOperation } from '../../types'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useData, useRouter } from 'vitepress'
+import { computed, ref, watch } from 'vue'
 import { resolveSelectedPlaygroundOperation } from '../../lib/playground/resolveSelectedPlaygroundOperation'
 import { providePlaygroundData } from '../../lib/playgroundData'
 
@@ -12,36 +13,33 @@ const props = defineProps({
   },
 })
 
-const operations = props.openapi.getOperations()
-const currentHash = ref(typeof window !== 'undefined' ? window.location.hash : '')
+const { hash } = useData()
+const router = useRouter()
+const operations = computed(() => props.openapi.getOperations() as ParsedOperation[])
 
 const selectedOperation: Ref<ParsedOperation | null> = ref(null)
 
 watch(
-  currentHash,
-  (hash) => {
+  [hash, operations],
+  async ([currentHash, currentOperations]) => {
     selectedOperation.value = resolveSelectedPlaygroundOperation({
-      hash,
-      operations,
+      hash: currentHash,
+      operations: currentOperations,
     })
+
+    const operationId = selectedOperation.value?.operationId
+    const expectedHash = operationId ? `#${encodeURIComponent(operationId)}` : ''
+
+    if (!operationId || currentHash === expectedHash || typeof window === 'undefined') {
+      return
+    }
+
+    await router.go(`${window.location.pathname}${window.location.search}${expectedHash}`)
   },
   {
     immediate: true,
   },
 )
-
-function syncHashFromLocation() {
-  currentHash.value = window.location.hash
-}
-
-onMounted(() => {
-  syncHashFromLocation()
-  window.addEventListener('hashchange', syncHashFromLocation)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('hashchange', syncHashFromLocation)
-})
 
 providePlaygroundData({
   selectedOperation,
