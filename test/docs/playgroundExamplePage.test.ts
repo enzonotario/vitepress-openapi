@@ -3,10 +3,11 @@ import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 describe('docs example playground page', () => {
-  it('renders the playground with a custom sidebar slot so mobile behavior is visible locally', () => {
+  it('renders the custom sidebar with markdown-safe component syntax', () => {
     const page = readFileSync(resolve('docs/example/playground.md'), 'utf8')
 
-    expect(page).toContain('<template #sidebar="{ openapi')
-    expect(page).toContain('<OAPlaygroundSidebar :openapi="openapi" />')
+    expect(page).toContain('<template #sidebar="{ openapi }">')
+    expect(page).toContain('<OAPlaygroundSidebar v-bind:openapi="openapi"></OAPlaygroundSidebar>')
+    expect(page).not.toContain('<OAPlaygroundSidebar :openapi="openapi" />')
   })
 })

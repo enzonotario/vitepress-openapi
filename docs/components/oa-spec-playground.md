@@ -41,7 +41,9 @@ By default, the selected operation is synchronized with the page hash (`#operati
 
 ```vue
 <OASpecPlayground spec-url="/openapi.json">
-  <template #sidebar="{ openapi }">
+  sidebar="{ openapi }">
+    <OAPlaygroundSidebar :openapi="openapi" />
+  </template>#sidebar="{ openapi }">
     <OAPlaygroundSidebar :openapi="openapi" />
   </template>
 
