@@ -34,6 +34,23 @@ describe('resolveSelectedPlaygroundOperation', () => {
     expect(operation?.operationId).toBe('getUserPets')
   })
 
+  it('ignores malformed encoded hashes instead of throwing', () => {
+    expect(() => resolveSelectedPlaygroundOperation({
+      hash: '#%E0%A4%A',
+      operations: [],
+    })).not.toThrow()
+
+    expect(resolveSelectedPlaygroundOperation({
+      hash: '#%E0%A4%A',
+      operations: [],
+    })).toBeNull()
+
+    expect(resolveSelectedPlaygroundOperation({
+      hash: '#%E0%A4%A',
+      operations,
+    })?.operationId).toBe(operations[0]?.operationId)
+  })
+
   it('returns null when there are no operations available', () => {
     const operation = resolveSelectedPlaygroundOperation({
       hash: '#missing-operation',

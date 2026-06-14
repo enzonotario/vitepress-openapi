@@ -28,7 +28,7 @@ By default, the selected operation is synchronized with the page hash (`#operati
 
 | Slot | Slot Props | Description |
 |------|------------|-------------|
-| `sidebar` | `{ openapi }` | Replace the default Playground sidebar |
+| `sidebar` | `{ openapi, sidebarOpen, openSidebar, closeSidebar, toggleSidebar }` | Replace the sidebar contents while keeping the built-in desktop/mobile shell |
 | `playground` | `{ openapi, operationId }` | Replace the default main Playground panel |
 
 ## Basic Usage
@@ -42,9 +42,7 @@ By default, the selected operation is synchronized with the page hash (`#operati
 ```vue
 <OASpecPlayground spec-url="/openapi.json">
   <template #sidebar="{ openapi }">
-    <div class="OASidebar">
-      <OAPlaygroundSidebar :openapi="openapi" />
-    </div>
+    <OAPlaygroundSidebar :openapi="openapi" />
   </template>
 
   <template #playground="{ openapi, operationId }">

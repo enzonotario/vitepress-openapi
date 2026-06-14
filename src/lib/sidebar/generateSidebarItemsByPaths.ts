@@ -57,7 +57,7 @@ export function generateSidebarItemsByPaths({
                       path: fullPath,
                       title: operation.summary,
                     })
-                  : `[${method.toUpperCase()}] ${operation.summary || operation.path}`,
+                  : `[${method.toUpperCase()}] ${operation.summary || fullPath}`,
                 link: `${itemLinkPrefix}${operation.operationId}`,
                 method,
                 path: fullPath,
