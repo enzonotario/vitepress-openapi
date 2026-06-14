@@ -34,7 +34,6 @@ const { selectedOperation } = usePlaygroundData()
       />
     </template>
     <aside v-else class="OASidebar">
-      <div class="OACurtain" />
       <OAPlaygroundSidebar
         :openapi="props.openapi"
       />

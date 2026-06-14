@@ -98,16 +98,3 @@
     width: calc((100% - (var(--vp-layout-max-width) - 64px)) / 2 + var(--vp-sidebar-width) - 32px);
   }
 }
-
-@media (min-width: 960px) {
-  .OACurtain {
-    position: sticky;
-    top: -64px;
-    left: 0;
-    z-index: 1;
-    margin-right: -32px;
-    margin-left: -32px;
-    height: var(--vp-nav-height);
-    background-color: var(--vp-sidebar-bg-color);
-  }
-}
