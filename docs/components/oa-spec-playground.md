@@ -44,7 +44,6 @@ By default, the selected operation is synchronized with the page hash (`#operati
   <template #sidebar="{ openapi }">
     <OAPlaygroundSidebar :openapi="openapi" />
   </template>
-
   <template #playground="{ openapi, operationId }">
     <div class="OAContent has-sidebar vp-doc">
       <div class="OADoc w-full max-w-3xl mx-auto">
