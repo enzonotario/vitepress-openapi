@@ -244,6 +244,10 @@ export default defineConfigWithTheme({
               text: 'Playground',
               link: '/example/playground',
             },
+            {
+              text: 'Playground Custom Sidebar',
+              link: '/example/playground-custom-sidebar',
+            },
           ],
         },
         {

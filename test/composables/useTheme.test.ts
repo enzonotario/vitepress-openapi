@@ -28,6 +28,12 @@ describe('initialization and reset', () => {
           navigationBar: true,
           statusBar: true,
         },
+        sidebar: [
+          {
+            text: 'Playground',
+            link: '/playground',
+          },
+        ],
       },
       headingLevels: {
         h1: 2,
@@ -103,6 +109,12 @@ describe('initialization and reset', () => {
     expect(theme.getPlaygroundJsonEditorMainMenuBar()).toBe(true)
     expect(theme.getPlaygroundJsonEditorNavigationBar()).toBe(true)
     expect(theme.getPlaygroundJsonEditorStatusBar()).toBe(true)
+    expect(theme.getPlaygroundSidebar()).toEqual([
+      {
+        text: 'Playground',
+        link: '/playground',
+      },
+    ])
 
     // Headings
     expect(theme.getHeadingLevels()).toEqual({
@@ -539,6 +551,22 @@ describe('playground configuration', () => {
     themeConfig.setPlaygroundJsonEditorStatusBar(true)
     const result = themeConfig.getPlaygroundJsonEditorStatusBar()
     expect(result).toBe(true)
+  })
+
+  it('sets and gets the playground sidebar', () => {
+    themeConfig.setPlaygroundSidebar([
+      {
+        text: 'Playground',
+        link: '/playground',
+      },
+    ])
+
+    expect(themeConfig.getPlaygroundSidebar()).toEqual([
+      {
+        text: 'Playground',
+        link: '/playground',
+      },
+    ])
   })
 })
 

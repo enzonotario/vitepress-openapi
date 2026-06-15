@@ -1,5 +1,6 @@
 import type MarkdownIt from 'markdown-it'
 import type { Ref, UnwrapNestedRefs } from 'vue'
+import type { DefaultTheme } from 'vitepress'
 import type { OARequest } from '../lib/codeSamples/request'
 import type { OperationSlot, ParsedOperation } from '../types'
 import vitesseDark from '@shikijs/themes/vitesse-dark'
@@ -106,6 +107,8 @@ export interface PlaygroundConfig {
     behavior?: Ref<PlaygroundExampleBehavior>
     playgroundExampleBehavior?: Ref<PlaygroundExampleBehavior>
   }
+
+  sidebar?: Ref<DefaultTheme.Sidebar | null>
 }
 
 export interface SecurityConfig {
@@ -321,6 +324,7 @@ const defaultValues = {
       behavior: 'value' as PlaygroundExampleBehavior,
       playgroundExampleBehavior: 'value' as PlaygroundExampleBehavior,
     },
+    sidebar: null as DefaultTheme.Sidebar | null,
   },
   security: {
     defaultScheme: null as string | null,
@@ -439,6 +443,7 @@ const themeConfig: UseThemeConfig = {
       behavior: ref(defaultValues.playground.examples?.behavior ?? 'value'),
       playgroundExampleBehavior: ref(defaultValues.playground.examples?.playgroundExampleBehavior ?? 'value'),
     },
+    sidebar: ref(defaultValues.playground.sidebar),
   },
   security: {
     defaultScheme: ref(defaultValues.security.defaultScheme),
@@ -570,6 +575,9 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     if (config.playground?.examples?.playgroundExampleBehavior !== undefined) {
       ensureNestedRefProperty(themeConfig, ['playground', 'examples'], 'playgroundExampleBehavior', config.playground.examples.playgroundExampleBehavior)
     }
+    if (config.playground?.sidebar !== undefined) {
+      ensureNestedRefProperty(themeConfig, ['playground'], 'sidebar', config.playground.sidebar)
+    }
 
     // Security
     if (config.security?.defaultScheme !== undefined) {
@@ -636,8 +644,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setConfig(defaultValues)
   }
 
-  function getState() {
-    return deepUnref(themeConfig)
+  function getState(): PartialUseThemeConfig {
+    return deepUnref(themeConfig) as PartialUseThemeConfig
   }
 
   function getLocale(): Languages {
@@ -809,6 +817,14 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
   function setPlaygroundXExampleBehavior(value: PlaygroundExampleBehavior) {
     ensureNestedRefProperty(themeConfig, ['playground', 'examples'], 'playgroundExampleBehavior', value)
+  }
+
+  function getPlaygroundSidebar(): DefaultTheme.Sidebar | null | undefined {
+    return themeConfig?.playground?.sidebar?.value
+  }
+
+  function setPlaygroundSidebar(value: DefaultTheme.Sidebar | null) {
+    ensureNestedRefProperty(themeConfig, ['playground'], 'sidebar', value)
   }
 
   function getSecurityDefaultScheme(): string | null | undefined {
@@ -1155,6 +1171,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setPlaygroundExamplesBehavior,
     getPlaygroundXExampleBehavior,
     setPlaygroundXExampleBehavior,
+    getPlaygroundSidebar,
+    setPlaygroundSidebar,
     getSecurityDefaultScheme,
     setSecurityDefaultScheme,
     getOperationBadges,

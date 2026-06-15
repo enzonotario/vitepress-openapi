@@ -57,6 +57,54 @@ By default, the selected operation is synchronized with the page hash (`#operati
 </OASpecPlayground>
 ```
 
+## Configure the Playground sidebar
+
+You can also configure the default Playground sidebar without using the `sidebar` slot.
+
+### Via VitePress `themeConfig`
+
+`playgroundSidebar` accepts the same shapes as VitePress `sidebar`:
+
+```ts
+export default defineConfig({
+  themeConfig: {
+    playgroundSidebar: {
+      '/example/': [
+        {
+          text: 'Introduction',
+          link: '/example/introduction',
+        },
+        {
+          text: 'Playground',
+          link: '/example/playground',
+        },
+      ],
+    },
+  },
+})
+```
+
+### Via composable
+
+If you're rendering Playground components in a custom theme/app entry, you can set it with `useTheme` or `useOpenapi`:
+
+```ts
+useTheme({
+  playground: {
+    sidebar: [
+      {
+        text: 'Introduction',
+        link: '/example/introduction',
+      },
+      {
+        text: 'Playground',
+        link: '/example/playground',
+      },
+    ],
+  },
+})
+```
+
 ## Related Building Blocks
 
 - `OAPlaygroundSidebar` renders the sidebar items for the current spec.
