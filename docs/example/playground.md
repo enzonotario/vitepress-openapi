@@ -12,9 +12,6 @@ const { selectedSpecUrl } = usePlaygroundSpecSelection()
 
 <OASpecPlayground :spec-url="selectedSpecUrl" :key="selectedSpecUrl">
 <template #sidebar="{ openapi }">
-<div class="px-1 pb-3 text-xs font-semibold uppercase tracking-wide text-[var(--vp-c-text-2)]">
-  Custom Playground Sidebar
-</div>
 <OAPlaygroundSidebar v-bind:openapi="openapi"></OAPlaygroundSidebar>
 </template>
 </OASpecPlayground>
