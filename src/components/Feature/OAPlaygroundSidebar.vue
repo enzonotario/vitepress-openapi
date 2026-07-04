@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { DefaultTheme } from 'vitepress'
 import type { OASidebarItem } from '../../composables/useSidebar'
-import { computed } from 'vue'
 import { useData, useRoute } from 'vitepress'
+import { computed } from 'vue'
 import { useSidebar } from '../../composables/useSidebar'
 import { useTheme } from '../../composables/useTheme'
 import { resolvePlaygroundSidebar } from '../../lib/playground/resolvePlaygroundSidebar'
