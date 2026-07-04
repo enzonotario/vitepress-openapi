@@ -3,7 +3,7 @@ import type { SpecPlaygroundSlot } from '../../types'
 import { useScrollLock } from '@vueuse/core'
 import { useData } from 'vitepress'
 import VPBackdrop from 'vitepress/dist/client/theme-default/components/VPBackdrop.vue'
-import { ref, watch } from 'vue'
+import { ref, useId, watch } from 'vue'
 import { usePlaygroundData } from '../../lib/playgroundData'
 import OAFooter from '../Common/OAFooter.vue'
 import OAOperationPlayground from './OAOperationPlayground.vue'
@@ -30,6 +30,7 @@ function hasSlot(name: SpecPlaygroundSlot): boolean {
 const { hash } = useData()
 const { selectedOperation } = usePlaygroundData()
 
+const sidebarNavId = `OASidebarNav-${useId()}`
 const sidebarNavEl = ref<HTMLElement | null>(null)
 const isSidebarOpen = ref(false)
 const isScrollLocked = useScrollLock(typeof document === 'undefined' ? null : document.body)
@@ -70,13 +71,13 @@ watch(
   <div class="OASpecPlayground">
     <VPBackdrop :show="isSidebarOpen" @click="closeSidebar" />
 
-    <OAPlaygroundLocalNav :open="isSidebarOpen" @open-menu="openSidebar" />
+    <OAPlaygroundLocalNav :open="isSidebarOpen" :sidebar-nav-id="sidebarNavId" @open-menu="openSidebar" />
 
     <aside class="OASidebar" :class="{ open: isSidebarOpen }" @click.stop>
       <div class="curtain" />
 
       <nav
-        id="OASidebarNav"
+        :id="sidebarNavId"
         ref="sidebarNavEl"
         class="nav"
         aria-labelledby="sidebar-aria-label"

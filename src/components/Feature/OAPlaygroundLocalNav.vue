@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   open: boolean
+  sidebarNavId: string
 }>()
 
 defineEmits<{
@@ -14,7 +15,7 @@ defineEmits<{
       <button
         class="menu"
         :aria-expanded="open"
-        aria-controls="OASidebarNav"
+        :aria-controls="sidebarNavId"
         @click="$emit('openMenu')"
       >
         <span class="vpi-align-left menu-icon" />
