@@ -1,5 +1,5 @@
 import type { DefaultTheme } from 'vitepress'
-import { useSidebar } from 'vitepress-openapi'
+import { minifyHtml, useSidebar } from 'vitepress-openapi'
 import { examplesPages, testsPages } from './pages'
 import spec from './public/openapi.json'
 
@@ -7,6 +7,25 @@ const sidebar = useSidebar({
   spec,
 })
 
+function createPlaygroundCustomSidebarItemTemplate({
+  method,
+  path,
+  title,
+}: {
+  method: string
+  path: string
+  title?: string
+}) {
+  const operation = spec.paths[path]?.[method as keyof typeof spec.paths[string]]
+  const displayText = title || (operation ? operation.summary : path)
+
+  return minifyHtml(`
+    <span class="OASidebarItem group/oaOperationLink" style="display: grid; grid-template-columns: 1fr auto;">
+      <span class="text" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${displayText}</span>
+      <span class="OASidebarItem-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>
+    </span>
+  `)
+}
 
 function createPlaygroundExampleGroup(items: DefaultTheme.SidebarItem[]): DefaultTheme.SidebarItem {
   return {
@@ -36,11 +55,13 @@ export function createPlaygroundCustomSidebarExampleSidebarItems(): DefaultTheme
       tag: 'Artists',
       text: 'Rock Artists',
       linkPrefix: '/example/playground-custom-sidebar#',
+      sidebarItemTemplate: createPlaygroundCustomSidebarItemTemplate,
     }),
     sidebar.generateSidebarGroup({
       tag: 'Authentication',
       text: 'Auth',
       linkPrefix: '/example/playground-custom-sidebar#',
+      sidebarItemTemplate: createPlaygroundCustomSidebarItemTemplate,
     }),
   ]
 }

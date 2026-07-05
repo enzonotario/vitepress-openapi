@@ -70,4 +70,13 @@ describe('docs playground sidebar configs', () => {
     expect(customSidebarItems[1]?.text).toBe('Auth')
     expect(customSidebarItems[1]?.items?.some(item => item.link?.includes('#createUser'))).toBe(true)
   })
+
+  it('uses a custom sidebar item template for the custom sidebar example group', () => {
+    const customSidebarItems = createPlaygroundCustomSidebarExampleSidebarItems()
+    const firstItemText = customSidebarItems[0]?.items?.[0]?.text
+
+    expect(firstItemText).toContain('grid-template-columns: 1fr auto')
+    expect(firstItemText).toContain('Get all artists')
+    expect(firstItemText).toMatch(/OAMethodBadge--get.*GET|GET.*OAMethodBadge--get/s)
+  })
 })
