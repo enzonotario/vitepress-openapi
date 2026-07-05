@@ -3,8 +3,9 @@ import { compressToURL, decompressFromURL } from '@amoutonbrady/lz-string'
 import { useUrlSearchParams } from '@vueuse/core'
 import { useData } from 'vitepress'
 import { useTheme } from 'vitepress-openapi/client'
-import { provide, watch } from 'vue'
+import { provide, watch, watchEffect, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import { deepUnref } from '../../../../../src/lib/utils/deepUnref'
+import { applyPlaygroundSandboxSidebar } from '../../lib/playgroundSandboxSidebar'
 import { initSandboxData } from '../../sandboxData'
 import ThemeConfigPopover from '../theme/ThemeConfigPopover.vue'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../ui/resizable'
@@ -41,6 +42,10 @@ const sandboxData = initSandboxData({
 
 provide('sandboxData', sandboxData)
 
+const isEmbeddedAutoHeight = computed(() => (
+  sandboxData.hideSandboxNav.value && sandboxData.autoHeight.value
+))
+
 function share() {
   const themeConfigQuery = compressToURL(JSON.stringify({
     ...themeConfig.getState(),
@@ -73,6 +78,7 @@ watch(hash, () => {
 
   switch (sandboxData.previewComponent.value) {
     case 'PagesByOperation':
+    case 'Playground':
       sandboxData.operationId.value = segments.length > 1 ? segments[1] : ''
       break
     case 'PagesByTag':
@@ -80,10 +86,79 @@ watch(hash, () => {
       break
   }
 })
+
+watchEffect(() => {
+  applyPlaygroundSandboxSidebar(sandboxData, themeConfig)
+})
+
+watch(sandboxData.previewComponent, (component) => {
+  if (component === 'Playground') {
+    sandboxData.showSidebar.value = true
+  }
+}, { immediate: true })
+
+let embeddedResizeObserver: ResizeObserver | undefined
+
+function postEmbeddedHeight() {
+  if (!isEmbeddedAutoHeight.value) {
+    return
+  }
+
+  const target = document.querySelector('.SandboxPreviewRoot')
+  if (!target) {
+    return
+  }
+
+  window.parent.postMessage({
+    type: 'sandbox-iframe-resize',
+    height: Math.ceil(target.getBoundingClientRect().height),
+  }, '*')
+}
+
+function setupEmbeddedResizeObserver() {
+  if (!isEmbeddedAutoHeight.value) {
+    return
+  }
+
+  embeddedResizeObserver?.disconnect()
+
+  const target = document.querySelector('.SandboxPreviewRoot')
+  if (!target) {
+    return
+  }
+
+  embeddedResizeObserver = new ResizeObserver(() => {
+    postEmbeddedHeight()
+  })
+  embeddedResizeObserver.observe(target)
+  postEmbeddedHeight()
+}
+
+onMounted(() => {
+  setupEmbeddedResizeObserver()
+})
+
+onUnmounted(() => {
+  embeddedResizeObserver?.disconnect()
+})
+
+watch(() => sandboxData.specLoaded.value, (loaded) => {
+  if (loaded) {
+    nextTick(() => {
+      setupEmbeddedResizeObserver()
+    })
+  }
+})
 </script>
 
 <template>
-  <div class="overflow-hidden">
+  <div
+    class="overflow-hidden"
+    :class="{
+      SandboxEmbeddedRoot: sandboxData.hideSandboxNav.value,
+      'is-auto-height': isEmbeddedAutoHeight,
+    }"
+  >
     <SandboxNav v-show="!sandboxData.hideSandboxNav.value" class="fixed w-full top-0 z-(--vp-z-index-nav) ">
       <template #start>
         <SandboxRemoteFetch />
@@ -119,7 +194,11 @@ watch(hash, () => {
     <ResizablePanelGroup
       direction="horizontal"
       class="SandboxSplitView"
-      :class="{ 'has-nav': !sandboxData.hideSandboxNav.value }"
+      :class="{
+        'has-nav': !sandboxData.hideSandboxNav.value,
+        'is-embedded': sandboxData.hideSandboxNav.value,
+        'is-auto-height': isEmbeddedAutoHeight,
+      }"
     >
       <ResizablePanel v-show="sandboxData.sandboxView.value === 'edit'">
         <SandboxEditor />
@@ -127,8 +206,11 @@ watch(hash, () => {
 
       <ResizableHandle v-if="sandboxData.sandboxView.value === 'edit'" with-handle class="z-40" />
 
-      <ResizablePanel>
-        <div class="w-full h-full overflow-x-hidden overflow-y-auto">
+      <ResizablePanel class="SandboxPreviewPanel">
+        <div
+          class="w-full h-full min-h-0 overflow-x-hidden"
+          :class="isEmbeddedAutoHeight ? 'overflow-y-hidden' : 'overflow-y-auto'"
+        >
           <SandboxPreview v-if="sandboxData.specLoaded.value" />
           <OASpecSkeleton v-else />
         </div>
@@ -145,9 +227,52 @@ watch(hash, () => {
   height: 100vh;
   max-height: 100vh;
 }
+.SandboxSplitView.is-embedded.is-auto-height {
+  height: auto;
+  max-height: none;
+}
+.SandboxSplitView.is-embedded:not(.is-auto-height) {
+  height: 100%;
+  max-height: none;
+}
 .SandboxSplitView.has-nav {
   margin-top: var(--vp-nav-height);
   height: calc(100vh - var(--vp-nav-height));
   max-height: calc(100vh - var(--vp-nav-height));
+}
+.SandboxPreviewPanel,
+.SandboxPreviewPanel > div {
+  min-height: 0;
+}
+.SandboxSplitView:not(.is-embedded) .SandboxPreviewPanel,
+.SandboxSplitView:not(.is-embedded) .SandboxPreviewPanel > div {
+  height: 100%;
+}
+.SandboxSplitView.is-embedded:not(.is-auto-height) .SandboxPreviewPanel,
+.SandboxSplitView.is-embedded:not(.is-auto-height) .SandboxPreviewPanel > div {
+  height: 100%;
+}
+:global(html:has(.SandboxEmbeddedRoot.is-auto-height)),
+:global(body:has(.SandboxEmbeddedRoot.is-auto-height)),
+:global(#app:has(.SandboxEmbeddedRoot.is-auto-height)) {
+  min-height: 0 !important;
+  height: auto !important;
+  overflow: hidden;
+}
+:global(html:has(.SandboxEmbeddedRoot:not(.is-auto-height))),
+:global(body:has(.SandboxEmbeddedRoot:not(.is-auto-height))),
+:global(#app:has(.SandboxEmbeddedRoot:not(.is-auto-height))) {
+  height: 100%;
+  min-height: 0 !important;
+  overflow: hidden;
+}
+.SandboxEmbeddedRoot.is-auto-height {
+  height: auto;
+}
+.SandboxEmbeddedRoot:not(.is-auto-height) {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  overflow: hidden;
 }
 </style>

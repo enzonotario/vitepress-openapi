@@ -3,7 +3,7 @@ import type { SandboxData } from '../../sandboxData'
 import { useData } from 'vitepress'
 import { getHeaders } from 'vitepress/dist/client/theme-default/composables/outline.js'
 import { VPHomeContent } from 'vitepress/theme'
-import { inject, onMounted, watch } from 'vue'
+import { computed, inject, onMounted, watch } from 'vue'
 import { scrollToHash } from '../../../../../src/lib/utils/utils'
 import VPDocAsideOutline from '../vitepress/VPDocAsideOutline.vue'
 import SandboxPreviewSidebar from './SandboxPreviewSidebar.vue'
@@ -12,11 +12,21 @@ const { theme } = useData()
 
 const sandboxData = inject('sandboxData') as SandboxData
 
+const isPlaygroundPreview = computed(() => sandboxData.previewComponent.value === 'Playground')
+const showPreviewSidebar = computed(() => sandboxData.showSidebar.value)
+const isEmbeddedPreview = computed(() => sandboxData.hideSandboxNav.value)
+
+function getFirstOperationId(spec: Record<string, any>) {
+  return Object.entries(spec.paths ?? {})
+    .flatMap(([_, methods]) => Object.values(methods as Record<string, { operationId?: string }>))
+    .map(operation => operation.operationId)
+    .find(Boolean) ?? null
+}
+
 onMounted(() => {
   sandboxData.previewHeaders.value = getHeaders(theme.value.outline)
 })
 
-// Scroll into the operation when the operationId changes.
 watch(sandboxData.operationId, () => {
   if (sandboxData.previewComponent.value === 'PagesBySpec') {
     scrollToHash({
@@ -25,7 +35,6 @@ watch(sandboxData.operationId, () => {
   }
 })
 
-// Check if the operationId is still present in the spec.
 watch(sandboxData.spec, (spec) => {
   if (sandboxData.operationId.value && spec.paths) {
     const operation = Object.values(spec.paths)
@@ -39,30 +48,20 @@ watch(sandboxData.spec, (spec) => {
   }
 })
 
-/**
- * If the preview component is PagesByOperation and the `operationId` is not
- * set, set it to the first operationId in the spec.
- */
 watch(sandboxData.previewComponent, () => {
   if (sandboxData.previewComponent.value === 'PagesByOperation'
     && !sandboxData.operationId.value) {
-    const operationId = Object.entries(sandboxData.spec.value.paths)
-      .map(([_, methods]) => {
-        return Object.entries(methods).map(([_, operation]) => {
-          return operation.operationId
-        })
-      })
-      .flat()
-      .filter(Boolean)[0]
-
-    sandboxData.operationId.value = operationId
+    sandboxData.operationId.value = getFirstOperationId(sandboxData.spec.value)
   }
 })
 
-/**
- * If the preview component is PagesByTag and `tags` is not set, set it to
- * the first tag in the spec.
- */
+watch(sandboxData.previewComponent, () => {
+  if (sandboxData.previewComponent.value === 'Playground'
+    && !sandboxData.operationId.value) {
+    sandboxData.operationId.value = getFirstOperationId(sandboxData.spec.value)
+  }
+})
+
 watch(sandboxData.previewComponent, () => {
   if (sandboxData.previewComponent.value === 'PagesByTag'
     && (!sandboxData.tags.value || sandboxData.tags.value.length === 0)) {
@@ -81,14 +80,22 @@ watch(sandboxData.previewComponent, () => {
 </script>
 
 <template>
-  <div>
-    <SandboxPreviewSidebar v-if="sandboxData.spec.value && sandboxData.showSidebar.value" />
+  <div
+    class="SandboxPreviewRoot"
+    :class="{
+      'has-sidebar': showPreviewSidebar,
+      'is-embedded': isEmbeddedPreview,
+    }"
+  >
+    <SandboxPreviewSidebar v-if="sandboxData.spec.value && showPreviewSidebar" />
 
     <div
       class="SandboxPreviewContentWrapper"
       :class="{
-        'has-sidebar': sandboxData.showSidebar.value,
+        'has-sidebar': showPreviewSidebar,
         'has-aside': sandboxData.showAside.value,
+        'has-playground': isPlaygroundPreview,
+        'is-embedded': isEmbeddedPreview,
         'preview-full': false,
         'has-nav': !sandboxData.hideSandboxNav.value,
       }"
@@ -124,6 +131,14 @@ watch(sandboxData.previewComponent, () => {
             :spec-url="sandboxData.specUrl.value"
             @update:spec="sandboxData.spec.value = $event"
           />
+          <OASpecPlayground
+            v-else-if="sandboxData.previewComponent.value === 'Playground'"
+            :key="`${sandboxData.playgroundSidebarItemsType.value}-${sandboxData.playgroundSidebarUseCustomTemplate.value}`"
+            :spec="sandboxData.spec.value"
+            :spec-url="sandboxData.specUrl.value"
+            :hide-branding="sandboxData.playgroundHideBranding.value"
+            @update:spec="sandboxData.spec.value = $event"
+          />
         </VPHomeContent>
       </div>
 
@@ -138,9 +153,19 @@ watch(sandboxData.previewComponent, () => {
 </template>
 
 <style scoped>
+.SandboxPreviewRoot {
+  position: relative;
+  min-height: inherit;
+}
 .SandboxPreviewContentWrapper {
   padding-top: 16px;
   padding-bottom: 16px;
+}
+.SandboxPreviewRoot.is-embedded {
+  min-height: 0;
+}
+.SandboxPreviewContentWrapper.is-embedded {
+  min-height: 0;
 }
 .SandboxPreviewContentWrapper.has-nav {
   padding-top: var(--vp-nav-height);
@@ -153,5 +178,32 @@ watch(sandboxData.previewComponent, () => {
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+.SandboxPreviewContentWrapper.has-playground {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.SandboxPreviewContentWrapper.has-playground.has-nav {
+  padding-top: var(--vp-nav-height);
+  padding-bottom: 0;
+  min-height: calc(100vh - var(--vp-nav-height));
+}
+.SandboxPreviewContentWrapper.has-playground :deep(.VPDoc),
+.SandboxPreviewContentWrapper.has-playground :deep(.VPHomeContent),
+.SandboxPreviewContentWrapper.has-playground :deep(.container) {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+.SandboxPreviewContentWrapper.has-playground :deep(.OASpecPlayground .OASidebar),
+.SandboxPreviewContentWrapper.has-playground :deep(.OASpecPlayground .OAPlaygroundLocalNav),
+.SandboxPreviewContentWrapper.has-playground :deep(.OASpecPlayground .VPBackdrop) {
+  display: none;
+}
+.SandboxPreviewContentWrapper.has-playground :deep(.OASpecPlayground .OAContent.has-sidebar) {
+  margin-top: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 </style>

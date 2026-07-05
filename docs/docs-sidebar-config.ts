@@ -93,6 +93,10 @@ export function createDocsSidebar(): DefaultTheme.SidebarItem[] {
               text: 'Introduction',
               link: '/pages/introduction',
             },
+            {
+              text: 'Playground',
+              link: '/pages/playground',
+            },
           ],
         },
       ],

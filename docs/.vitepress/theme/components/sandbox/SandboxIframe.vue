@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import { compressToURL } from '@amoutonbrady/lz-string'
 import { ExternalLink } from 'lucide-vue-next'
+import { computed, onMounted, onUnmounted, ref, useAttrs } from 'vue'
 import { deepUnref } from '../../../../../src/lib/utils/deepUnref'
 import { cn } from '../../../../../src/lib/utils/utils'
 import { initSandboxData } from '../../sandboxData'
 import BrowserWindow from '../BrowserWindow.vue'
+
+defineOptions({
+  inheritAttrs: false,
+})
+
+const TITLE_BAR_HEIGHT = 41
+
+const attrs = useAttrs()
 
 const props = defineProps({
   themeConfig: {
@@ -25,10 +34,80 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
+  autoHeight: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const scale = computed(() => props.iframeZoom ?? 1)
+const contentHeight = ref<number | null>(null)
+
+const scaledFrameStyle = computed(() => {
+  if (scale.value === 1) {
+    return {
+      width: '100%',
+      height: contentHeight.value ? `${contentHeight.value}px` : '100%',
+    }
+  }
+
+  const size = `${100 / scale.value}%`
+
+  return {
+    width: size,
+    height: contentHeight.value ? `${contentHeight.value}px` : size,
+    transform: `scale(${scale.value})`,
+    transformOrigin: 'top left',
+  }
+})
+
+const browserWindowStyle = computed(() => {
+  if (!props.autoHeight || !contentHeight.value) {
+    return undefined
+  }
+
+  const slotHeight = Math.ceil(contentHeight.value * scale.value)
+
+  return {
+    height: `${slotHeight + TITLE_BAR_HEIGHT}px`,
+  }
+})
+
+const browserWindowClass = computed(() => {
+  if (props.autoHeight) {
+    return cn(!contentHeight.value && 'h-[70vh] max-h-[700px]')
+  }
+
+  return cn(attrs.class as string | undefined)
+})
+
+function handleResizeMessage(event: MessageEvent) {
+  if (!props.autoHeight) {
+    return
+  }
+
+  if (event.data?.type !== 'sandbox-iframe-resize') {
+    return
+  }
+
+  if (typeof event.data.height !== 'number' || event.data.height <= 0) {
+    return
+  }
+
+  contentHeight.value = event.data.height
+}
+
+onMounted(() => {
+  window.addEventListener('message', handleResizeMessage)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('message', handleResizeMessage)
 })
 
 const sandboxData = initSandboxData({
   ...props.sandboxData,
+  autoHeight: props.autoHeight,
 })
 
 const themeConfigCompressed = compressToURL(
@@ -48,6 +127,7 @@ const sandboxDataCompressed = compressToURL(
   JSON.stringify({
     ...data,
     hideSandboxNav: true,
+    autoHeight: props.autoHeight,
   }),
 )
 
@@ -69,7 +149,7 @@ const openSandboxUrl = `${baseUrl}?themeConfig=${themeConfigCompressed}&sandboxD
 </script>
 
 <template>
-  <BrowserWindow>
+  <BrowserWindow :class-name="browserWindowClass" :style="browserWindowStyle">
     <template #title-end>
       <a
         :href="openSandboxUrl"
@@ -84,21 +164,29 @@ const openSandboxUrl = `${baseUrl}?themeConfig=${themeConfigCompressed}&sandboxD
       </a>
     </template>
 
-    <div class="relative w-full h-full overflow-x-hidden">
-      <iframe
-        :class="cn([
-          'w-full h-full rounded',
-          {
-            'pointer-events-none': props.nonInteractive,
-          },
-        ], props.iframeClass)"
-        :src="url"
-        frameborder="0"
-        allowfullscreen
-        :style="{ zoom: props.iframeZoom ?? 1 }"
-      />
+    <div class="relative h-full w-full overflow-hidden">
+      <div class="SandboxIframe-scaledFrame" :style="scaledFrameStyle">
+        <iframe
+          :class="cn([
+            'block h-full w-full rounded',
+            {
+              'pointer-events-none': props.nonInteractive,
+            },
+          ], props.iframeClass)"
+          :src="url"
+          frameborder="0"
+          allowfullscreen
+        />
+      </div>
 
       <div v-if="props.nonInteractive" class="absolute inset-0" />
     </div>
   </BrowserWindow>
 </template>
+
+<style scoped>
+.SandboxIframe-scaledFrame {
+  width: 100%;
+  height: 100%;
+}
+</style>
