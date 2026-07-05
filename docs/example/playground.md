@@ -1,6 +1,6 @@
 ---
-layout: page
-sidebar: false
+aside: false
+outline: false
 title: vitepress-openapi
 ---
 
@@ -10,8 +10,4 @@ import { usePlaygroundSpecSelection } from '../.vitepress/theme/composables/useP
 const { selectedSpecUrl } = usePlaygroundSpecSelection()
 </script>
 
-<OASpecPlayground :spec-url="selectedSpecUrl" :key="selectedSpecUrl">
-<template #sidebar="{ openapi }">
-<OAPlaygroundSidebar v-bind:openapi="openapi"></OAPlaygroundSidebar>
-</template>
-</OASpecPlayground>
+<OASpecPlayground :spec-url="selectedSpecUrl" :key="selectedSpecUrl" />

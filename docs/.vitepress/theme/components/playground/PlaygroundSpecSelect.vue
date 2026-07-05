@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<{
 const route = useRoute()
 const { specs, selectedSpecUrl } = usePlaygroundSpecSelection()
 
-const isPlaygroundPage = computed(() => route.path.includes('/example/playground'))
+const isPlaygroundPage = computed(() => route.path === '/example/playground')
 const selectId = computed(() => props.mobile ? 'playground-spec-select-mobile' : 'playground-spec-select-desktop')
 </script>
 
