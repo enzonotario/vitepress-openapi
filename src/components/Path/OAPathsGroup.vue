@@ -69,7 +69,7 @@ function onPathClick(hash: string) {
         class="flex justify-center"
       >
         <CollapsibleTrigger>
-          <Button>
+          <Button as="div">
             {{ isOpen ? t('Hide operations') : t('Show operations') }}
           </Button>
         </CollapsibleTrigger>
