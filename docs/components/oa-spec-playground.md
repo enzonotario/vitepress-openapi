@@ -59,7 +59,7 @@ By default, the selected operation is synchronized with the page hash (`#operati
 
 ## Configure the Playground sidebar
 
-You can also configure the default Playground sidebar without using the `sidebar` slot.
+You can configure the default Playground sidebar without using the `sidebar` slot. See [Playground Sidebar](/pages/playground-sidebar) for the full guide, including VitePress integration and custom item templates.
 
 ### Via VitePress `themeConfig`
 

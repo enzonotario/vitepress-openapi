@@ -72,6 +72,9 @@ title: vitepress-openapi
 
 ## Sidebar
 
-By default, `OASpecPlayground` renders its own sidebar with operations grouped by tags. You can also integrate playground navigation into the VitePress sidebar so the rest of your docs navigation stays visible.
+`OASpecPlayground` ships with operation navigation. See [Playground Sidebar](/pages/playground-sidebar) for built-in sidebar configuration, VitePress integration, custom item templates, and live Sandbox examples.
 
-See the live example at [/example/playground](/example/playground) and the [`OASpecPlayground` component docs](/components/oa-spec-playground) for sidebar slots, `playgroundSidebar` theme configuration, and custom item templates.
+Live examples:
+
+- [/example/playground](/example/playground)
+- [/example/playground-custom-sidebar](/example/playground-custom-sidebar)

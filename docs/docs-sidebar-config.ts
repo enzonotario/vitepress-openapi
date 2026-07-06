@@ -97,6 +97,10 @@ export function createDocsSidebar(): DefaultTheme.SidebarItem[] {
               text: 'Playground',
               link: '/pages/playground',
             },
+            {
+              text: 'Playground Sidebar',
+              link: '/pages/playground-sidebar',
+            },
           ],
         },
       ],
