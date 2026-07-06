@@ -152,7 +152,7 @@ const toggleBadge = (badge: string) => {
     >
       <h3>Playground Sidebar</h3>
       <p class="text-sm text-muted-foreground">
-        Configures `OAPlaygroundSidebar` through `useTheme().setPlaygroundSidebar()`.
+        Configures the VitePress preview sidebar for Playground through `theme.value.sidebar`.
       </p>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4">
         <label

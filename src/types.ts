@@ -19,7 +19,7 @@ export type OperationSlot
     | 'branding'
     | 'footer'
 
-export type SpecPlaygroundSlot = 'sidebar' | 'playground'
+export type SpecPlaygroundSlot = 'playground'
 // TODO: Implement these slots.
 // | 'summary'
 // | 'servers'

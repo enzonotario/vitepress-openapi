@@ -4,7 +4,7 @@ outline: 2
 
 # Playground Page
 
-You can use the `OASpecPlayground` component to render a dedicated API explorer page: a navigation sidebar on the left and the currently selected operation Playground on the right.
+You can use the `OASpecPlayground` component to render a dedicated API explorer page: the currently selected operation Playground in the main content area, with operation navigation provided by your VitePress sidebar.
 
 The selected operation is synchronized with the page hash (`#operationId`), so links are bookmarkable and the active sidebar item stays in sync with the rendered Playground.
 
@@ -74,47 +74,34 @@ title: vitepress-openapi
 
 ## Sidebar
 
-`OASpecPlayground` needs operation navigation. By default it renders `OAPlaygroundSidebar`, which builds links from the OpenAPI spec and syncs the active item with `#operationId`.
-
-`OAPlaygroundSidebar` resolves items in this order:
-
-1. [`useTheme().getPlaygroundSidebar()`](/composables/useTheme#playground-sidebar-configuration)
-2. `themeConfig.playgroundSidebar` from VitePress config
-3. [`useSidebar().generateSidebarGroups({ linkPrefix: '#' })`](/composables/useSidebar)
+`OASpecPlayground` does not render its own navigation. Use the VitePress docs sidebar and generate operation links with [`useSidebar`](/composables/useSidebar). Point each item to your playground page with a hash suffix (`/playground#operationId`) so the active operation stays in sync.
 
 ### Configure the sidebar
 
-Set a static sidebar in VitePress config:
+Add operation groups to `themeConfig.sidebar`:
 
 ```ts
 import { defineConfig } from 'vitepress'
+import { useSidebar } from 'vitepress-openapi'
+import spec from './public/openapi.json'
+
+const sidebar = useSidebar({ spec })
 
 export default defineConfig({
   themeConfig: {
-    playgroundSidebar: {
-      '/api/': [
-        { text: 'Introduction', link: '/api/introduction' },
-        { text: 'Playground', link: '/api/playground' },
-      ],
-    },
+    sidebar: [
+      {
+        text: 'Playground',
+        items: sidebar.generateSidebarGroups({
+          linkPrefix: '/api/playground#',
+        }),
+      },
+    ],
   },
 })
 ```
 
-Or generate items at runtime with [`useSidebar`](/composables/useSidebar) and [`useTheme().setPlaygroundSidebar()`](/composables/useTheme#playground-sidebar-configuration):
-
-```ts
-import { useTheme, useSidebar } from 'vitepress-openapi/client'
-import spec from '../public/openapi.json' with { type: 'json' }
-
-const sidebar = useSidebar({ spec })
-
-useTheme().setPlaygroundSidebar(
-  sidebar.generateSidebarGroups({ linkPrefix: '#' }),
-)
-```
-
-See [`useSidebar`](/composables/useSidebar) for generators, link prefixes, and custom templates.
+See [`useSidebar`](/composables/useSidebar) for generators, link prefixes, and custom templates. For general VitePress sidebar setup, see [Sidebar Items](/sidebar/sidebar-items).
 
 ### Custom groups and templates
 
@@ -138,26 +125,23 @@ function sidebarItemTemplate({ method, path, title }) {
   `)
 }
 
-useTheme().setPlaygroundSidebar([
-  sidebar.generateSidebarGroup({
-    tag: 'Artists',
-    text: 'Rock Artists',
-    linkPrefix: '#',
-    sidebarItemTemplate,
-  }),
-])
+export function createPlaygroundSidebarItems() {
+  return [
+    sidebar.generateSidebarGroup({
+      tag: 'Artists',
+      text: 'Rock Artists',
+      linkPrefix: '/api/playground#',
+      sidebarItemTemplate,
+    }),
+  ]
+}
 ```
 
 <SandboxIframe auto-height :sandbox-data="{sandboxView: 'preview', previewComponent: 'Playground', playgroundSidebarItemsType: 'custom', playgroundSidebarUseCustomTemplate: true}" :iframe-zoom="0.6" />
 
-### VitePress docs sidebar integration
+### Docs site example
 
-On documentation sites you may prefer one VitePress sidebar instead of the playground’s internal navigation:
-
-1. Inject operation groups into `themeConfig.sidebar` with hash links to your playground page.
-2. Hide the internal playground sidebar on docs pages.
-
-This site uses that pattern in `docs-sidebar-config.ts`:
+This site wires playground navigation through `docs-sidebar-config.ts`:
 
 ```ts
 import { useSidebar } from 'vitepress-openapi'
@@ -183,22 +167,6 @@ themeConfig: {
   ],
 }
 ```
-
-```css
-.VPContent .VPDoc:has(.OASpecPlayground) .OASpecPlayground .OASidebar,
-.VPContent .VPDoc:has(.OASpecPlayground) .OASpecPlayground .OAPlaygroundLocalNav,
-.VPContent .VPDoc:has(.OASpecPlayground) .OASpecPlayground .VPBackdrop {
-  display: none;
-}
-
-.VPContent .VPDoc:has(.OASpecPlayground) .OASpecPlayground .OAContent.has-sidebar {
-  margin-top: 0;
-  padding-left: 0;
-  padding-right: 0;
-}
-```
-
-For general VitePress sidebar setup with `useSidebar`, see [Sidebar Items](/sidebar/sidebar-items).
 
 ### Generation modes
 

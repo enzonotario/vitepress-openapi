@@ -9,7 +9,7 @@ next:
 
 # `useSidebar` composable
 
-`useSidebar` generates VitePress-compatible sidebar items from an OpenAPI specification. Use it in `themeConfig.sidebar`, in [`useTheme().setPlaygroundSidebar()`](/composables/useTheme#playground-sidebar-configuration), or anywhere you need operation navigation links.
+`useSidebar` generates VitePress-compatible sidebar items from an OpenAPI specification. Use it in `themeConfig.sidebar` or anywhere you need operation navigation links.
 
 For ready-to-use `themeConfig.sidebar` recipes, see [Sidebar Items](/sidebar/sidebar-items). For playground pages, see [Playground Page — Sidebar](/pages/playground#sidebar).
 
@@ -152,6 +152,6 @@ Set `x-sidebar-title` on an operation to override the title used in sidebar temp
 
 ## Playground usage
 
-`OAPlaygroundSidebar` uses the same generators when no custom sidebar is configured. In playground pages, use `linkPrefix: '#'` so items navigate by `operationId` hash.
+In playground pages, use hash links so items navigate by `operationId` (for example `linkPrefix: '/api/playground#'`).
 
-See [Playground Page — Sidebar](/pages/playground#sidebar) for `playgroundSidebar` theme config, VitePress integration, and live examples.
+See [Playground Page — Sidebar](/pages/playground#sidebar) for VitePress integration and live examples.

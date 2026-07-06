@@ -10,7 +10,6 @@ import OAOperation from './Feature/OAOperation.vue'
 import OAOperationContext from './Feature/OAOperationContext.vue'
 import OAOperationLink from './Feature/OAOperationLink.vue'
 import OAOperationPlayground from './Feature/OAOperationPlayground.vue'
-import OAPlaygroundSidebar from './Feature/OAPlaygroundSidebar.vue'
 import OAServers from './Feature/OAServers.vue'
 import OASpec from './Feature/OASpec.vue'
 import OASpecPlayground from './Feature/OASpecPlayground.vue'
@@ -43,7 +42,6 @@ export {
   OAParameters,
   OAPathEndpoint,
   OAPlayground,
-  OAPlaygroundSidebar,
   OARequestBody,
   OAResponses,
   OASecurity,

@@ -1,9 +1,6 @@
 import type { DefaultTheme } from 'vitepress'
 import type { SandboxData } from '../sandboxData'
-import type { useTheme } from 'vitepress-openapi/client'
 import { minifyHtml, useSidebar } from 'vitepress-openapi'
-
-type ThemeConfig = ReturnType<typeof useTheme>
 
 function createPlaygroundCustomSidebarItemTemplate(spec: Record<string, any>) {
   return ({
@@ -83,17 +80,4 @@ export function buildPlaygroundSandboxSidebar(
     default:
       return null
   }
-}
-
-export function applyPlaygroundSandboxSidebar(
-  sandboxData: SandboxData,
-  themeConfig: ThemeConfig,
-) {
-  if (sandboxData.previewComponent.value !== 'Playground') {
-    themeConfig.setPlaygroundSidebar(null)
-    return
-  }
-
-  const sidebar = buildPlaygroundSandboxSidebar(sandboxData.spec.value, sandboxData)
-  themeConfig.setPlaygroundSidebar(sidebar)
 }

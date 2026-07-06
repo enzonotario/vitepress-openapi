@@ -2,6 +2,8 @@
 aside: false
 outline: false
 title: vitepress-openapi
+next: false
+prev: false
 ---
 
 <script setup>

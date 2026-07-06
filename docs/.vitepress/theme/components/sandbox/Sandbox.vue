@@ -3,9 +3,8 @@ import { compressToURL, decompressFromURL } from '@amoutonbrady/lz-string'
 import { useUrlSearchParams } from '@vueuse/core'
 import { useData } from 'vitepress'
 import { useTheme } from 'vitepress-openapi/client'
-import { provide, watch, watchEffect, onMounted, onUnmounted, nextTick, computed } from 'vue'
+import { provide, watch, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import { deepUnref } from '../../../../../src/lib/utils/deepUnref'
-import { applyPlaygroundSandboxSidebar } from '../../lib/playgroundSandboxSidebar'
 import { initSandboxData } from '../../sandboxData'
 import ThemeConfigPopover from '../theme/ThemeConfigPopover.vue'
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '../ui/resizable'
@@ -85,10 +84,6 @@ watch(hash, () => {
       sandboxData.tags.value = segments.length > 1 ? segments[1].split(',') : []
       break
   }
-})
-
-watchEffect(() => {
-  applyPlaygroundSandboxSidebar(sandboxData, themeConfig)
 })
 
 watch(sandboxData.previewComponent, (component) => {

@@ -188,22 +188,4 @@ watch(sandboxData.previewComponent, () => {
   padding-bottom: 0;
   min-height: calc(100vh - var(--vp-nav-height));
 }
-.SandboxPreviewContentWrapper.has-playground :deep(.VPDoc),
-.SandboxPreviewContentWrapper.has-playground :deep(.VPHomeContent),
-.SandboxPreviewContentWrapper.has-playground :deep(.container) {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-}
-.SandboxPreviewContentWrapper.has-playground :deep(.OASpecPlayground .OASidebar),
-.SandboxPreviewContentWrapper.has-playground :deep(.OASpecPlayground .OAPlaygroundLocalNav),
-.SandboxPreviewContentWrapper.has-playground :deep(.OASpecPlayground .VPBackdrop) {
-  display: none;
-}
-.SandboxPreviewContentWrapper.has-playground :deep(.OASpecPlayground .OAContent.has-sidebar) {
-  margin-top: 0;
-  padding-left: 0;
-  padding-right: 0;
-}
 </style>

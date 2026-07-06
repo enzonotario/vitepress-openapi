@@ -8,15 +8,3 @@
 .VPDoc .content .content-container {
   max-width: none !important;
 }
-
-.VPContent .VPDoc:has(.OASpecPlayground) .OASpecPlayground .OASidebar,
-.VPContent .VPDoc:has(.OASpecPlayground) .OASpecPlayground .OAPlaygroundLocalNav,
-.VPContent .VPDoc:has(.OASpecPlayground) .OASpecPlayground .VPBackdrop {
-  display: none;
-}
-
-.VPContent .VPDoc:has(.OASpecPlayground) .OASpecPlayground .OAContent.has-sidebar {
-  margin-top: 0;
-  padding-left: 0;
-  padding-right: 0;
-}

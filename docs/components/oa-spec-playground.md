@@ -4,7 +4,7 @@ outline: 2
 
 # OASpecPlayground Component
 
-The `OASpecPlayground` component renders a dedicated Playground view for an OpenAPI spec: a navigation sidebar on the left and the currently selected operation Playground on the right.
+The `OASpecPlayground` component renders a dedicated Playground view for an OpenAPI spec. Operation navigation comes from your VitePress sidebar; the component renders the currently selected operation Playground in the main content area.
 
 It is designed for “API explorer” pages where users focus on trying operations one at a time instead of reading the full spec document.
 
@@ -28,7 +28,6 @@ By default, the selected operation is synchronized with the page hash (`#operati
 
 | Slot | Slot Props | Description |
 |------|------------|-------------|
-| `sidebar` | `{ openapi, sidebarOpen, openSidebar, closeSidebar, toggleSidebar }` | Replace the sidebar contents while keeping the built-in desktop/mobile shell |
 | `playground` | `{ openapi, operationId }` | Replace the default main Playground panel |
 
 ## Basic Usage
@@ -37,77 +36,26 @@ By default, the selected operation is synchronized with the page hash (`#operati
 <OASpecPlayground spec-url="/openapi.json" />
 ```
 
+Pair it with a VitePress sidebar generated from your spec. See [Playground Page — Sidebar](/pages/playground#sidebar).
+
 ## Custom Layout Example
 
 ```vue
 <OASpecPlayground spec-url="/openapi.json">
-  <template #sidebar="{ openapi }">
-    <OAPlaygroundSidebar :openapi="openapi" />
-  </template>
   <template #playground="{ openapi, operationId }">
-    <div class="OAContent has-sidebar vp-doc">
-      <div class="OADoc w-full max-w-3xl mx-auto">
-        <OAOperationPlayground
-          :openapi="openapi"
-          :operation-id="operationId"
-        />
-      </div>
+    <div class="w-full max-w-3xl mx-auto">
+      <OAOperationPlayground
+        :openapi="openapi"
+        :operation-id="operationId"
+      />
     </div>
   </template>
 </OASpecPlayground>
 ```
 
-## Configure the Playground sidebar
-
-You can configure the default Playground sidebar without using the `sidebar` slot. See [Playground Page — Sidebar](/pages/playground#sidebar) for the full guide, including VitePress integration and custom item templates. Use [`useTheme().setPlaygroundSidebar()`](/composables/useTheme#playground-sidebar-configuration) or [`useSidebar`](/composables/useSidebar) to generate items.
-
-### Via VitePress `themeConfig`
-
-`playgroundSidebar` accepts the same shapes as VitePress `sidebar`:
-
-```ts
-export default defineConfig({
-  themeConfig: {
-    playgroundSidebar: {
-      '/example/': [
-        {
-          text: 'Introduction',
-          link: '/example/introduction',
-        },
-        {
-          text: 'Playground',
-          link: '/example/playground',
-        },
-      ],
-    },
-  },
-})
-```
-
-### Via composable
-
-If you're rendering Playground components in a custom theme/app entry, you can set it with `useTheme` or `useOpenapi`:
-
-```ts
-useTheme({
-  playground: {
-    sidebar: [
-      {
-        text: 'Introduction',
-        link: '/example/introduction',
-      },
-      {
-        text: 'Playground',
-        link: '/example/playground',
-      },
-    ],
-  },
-})
-```
-
 ## Related Building Blocks
 
-- `OAPlaygroundSidebar` renders the sidebar items for the current spec.
+- [`useSidebar`](/composables/useSidebar) generates VitePress sidebar items for operation navigation.
 - `OAOperationPlayground` renders the Playground and code samples for a single operation.
 
-You usually won’t need those directly unless you want to replace one side of the default `OASpecPlayground` layout.
+You usually won’t need `OAOperationPlayground` directly unless you replace the default `OASpecPlayground` layout with the `playground` slot.
