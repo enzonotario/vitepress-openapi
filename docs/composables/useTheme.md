@@ -1,7 +1,7 @@
 ---
 prev:
-  text: 'Sidebar Items'
-  link: /sidebar/sidebar-items
+  text: 'useSidebar'
+  link: /composables/useSidebar
 ---
 
 # `useTheme` composable
@@ -310,6 +310,46 @@ useTheme({
   },
 })
 ```
+
+## Playground Sidebar Configuration
+
+Configures the sidebar rendered by `OAPlaygroundSidebar` in [`OASpecPlayground`](/components/oa-spec-playground). Items are usually generated with [`useSidebar`](/composables/useSidebar).
+
+See [Playground Page — Sidebar](/pages/playground#sidebar) for setup patterns, VitePress integration, and live examples.
+
+| Function                  | Description                                      | Default Value |
+|---------------------------|--------------------------------------------------|---------------|
+| `setPlaygroundSidebar`    | Sets the playground sidebar items or config.     | `null`        |
+| `getPlaygroundSidebar`    | Gets the current playground sidebar config.      | —             |
+
+`setPlaygroundSidebar` accepts the same shapes as VitePress `sidebar`: a flat array of items or a route map.
+
+```ts
+import { useTheme, useSidebar } from 'vitepress-openapi/client'
+import spec from '../public/openapi.json' with { type: 'json' }
+
+const sidebar = useSidebar({ spec })
+
+useTheme().setPlaygroundSidebar(
+  sidebar.generateSidebarGroups({ linkPrefix: '#' }),
+)
+```
+
+You can also set a static sidebar in VitePress config:
+
+```ts
+export default defineConfig({
+  themeConfig: {
+    playgroundSidebar: {
+      '/api/': [
+        { text: 'Playground', link: '/api/playground' },
+      ],
+    },
+  },
+})
+```
+
+`OAPlaygroundSidebar` resolves sidebar items in this order: `getPlaygroundSidebar()` → `themeConfig.playgroundSidebar` → `useSidebar().generateSidebarGroups({ linkPrefix: '#' })`.
 
 ## Security Configuration
 

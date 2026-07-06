@@ -97,10 +97,6 @@ export function createDocsSidebar(): DefaultTheme.SidebarItem[] {
               text: 'Playground',
               link: '/pages/playground',
             },
-            {
-              text: 'Playground Sidebar',
-              link: '/pages/playground-sidebar',
-            },
           ],
         },
       ],
@@ -153,6 +149,10 @@ export function createDocsSidebar(): DefaultTheme.SidebarItem[] {
       items: [
         {
           items: [
+            {
+              text: 'useSidebar',
+              link: '/composables/useSidebar',
+            },
             {
               text: 'useTheme',
               link: '/composables/useTheme',

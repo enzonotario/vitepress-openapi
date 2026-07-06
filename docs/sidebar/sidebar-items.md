@@ -2,8 +2,8 @@
 aside: false
 outline: false
 next:
-  text: 'useTheme'
-  link: /composables/useTheme
+  text: 'useSidebar'
+  link: /composables/useSidebar
 ---
 
 <script setup>
@@ -12,7 +12,9 @@ import SandboxIframe from '../.vitepress/theme/components/sandbox/SandboxIframe.
 
 # Sidebar Items
 
-The `useSidebar` composable provides functions to generate sidebar items based on the OpenAPI specification. You can generate sidebar items by operations grouped by tags, by tags, or by paths.
+This page shows how to wire [`useSidebar`](/composables/useSidebar) generators into `themeConfig.sidebar`. For the full API, templates, and configuration options, see the [`useSidebar` composable reference](/composables/useSidebar).
+
+For playground pages, see [Playground Page — Sidebar](/pages/playground#sidebar).
 
 ## Operations grouped by tags
 
