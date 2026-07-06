@@ -53,6 +53,7 @@
   "Authorization URL": "Authorization URL",
   "Token URL": "Token URL",
   "Refresh URL": "Refresh URL",
+  "Scopes": "Scopes",
   "Select an example": "Select an example",
   "Playground": "Playground",
   "Collapse all": "Collapse all",

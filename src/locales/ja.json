@@ -53,6 +53,7 @@
   "Authorization URL": "認可 URL",
   "Token URL": "トークン URL",
   "Refresh URL": "リフレッシュ URL",
+  "Scopes": "スコープ",
   "Select an example": "例を選択",
   "Playground": "Playground",
   "Collapse all": "すべて折りたたむ",
