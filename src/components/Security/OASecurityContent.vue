@@ -81,8 +81,13 @@ const typeValue = computed(() => {
                 <OACodeValue :value="url.tokenUrl" />
               </div>
 
+              <div v-if="url.refreshUrl" class="flex flex-wrap gap-2">
+                <span class="text-sm">{{ t('Refresh URL') }}</span>
+                <OACodeValue :value="url.refreshUrl" />
+              </div>
+
               <div v-if="url.scopes">
-                <span class="text-sm">Scopes:</span>
+                <span class="text-sm">{{ t('Scopes') }}:</span>
                 <ul class="pl-2 my-0!">
                   <li
                     v-for="(description, scope) in url.scopes"

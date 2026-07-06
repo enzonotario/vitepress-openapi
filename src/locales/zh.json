@@ -53,6 +53,7 @@
   "Authorization URL": "授权 URL",
   "Token URL": "令牌 URL",
   "Refresh URL": "刷新 URL",
+  "Scopes": "作用域",
   "Select an example": "选择示例",
   "Playground": "试验场",
   "Collapse all": "全部折叠",

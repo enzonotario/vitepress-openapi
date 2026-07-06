@@ -53,6 +53,7 @@
   "Authorization URL": "URL de autorização",
   "Token URL": "URL do token",
   "Refresh URL": "URL de atualização",
+  "Scopes": "Escopos",
   "Select an example": "Selecione um exemplo",
   "Playground": "Playground",
   "Collapse all": "Recolher tudo",
