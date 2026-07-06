@@ -142,6 +142,7 @@ const propertyName = computed(() => props.property.name || props.property.title)
                   <TooltipTrigger as-child>
                     <Button
                       v-if="isCollapsible"
+                      as="div"
                       size="icon"
                       variant="icon"
                       :aria-label="toggleLabel"
@@ -191,6 +192,7 @@ const propertyName = computed(() => props.property.name || props.property.title)
                 <Tooltip :delay-duration="200">
                   <TooltipTrigger as-child>
                     <Button
+                      as="div"
                       size="icon"
                       variant="icon"
                       :aria-label="toggleAllLabel"
