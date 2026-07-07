@@ -8,8 +8,6 @@ You can use the `OASpecPlayground` component to render a dedicated API explorer 
 
 The selected operation is synchronized with the page hash (`#operationId`), so links are bookmarkable and the active sidebar item stays in sync with the rendered Playground.
 
-Use the [Sandbox](/sandbox/) with **Playground** to try the page live. Configure sidebar layouts from the **Playground Sidebar** panel.
-
 ## Example
 
 <SandboxIframe auto-height :sandbox-data="{sandboxView: 'preview', previewComponent: 'Playground', playgroundSidebarItemsType: 'default'}" :iframe-zoom="0.6" />

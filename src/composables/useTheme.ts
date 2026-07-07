@@ -1,5 +1,4 @@
 import type MarkdownIt from 'markdown-it'
-import type { DefaultTheme } from 'vitepress'
 import type { Ref, UnwrapNestedRefs } from 'vue'
 import type { OARequest } from '../lib/codeSamples/request'
 import type { OperationSlot, ParsedOperation } from '../types'
