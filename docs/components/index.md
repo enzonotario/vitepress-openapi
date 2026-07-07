@@ -10,6 +10,7 @@ This section provides comprehensive documentation for the main components provid
 
 - [`OASpec`](/components/oa-spec) - Renders a complete OpenAPI specification
 - [`OAOperation`](/components/oa-operation) - Renders a specific API operation
+- [`OASpecPlayground`](/components/oa-spec-playground) - Renders a dedicated API explorer with sidebar + current operation playground
 - [`OAOperationLink`](/customizations/operation-links#component) - Renders operation links with HTTP method badges.
 
 ## Quick Start

@@ -1,7 +1,7 @@
 ---
 prev:
-  text: 'Sidebar Items'
-  link: /sidebar/sidebar-items
+  text: 'useSidebar'
+  link: /composables/useSidebar
 ---
 
 # `useTheme` composable

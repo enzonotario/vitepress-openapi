@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import type { SandboxData } from '../../sandboxData'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from 'vitepress-openapi/client'
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 
 const sandboxData = inject('sandboxData') as SandboxData
 
 const themeConfig = useTheme()
 
+const isPlaygroundPreview = computed(() => sandboxData.previewComponent.value === 'Playground')
+
 const availablePagesTypes = [
   'PagesByOperation',
   'PagesBySpec',
   'PagesByTag',
+  'Playground',
   'Introduction',
 ]
 
@@ -18,6 +21,13 @@ const availableSidebarItemsTypes = [
   'default',
   'itemsByTags',
   'itemsByPaths',
+] as const
+
+const availablePlaygroundSidebarItemsTypes = [
+  'default',
+  'itemsByTags',
+  'itemsByPaths',
+  'custom',
 ] as const
 
 const requestBodyViews = ['schema', 'contentType']
@@ -76,7 +86,7 @@ const toggleBadge = (badge: string) => {
     </div>
 
     <div
-      v-if="sandboxData.showSidebar.value"
+      v-if="sandboxData.showSidebar.value && !isPlaygroundPreview"
       class="flex flex-col gap-2"
     >
       <h3>Sidebar</h3>
@@ -132,6 +142,73 @@ const toggleBadge = (badge: string) => {
             @change="sandboxData.previewComponent.value = component"
           >
           {{ component }}
+        </label>
+      </div>
+    </div>
+
+    <div
+      v-if="isPlaygroundPreview"
+      class="flex flex-col gap-2"
+    >
+      <h3>Playground Sidebar</h3>
+      <p class="text-sm text-muted-foreground">
+        Configures the VitePress preview sidebar for Playground through `theme.value.sidebar`.
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4">
+        <label
+          v-for="type in availablePlaygroundSidebarItemsTypes"
+          :key="type"
+          class="flex items-center gap-2"
+        >
+          <input
+            type="radio"
+            :checked="sandboxData.playgroundSidebarItemsType.value === type"
+            @change="sandboxData.playgroundSidebarItemsType.value = type"
+          >
+          {{ type }}
+        </label>
+
+        <label for="playgroundCustomTemplate" class="flex items-center gap-2">
+          <input
+            id="playgroundCustomTemplate"
+            type="checkbox"
+            :checked="sandboxData.playgroundSidebarUseCustomTemplate.value"
+            @change="sandboxData.playgroundSidebarUseCustomTemplate.value = ($event.target as HTMLInputElement).checked"
+          >
+          Custom item template
+        </label>
+
+        <label v-if="sandboxData.playgroundSidebarItemsType.value === 'itemsByPaths'" for="playgroundDepth" class="flex items-center gap-2">
+          <span>Depth</span>
+          <input
+            id="playgroundDepth"
+            type="number"
+            class="theme-input"
+            min="1"
+            max="6"
+            :value="sandboxData.playgroundSidebarItemsDepth.value"
+            @input="sandboxData.playgroundSidebarItemsDepth.value = Number(($event.target as HTMLInputElement).value)"
+          >
+        </label>
+
+        <label v-if="sandboxData.playgroundSidebarItemsType.value === 'itemsByPaths'" for="playgroundCollapsible" class="flex items-center gap-2">
+          <input
+            id="playgroundCollapsible"
+            type="checkbox"
+            :checked="sandboxData.playgroundSidebarItemsCollapsible.value"
+            @change="sandboxData.playgroundSidebarItemsCollapsible.value = ($event.target as HTMLInputElement).checked"
+          >
+          Collapsible
+        </label>
+
+        <label for="playgroundHideBranding" class="flex items-center gap-2">
+          <input
+            id="playgroundHideBranding"
+            type="checkbox"
+            :checked="sandboxData.playgroundHideBranding.value"
+            @change="sandboxData.playgroundHideBranding.value = ($event.target as HTMLInputElement).checked"
+          >
+          Hide branding
         </label>
       </div>
     </div>
@@ -316,7 +393,10 @@ const toggleBadge = (badge: string) => {
       </div>
     </div>
 
-    <div class="flex flex-col gap-2">
+    <div
+      v-if="isPlaygroundPreview"
+      class="flex flex-col gap-2"
+    >
       <h3>Playground</h3>
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4">
         <label v-for="mode in playgroundModes" :key="mode" class="flex items-center gap-2">
