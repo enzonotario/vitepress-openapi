@@ -27,7 +27,7 @@ jobs:
       )
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # For PR comments, checkout the PR's branch (works with forks too)
           ref: ${{ github.event_name == 'issue_comment' && format('refs/pull/{0}/head', github.event.issue.number) || github.ref }}
@@ -44,8 +44,20 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install Playwright browsers and system dependencies
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --with-deps chromium firefox
+
+      - name: Install OS dependencies for browsers
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium firefox
 
       - name: Wait for Vercel deployment
         if: github.event_name != 'issue_comment'
@@ -82,7 +94,7 @@ jobs:
           PLAYWRIGHT_BASE_URL: ${{ steps.resolve-url.outputs.url }}
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ !cancelled() }}
         with:
           name: playwright-report
           path: |

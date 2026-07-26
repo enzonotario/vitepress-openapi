@@ -11,8 +11,11 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
-  reporter: 'html',
+  workers: process.env.CI ? '50%' : undefined,
+  reporter: [
+    ['html'],
+    ['github'],
+  ],
   use: {
     baseURL: url,
     trace: 'on-first-retry',
