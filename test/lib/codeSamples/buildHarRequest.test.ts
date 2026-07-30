@@ -78,7 +78,7 @@ describe('buildHarRequest', () => {
     })
   })
 
-  it('generates HAR request with cookies', () => {
+  it('folds cookies into a Cookie request header', () => {
     const request = buildRequest({
       baseUrl: 'https://api.example.com',
       path: '/resource',
@@ -92,15 +92,31 @@ describe('buildHarRequest', () => {
       method: 'GET',
       url: 'https://api.example.com/resource',
       httpVersion: 'HTTP/1.1',
-      headers: [],
-      queryString: [],
-      cookies: [
-        { name: 'session', value: 'abc123' },
-        { name: 'user', value: 'john' },
+      headers: [
+        { name: 'Cookie', value: 'session=abc123; user=john' },
       ],
+      queryString: [],
+      cookies: [],
       headersSize: -1,
       bodySize: -1,
     })
+  })
+
+  it('does not override an existing Cookie header when folding cookies', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      headers: { cookie: 'session=xyz' },
+      cookies: { token: 'abc' },
+    })
+
+    const result = buildHarRequest(request)
+
+    expect(result.headers).toEqual([
+      { name: 'Cookie', value: 'session=xyz' },
+    ])
+    expect(result.cookies).toEqual([])
   })
 
   it('generates HAR request with string body', () => {
@@ -278,14 +294,13 @@ describe('buildHarRequest', () => {
       headers: [
         { name: 'Authorization', value: 'Bearer token' },
         { name: 'Content-Type', value: 'application/json' },
+        { name: 'Cookie', value: 'session=abc123' },
       ],
       queryString: [
         { name: 'search', value: 'query' },
         { name: 'page', value: '2' },
       ],
-      cookies: [
-        { name: 'session', value: 'abc123' },
-      ],
+      cookies: [],
       headersSize: -1,
       bodySize: -1,
       postData: {

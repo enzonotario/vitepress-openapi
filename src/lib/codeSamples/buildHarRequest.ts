@@ -7,14 +7,32 @@ const RE_TITLE_CASE = /\b\w/g
 export function buildHarRequest(
   oaRequest: OARequest,
 ): HarRequest {
+  const headers = Object.entries(oaRequest.headers).map(([name, value]) => ({
+    name: name.replace(RE_TITLE_CASE, letter => letter.toUpperCase()), // Convert to title case.
+    value,
+  }))
+
+  const cookies = Object.entries(oaRequest.cookies).map(([name, value]) => ({
+    name,
+    value,
+  }))
+
+  // @scalar/snippetz js/fetch clients render HAR `cookies` as `Set-Cookie` (a
+  // response header). Request cookies belong on the `Cookie` header, so fold
+  // them there and clear `cookies` to avoid incorrect samples.
+  const hasCookieHeader = headers.some(header => header.name.toLowerCase() === 'cookie')
+  if (cookies.length > 0 && !hasCookieHeader) {
+    headers.push({
+      name: 'Cookie',
+      value: cookies.map(cookie => `${cookie.name}=${cookie.value}`).join('; '),
+    })
+  }
+
   const harRequest: HarRequest = {
     method: oaRequest.method.toUpperCase(),
     url: decodeURI(oaRequest.url.toString()),
     httpVersion: 'HTTP/1.1',
-    headers: Object.entries(oaRequest.headers).map(([name, value]) => ({
-      name: name.replace(RE_TITLE_CASE, letter => letter.toUpperCase()), // Convert to title case.
-      value,
-    })),
+    headers,
     queryString: [
       ...Object.entries(oaRequest.query).flatMap(([name, value]) => {
         if (Array.isArray(value)) {
@@ -24,10 +42,7 @@ export function buildHarRequest(
         return [{ name, value: typeof value === 'object' ? JSON.stringify(value) : String(value) }]
       }),
     ],
-    cookies: Object.entries(oaRequest.cookies).map(([name, value]) => ({
-      name,
-      value,
-    })),
+    cookies: [],
     headersSize: -1,
     bodySize: -1,
   }

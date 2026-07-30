@@ -83,7 +83,7 @@ const request = props.shouldBuildRequest
       authorizations: Object.entries(authorizations).map(([name, value]: [string, any]) => {
         return {
           ...value,
-          name: String(name),
+          name: value.name ?? String(name),
           label: String(name),
         } as PlaygroundSecurityScheme
       }),

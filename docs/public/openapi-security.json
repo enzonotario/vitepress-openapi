@@ -170,6 +170,7 @@
     "/onlyApiKeyQuery": {
       "get": {
         "operationId": "onlyApiKeyQuery",
+        "summary": "API key in query",
         "security": [
           {
             "apiKeyQuery": []
@@ -185,7 +186,46 @@
             },
             "description": "An optional query parameter"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/downloads": {
+      "get": {
+        "operationId": "listDownloads",
+        "summary": "apiKey header name differs from scheme key",
+        "description": "Uses `managementKey` as the securitySchemes key but sends the header `X-Management-Key`. Code samples must use the scheme `name`, not the key.",
+        "security": [
+          {
+            "managementKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of downloads"
+          }
+        }
+      }
+    },
+    "/api/v2/torrents/info": {
+      "get": {
+        "operationId": "torrentInfo",
+        "summary": "apiKey in cookie",
+        "description": "Uses an apiKey scheme with `in: cookie`. Code samples must send a `Cookie` request header, not `Set-Cookie`.",
+        "security": [
+          {
+            "sid": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Torrent info"
+          }
+        }
       }
     }
   },
@@ -202,6 +242,20 @@
         "name": "api_key",
         "in": "query",
         "example": "your-api-key"
+      },
+      "managementKey": {
+        "type": "apiKey",
+        "name": "X-Management-Key",
+        "in": "header",
+        "description": "Management API key. Scheme key is `managementKey`; header name is `X-Management-Key`.",
+        "example": "mgmt-secret"
+      },
+      "sid": {
+        "type": "apiKey",
+        "name": "SID",
+        "in": "cookie",
+        "description": "Session id cookie. Request samples must use the Cookie header.",
+        "example": "session-id-example"
       },
       "bearerAuth": {
         "type": "http",
