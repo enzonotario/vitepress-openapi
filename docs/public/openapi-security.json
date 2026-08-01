@@ -3,38 +3,81 @@
   "info": {
     "title": "Example of an OpenAPI document with security",
     "version": "1.0.0",
-    "description": "This is an example of an OpenAPI document with security definitions and security requirements."
+    "description": "OpenAPI security examples backed by [httpbin.io](https://httpbin.io/) so the playground returns real responses (headers, bearer auth, cookies, request body echo)."
   },
   "servers": [
     {
-      "url": "https://localhost:3000",
-      "description": "Local server"
+      "url": "https://httpbin.io",
+      "description": "httpbin.io — HTTP request & response testing service"
     }
   ],
   "paths": {
-    "/onlyApiKey": {
+    "/anything/only-api-key": {
       "get": {
         "operationId": "onlyApiKey",
+        "summary": "API key in header",
+        "description": "Calls httpbin `/anything`, which echoes request headers so you can verify `api_key` was sent.",
         "security": [
           {
             "apiKey": []
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "Echo of the request including headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnythingResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
-    "/onlyBearerAuth": {
-      "post": {
+    "/bearer": {
+      "get": {
         "operationId": "onlyBearerAuth",
+        "summary": "Bearer authentication",
+        "description": "Calls httpbin `/bearer`, which requires a valid `Authorization: Bearer <token>` header and returns 401 without it.",
         "security": [
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "Authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "authenticated": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "your-token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token"
+          }
+        }
       }
     },
-    "/apiKeyAndBearerAuth": {
+    "/put": {
       "put": {
         "operationId": "apiKeyAndBearerAuth",
+        "summary": "API key and bearer auth",
+        "description": "Calls httpbin `/put`, which echoes headers and JSON body. Requires both `api_key` and bearer auth.",
         "security": [
           {
             "apiKey": [],
@@ -52,12 +95,26 @@
             "description": "Header parameter description",
             "example": "value"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "description": "Echo of the PUT request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnythingResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
-    "/apiKeyOrBearerAuth/{pathParam}": {
+    "/anything/{pathParam}": {
       "get": {
         "operationId": "apiKeyOrBearerAuth",
+        "summary": "API key or bearer auth",
+        "description": "Calls httpbin `/anything/{pathParam}`. Accepts either an API key or a bearer token.",
         "security": [
           {
             "apiKey": []
@@ -74,20 +131,27 @@
             "schema": {
               "type": "string"
             },
-            "description": "Path parameter description"
+            "description": "Path segment echoed by httpbin",
+            "example": "demo"
           }
-        ]
-      }
-    },
-    "/noSecurity": {
-      "get": {
-        "operationId": "noSecurity",
-        "security": []
-      }
-    },
-    "/multipleSecurity/{pathParam}": {
+        ],
+        "responses": {
+          "200": {
+            "description": "Echo of the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnythingResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "operationId": "multipleSecurity",
+        "summary": "Multiple security requirement options",
+        "description": "Calls httpbin `/anything/{pathParam}` with a JSON body. Either (apiKey + bearer) or (basicAuth + internalApiKey).",
         "security": [
           {
             "apiKey": [],
@@ -120,7 +184,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Another query parameter description"
+            "description": "Another query parameter description",
+            "example": "hello"
           },
           {
             "name": "pathParam",
@@ -129,7 +194,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Path parameter description"
+            "description": "Path segment echoed by httpbin",
+            "example": "demo"
           }
         ],
         "requestBody": {
@@ -160,17 +226,55 @@
                 }
               },
               "example": {
-                "prop1": "value1"
+                "prop1": "value1",
+                "prop2": 42,
+                "prop3": [
+                  "value1",
+                  "value2"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Echo of the request including body, args, and headers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnythingResponse"
+                }
               }
             }
           }
         }
       }
     },
-    "/onlyApiKeyQuery": {
+    "/get": {
+      "get": {
+        "operationId": "noSecurity",
+        "summary": "No security",
+        "description": "Calls httpbin `/get` with no authentication required.",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Echo of the GET request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/anything/api-key-query": {
       "get": {
         "operationId": "onlyApiKeyQuery",
         "summary": "API key in query",
+        "description": "Calls httpbin `/anything`, which echoes query args so you can verify `api_key` was sent as a query parameter.",
         "security": [
           {
             "apiKeyQuery": []
@@ -184,21 +288,29 @@
             "schema": {
               "type": "string"
             },
-            "description": "An optional query parameter"
+            "description": "An optional query parameter",
+            "example": "optional-value"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Echo of the request including query args",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnythingResponse"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/downloads": {
+    "/headers": {
       "get": {
         "operationId": "listDownloads",
         "summary": "apiKey header name differs from scheme key",
-        "description": "Uses `managementKey` as the securitySchemes key but sends the header `X-Management-Key`. Code samples must use the scheme `name`, not the key.",
+        "description": "Uses `managementKey` as the securitySchemes key but sends the header `X-Management-Key`. Code samples must use the scheme `name`, not the key. Calls httpbin `/headers` so the response shows the received headers.",
         "security": [
           {
             "managementKey": []
@@ -206,16 +318,34 @@
         ],
         "responses": {
           "200": {
-            "description": "List of downloads"
+            "description": "Request headers as seen by httpbin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "headers": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/v2/torrents/info": {
+    "/cookies": {
       "get": {
         "operationId": "torrentInfo",
         "summary": "apiKey in cookie",
-        "description": "Uses an apiKey scheme with `in: cookie`. Code samples must send a `Cookie` request header, not `Set-Cookie`.",
+        "description": "Uses an apiKey scheme with `in: cookie`. Code samples must send a `Cookie` request header, not `Set-Cookie`. Calls httpbin `/cookies`, which returns cookies received on the request.",
         "security": [
           {
             "sid": []
@@ -223,13 +353,83 @@
         ],
         "responses": {
           "200": {
-            "description": "Torrent info"
+            "description": "Cookies received by httpbin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "example": {
+                    "SID": "session-id-example"
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   },
   "components": {
+    "schemas": {
+      "GetResponse": {
+        "type": "object",
+        "properties": {
+          "args": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "origin": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "AnythingResponse": {
+        "type": "object",
+        "properties": {
+          "args": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "data": {
+            "type": "string"
+          },
+          "files": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "form": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "json": {
+            "nullable": true
+          },
+          "method": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "securitySchemes": {
       "apiKey": {
         "type": "apiKey",
