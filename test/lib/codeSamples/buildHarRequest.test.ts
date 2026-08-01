@@ -102,7 +102,7 @@ describe('buildHarRequest', () => {
     })
   })
 
-  it('does not override an existing Cookie header when folding cookies', () => {
+  it('merges structured cookies into an existing Cookie header', () => {
     const request = buildRequest({
       baseUrl: 'https://api.example.com',
       path: '/resource',
@@ -114,7 +114,24 @@ describe('buildHarRequest', () => {
     const result = buildHarRequest(request)
 
     expect(result.headers).toEqual([
-      { name: 'Cookie', value: 'session=xyz' },
+      { name: 'Cookie', value: 'session=xyz; token=abc' },
+    ])
+    expect(result.cookies).toEqual([])
+  })
+
+  it('keeps existing Cookie header values when structured cookies share a name', () => {
+    const request = buildRequest({
+      baseUrl: 'https://api.example.com',
+      path: '/resource',
+      method: 'GET',
+      headers: { cookie: 'session=xyz; token=from-header' },
+      cookies: { token: 'from-cookies', extra: '1' },
+    })
+
+    const result = buildHarRequest(request)
+
+    expect(result.headers).toEqual([
+      { name: 'Cookie', value: 'session=xyz; token=from-header; extra=1' },
     ])
     expect(result.cookies).toEqual([])
   })

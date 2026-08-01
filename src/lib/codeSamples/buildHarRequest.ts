@@ -20,12 +20,39 @@ export function buildHarRequest(
   // @scalar/snippetz js/fetch clients render HAR `cookies` as `Set-Cookie` (a
   // response header). Request cookies belong on the `Cookie` header, so fold
   // them there and clear `cookies` to avoid incorrect samples.
-  const hasCookieHeader = headers.some(header => header.name.toLowerCase() === 'cookie')
-  if (cookies.length > 0 && !hasCookieHeader) {
-    headers.push({
-      name: 'Cookie',
-      value: cookies.map(cookie => `${cookie.name}=${cookie.value}`).join('; '),
-    })
+  // Existing Cookie header names win on duplicates; structured cookies fill gaps.
+  if (cookies.length > 0) {
+    const cookieHeaderIndex = headers.findIndex(header => header.name.toLowerCase() === 'cookie')
+    const merged = new Map<string, string>()
+
+    if (cookieHeaderIndex !== -1) {
+      for (const part of headers[cookieHeaderIndex].value.split(';')) {
+        const trimmed = part.trim()
+        if (!trimmed) {
+          continue
+        }
+        const eq = trimmed.indexOf('=')
+        const name = eq === -1 ? trimmed : trimmed.slice(0, eq).trim()
+        const value = eq === -1 ? '' : trimmed.slice(eq + 1).trim()
+        merged.set(name, value)
+      }
+    }
+
+    for (const cookie of cookies) {
+      if (!merged.has(cookie.name)) {
+        merged.set(cookie.name, cookie.value)
+      }
+    }
+
+    const cookieHeaderValue = Array.from(merged.entries())
+      .map(([name, value]) => `${name}=${value}`)
+      .join('; ')
+
+    if (cookieHeaderIndex !== -1) {
+      headers[cookieHeaderIndex] = { name: 'Cookie', value: cookieHeaderValue }
+    } else {
+      headers.push({ name: 'Cookie', value: cookieHeaderValue })
+    }
   }
 
   const harRequest: HarRequest = {
