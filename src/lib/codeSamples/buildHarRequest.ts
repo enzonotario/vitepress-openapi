@@ -11,22 +11,30 @@ interface NamedValue {
 
 /**
  * Fold structured request cookies into the Cookie header.
- * Existing Cookie header names win on duplicates; structured cookies fill gaps.
- * Mutates `headers` in place (add or replace the Cookie entry).
+ * Collects every case-insensitive Cookie header, keeps one canonical slot,
+ * and drops duplicate case-variant entries. Existing Cookie header names win
+ * on duplicates; structured cookies fill gaps.
+ * Mutates `headers` in place.
  */
 function mergeCookiesIntoHeader(
   headers: NamedValue[],
   cookies: NamedValue[],
 ): void {
-  if (cookies.length === 0) {
+  const cookieHeaderIndexes: number[] = []
+  for (let i = 0; i < headers.length; i++) {
+    if (headers[i].name.toLowerCase() === 'cookie') {
+      cookieHeaderIndexes.push(i)
+    }
+  }
+
+  if (cookieHeaderIndexes.length === 0 && cookies.length === 0) {
     return
   }
 
-  const cookieHeaderIndex = headers.findIndex(header => header.name.toLowerCase() === 'cookie')
   const merged = new Map<string, string>()
 
-  if (cookieHeaderIndex !== -1) {
-    for (const part of headers[cookieHeaderIndex].value.split(';')) {
+  for (const index of cookieHeaderIndexes) {
+    for (const part of headers[index].value.split(';')) {
       const trimmed = part.trim()
       if (!trimmed) {
         continue
@@ -34,7 +42,9 @@ function mergeCookiesIntoHeader(
       const eq = trimmed.indexOf('=')
       const name = eq === -1 ? trimmed : trimmed.slice(0, eq).trim()
       const value = eq === -1 ? '' : trimmed.slice(eq + 1).trim()
-      merged.set(name, value)
+      if (!merged.has(name)) {
+        merged.set(name, value)
+      }
     }
   }
 
@@ -48,9 +58,14 @@ function mergeCookiesIntoHeader(
     .map(([name, value]) => `${name}=${value}`)
     .join('; ')
 
-  if (cookieHeaderIndex !== -1) {
-    headers[cookieHeaderIndex] = { name: 'Cookie', value: cookieHeaderValue }
-  } else {
+  // Remove duplicate Cookie headers from the end so the first index stays valid.
+  for (let i = cookieHeaderIndexes.length - 1; i >= 1; i--) {
+    headers.splice(cookieHeaderIndexes[i], 1)
+  }
+
+  if (cookieHeaderIndexes.length > 0) {
+    headers[cookieHeaderIndexes[0]] = { name: 'Cookie', value: cookieHeaderValue }
+  } else if (merged.size > 0) {
     headers.push({ name: 'Cookie', value: cookieHeaderValue })
   }
 }

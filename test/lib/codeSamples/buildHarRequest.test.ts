@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { buildHarRequest } from '../../../src/lib/codeSamples/buildHarRequest'
 import { buildRequest } from '../../../src/lib/codeSamples/buildRequest'
+import { OARequest } from '../../../src/lib/codeSamples/request'
 
 describe('buildHarRequest', () => {
   it('generates HAR request for basic GET request', () => {
@@ -132,6 +133,27 @@ describe('buildHarRequest', () => {
 
     expect(result.headers).toEqual([
       { name: 'Cookie', value: 'session=xyz; token=from-header; extra=1' },
+    ])
+    expect(result.cookies).toEqual([])
+  })
+
+  it('merges differently cased Cookie header keys into one canonical header', () => {
+    const request = new OARequest({
+      url: new URL('https://api.example.com/resource'),
+      method: 'get',
+      headers: {
+        cookie: 'session=xyz',
+        Cookie: 'token=from-Cookie',
+        COOKIE: 'other=1',
+      },
+      query: {},
+      cookies: { extra: '2' },
+    })
+
+    const result = buildHarRequest(request)
+
+    expect(result.headers.filter(header => header.name.toLowerCase() === 'cookie')).toEqual([
+      { name: 'Cookie', value: 'session=xyz; token=from-Cookie; other=1; extra=2' },
     ])
     expect(result.cookies).toEqual([])
   })
