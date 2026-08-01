@@ -526,6 +526,65 @@ describe('custom languages', () => {
   })
 })
 
+describe('apiKey authorizations', () => {
+  it('uses the scheme declared header name in javascript samples', async () => {
+    const request = buildRequest({
+      baseUrl: 'http://localhost:5226',
+      path: '/downloads',
+      authorizations: [{
+        type: 'apiKey',
+        in: 'header',
+        name: 'X-Management-Key',
+        label: 'managementKey',
+        value: 'managementKey',
+      } as any],
+    })
+
+    const result = await generateCodeSample(langConfigs.javascript, request)
+
+    expect(result).toContain(`'X-Management-Key': 'managementKey'`)
+  })
+
+  it('renders cookie apiKey as Cookie header, not Set-Cookie, in javascript samples', async () => {
+    const request = buildRequest({
+      baseUrl: 'http://localhost:5225',
+      path: '/api/v2/torrents/info',
+      authorizations: [{
+        type: 'apiKey',
+        in: 'cookie',
+        name: 'SID',
+        label: 'sid',
+        value: 'SID',
+      } as any],
+    })
+
+    const result = await generateCodeSample(langConfigs.javascript, request)
+
+    expect(result).toMatch(/['"]?Cookie['"]?\s*:/)
+    expect(result).toContain('SID=SID')
+    expect(result).not.toContain('Set-Cookie')
+  })
+
+  it('renders cookie apiKey as Cookie header in curl samples', async () => {
+    const request = buildRequest({
+      baseUrl: 'http://localhost:5225',
+      path: '/api/v2/torrents/info',
+      authorizations: [{
+        type: 'apiKey',
+        in: 'cookie',
+        name: 'SID',
+        label: 'sid',
+        value: 'SID',
+      } as any],
+    })
+
+    const result = await generateCodeSample(langConfigs.curl, request)
+
+    expect(result).toContain('Cookie: SID=SID')
+    expect(result).not.toContain('Set-Cookie')
+  })
+})
+
 describe('update request', () => {
   it('updates request with query parameters', async () => {
     const request = buildRequest({
