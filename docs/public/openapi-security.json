@@ -3,7 +3,7 @@
   "info": {
     "title": "Example of an OpenAPI document with security",
     "version": "1.0.0",
-    "description": "OpenAPI security examples backed by [httpbin.io](https://httpbin.io/) so the playground returns real responses (headers, bearer auth, cookies, request body echo)."
+    "description": "OpenAPI security examples backed by [httpbin.io](https://httpbin.io/) so the playground returns real responses (headers, bearer auth, cookies, request body echo).\n\nUse **Get token** on bearer-protected operations to open the auth playground (`POST /auth/login` against [dummyjson](https://dummyjson.com)). Demo credentials: `emilys` / `emilyspass`."
   },
   "servers": [
     {
@@ -12,6 +12,50 @@
     }
   ],
   "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "getToken",
+        "summary": "Obtain access token",
+        "description": "Demo login used by the auth playground modal. Calls [dummyjson `/auth/login`](https://dummyjson.com/docs/auth) (operation-level server). Try username `emilys` and password `emilyspass`. The response includes `accessToken`, which is written into the `bearerAuth` playground field.",
+        "security": [],
+        "servers": [
+          {
+            "url": "https://dummyjson.com",
+            "description": "dummyjson auth demo"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRequest"
+              },
+              "example": {
+                "username": "emilys",
+                "password": "emilyspass",
+                "expiresInMins": 30
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authenticated; includes access and refresh tokens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
     "/anything/only-api-key": {
       "get": {
         "operationId": "onlyApiKey",
@@ -40,7 +84,7 @@
       "get": {
         "operationId": "onlyBearerAuth",
         "summary": "Bearer authentication",
-        "description": "Calls httpbin `/bearer`, which requires a valid `Authorization: Bearer <token>` header and returns 401 without it.",
+        "description": "Calls httpbin `/bearer`, which requires a valid `Authorization: Bearer <token>` header and returns 401 without it. If the token field is empty, use **Get token** to authenticate via `POST /auth/login`.",
         "security": [
           {
             "bearerAuth": []
@@ -374,6 +418,55 @@
   },
   "components": {
     "schemas": {
+      "TokenRequest": {
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "emilys"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": "emilyspass"
+          },
+          "expiresInMins": {
+            "type": "number",
+            "example": 30
+          }
+        }
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token used as the bearer value"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          }
+        }
+      },
       "GetResponse": {
         "type": "object",
         "properties": {
