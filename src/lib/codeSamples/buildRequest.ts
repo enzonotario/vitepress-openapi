@@ -96,7 +96,7 @@ export function getAuthorizationsHeaders(authorizations: PlaygroundSecuritySchem
 
     switch (authorization.type) {
       case 'http':
-        headers.set('Authorization', value)
+        headers.set('Authorization', formatHttpAuthorizationValue(authorization.scheme, String(value)))
         break
 
       case 'apiKey':
@@ -107,7 +107,7 @@ export function getAuthorizationsHeaders(authorizations: PlaygroundSecuritySchem
 
       case 'openIdConnect':
       case 'oauth2':
-        headers.set('Authorization', `Bearer ${value}`)
+        headers.set('Authorization', formatBearerAuthValue(String(value)))
         break
 
       default:
@@ -116,6 +116,35 @@ export function getAuthorizationsHeaders(authorizations: PlaygroundSecuritySchem
   }
 
   return headers
+}
+
+/**
+ * Ensures bearer tokens become `Authorization: Bearer <token>` without doubling
+ * an existing `Bearer ` prefix (case-insensitive).
+ */
+export function formatBearerAuthValue(value: string): string {
+  const trimmed = value.trim()
+  if (!trimmed) {
+    return trimmed
+  }
+
+  if (/^Bearer\s+/i.test(trimmed)) {
+    return `Bearer ${trimmed.replace(/^Bearer\s+/i, '')}`
+  }
+
+  return `Bearer ${trimmed}`
+}
+
+function formatHttpAuthorizationValue(scheme: string | undefined, value: string): string {
+  const normalizedScheme = scheme?.toLowerCase()
+
+  // OpenAPI http bearer (and missing scheme, treated as bearer-compatible raw tokens
+  // from auth playground / oauth-style responses).
+  if (!normalizedScheme || normalizedScheme === 'bearer') {
+    return formatBearerAuthValue(value)
+  }
+
+  return value
 }
 
 function serializeDeepObject(key: string, value: Record<string, unknown>): Record<string, string> {
