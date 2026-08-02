@@ -289,6 +289,53 @@ describe('usePlayground', () => {
       expect(playground.response.value?.status).toBe(404)
     })
 
+    it('should encode application/x-www-form-urlencoded bodies', async () => {
+      const mockResponse = {
+        status: 200,
+        headers: {
+          get: vi.fn().mockReturnValue('application/json'),
+        },
+        json: vi.fn().mockResolvedValue({ access_token: 'token' }),
+        text: vi.fn(),
+      }
+      mockFetch.mockResolvedValue(mockResponse)
+
+      const requestBody = {
+        grant_type: 'password',
+        username: 'user@example.com',
+        password: 'secret',
+      }
+
+      const request = buildRequest({
+        baseUrl: 'https://api.example.com',
+        path: '/token',
+        method: 'POST',
+        body: requestBody,
+        contentType: 'application/x-www-form-urlencoded',
+        parameters: [],
+        variables: {},
+      })
+
+      await usePlayground().submitRequest({
+        request,
+        method: request.method,
+        baseUrl: 'https://api.example.com',
+        path: request.path,
+        operationId: 'obtenerToken',
+      })
+
+      expect(mockFetch.mock.calls[0][0].toString()).toBe('https://api.example.com/token')
+      expect(mockFetch.mock.calls[0][1]).toEqual({
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+        body: 'grant_type=password&username=user%40example.com&password=secret',
+        signal: expect.any(AbortSignal),
+      })
+      expect(mockResponse.json).toHaveBeenCalled()
+    })
+
     it('should handle PUT requests with body', async () => {
       const mockResponse = {
         status: 200,

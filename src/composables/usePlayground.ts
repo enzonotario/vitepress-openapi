@@ -3,6 +3,7 @@ import type { OperationData } from '../lib/operation/operationData'
 import { inject, ref } from 'vue'
 import { OPERATION_DATA_KEY } from '../lib/operation/operationData'
 import { isResponseDownloadable } from '../lib/playground/responseDownloadable'
+import { serializeRequestBody } from '../lib/playground/serializeRequestBody'
 
 export interface SecuritySchemeDefaultValues {
   'http-basic': string
@@ -112,9 +113,7 @@ export function usePlayground() {
       const data = await fetch(url.toString(), {
         method: method.toUpperCase(),
         headers: request.body instanceof FormData ? {} : (request.headers ?? {}),
-        body: request.body instanceof FormData
-          ? request.body
-          : ((typeof request.body === 'string' || request.body instanceof Blob) ? request.body : JSON.stringify(request.body)),
+        body: serializeRequestBody(request.body, request.contentType ?? request.headers?.['content-type']),
         signal: controller.signal,
       })
 
