@@ -21,7 +21,6 @@ import { isLocalStorageAvailable } from '@/lib/utils/utils'
 import { getGlobalOpenapi, injectOpenapi } from '../../composables/useOpenapi'
 import { usePlayground } from '../../composables/usePlayground'
 import { useTheme } from '../../composables/useTheme'
-import { Button } from '../ui/button'
 import { Label } from '../ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import SelectWithCustomOption from '../ui/select-with-custom-option/SelectWithCustomOption.vue'
@@ -256,6 +255,14 @@ function onAuthenticated({ token, schemeName }: { token: string, schemeName: str
   }
 }
 
+function showGetTokenFor(authorization: PlaygroundSecurityScheme): boolean {
+  if (!showAuthPlaygroundButton.value || !authSchemeName.value) {
+    return false
+  }
+
+  return authorization.label === authSchemeName.value
+}
+
 watch([variables, authorizations, body, selectedServer, enabledParameters], () => {
   const filteredParameters = props.parameters.filter(parameter =>
     parameter.name && enabledParameters.value[createCompositeKey({ parameter, operationId: props.operationId })],
@@ -385,19 +392,20 @@ watch([operationData.security.securityValues, authorizations], ([values]) => {
               :name="authorization.name"
               class="w-full"
               @submit="emits('submit')"
-            />
+            >
+              <template v-if="showGetTokenFor(authorization)" #trailing>
+                <div class="h-full py-1">
+                  <button
+                    type="button"
+                    class="h-full bg-(--vp-c-bg) text-xs font-medium text-muted-foreground hover:text-foreground focus:outline-none whitespace-nowrap px-1 rounded"
+                    @click="authModalOpen = true"
+                  >
+                    {{ t('Get token') }}
+                  </button>
+                </div>
+              </template>
+            </OAPlaygroundSecurityInput>
           </div>
-        </div>
-
-        <div v-if="showAuthPlaygroundButton" class="pt-1">
-          <Button
-            variant="outline"
-            size="sm"
-            type="button"
-            @click="authModalOpen = true"
-          >
-            {{ t('Get token') }}
-          </Button>
         </div>
       </div>
     </details>
