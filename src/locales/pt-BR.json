@@ -79,5 +79,11 @@
   "Pattern": "Padrão",
   "Unique Items": "Itens únicos",
   "Add Field": "Adicionar campo",
-  "Click to set in playground": "Clique para definir no playground"
+  "Click to set in playground": "Clique para definir no playground",
+  "Get token": "Obter token",
+  "Authentication": "Autenticação",
+  "Auth playground description": "Use este playground para obter um access token e continuar com a operação protegida.",
+  "Auth playground success": "Token salvo. Agora você pode testar a operação protegida.",
+  "Auth playground error": "Falha na autenticação. Verifique as credenciais e tente novamente.",
+  "Auth playground missing token": "A resposta não incluiu um access token."
 }

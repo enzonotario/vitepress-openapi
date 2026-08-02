@@ -9,17 +9,26 @@ import { useStorage } from '@vueuse/core'
 import { computed, inject, isRef, ref, watch } from 'vue'
 import { buildRequest } from '@/lib/codeSamples/buildRequest'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
+import {
+  findAuthOperations,
+  isAuthPlaygroundEnabled,
+  isAuthValueEmpty,
+  resolveAuthPlaygroundScheme,
+} from '@/lib/playground/authPlayground'
 import { createCompositeKey } from '@/lib/playground/createCompositeKey'
 import { resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import { isLocalStorageAvailable } from '@/lib/utils/utils'
+import { getGlobalOpenapi, injectOpenapi } from '../../composables/useOpenapi'
 import { usePlayground } from '../../composables/usePlayground'
 import { useTheme } from '../../composables/useTheme'
-import OAPlaygroundBodyInput from '../Playground/OAPlaygroundBodyInput.vue'
-import OAPlaygroundParameterInput from '../Playground/OAPlaygroundParameterInput.vue'
-import OAPlaygroundSecurityInput from '../Playground/OAPlaygroundSecurityInput.vue'
+import { Button } from '../ui/button'
 import { Label } from '../ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import SelectWithCustomOption from '../ui/select-with-custom-option/SelectWithCustomOption.vue'
+import OAPlaygroundAuthModal from './OAPlaygroundAuthModal.vue'
+import OAPlaygroundBodyInput from './OAPlaygroundBodyInput.vue'
+import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
+import OAPlaygroundSecurityInput from './OAPlaygroundSecurityInput.vue'
 
 const props = defineProps({
   operationId: {
@@ -64,6 +73,10 @@ const props = defineProps({
     type: Object,
     required: false,
   },
+  source: {
+    type: String as () => 'playground' | 'auth-modal',
+    default: 'playground',
+  },
 })
 
 const emits = defineEmits([
@@ -75,6 +88,7 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
 const { t } = useI18n()
 const keyLabel = t('Key')
 const valueLabel = t('Value')
+const { setSecurityValue, getSecuritySchemeDefaultValue } = usePlayground()
 
 const selectedServer = computed({
   get: () => operationData.playground.selectedServer.value,
@@ -106,7 +120,8 @@ const request = computed({
 
 const allowCustomServer = computed(() => useTheme().getServerAllowCustomServer())
 
-const { getStoragePrefix, getStoragePersistAuth } = useTheme()
+const themeConfig = useTheme()
+const { getStoragePrefix, getStoragePersistAuth } = themeConfig
 const storagePrefix = getStoragePrefix()
 const persistAuth = getStoragePersistAuth()
 
@@ -172,6 +187,74 @@ const enabledParameters = ref(
 const authorizations = ref<PlaygroundSecurityScheme[]>([])
 
 const body = ref(null)
+
+const authModalOpen = ref(false)
+
+const openapiInstance = injectOpenapi() ?? getGlobalOpenapi()
+
+function getSpecDocument() {
+  return openapiInstance?.getSpec?.() ?? openapiInstance?.spec ?? null
+}
+
+const authPlaygroundConfig = computed(() => themeConfig.getAuthPlaygroundConfig())
+
+const authOperationIds = computed(() =>
+  findAuthOperations(getSpecDocument(), authPlaygroundConfig.value),
+)
+
+const authSchemeName = computed(() =>
+  resolveAuthPlaygroundScheme(
+    getSpecDocument(),
+    authPlaygroundConfig.value,
+    themeConfig.getSecurityDefaultScheme(),
+  ),
+)
+
+const showAuthPlaygroundButton = computed(() => {
+  if (props.source === 'auth-modal') {
+    return false
+  }
+
+  if (!authorizations.value.length) {
+    return false
+  }
+
+  if (!isAuthPlaygroundEnabled(getSpecDocument(), authPlaygroundConfig.value)) {
+    return false
+  }
+
+  if (!authOperationIds.value.length || !authSchemeName.value) {
+    return false
+  }
+
+  const targetAuth = authorizations.value.find(auth => auth.label === authSchemeName.value)
+    ?? authorizations.value[0]
+
+  if (!targetAuth) {
+    return false
+  }
+
+  const currentValue = isRef(targetAuth.value) ? targetAuth.value.value : targetAuth.value
+  const defaultValue = getSecuritySchemeDefaultValue(targetAuth)
+
+  return isAuthValueEmpty(currentValue, defaultValue)
+})
+
+function onAuthenticated({ token, schemeName }: { token: string, schemeName: string }) {
+  setSecurityValue(schemeName, token)
+
+  const auth = authorizations.value.find(a => a.label === schemeName)
+  if (!auth) {
+    return
+  }
+
+  if (isRef(auth.value)) {
+    auth.value.value = token
+  }
+  else {
+    auth.value = token
+  }
+}
 
 watch([variables, authorizations, body, selectedServer, enabledParameters], () => {
   const filteredParameters = props.parameters.filter(parameter =>
@@ -305,8 +388,28 @@ watch([operationData.security.securityValues, authorizations], ([values]) => {
             />
           </div>
         </div>
+
+        <div v-if="showAuthPlaygroundButton" class="pt-1">
+          <Button
+            variant="outline"
+            size="sm"
+            type="button"
+            @click="authModalOpen = true"
+          >
+            {{ t('Get token') }}
+          </Button>
+        </div>
       </div>
     </details>
+
+    <OAPlaygroundAuthModal
+      v-if="authSchemeName && authOperationIds.length"
+      v-model:open="authModalOpen"
+      :scheme-name="authSchemeName"
+      :operation-ids="authOperationIds"
+      :openapi="openapiInstance"
+      @authenticated="onAuthenticated"
+    />
 
     <details v-if="headerParameters.length" open>
       <summary>

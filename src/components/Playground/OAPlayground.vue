@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { PlaygroundResponse } from '../../composables/usePlayground'
 import type { OperationData } from '@/lib/operation/operationData'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, inject, onBeforeUnmount } from 'vue'
@@ -49,7 +50,19 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  source: {
+    type: String as () => 'playground' | 'auth-modal',
+    default: 'playground',
+  },
+  compact: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+const emits = defineEmits<{
+  response: [response: PlaygroundResponse]
+}>()
 
 const { loading, response, submitRequest, cleanupImageUrls } = usePlayground()
 
@@ -91,13 +104,17 @@ async function onSubmit() {
     return
   }
 
-  await submitRequest({
+  const result = await submitRequest({
     request: operationData.playground.request.value,
     method: props.method,
     baseUrl: operationData.playground.selectedServer.value,
     path: props.path,
     operationId: props.operationId,
   })
+
+  if (result) {
+    emits('response', result)
+  }
 }
 
 onBeforeUnmount(() => {
@@ -108,6 +125,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="flex flex-col gap-2">
     <OAHeading
+      v-if="!compact"
       level="h2"
       :prefix="headingPrefix"
       class="block"
@@ -130,6 +148,7 @@ onBeforeUnmount(() => {
       :example-behavior="exampleBehavior"
       :x-example-behavior="xExampleBehavior"
       :request-body="props.requestBody"
+      :source="props.source"
       @submit="onSubmit"
     />
 

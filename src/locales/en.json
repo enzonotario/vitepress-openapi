@@ -79,5 +79,11 @@
   "Pattern": "Pattern",
   "Unique Items": "Unique Items",
   "Add Field": "Add Field",
-  "Click to set in playground": "Click to set in playground"
+  "Click to set in playground": "Click to set in playground",
+  "Get token": "Get token",
+  "Authentication": "Authentication",
+  "Auth playground description": "Use this playground to obtain an access token, then continue with the protected operation.",
+  "Auth playground success": "Token saved. You can now try the protected operation.",
+  "Auth playground error": "Authentication failed. Check the credentials and try again.",
+  "Auth playground missing token": "The response did not include an access token."
 }

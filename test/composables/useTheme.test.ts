@@ -692,6 +692,26 @@ describe('security configuration', () => {
     const result = themeConfig.getSecurityDefaultScheme()
     expect(result).toBe('bearer')
   })
+
+  it('returns default auth playground config', () => {
+    const result = themeConfig.getAuthPlaygroundConfig()
+    expect(result.tokenResponseFields).toEqual(['access_token', 'token', 'accessToken'])
+  })
+
+  it('sets and gets auth playground config', () => {
+    themeConfig.setAuthPlaygroundConfig({
+      operationIds: ['Token_Token'],
+      scheme: 'bearerAuth',
+      tokenResponseFields: ['access_token'],
+      enabled: true,
+    })
+
+    const result = themeConfig.getAuthPlaygroundConfig()
+    expect(result.operationIds).toEqual(['Token_Token'])
+    expect(result.scheme).toBe('bearerAuth')
+    expect(result.tokenResponseFields).toEqual(['access_token'])
+    expect(result.enabled).toBe(true)
+  })
 })
 
 describe('spec configuration', () => {

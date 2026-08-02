@@ -79,5 +79,11 @@
   "Pattern": "パターン",
   "Unique Items": "ユニーク項目",
   "Add Field": "フィールドを追加",
-  "Click to set in playground": "クリックしてプレイグラウンドに設定"
+  "Click to set in playground": "クリックしてプレイグラウンドに設定",
+  "Get token": "トークンを取得",
+  "Authentication": "認証",
+  "Auth playground description": "このプレイグラウンドでアクセストークンを取得し、保護されたオペレーションを続行できます。",
+  "Auth playground success": "トークンを保存しました。保護されたオペレーションを試せます。",
+  "Auth playground error": "認証に失敗しました。認証情報を確認してもう一度お試しください。",
+  "Auth playground missing token": "レスポンスにアクセストークンが含まれていません。"
 }

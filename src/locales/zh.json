@@ -79,5 +79,11 @@
   "Pattern": "模式",
   "Unique Items": "唯一项",
   "Add Field": "添加字段",
-  "Click to set in playground": "点击在 Playground 中设置"
+  "Click to set in playground": "点击在 Playground 中设置",
+  "Get token": "获取令牌",
+  "Authentication": "身份验证",
+  "Auth playground description": "使用此 playground 获取 access token，然后继续受保护的操作。",
+  "Auth playground success": "令牌已保存。现在可以尝试受保护的操作。",
+  "Auth playground error": "身份验证失败。请检查凭据后重试。",
+  "Auth playground missing token": "响应中未包含 access token。"
 }

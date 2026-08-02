@@ -319,6 +319,25 @@ Sets the default security scheme used when multiple schemes are available (e.g. 
 |-----------------------------|---------------------------------------|---------------|------------------|
 | `setSecurityDefaultScheme`  | Sets the default security scheme ID.  | `null`        | `string \| null` |
 | `getSecurityDefaultScheme`  | Gets the current default scheme.      | —             | —                |
+| `setAuthPlaygroundConfig`   | Configures the auth playground modal. | see below     | `AuthPlaygroundConfig` |
+| `getAuthPlaygroundConfig`   | Gets the auth playground config.      | —             | —                |
+
+### Auth Playground
+
+Optionally show a **Get token** button in protected playgrounds that opens a nested login/token playground. See [Auth Playground](/customizations/auth-playground).
+
+```ts
+useTheme({
+  security: {
+    defaultScheme: 'bearerAuth',
+    authPlayground: {
+      operationIds: ['Token_Token'],
+      scheme: 'bearerAuth',
+      tokenResponseFields: ['access_token'],
+    },
+  },
+})
+```
 
 ## Code Samples Configuration
 
