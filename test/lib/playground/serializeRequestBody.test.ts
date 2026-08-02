@@ -7,12 +7,15 @@ describe('serializeRequestBody', () => {
     expect(serializeRequestBody(undefined)).toBeUndefined()
   })
 
-  it('passes through FormData, Blob and string bodies', () => {
+  it('passes through FormData, Blob, URLSearchParams and string bodies', () => {
     const formData = new FormData()
     const blob = new Blob(['x'])
+    const params = new URLSearchParams({ grant_type: 'password', username: 'user' })
 
     expect(serializeRequestBody(formData)).toBe(formData)
     expect(serializeRequestBody(blob)).toBe(blob)
+    expect(serializeRequestBody(params)).toBe(params)
+    expect(serializeRequestBody(params)?.toString()).toBe('grant_type=password&username=user')
     expect(serializeRequestBody('raw=text')).toBe('raw=text')
   })
 

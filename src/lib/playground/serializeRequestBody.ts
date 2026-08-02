@@ -12,7 +12,12 @@ export function serializeRequestBody(
     return undefined
   }
 
-  if (body instanceof FormData || body instanceof Blob || typeof body === 'string') {
+  if (
+    body instanceof FormData
+    || body instanceof Blob
+    || body instanceof URLSearchParams
+    || typeof body === 'string'
+  ) {
     return body
   }
 
