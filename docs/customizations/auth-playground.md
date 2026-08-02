@@ -1,6 +1,6 @@
 # Auth Playground
 
-When an operation requires authentication and the playground auth value is empty (or still the default placeholder), vitepress-openapi can show a **Get token** button that opens a modal with a nested playground for your login/token endpoint.
+When an operation requires authentication and the playground auth value is empty (or still the default placeholder), `vitepress-openapi` can show a **Get token** button that opens a modal with a nested playground for your login/token endpoint.
 
 After a successful `2xx` response that includes a token field, the value is written to `localStorage` (same key as the Authorization input) and applied to the protected playground.
 
@@ -41,9 +41,3 @@ If `operationIds` is not set, vitepress-openapi looks for `POST` operations with
 | `setAuthPlaygroundConfig` | Updates auth playground options. |
 
 See also [Security Configuration](/composables/useTheme#security-configuration) in `useTheme`.
-
-## Out of scope (v1)
-
-- Automatic `refresh_token` flows
-- OAuth2 authorization-code redirects
-- Tokens from `Set-Cookie` / non-JSON responses
