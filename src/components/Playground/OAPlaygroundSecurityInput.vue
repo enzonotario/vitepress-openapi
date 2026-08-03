@@ -26,10 +26,6 @@ const emits = defineEmits([
 const slots = useSlots()
 
 const placeholder = computed(() => {
-  if (props.modelValue) {
-    return props.modelValue
-  }
-
   if (props.scheme?.example) {
     return props.scheme.example
   }

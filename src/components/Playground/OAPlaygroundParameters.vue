@@ -6,7 +6,7 @@ import type { PlaygroundSecurityScheme, SecurityUiItem } from '../../types'
 import type { OperationData } from '@/lib/operation/operationData'
 import { useI18n } from '@byjohann/vue-i18n'
 import { useStorage } from '@vueuse/core'
-import { computed, inject, isRef, ref, watch } from 'vue'
+import { computed, inject, isRef, ref, unref, watch } from 'vue'
 import { buildRequest } from '@/lib/codeSamples/buildRequest'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import {
@@ -240,19 +240,25 @@ const showAuthPlaygroundButton = computed(() => {
 })
 
 function onAuthenticated({ token, schemeName }: { token: string, schemeName: string }) {
-  setSecurityValue(schemeName, token)
+  updateAuthorizationValue(schemeName, token)
+}
 
+function getAuthorizationModelValue(authorization: PlaygroundSecurityScheme) {
+  return unref(authorization.value) ?? ''
+}
+
+function updateAuthorizationValue(schemeName: string, value: string | number) {
   const auth = authorizations.value.find(a => a.label === schemeName)
-  if (!auth) {
-    return
+  if (auth) {
+    if (isRef(auth.value)) {
+      auth.value.value = value
+    }
+    else {
+      auth.value = value
+    }
   }
 
-  if (isRef(auth.value)) {
-    auth.value.value = token
-  }
-  else {
-    auth.value = token
-  }
+  setSecurityValue(schemeName, value)
 }
 
 function showGetTokenFor(authorization: PlaygroundSecurityScheme): boolean {
@@ -317,6 +323,12 @@ watch([operationData.security.securityValues, authorizations], ([values]) => {
     if (!auth) {
       continue
     }
+
+    const current = unref(auth.value)
+    if (current === value) {
+      continue
+    }
+
     if (isRef(auth.value)) {
       auth.value.value = value
     }
@@ -387,10 +399,11 @@ watch([operationData.security.securityValues, authorizations], ([values]) => {
           </div>
           <div class="flex flex-row items-center space-x-2">
             <OAPlaygroundSecurityInput
-              v-model="authorization.value"
+              :model-value="getAuthorizationModelValue(authorization)"
               :scheme="authorization"
               :name="authorization.name"
               class="w-full"
+              @update:model-value="updateAuthorizationValue(authorization.label, $event)"
               @submit="emits('submit')"
             >
               <template v-if="showGetTokenFor(authorization)" #trailing>
