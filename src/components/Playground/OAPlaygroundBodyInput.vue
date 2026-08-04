@@ -188,7 +188,7 @@ watch(() => props.contentType, () => {
 
 <template>
   <div>
-    <div v-if="isJsonContent" class="bg-muted p-1 rounded">
+    <div v-if="isJsonContent" class="bg-muted p-1 rounded vp-doc">
       <div v-if="bodyValue !== null" class="m-0! vp-adaptive-theme min-h-16 language-json">
         <button
           title="Copy Code"
