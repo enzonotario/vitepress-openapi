@@ -2,7 +2,7 @@
 import type { PlaygroundResponse } from '../../composables/usePlayground'
 import type { OpenApiSpecInstance } from '@/lib/spec/createOpenApiSpec'
 import { useI18n } from '@byjohann/vue-i18n'
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import {
   extractAuthToken,
 } from '@/lib/playground/authPlayground'
@@ -32,16 +32,27 @@ const emits = defineEmits<{
   'authenticated': [payload: { token: string, schemeName: string }]
 }>()
 
+const SUCCESS_CLOSE_DELAY_MS = 1500
+
 const { t } = useI18n()
 const themeConfig = useTheme()
 
 const errorMessage = ref<string | null>(null)
 const successMessage = ref<string | null>(null)
+let closeTimeout: ReturnType<typeof setTimeout> | null = null
 
 const injectedOpenapi = injectOpenapi()
 const openapi = computed(() => props.openapi ?? injectedOpenapi ?? getGlobalOpenapi())
 
 const selectedOperationId = ref(props.operationIds[0] ?? '')
+
+function clearCloseTimeout() {
+  if (closeTimeout == null) {
+    return
+  }
+  clearTimeout(closeTimeout)
+  closeTimeout = null
+}
 
 watch(() => props.operationIds, (ids) => {
   if (!ids.includes(selectedOperationId.value)) {
@@ -51,9 +62,14 @@ watch(() => props.operationIds, (ids) => {
 
 watch(() => props.open, (isOpen) => {
   if (isOpen) {
+    clearCloseTimeout()
     errorMessage.value = null
     successMessage.value = null
   }
+})
+
+onBeforeUnmount(() => {
+  clearCloseTimeout()
 })
 
 const tokenFields = computed(() =>
@@ -62,10 +78,14 @@ const tokenFields = computed(() =>
 )
 
 function setOpen(value: boolean) {
+  if (!value) {
+    clearCloseTimeout()
+  }
   emits('update:open', value)
 }
 
 function onResponse(response: PlaygroundResponse) {
+  clearCloseTimeout()
   errorMessage.value = null
   successMessage.value = null
 
@@ -89,7 +109,10 @@ function onResponse(response: PlaygroundResponse) {
 
   successMessage.value = t('Auth playground success')
   emits('authenticated', { token, schemeName: props.schemeName })
-  setOpen(false)
+  closeTimeout = setTimeout(() => {
+    closeTimeout = null
+    emits('update:open', false)
+  }, SUCCESS_CLOSE_DELAY_MS)
 }
 </script>
 
