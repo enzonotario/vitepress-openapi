@@ -5,9 +5,8 @@ import { useI18n } from '@byjohann/vue-i18n'
 import { computed, ref, watch } from 'vue'
 import {
   extractAuthToken,
-  getAuthorizationStorageKey,
 } from '@/lib/playground/authPlayground'
-import { isLocalStorageAvailable } from '@/lib/utils/utils'
+import { setSharedAuthorizationValue } from '@/lib/playground/sharedAuthorizationStorage'
 import { getGlobalOpenapi, injectOpenapi } from '../../composables/useOpenapi'
 import { useTheme } from '../../composables/useTheme'
 import OAOperationContext from '../Feature/OAOperationContext.vue'
@@ -83,12 +82,10 @@ function onResponse(response: PlaygroundResponse) {
   }
 
   const persistAuth = themeConfig.getStoragePersistAuth()
-  if (persistAuth && isLocalStorageAvailable()) {
-    localStorage.setItem(
-      getAuthorizationStorageKey(themeConfig.getStoragePrefix(), props.schemeName),
-      token,
-    )
-  }
+  setSharedAuthorizationValue(props.schemeName, token, {
+    prefix: themeConfig.getStoragePrefix(),
+    persist: persistAuth,
+  })
 
   successMessage.value = t('Auth playground success')
   emits('authenticated', { token, schemeName: props.schemeName })

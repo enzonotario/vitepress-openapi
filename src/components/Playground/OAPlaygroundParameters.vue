@@ -17,6 +17,7 @@ import {
 } from '@/lib/playground/authPlayground'
 import { createCompositeKey } from '@/lib/playground/createCompositeKey'
 import { resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
+import { useSharedAuthorizationStorage } from '@/lib/playground/sharedAuthorizationStorage'
 import { isLocalStorageAvailable } from '@/lib/utils/utils'
 import { getGlobalOpenapi, injectOpenapi } from '../../composables/useOpenapi'
 import { usePlayground } from '../../composables/usePlayground'
@@ -269,25 +270,35 @@ function showGetTokenFor(authorization: PlaygroundSecurityScheme): boolean {
   return authorization.label === authSchemeName.value
 }
 
-watch([variables, authorizations, body, selectedServer, enabledParameters], () => {
-  const filteredParameters = props.parameters.filter(parameter =>
-    parameter.name && enabledParameters.value[createCompositeKey({ parameter, operationId: props.operationId })],
-  )
+watch(
+  [
+    variables,
+    () => authorizations.value.map(authorization => unref(authorization.value)),
+    body,
+    selectedServer,
+    enabledParameters,
+  ],
+  () => {
+    const filteredParameters = props.parameters.filter(parameter =>
+      parameter.name && enabledParameters.value[createCompositeKey({ parameter, operationId: props.operationId })],
+    )
 
-  request.value = buildRequest({
-    baseUrl: selectedServer.value,
-    method: props.method as OpenAPIV3.HttpMethods,
-    path: props.path,
-    variables: variables.value,
-    authorizations: authorizations.value,
-    body: enabledParameters.value.body ? body.value : undefined,
-    parameters: filteredParameters,
-    contentType: selectedContentType.value,
-    headers: {
-      ...(useTheme().getCodeSamplesDefaultHeaders() || {}),
-    },
-  })
-}, { deep: true })
+    request.value = buildRequest({
+      baseUrl: selectedServer.value,
+      method: props.method as OpenAPIV3.HttpMethods,
+      path: props.path,
+      variables: variables.value,
+      authorizations: authorizations.value,
+      body: enabledParameters.value.body ? body.value : undefined,
+      parameters: filteredParameters,
+      contentType: selectedContentType.value,
+      headers: {
+        ...(useTheme().getCodeSamplesDefaultHeaders() || {}),
+      },
+    })
+  },
+  { deep: true },
+)
 
 watch(selectedSchemeId, (schemeId) => {
   const selectedScheme = props.securityUi.find((scheme: SecurityUiItem) => scheme.id === schemeId)
@@ -308,35 +319,40 @@ watch(selectedSchemeId, (schemeId) => {
       scheme: scheme.scheme,
       in: scheme.in,
       name: scheme.name ?? name,
-      value: isLocalStorageAvailable() && persistAuth
-        ? useStorage(`${storagePrefix}-authorization-${name}`, example, localStorage)
-        : example,
+      value: useSharedAuthorizationStorage(name, example, {
+        prefix: storagePrefix,
+        persist: persistAuth,
+      }),
       label: name,
       example,
     }
   })
 }, { immediate: true })
 
-watch([operationData.security.securityValues, authorizations], ([values]) => {
-  for (const [schemeId, value] of Object.entries(values)) {
-    const auth = authorizations.value.find(a => a.label === schemeId)
-    if (!auth) {
-      continue
-    }
+watch(
+  () => operationData.security.securityValues.value,
+  (values) => {
+    for (const [schemeId, value] of Object.entries(values)) {
+      const auth = authorizations.value.find(a => a.label === schemeId)
+      if (!auth) {
+        continue
+      }
 
-    const current = unref(auth.value)
-    if (current === value) {
-      continue
-    }
+      const current = unref(auth.value)
+      if (current === value) {
+        continue
+      }
 
-    if (isRef(auth.value)) {
-      auth.value.value = value
+      if (isRef(auth.value)) {
+        auth.value.value = value
+      }
+      else {
+        auth.value = value
+      }
     }
-    else {
-      auth.value = value
-    }
-  }
-}, { deep: true })
+  },
+  { deep: true },
+)
 </script>
 
 <template>
