@@ -118,6 +118,8 @@ export function getAuthorizationsHeaders(authorizations: PlaygroundSecuritySchem
   return headers
 }
 
+const BEARER_PREFIX_RE = /^Bearer\s+/i
+
 /**
  * Ensures bearer tokens become `Authorization: Bearer <token>` without doubling
  * an existing `Bearer ` prefix (case-insensitive).
@@ -128,8 +130,8 @@ export function formatBearerAuthValue(value: string): string {
     return trimmed
   }
 
-  if (/^Bearer\s+/i.test(trimmed)) {
-    return `Bearer ${trimmed.replace(/^Bearer\s+/i, '')}`
+  if (BEARER_PREFIX_RE.test(trimmed)) {
+    return `Bearer ${trimmed.replace(BEARER_PREFIX_RE, '')}`
   }
 
   return `Bearer ${trimmed}`
