@@ -431,7 +431,7 @@ watch(
     </details>
 
     <OAPlaygroundAuthModal
-      v-if="authSchemeName && authOperationIds.length"
+      v-if="props.source !== 'auth-modal' && authSchemeName && authOperationIds.length"
       v-model:open="authModalOpen"
       :scheme-name="authSchemeName"
       :operation-ids="authOperationIds"
