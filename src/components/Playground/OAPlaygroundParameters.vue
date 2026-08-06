@@ -12,7 +12,6 @@ import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import {
   findAuthOperations,
   isAuthPlaygroundEnabled,
-  isAuthValueEmpty,
   resolveAuthPlaygroundScheme,
 } from '@/lib/playground/authPlayground'
 import { createCompositeKey } from '@/lib/playground/createCompositeKey'
@@ -88,7 +87,7 @@ const operationData = inject(OPERATION_DATA_KEY) as OperationData
 const { t } = useI18n()
 const keyLabel = t('Key')
 const valueLabel = t('Value')
-const { setSecurityValue, getSecuritySchemeDefaultValue } = usePlayground()
+const { setSecurityValue } = usePlayground()
 
 const selectedServer = computed({
   get: () => operationData.playground.selectedServer.value,
@@ -227,17 +226,9 @@ const showAuthPlaygroundButton = computed(() => {
     return false
   }
 
-  const targetAuth = authorizations.value.find(auth => auth.label === authSchemeName.value)
-    ?? authorizations.value[0]
-
-  if (!targetAuth) {
-    return false
-  }
-
-  const currentValue = isRef(targetAuth.value) ? targetAuth.value.value : targetAuth.value
-  const defaultValue = getSecuritySchemeDefaultValue(targetAuth)
-
-  return isAuthValueEmpty(currentValue, defaultValue)
+  // Exact label match only — same target as showGetTokenFor (no [0] fallback).
+  // Keep the button available even when a credential is already set.
+  return authorizations.value.some(auth => auth.label === authSchemeName.value)
 })
 
 function onAuthenticated({ token, schemeName }: { token: string, schemeName: string }) {
