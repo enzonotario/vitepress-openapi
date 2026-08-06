@@ -32,6 +32,32 @@ describe('usePaths', () => {
     ])
   })
 
+  it('exposes the operation description', () => {
+    const result = usePaths({
+      spec: {
+        openapi: '3.0.0',
+        paths: {
+          '/users': {
+            get: {
+              operationId: 'getUsers',
+              summary: 'GET /users',
+              description: 'Returns **all** users.',
+            },
+            post: {
+              operationId: 'createUser',
+              summary: 'POST /users',
+            },
+          },
+        },
+      },
+    }).getPathsByVerbs()
+
+    expect(result.map(({ operationId, description }) => ({ operationId, description }))).toEqual([
+      { operationId: 'getUsers', description: 'Returns **all** users.' },
+      { operationId: 'createUser', description: undefined },
+    ])
+  })
+
   it('returns the correct tags', () => {
     const result = paths.getTags()
     expect(result).toEqual([

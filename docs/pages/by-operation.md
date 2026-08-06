@@ -45,6 +45,48 @@ export default {
 }
 ```
 
+### Meta descriptions
+
+`getPathsByVerbs()` also exposes each operation's raw Markdown `description`. Combined with the `markdownToPlainText` helper, you can use it to generate a `<meta name="description">` for each page:
+
+```ts
+import { markdownToPlainText, usePaths } from 'vitepress-openapi'
+import spec from '../public/openapi.json' with {type: 'json'}
+
+export default {
+    paths() {
+        return usePaths({ spec })
+            .getPathsByVerbs()
+            .map(({ operationId, summary, description }) => {
+                return {
+                    params: {
+                        operationId,
+                        pageTitle: `${summary} - vitepress-openapi`,
+                        description: markdownToPlainText(description, { maxLength: 160 }),
+                    },
+                }
+            })
+    },
+}
+```
+
+`markdownToPlainText` reduces the Markdown (and any inline HTML) to a single line of plain text, truncated at a word boundary when `maxLength` is set.
+
+Then map the params onto the page data in your `.vitepress/config.[js,ts]` file, using the [transformPageData](https://vitepress.dev/reference/site-config#transformpagedata) hook:
+
+```ts
+export default defineConfig({
+    transformPageData(pageData) {
+        if (pageData.params?.pageTitle) {
+            pageData.title = pageData.params.pageTitle
+        }
+        if (pageData.params?.description) {
+            pageData.description = pageData.params.description
+        }
+    },
+})
+```
+
 ## Markdown File
 
 In the `[operationId].md` file, you can use the `OAOperation` component to render the operation.

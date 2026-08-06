@@ -126,12 +126,13 @@ export function createOpenApiSpec(options: {
             if (!paths || !paths[path] || !paths[path][verb]) {
               return null
             }
-            const { operationId, summary, tags } = paths[path][verb]
+            const { operationId, summary, description, tags } = paths[path][verb]
             return {
               path,
               verb,
               operationId,
               summary,
+              description,
               tags: tags ?? [],
             }
           })
