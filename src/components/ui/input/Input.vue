@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
+import type { HTMLAttributes, Slot, VNode } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { X } from 'lucide-vue-next'
-import { computed, useSlots } from 'vue'
+import { Comment, computed, Fragment, Text, useSlots } from 'vue'
 import { cn } from '@/lib/utils/utils'
 
 defineOptions({ inheritAttrs: false })
@@ -30,24 +30,62 @@ const hasValue = computed(() =>
   modelValue.value !== '' && modelValue.value !== null && modelValue.value !== undefined,
 )
 
-const hasTrailing = computed(() => Boolean(slots.trailing))
-
 const showClear = computed(() => props.clearable && hasValue.value)
 
-const useAffixWrapper = computed(() => props.clearable || hasTrailing.value)
+function slotHasContent(slot: Slot | undefined): boolean {
+  if (!slot) {
+    return false
+  }
 
-const inputPaddingClass = computed(() => {
-  if (showClear.value && hasTrailing.value) {
+  return vnodesHaveContent(slot())
+}
+
+function vnodesHaveContent(nodes: VNode[] | undefined): boolean {
+  if (!nodes?.length) {
+    return false
+  }
+
+  return nodes.some((node) => {
+    if (node.type === Comment) {
+      return false
+    }
+
+    if (node.type === Text || node.type === Fragment) {
+      if (typeof node.children === 'string') {
+        return node.children.trim().length > 0
+      }
+
+      return vnodesHaveContent(node.children as VNode[] | undefined)
+    }
+
+    return true
+  })
+}
+
+// Evaluated during render (not a computed on slots.*) so parent `v-if` on
+// `#trailing` correctly drops padding when the slot renders nothing.
+function hasTrailingContent(): boolean {
+  return slotHasContent(slots.trailing)
+}
+
+function useAffixWrapper(): boolean {
+  return Boolean(props.clearable || hasTrailingContent())
+}
+
+function inputPaddingClass(): string | undefined {
+  const trailing = hasTrailingContent()
+
+  if (showClear.value && trailing) {
     return 'pr-28'
   }
-  if (hasTrailing.value) {
+  if (trailing) {
     return 'pr-24'
   }
   if (props.clearable) {
     return 'pr-8'
   }
   return undefined
-})
+}
 
 function clear() {
   modelValue.value = ''
@@ -55,14 +93,14 @@ function clear() {
 </script>
 
 <template>
-  <div v-if="useAffixWrapper" class="relative flex items-center w-full">
+  <div v-if="useAffixWrapper()" class="relative flex items-center w-full">
     <input
       v-bind="$attrs"
       v-model="modelValue"
       :type="props.type ?? 'text'"
       :class="cn(
         'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-        inputPaddingClass,
+        inputPaddingClass(),
         props.class,
       )"
     >
