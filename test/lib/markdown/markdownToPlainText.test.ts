@@ -31,6 +31,13 @@ describe('markdownToPlainText', () => {
       .toBe('Returns users. Beta')
   })
 
+  it('strips tags whose quoted attributes contain >', () => {
+    expect(markdownToPlainText('Returns users. <span title="x > y">Beta</span>'))
+      .toBe('Returns users. Beta')
+    expect(markdownToPlainText(`Keeps text <span title='a > b'>inside</span> tags.`))
+      .toBe('Keeps text inside tags.')
+  })
+
   it('collapses newlines and repeated whitespace into single spaces', () => {
     expect(markdownToPlainText('First line.\n\nSecond   line.'))
       .toBe('First line. Second line.')
@@ -55,5 +62,15 @@ describe('markdownToPlainText', () => {
 
   it('does not truncate text shorter than maxLength', () => {
     expect(markdownToPlainText('Returns users.', { maxLength: 30 })).toBe('Returns users.')
+  })
+
+  it('returns an empty string when maxLength is 0', () => {
+    expect(markdownToPlainText('Returns users.', { maxLength: 0 })).toBe('')
+  })
+
+  it('rejects invalid maxLength values', () => {
+    expect(() => markdownToPlainText('Returns users.', { maxLength: -1 })).toThrow(TypeError)
+    expect(() => markdownToPlainText('Returns users.', { maxLength: 1.5 })).toThrow(TypeError)
+    expect(() => markdownToPlainText('Returns users.', { maxLength: Number.POSITIVE_INFINITY })).toThrow(TypeError)
   })
 })
