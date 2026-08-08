@@ -83,6 +83,7 @@
   "Get token": "获取令牌",
   "Authentication": "身份验证",
   "Auth playground description": "使用此 playground 获取 access token，然后继续受保护的操作。",
+  "Auth playground samples description": "运行 curl 示例，然后将 access_token 粘贴到受保护操作的 Authorization 中。",
   "Auth playground success": "令牌已保存。现在可以尝试受保护的操作。",
   "Auth playground error": "身份验证失败。请检查凭据后重试。",
   "Auth playground missing token": "响应中未包含 access token。"

@@ -696,6 +696,8 @@ describe('security configuration', () => {
   it('returns default auth playground config', () => {
     const result = themeConfig.getAuthPlaygroundConfig()
     expect(result.tokenResponseFields).toEqual(['access_token', 'token', 'accessToken'])
+    expect(result.mode).toBe('tryIt')
+    expect(result.description).toBeUndefined()
   })
 
   it('sets and gets auth playground config', () => {
@@ -704,6 +706,8 @@ describe('security configuration', () => {
       scheme: 'bearerAuth',
       tokenResponseFields: ['access_token'],
       enabled: true,
+      mode: 'samples',
+      description: 'Run curl manually',
     })
 
     const result = themeConfig.getAuthPlaygroundConfig()
@@ -711,9 +715,10 @@ describe('security configuration', () => {
     expect(result.scheme).toBe('bearerAuth')
     expect(result.tokenResponseFields).toEqual(['access_token'])
     expect(result.enabled).toBe(true)
+    expect(result.mode).toBe('samples')
+    expect(result.description).toBe('Run curl manually')
   })
 })
-
 describe('spec configuration', () => {
   const themeConfig = useTheme()
 

@@ -83,6 +83,7 @@
   "Get token": "トークンを取得",
   "Authentication": "認証",
   "Auth playground description": "このプレイグラウンドでアクセストークンを取得し、保護されたオペレーションを続行できます。",
+  "Auth playground samples description": "curl を実行し、取得した access_token を保護されたオペレーションの Authorization に貼り付けてください。",
   "Auth playground success": "トークンを保存しました。保護されたオペレーションを試せます。",
   "Auth playground error": "認証に失敗しました。認証情報を確認してもう一度お試しください。",
   "Auth playground missing token": "レスポンスにアクセストークンが含まれていません。"

@@ -108,11 +108,20 @@ export interface PlaygroundConfig {
   }
 }
 
+export type AuthPlaygroundMode = 'tryIt' | 'samples'
+
 export interface AuthPlaygroundConfig {
   enabled?: boolean
   operationIds?: string[]
   scheme?: string
   tokenResponseFields?: string[]
+  /**
+   * `tryIt` (default): nested playground with Try it + auto token extract.
+   * `samples`: params update the request; show code samples only (no browser fetch).
+   */
+  mode?: AuthPlaygroundMode
+  /** Markdown shown above the auth playground when the operation has no `x-auth-playground-description` / `description`. */
+  description?: string
 }
 
 export interface SecurityConfig {
@@ -337,6 +346,8 @@ const defaultValues = {
       operationIds: undefined as string[] | undefined,
       scheme: undefined as string | undefined,
       tokenResponseFields: ['access_token', 'token', 'accessToken'] as string[],
+      mode: 'tryIt' as AuthPlaygroundMode,
+      description: undefined as string | undefined,
     },
   },
   operation: {
@@ -864,6 +875,12 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     }
     if (config.tokenResponseFields !== undefined) {
       authPlayground.tokenResponseFields = config.tokenResponseFields
+    }
+    if (config.mode !== undefined) {
+      authPlayground.mode = config.mode
+    }
+    if (config.description !== undefined) {
+      authPlayground.description = config.description
     }
   }
 

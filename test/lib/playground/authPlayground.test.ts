@@ -6,6 +6,8 @@ import {
   hasHttpOrOauth2Schemes,
   isAuthPlaygroundEnabled,
   isAuthValueEmpty,
+  resolveAuthPlaygroundDescription,
+  resolveAuthPlaygroundMode,
   resolveAuthPlaygroundScheme,
 } from '../../../src/lib/playground/authPlayground'
 
@@ -178,5 +180,43 @@ describe('isAuthValueEmpty', () => {
     expect(isAuthValueEmpty('   ')).toBe(true)
     expect(isAuthValueEmpty('Token', 'Token')).toBe(true)
     expect(isAuthValueEmpty('real-token', 'Token')).toBe(false)
+  })
+})
+
+describe('resolveAuthPlaygroundMode', () => {
+  it('defaults to tryIt', () => {
+    expect(resolveAuthPlaygroundMode()).toBe('tryIt')
+    expect(resolveAuthPlaygroundMode(null)).toBe('tryIt')
+    expect(resolveAuthPlaygroundMode(undefined)).toBe('tryIt')
+    expect(resolveAuthPlaygroundMode('tryIt')).toBe('tryIt')
+  })
+
+  it('accepts samples', () => {
+    expect(resolveAuthPlaygroundMode('samples')).toBe('samples')
+  })
+})
+
+describe('resolveAuthPlaygroundDescription', () => {
+  it('prefers x-auth-playground-description over operation.description and theme', () => {
+    expect(resolveAuthPlaygroundDescription({
+      'x-auth-playground-description': 'From extension',
+      description: 'From operation',
+    }, 'From theme')).toBe('From extension')
+  })
+
+  it('falls back to operation.description', () => {
+    expect(resolveAuthPlaygroundDescription({
+      description: 'From operation',
+    }, 'From theme')).toBe('From operation')
+  })
+
+  it('falls back to theme description', () => {
+    expect(resolveAuthPlaygroundDescription({}, 'From theme')).toBe('From theme')
+    expect(resolveAuthPlaygroundDescription(null, 'From theme')).toBe('From theme')
+  })
+
+  it('returns null when nothing is set (i18n fallback)', () => {
+    expect(resolveAuthPlaygroundDescription(undefined, undefined)).toBeNull()
+    expect(resolveAuthPlaygroundDescription({ description: '  ' }, '   ')).toBeNull()
   })
 })

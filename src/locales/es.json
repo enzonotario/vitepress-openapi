@@ -83,6 +83,7 @@
   "Get token": "Obtener token",
   "Authentication": "Autenticación",
   "Auth playground description": "Usá este playground para obtener un access token y continuar con la operación protegida.",
+  "Auth playground samples description": "Ejecutá el curl y pegá el access_token en Authorization de la operación protegida.",
   "Auth playground success": "Token guardado. Ya podés probar la operación protegida.",
   "Auth playground error": "Falló la autenticación. Revisá las credenciales e intentá de nuevo.",
   "Auth playground missing token": "La respuesta no incluyó un access token."

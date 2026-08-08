@@ -5,6 +5,10 @@ export const DEFAULT_AUTH_TOKEN_RESPONSE_FIELDS = ['access_token', 'token', 'acc
 
 export const AUTH_OPERATION_PATTERN = /token|auth|login|oauth/i
 
+export const AUTH_PLAYGROUND_DESCRIPTION_EXTENSION = 'x-auth-playground-description'
+
+export type AuthPlaygroundMode = 'tryIt' | 'samples'
+
 const HTTP_METHODS = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'] as const
 
 export interface AuthPlaygroundOptions {
@@ -12,6 +16,40 @@ export interface AuthPlaygroundOptions {
   operationIds?: string[]
   scheme?: string
   tokenResponseFields?: string[]
+  mode?: AuthPlaygroundMode
+  description?: string
+}
+
+/**
+ * Resolve markdown instructions for the auth playground modal.
+ * Priority: `x-auth-playground-description` → `operation.description` → theme `description`.
+ * Returns `null` when callers should fall back to i18n Dialog copy.
+ */
+export function resolveAuthPlaygroundDescription(
+  operation: Record<string, unknown> | null | undefined,
+  themeDescription?: string | null,
+): string | null {
+  if (operation && typeof operation === 'object') {
+    const extension = operation[AUTH_PLAYGROUND_DESCRIPTION_EXTENSION]
+    if (typeof extension === 'string' && extension.trim()) {
+      return extension.trim()
+    }
+
+    const description = operation.description
+    if (typeof description === 'string' && description.trim()) {
+      return description.trim()
+    }
+  }
+
+  if (typeof themeDescription === 'string' && themeDescription.trim()) {
+    return themeDescription.trim()
+  }
+
+  return null
+}
+
+export function resolveAuthPlaygroundMode(mode?: AuthPlaygroundMode | null): AuthPlaygroundMode {
+  return mode === 'samples' ? 'samples' : 'tryIt'
 }
 
 export function getAuthorizationStorageKey(prefix: string, schemeName: string): string {

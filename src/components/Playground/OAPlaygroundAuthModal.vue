@@ -5,10 +5,13 @@ import { useI18n } from '@byjohann/vue-i18n'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import {
   extractAuthToken,
+  resolveAuthPlaygroundDescription,
+  resolveAuthPlaygroundMode,
 } from '@/lib/playground/authPlayground'
 import { setSharedAuthorizationValue } from '@/lib/playground/sharedAuthorizationStorage'
 import { getGlobalOpenapi, injectOpenapi } from '../../composables/useOpenapi'
 import { useTheme } from '../../composables/useTheme'
+import OAMarkdown from '../Common/OAMarkdown.vue'
 import OAOperationContext from '../Feature/OAOperationContext.vue'
 import {
   Dialog,
@@ -45,6 +48,21 @@ const injectedOpenapi = injectOpenapi()
 const openapi = computed(() => props.openapi ?? injectedOpenapi ?? getGlobalOpenapi())
 
 const selectedOperationId = ref(props.operationIds[0] ?? '')
+
+const authPlaygroundConfig = computed(() => themeConfig.getAuthPlaygroundConfig())
+
+const mode = computed(() => resolveAuthPlaygroundMode(authPlaygroundConfig.value.mode))
+
+const descriptionMarkdown = computed(() => {
+  const operation = openapi.value?.getOperation?.(selectedOperationId.value) as Record<string, unknown> | undefined
+  return resolveAuthPlaygroundDescription(operation, authPlaygroundConfig.value.description)
+})
+
+const fallbackDescription = computed(() =>
+  mode.value === 'samples'
+    ? t('Auth playground samples description')
+    : t('Auth playground description'),
+)
 
 function clearCloseTimeout() {
   if (closeTimeout == null) {
@@ -85,6 +103,10 @@ function setOpen(value: boolean) {
 }
 
 function onResponse(response: PlaygroundResponse) {
+  if (mode.value !== 'tryIt') {
+    return
+  }
+
   clearCloseTimeout()
   errorMessage.value = null
   successMessage.value = null
@@ -121,8 +143,13 @@ function onResponse(response: PlaygroundResponse) {
     <DialogContent class="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>{{ t('Authentication') }}</DialogTitle>
-        <DialogDescription>
-          {{ t('Auth playground description') }}
+        <OAMarkdown
+          v-if="descriptionMarkdown"
+          :content="descriptionMarkdown"
+          class="text-sm text-muted-foreground text-left"
+        />
+        <DialogDescription :class="descriptionMarkdown ? 'sr-only' : undefined">
+          {{ fallbackDescription }}
         </DialogDescription>
       </DialogHeader>
 
@@ -166,6 +193,7 @@ function onResponse(response: PlaygroundResponse) {
                   :parameters="ctx.parameters"
                   :request-body="ctx.requestBody"
                   :security-ui="ctx.securityUi"
+                  :mode="mode"
                   source="auth-modal"
                   compact
                   @response="onResponse"
@@ -189,6 +217,7 @@ function onResponse(response: PlaygroundResponse) {
               :parameters="ctx.parameters"
               :request-body="ctx.requestBody"
               :security-ui="ctx.securityUi"
+              :mode="mode"
               source="auth-modal"
               compact
               @response="onResponse"

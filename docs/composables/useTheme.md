@@ -324,7 +324,7 @@ Sets the default security scheme used when multiple schemes are available (e.g. 
 
 ### Auth Playground
 
-Optionally show a **Get token** button in protected playgrounds that opens a nested login/token playground. See [Auth Playground](/customizations/auth-playground).
+Optionally show a **Get token** button in protected playgrounds that opens a nested login/token playground. Supports `mode: 'tryIt' | 'samples'` (default `tryIt`). See [Auth Playground](/customizations/auth-playground).
 
 ```ts
 useTheme({
@@ -334,6 +334,7 @@ useTheme({
       operationIds: ['Token_Token'],
       scheme: 'bearerAuth',
       tokenResponseFields: ['access_token'],
+      // mode: 'samples', // when browser CORS blocks successful token responses
     },
   },
 })

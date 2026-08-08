@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { PlaygroundResponse } from '../../composables/usePlayground'
+import type { AuthPlaygroundMode } from '../../composables/useTheme'
 import type { OperationData } from '@/lib/operation/operationData'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, inject, onBeforeUnmount } from 'vue'
@@ -8,6 +9,7 @@ import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { usePlayground } from '../../composables/usePlayground'
 import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'
+import OACodeSamples from '../Sample/OACodeSamples.vue'
 import { Button } from '../ui/button'
 import OAPlaygroundParameters from './OAPlaygroundParameters.vue'
 import OAPlaygroundResponse from './OAPlaygroundResponse.vue'
@@ -58,6 +60,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  mode: {
+    type: String as () => AuthPlaygroundMode,
+    default: 'tryIt',
+  },
 })
 
 const emits = defineEmits<{
@@ -89,6 +95,8 @@ const exampleBehavior = computed(() => themeConfig.getPlaygroundExamplesBehavior
 
 const xExampleBehavior = computed(() => themeConfig.getPlaygroundXExampleBehavior())
 
+const showTryIt = computed(() => props.mode !== 'samples')
+
 const examples = computed(() => {
   const selectedContentTypeValue = operationData.requestBody.selectedContentType.value
 
@@ -100,7 +108,7 @@ const examples = computed(() => {
 })
 
 async function onSubmit() {
-  if (!operationData.playground.request.value) {
+  if (!showTryIt.value || !operationData.playground.request.value) {
     return
   }
 
@@ -152,7 +160,7 @@ onBeforeUnmount(() => {
       @submit="onSubmit"
     />
 
-    <div class="flex flex-col gap-2">
+    <div v-if="showTryIt" class="flex flex-col gap-2">
       <Button variant="primary" @click="onSubmit">
         {{ t('Try it out') }}
       </Button>
@@ -163,5 +171,10 @@ onBeforeUnmount(() => {
         :loading="loading"
       />
     </div>
+
+    <OACodeSamples
+      v-else
+      :operation-id="props.operationId"
+    />
   </div>
 </template>
