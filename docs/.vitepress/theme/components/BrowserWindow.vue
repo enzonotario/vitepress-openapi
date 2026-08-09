@@ -14,19 +14,24 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  style: {
+    type: [Object, String],
+    default: undefined,
+  },
 })
 </script>
 
 <template>
   <div
-    class="rounded border overflow-hidden"
+    class="flex flex-col rounded border overflow-hidden"
     :class="cn({
       'shadow-lg': props.shadow,
     }, props.className)"
+    :style="props.style"
   >
     <div
       v-if="props.showBrowserDots"
-      class="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
+      class="shrink-0 flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
     >
       <span class="w-3 h-3 bg-red-500 rounded-full" />
       <span class="w-3 h-3 bg-yellow-500 rounded-full" />
@@ -37,7 +42,7 @@ const props = defineProps({
       <slot name="title-end" />
     </div>
 
-    <div class="relative w-full h-full overflow-x-hidden">
+    <div class="relative min-h-0 flex-1 w-full overflow-hidden">
       <slot />
     </div>
   </div>

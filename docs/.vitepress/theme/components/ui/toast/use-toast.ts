@@ -5,10 +5,7 @@ import { computed, ref } from 'vue'
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000
 
-export type StringOrVNode =
-  | string
-  | VNode
-  | (() => VNode)
+export type StringOrVNode = string | VNode | (() => VNode)
 
 type ToasterToast = ToastProps & {
   id: string
@@ -33,23 +30,27 @@ function genId() {
 
 type ActionType = typeof actionTypes
 
-type Action =
-  | {
-    type: ActionType['ADD_TOAST']
-    toast: ToasterToast
-  }
-  | {
-    type: ActionType['UPDATE_TOAST']
-    toast: Partial<ToasterToast>
-  }
-  | {
-    type: ActionType['DISMISS_TOAST']
-    toastId?: ToasterToast['id']
-  }
-  | {
-    type: ActionType['REMOVE_TOAST']
-    toastId?: ToasterToast['id']
-  }
+interface AddToastAction {
+  type: ActionType['ADD_TOAST']
+  toast: ToasterToast
+}
+
+interface UpdateToastAction {
+  type: ActionType['UPDATE_TOAST']
+  toast: Partial<ToasterToast>
+}
+
+interface DismissToastAction {
+  type: ActionType['DISMISS_TOAST']
+  toastId?: ToasterToast['id']
+}
+
+interface RemoveToastAction {
+  type: ActionType['REMOVE_TOAST']
+  toastId?: ToasterToast['id']
+}
+
+type Action = AddToastAction | UpdateToastAction | DismissToastAction | RemoveToastAction
 
 interface State {
   toasts: ToasterToast[]
@@ -58,8 +59,9 @@ interface State {
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
 function addToRemoveQueue(toastId: string) {
-  if (toastTimeouts.has(toastId))
-  { return }
+  if (toastTimeouts.has(toastId)) {
+    return
+  }
 
   const timeout = setTimeout(() => {
     toastTimeouts.delete(toastId)
@@ -112,10 +114,12 @@ function dispatch(action: Action) {
     }
 
     case actionTypes.REMOVE_TOAST:
-      if (action.toastId === undefined)
-      { state.value.toasts = [] }
-      else
-      { state.value.toasts = state.value.toasts.filter(t => t.id !== action.toastId) }
+      if (action.toastId === undefined) {
+        state.value.toasts = []
+      }
+      else {
+        state.value.toasts = state.value.toasts.filter(t => t.id !== action.toastId)
+      }
 
       break
   }

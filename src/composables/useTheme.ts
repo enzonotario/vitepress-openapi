@@ -636,8 +636,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setConfig(defaultValues)
   }
 
-  function getState() {
-    return deepUnref(themeConfig)
+  function getState(): PartialUseThemeConfig {
+    return deepUnref(themeConfig) as PartialUseThemeConfig
   }
 
   function getLocale(): Languages {

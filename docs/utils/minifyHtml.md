@@ -27,7 +27,7 @@ const html = minifyHtml(`
 
 ## Example in Sidebar Configuration
 
-This utility is especially useful when defining custom templates in your `useSidebar` configuration:
+This utility is especially useful when defining custom templates in your [`useSidebar`](/composables/useSidebar) configuration:
 
 ```ts {10-15}
 import { useSidebar, minifyHtml } from 'vitepress-openapi'

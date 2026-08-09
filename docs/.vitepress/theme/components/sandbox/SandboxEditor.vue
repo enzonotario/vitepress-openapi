@@ -22,7 +22,7 @@ watch(innerValue, () => {
     sandboxData.loading.value = false
 
     sandboxData.spec.value = parsed
-  } catch (error) {
+  } catch {
     console.warn('Invalid JSON')
   } finally {
     nextTick(() => {

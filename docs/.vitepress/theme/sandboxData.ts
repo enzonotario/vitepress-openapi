@@ -12,8 +12,9 @@ export interface SandboxData {
 
   sandboxView: Ref<'edit' | 'preview'>
   hideSandboxNav: Ref<boolean>
+  autoHeight: Ref<boolean>
 
-  previewComponent: Ref<'PagesByOperation' | 'PagesBySpec' | 'PagesByTag' | 'Introduction' | string>
+  previewComponent: Ref<'PagesByOperation' | 'PagesBySpec' | 'PagesByTag' | 'Playground' | 'Introduction' | string>
   previewHeaders: Ref<Array<any>>
   operationId: Ref<string | null>
   tags: Ref<Array<string>>
@@ -22,6 +23,12 @@ export interface SandboxData {
   sidebarItemsType: Ref<'default' | 'itemsByPaths' | 'itemsByTags'>
   sidebarItemsDepth: Ref<number>
   sidebarItemsCollapsible: Ref<boolean>
+
+  playgroundSidebarItemsType: Ref<'default' | 'itemsByPaths' | 'itemsByTags' | 'custom'>
+  playgroundSidebarUseCustomTemplate: Ref<boolean>
+  playgroundSidebarItemsDepth: Ref<number>
+  playgroundSidebarItemsCollapsible: Ref<boolean>
+  playgroundHideBranding: Ref<boolean>
 
   showAside: Ref<boolean>
 }
@@ -41,6 +48,10 @@ function parsePreviewComponent(options: Partial<UnwrapRef<SandboxData>>) {
     return 'Introduction'
   }
 
+  if (previewComponent === 'OASpecPlayground') {
+    return 'Playground'
+  }
+
   return previewComponent
 }
 
@@ -55,6 +66,7 @@ export function initSandboxData(options: Partial<UnwrapRef<SandboxData>> = {}): 
 
     sandboxView: ref(options.sandboxView ?? 'edit'),
     hideSandboxNav: ref(options.hideSandboxNav ?? false),
+    autoHeight: ref(options.autoHeight ?? false),
 
     previewComponent: ref(parsePreviewComponent(options)),
     previewHeaders: ref([]),
@@ -65,6 +77,12 @@ export function initSandboxData(options: Partial<UnwrapRef<SandboxData>> = {}): 
     sidebarItemsType: ref(options.sidebarItemsType ?? 'default'),
     sidebarItemsDepth: ref(options.sidebarItemsDepth ?? 6),
     sidebarItemsCollapsible: ref(options.sidebarItemsCollapsible ?? true),
+
+    playgroundSidebarItemsType: ref(options.playgroundSidebarItemsType ?? 'default'),
+    playgroundSidebarUseCustomTemplate: ref(options.playgroundSidebarUseCustomTemplate ?? false),
+    playgroundSidebarItemsDepth: ref(options.playgroundSidebarItemsDepth ?? 6),
+    playgroundSidebarItemsCollapsible: ref(options.playgroundSidebarItemsCollapsible ?? true),
+    playgroundHideBranding: ref(options.playgroundHideBranding ?? false),
 
     showAside: ref(options.showAside ?? false),
   }

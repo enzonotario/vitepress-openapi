@@ -9,5 +9,6 @@ export default {
     './sidebar/*.md',
     './showcase/*.md',
     './customizations/*.md',
+    './example/playground.md',
   ],
 }

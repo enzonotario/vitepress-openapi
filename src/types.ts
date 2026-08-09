@@ -18,6 +18,8 @@ export type OperationSlot
     | 'code-samples'
     | 'branding'
     | 'footer'
+
+export type SpecPlaygroundSlot = 'playground'
 // TODO: Implement these slots.
 // | 'summary'
 // | 'servers'
