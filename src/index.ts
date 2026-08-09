@@ -8,6 +8,7 @@ export {
 } from './composables/useOpenapi'
 export { usePaths } from './composables/usePaths'
 export { useSidebar } from './composables/useSidebar'
+export { markdownToPlainText, type MarkdownToPlainTextOptions } from './lib/markdown/markdownToPlainText'
 export { createOpenApiSpec, type OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
 export { minifyHtml } from './lib/utils/minifyHtml'
 export { parseSpec } from './lib/utils/parseSpec'
