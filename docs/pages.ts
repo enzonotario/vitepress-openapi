@@ -36,7 +36,15 @@ export const testsPages = [
     slug: 'security',
     label: 'Security',
     specPath: './public/openapi-security.json',
-    themeConfig: {},
+    themeConfig: {
+      security: {
+        authPlayground: {
+          operationIds: ['getToken'],
+          scheme: 'bearerAuth',
+          tokenResponseFields: ['accessToken', 'access_token', 'token'],
+        },
+      },
+    },
   },
   {
     slug: 'playground-examples',

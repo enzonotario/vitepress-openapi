@@ -213,6 +213,10 @@ export default defineConfigWithTheme({
                           text: 'Examples',
                           link: '/customizations/playground-examples',
                         },
+                        {
+                          text: 'Auth Playground',
+                          link: '/customizations/auth-playground',
+                        },
                       ],
                     },
                   ],

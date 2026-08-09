@@ -114,7 +114,7 @@ watch(operationData.playground.request, async (playgroundRequest, _, onInvalidat
   <div>
     <div
       v-if="samples.length"
-      class="vp-code-group vp-adaptive-theme mt-0"
+      class="vp-doc vp-code-group vp-adaptive-theme mt-0"
     >
       <div class="tabs m-0!">
         <template v-for="sample in samples" :key="sample.key">

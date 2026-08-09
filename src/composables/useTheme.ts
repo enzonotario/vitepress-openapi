@@ -108,8 +108,25 @@ export interface PlaygroundConfig {
   }
 }
 
+export type AuthPlaygroundMode = 'tryIt' | 'samples'
+
+export interface AuthPlaygroundConfig {
+  enabled?: boolean
+  operationIds?: string[]
+  scheme?: string
+  tokenResponseFields?: string[]
+  /**
+   * `tryIt` (default): nested playground with Try it + auto token extract.
+   * `samples`: params update the request; show code samples only (no browser fetch).
+   */
+  mode?: AuthPlaygroundMode
+  /** Markdown shown above the auth playground when the operation has no `x-auth-playground-description` / `description`. */
+  description?: string
+}
+
 export interface SecurityConfig {
   defaultScheme?: Ref<string | null>
+  authPlayground?: AuthPlaygroundConfig
 }
 
 export interface OperationConfig {
@@ -324,6 +341,14 @@ const defaultValues = {
   },
   security: {
     defaultScheme: null as string | null,
+    authPlayground: {
+      enabled: undefined as boolean | undefined,
+      operationIds: undefined as string[] | undefined,
+      scheme: undefined as string | undefined,
+      tokenResponseFields: ['access_token', 'token', 'accessToken'] as string[],
+      mode: 'tryIt' as AuthPlaygroundMode,
+      description: undefined as string | undefined,
+    },
   },
   operation: {
     badges: ['deprecated'] as OperationBadges[],
@@ -442,6 +467,9 @@ const themeConfig: UseThemeConfig = {
   },
   security: {
     defaultScheme: ref(defaultValues.security.defaultScheme),
+    authPlayground: {
+      ...defaultValues.security.authPlayground,
+    },
   },
   operation: {
     badges: ref(defaultValues.operation.badges),
@@ -574,6 +602,13 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     // Security
     if (config.security?.defaultScheme !== undefined) {
       ensureRefProperty(themeConfig, 'security', 'defaultScheme', config.security.defaultScheme)
+    }
+    if (config.security?.authPlayground !== undefined) {
+      const security = ensureNestedProperty(themeConfig, 'security')
+      security.authPlayground = {
+        ...defaultValues.security.authPlayground,
+        ...config.security.authPlayground,
+      }
     }
 
     // Operation
@@ -817,6 +852,36 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
   function setSecurityDefaultScheme(value: string | null) {
     ensureRefProperty(themeConfig, 'security', 'defaultScheme', value)
+  }
+
+  function getAuthPlaygroundConfig(): AuthPlaygroundConfig {
+    return {
+      ...(themeConfig?.security?.authPlayground ?? defaultValues.security.authPlayground),
+    }
+  }
+
+  function setAuthPlaygroundConfig(config: Partial<AuthPlaygroundConfig>) {
+    const security = ensureNestedProperty(themeConfig, 'security')
+    const authPlayground = ensureNestedProperty(security, 'authPlayground')
+
+    if (config.enabled !== undefined) {
+      authPlayground.enabled = config.enabled
+    }
+    if (config.operationIds !== undefined) {
+      authPlayground.operationIds = config.operationIds
+    }
+    if (config.scheme !== undefined) {
+      authPlayground.scheme = config.scheme
+    }
+    if (config.tokenResponseFields !== undefined) {
+      authPlayground.tokenResponseFields = config.tokenResponseFields
+    }
+    if (config.mode !== undefined) {
+      authPlayground.mode = config.mode
+    }
+    if (config.description !== undefined) {
+      authPlayground.description = config.description
+    }
   }
 
   function getOperationBadges(): OperationBadges[] {
@@ -1157,6 +1222,8 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     setPlaygroundXExampleBehavior,
     getSecurityDefaultScheme,
     setSecurityDefaultScheme,
+    getAuthPlaygroundConfig,
+    setAuthPlaygroundConfig,
     getOperationBadges,
     setOperationBadges,
     getOperationSlots,

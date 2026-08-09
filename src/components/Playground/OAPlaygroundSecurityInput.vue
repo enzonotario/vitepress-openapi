@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 import { usePlayground } from '../../composables/usePlayground'
 import { Input } from '../ui/input'
 
@@ -23,11 +23,9 @@ const emits = defineEmits([
   'submit',
 ])
 
-const placeholder = computed(() => {
-  if (props.modelValue) {
-    return props.modelValue
-  }
+const slots = useSlots()
 
+const placeholder = computed(() => {
   if (props.scheme?.example) {
     return props.scheme.example
   }
@@ -37,7 +35,7 @@ const placeholder = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col space-y-2">
+  <div class="flex flex-col space-y-2 w-full">
     <Input
       :id="name"
       :model-value="modelValue"
@@ -48,6 +46,10 @@ const placeholder = computed(() => {
       class="bg-muted"
       @update:model-value="emits('update:modelValue', $event)"
       @keydown.enter="emits('submit')"
-    />
+    >
+      <template v-if="slots.trailing" #trailing>
+        <slot name="trailing" />
+      </template>
+    </Input>
   </div>
 </template>

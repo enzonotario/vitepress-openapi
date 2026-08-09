@@ -36,6 +36,20 @@ describe('getAuthorizationsHeaders', () => {
     })
   })
 
+  it('prefixes Bearer for raw http bearer tokens', () => {
+    const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'bearer', value: 'token123' })
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'Bearer token123',
+    })
+  })
+
+  it('does not double the Bearer prefix', () => {
+    const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'bearer', value: 'bearer   token123' })
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'Bearer token123',
+    })
+  })
+
   it('handles http digest authorization', () => {
     const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'digest', value: 'Digest digest-value' })
     expect(Object.fromEntries(headers.entries())).toEqual({
@@ -51,9 +65,30 @@ describe('getAuthorizationsHeaders', () => {
   })
 
   it('defaults to Bearer for http authorization with no scheme', () => {
-    const headers = getAuthorizationsHeaders({ type: 'http', value: 'Bearer token123' })
+    const headers = getAuthorizationsHeaders({ type: 'http', value: 'token123' })
     expect(Object.fromEntries(headers.entries())).toEqual({
       authorization: 'Bearer token123',
+    })
+  })
+
+  it('handles oauth2 authorization', () => {
+    const headers = getAuthorizationsHeaders({ type: 'oauth2', value: 'oauth-token' })
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'Bearer oauth-token',
+    })
+  })
+
+  it('does not double Bearer for oauth2 values that already include it', () => {
+    const headers = getAuthorizationsHeaders({ type: 'oauth2', value: 'Bearer oauth-token' })
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'Bearer oauth-token',
+    })
+  })
+
+  it('handles openIdConnect authorization', () => {
+    const headers = getAuthorizationsHeaders({ type: 'openIdConnect', value: 'openid-token' })
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'Bearer openid-token',
     })
   })
 
@@ -66,20 +101,6 @@ describe('getAuthorizationsHeaders', () => {
   it('ignores apiKey authorization not in header', () => {
     const headers = getAuthorizationsHeaders({ type: 'apiKey', in: 'query', name: 'api_key', value: 'key123' })
     expect(Object.fromEntries(headers.entries())).toEqual({})
-  })
-
-  it('handles oauth2 authorization', () => {
-    const headers = getAuthorizationsHeaders({ type: 'oauth2', value: 'oauth-token' })
-    expect(Object.fromEntries(headers.entries())).toEqual({
-      authorization: 'Bearer oauth-token',
-    })
-  })
-
-  it('handles openIdConnect authorization', () => {
-    const headers = getAuthorizationsHeaders({ type: 'openIdConnect', value: 'openid-token' })
-    expect(Object.fromEntries(headers.entries())).toEqual({
-      authorization: 'Bearer openid-token',
-    })
   })
 
   it('handles multiple authorization schemes', () => {
