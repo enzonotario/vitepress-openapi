@@ -62,7 +62,7 @@
     "@vueuse/core": "^14.2.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-vue-next": "^1.0.0",
+    "@lucide/vue": "^1.39.0",
     "markdown-it-link-attributes": "^4.0.1",
     "reka-ui": "^2.9.5"
   },

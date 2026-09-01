@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ToastCloseProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { X } from 'lucide-vue-next'
+import { X } from '@lucide/vue'
 import { ToastClose } from 'reka-ui'
 import { computed } from 'vue'
 import { cn } from '../../../../../../src/lib/utils/utils'
