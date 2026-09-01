@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+import { X } from '@lucide/vue'
 import { useVModel } from '@vueuse/core'
-import { X } from 'lucide-vue-next'
 import { cn } from '@/lib/utils/utils'
 
 defineOptions({ inheritAttrs: false })

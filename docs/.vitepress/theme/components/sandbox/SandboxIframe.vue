@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { compressToURL } from '@amoutonbrady/lz-string'
-import { ExternalLink } from 'lucide-vue-next'
+import { ExternalLink } from '@lucide/vue'
 import { deepUnref } from '../../../../../src/lib/utils/deepUnref'
 import { cn } from '../../../../../src/lib/utils/utils'
 import { initSandboxData } from '../../sandboxData'
