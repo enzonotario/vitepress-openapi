@@ -2,7 +2,11 @@ packages:
   - docs
   - e2e/local/dev
 
-onlyBuiltDependencies:
-  - esbuild
-  - json-editor-vue
-  - vue-demi
+allowBuilds:
+  esbuild: true
+  vue-demi: true
+
+minimumReleaseAgeExclude:
+  - '@lucide/vue@1.39.0'
+  - '@sindresorhus/slugify@3.0.1'
+  - '@types/node@26.4.1'
