@@ -352,6 +352,7 @@ curl_close($ch);`)
     const result = await generateCodeSample(langConfigs.php, request)
     expect(result).toBe(`$ch = curl_init("https://api.example.com/resource?search=query");
 
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'key' => 'value'

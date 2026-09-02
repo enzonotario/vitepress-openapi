@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
-import yaml from 'js-yaml'
+import { dump } from 'js-yaml'
 import { Badge } from '../ui/badge/index'
 
 const props = defineProps({
@@ -25,7 +25,7 @@ function downloadSpec(format: 'json' | 'yaml'): void {
 
     const content = format === 'json'
       ? JSON.stringify(originalSpec, null, 2)
-      : yaml.dump(originalSpec)
+      : dump(originalSpec)
 
     const mimeType = format === 'json'
       ? 'application/json'

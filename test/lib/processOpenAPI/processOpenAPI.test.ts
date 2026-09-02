@@ -1,4 +1,4 @@
-import yaml from 'js-yaml'
+import { dump } from 'js-yaml'
 import { describe, expect, it } from 'vitest'
 import realSpec from '../../../docs/public/openapi.json'
 import { parseOpenapi } from '../../../src/lib/parser/parseOpenapi'
@@ -11,7 +11,7 @@ describe('processOpenAPI', () => {
   })
 
   it('produces the same result for YAML and JSON specs', async () => {
-    const yamlSpec = yaml.dump(realSpec)
+    const yamlSpec = dump(realSpec)
 
     expect(typeof yamlSpec).toBe('string')
     expect(typeof realSpec).toBe('object')
