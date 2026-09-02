@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main, develop ]
   issue_comment:
-    types: [created]
+    types: [ created ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,16 +27,17 @@ jobs:
       )
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # For PR comments, checkout the PR's branch (works with forks too)
-          ref: ${{ github.event_name == 'issue_comment' && format('refs/pull/{0}/head', github.event.issue.number) || github.ref }}
+          ref: ${{ github.event_name == 'issue_comment' && format('refs/pull/{0}/head',
+            github.event.issue.number) || github.ref }}
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4.0.0
+        uses: pnpm/action-setup@v6.0.10
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: '22.13.0'
           cache: 'pnpm'
@@ -46,7 +47,7 @@ jobs:
 
       - name: Cache Playwright browsers
         id: playwright-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
@@ -93,7 +94,7 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.resolve-url.outputs.url }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
