@@ -1,4 +1,4 @@
-import type MarkdownIt from 'markdown-it'
+import type { MarkdownIt } from 'markdown-it'
 import { describe, expect, it, vi } from 'vitest'
 import { useMarkdown } from '../../src/composables/useMarkdown'
 import { useOpenapi } from '../../src/composables/useOpenapi'

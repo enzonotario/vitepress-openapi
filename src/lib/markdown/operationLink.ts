@@ -1,5 +1,5 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { PluginWithOptions } from 'markdown-it'
+import type { MarkdownIt } from 'markdown-it'
 import { getGlobalOpenapi } from '../../composables/useOpenapi'
 
 export interface OperationLinkPluginOptions {
@@ -104,7 +104,7 @@ function modifyTokensForOperationLink(
  * Markdown-it plugin that transforms links with a specific prefix into operation links
  * with method badges and proper styling.
  */
-const operationLink: PluginWithOptions<OperationLinkPluginOptions> = (md, options = {}) => {
+const operationLink = (md: MarkdownIt, options: OperationLinkPluginOptions = {}) => {
   const defaultRender = md.renderer.rules.link_open || createDefaultRenderer
 
   const defaultLinkCloseRender = md.renderer.rules.link_close || createDefaultRenderer
@@ -127,7 +127,7 @@ const operationLink: PluginWithOptions<OperationLinkPluginOptions> = (md, option
       return defaultRender(tokens, idx, options, env, self)
     }
 
-    const href = tokens[idx].attrs![hrefIndex][1]
+    const href = String(tokens[idx].attrs![hrefIndex][1])
 
     const operationId = extractOperationId(href, linkPrefix)
     if (!operationId) {
