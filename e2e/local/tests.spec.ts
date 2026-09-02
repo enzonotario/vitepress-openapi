@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { testsPages } from '../../docs/pages'
+import { waitForStablePage } from '../utils'
 
 const pageSlugs = testsPages.map(page => page.slug)
 
@@ -8,6 +9,7 @@ for (const pageSlug of pageSlugs) {
     await page.goto(`/tests/${pageSlug}`)
 
     await page.waitForSelector('h1')
+    await waitForStablePage(page)
 
     await expect(page).toHaveScreenshot({
       fullPage: true,
