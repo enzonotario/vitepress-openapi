@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@typescript-eslint/utils': ^8.69.0
+
 importers:
 
   .:
@@ -2022,7 +2025,7 @@ packages:
     engines: {node: ^22.22.2 || >=24.15.0}
     peerDependencies:
       '@typescript-eslint/typescript-estree': '*'
-      '@typescript-eslint/utils': '*'
+      '@typescript-eslint/utils': ^8.69.0
       eslint: '*'
 
   eslint-plugin-cypress@7.0.1:
