@@ -6,6 +6,9 @@ allowBuilds:
   esbuild: true
   vue-demi: true
 
+overrides:
+  '@typescript-eslint/utils': ^8.69.0
+
 minimumReleaseAgeExclude:
   - '@lucide/vue@1.39.0'
   - '@sindresorhus/slugify@3.0.1'
