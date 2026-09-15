@@ -4,10 +4,10 @@ on:
   push:
 
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
 
   pull_request_review:
-    types: [ submitted ]
+    types: [submitted]
 
 jobs:
   publish:
@@ -23,8 +23,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: '22.13.0'
-          cache: 'pnpm'
+          node-version: 22.13.0
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install
