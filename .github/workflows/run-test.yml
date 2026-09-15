@@ -6,10 +6,10 @@ on:
       - main
 
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
 
   pull_request_review:
-    types: [ submitted ]
+    types: [submitted]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 20, 22, 24, 25 ]
+        node-version: [20, 22, 24, 25]
 
     steps:
       - name: Checkout code

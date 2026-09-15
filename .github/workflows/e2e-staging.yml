@@ -2,11 +2,11 @@ name: E2E Staging Tests
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   issue_comment:
-    types: [ created ]
+    types: [created]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -39,8 +39,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: '22.13.0'
-          cache: 'pnpm'
+          node-version: 22.13.0
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install
