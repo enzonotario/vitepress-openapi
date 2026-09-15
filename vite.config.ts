@@ -11,7 +11,17 @@ export default defineConfig({
       script: {
         fs: {
           fileExists: existsSync,
-          readFile: file => readFileSync(file, 'utf-8'),
+          readFile: (file) => {
+            try {
+              return readFileSync(file, 'utf-8')
+            }
+            catch (error) {
+              if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+                return undefined
+              }
+              throw error
+            }
+          },
           realpath: realpathSync,
         },
       },
