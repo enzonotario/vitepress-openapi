@@ -45,6 +45,18 @@ describe('coercePlaygroundParameterValue', () => {
   it('does not parse an array for an object schema', () => {
     expect(coercePlaygroundParameterValue({ type: 'object' }, '["important"]')).toBe('["important"]')
   })
+
+  it('parses an array when $ref has a local array type', () => {
+    const schema = { $ref: '#/components/schemas/Tags', type: 'array', items: { type: 'string' } }
+    expect(coercePlaygroundParameterValue(schema, '["important","draft"]')).toEqual(['important', 'draft'])
+    expect(valueFromPlaygroundTextField(schema, '["important","draft"]')).toEqual(['important', 'draft'])
+  })
+
+  it('does not parse JSON when the schema is only a $ref', () => {
+    const schema = { $ref: '#/components/schemas/Tags' }
+    expect(coercePlaygroundParameterValue(schema, '["important","draft"]')).toBe('["important","draft"]')
+    expect(schemaAcceptsStructuredJson(schema)).toBe(false)
+  })
 })
 
 describe('valueFromPlaygroundTextField', () => {

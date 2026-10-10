@@ -8,9 +8,13 @@ export interface ParameterSchemaLike {
 type JsonKind = 'array' | 'object'
 
 function jsonKinds(schema: unknown): Set<JsonKind> {
-  if (!schema || typeof schema !== 'object' || '$ref' in schema) {
+  if (!schema || typeof schema !== 'object') {
     return new Set()
   }
+
+  // A bare $ref has no local kind. OpenAPI 3.1 Schema Objects can also
+  // carry keywords next to $ref, and those keywords still apply.
+  // https://spec.openapis.org/oas/v3.1.2.html#schema-object
 
   const candidate = schema as ParameterSchemaLike
   const rawType = candidate.type

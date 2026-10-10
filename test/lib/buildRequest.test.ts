@@ -727,6 +727,28 @@ describe('parameter serialization', () => {
       ])
     })
 
+    it('explodes a query array when $ref has a local array type', () => {
+      const request = buildRequest({
+        path: '/documents',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          {
+            name: 'tags',
+            in: 'query',
+            style: 'form',
+            explode: true,
+            schema: { $ref: '#/components/schemas/Tags', type: 'array', items: { type: 'string' } },
+          } as any,
+        ],
+        variables: {
+          tags: '["important","draft"]',
+        },
+      })
+
+      expect(request.query.tags).toEqual(['important', 'draft'])
+    })
+
     it('keeps form explode false after parsing array JSON', () => {
       const request = buildRequest({
         path: '/endpoint',
