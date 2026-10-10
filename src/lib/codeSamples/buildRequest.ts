@@ -14,6 +14,16 @@ type ParameterValue
     | Record<string, unknown>
     | Array<string | number | boolean | Record<string, unknown>>
 
+function joinParameterArray(value: readonly unknown[]): string {
+  return value.map((element) => {
+    if (Array.isArray(element) || (element !== null && typeof element === 'object')) {
+      return JSON.stringify(element)
+    }
+    // Match Array#toString for null and undefined.
+    return element == null ? '' : String(element)
+  }).join(',')
+}
+
 function processParameters(
   variables: Record<string, ParameterValue>,
   parameters: OpenAPIV3.ParameterObject[],
@@ -35,7 +45,7 @@ function processParameters(
     if (value === undefined || value === '') {
       continue
     }
-    callback(key, String(value))
+    callback(key, Array.isArray(value) ? joinParameterArray(value) : String(value))
   }
 }
 

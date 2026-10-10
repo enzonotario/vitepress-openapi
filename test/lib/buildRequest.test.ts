@@ -743,6 +743,45 @@ describe('parameter serialization', () => {
       expect(request.query.tags).toBe('important,draft_edited')
     })
 
+    it('serializes object and nested-array elements in header, path, and cookie arrays as JSON', () => {
+      const schema = { type: 'array' }
+      const request = buildRequest({
+        path: '/documents/{labels}',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'labels', in: 'path', schema } as any,
+          { name: 'X-Items', in: 'header', schema } as any,
+          { name: 'items', in: 'cookie', schema } as any,
+        ],
+        variables: {
+          labels: '[{"id":1},[2,3]]',
+          'X-Items': '[{"id":1},[2,3]]',
+          items: '[{"id":1},[2,3]]',
+        },
+      })
+
+      expect(request.path).toBe('/documents/{"id":1},[2,3]')
+      expect(request.headers['x-items']).toBe('{"id":1},[2,3]')
+      expect(request.cookies.items).toBe('{"id":1},[2,3]')
+    })
+
+    it('joins scalar header arrays with commas', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'X-Tags', in: 'header', schema: { type: 'array', items: { type: 'string' } } } as any,
+        ],
+        variables: {
+          'X-Tags': '["important","draft",null]',
+        },
+      })
+
+      expect(request.headers['x-tags']).toBe('important,draft,')
+    })
+
     it('does not parse JSON text for a string query parameter', () => {
       const request = buildRequest({
         path: '/endpoint',
