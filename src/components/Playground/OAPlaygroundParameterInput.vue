@@ -3,7 +3,7 @@ import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, onMounted, ref, watch } from 'vue'
 import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
-import { coercePlaygroundParameterValue, schemaAcceptsStructuredJson } from '@/lib/playground/coercePlaygroundParameterValue'
+import { valueFromPlaygroundTextField } from '@/lib/playground/coercePlaygroundParameterValue'
 import { resolveExampleForPlaceholder, resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import { Checkbox } from '../ui/checkbox'
@@ -94,7 +94,7 @@ watch(() => props.modelValue, (value) => {
     return
   }
 
-  const fromDraft = coercePlaygroundParameterValue(props.parameter.schema, textDraft.value)
+  const fromDraft = valueFromPlaygroundTextField(props.parameter.schema, textDraft.value)
   if (!sameValue(fromDraft, value)) {
     textDraft.value = undefined
   }
@@ -111,9 +111,10 @@ function handleInputChange(value: any) {
     emits('update:enabled', true)
   }
 
-  if (typeof value === 'string' && schemaAcceptsStructuredJson(props.parameter.schema)) {
-    textDraft.value = value
-    emits('update:modelValue', coercePlaygroundParameterValue(props.parameter.schema, value))
+  if (typeof value === 'string') {
+    const next = valueFromPlaygroundTextField(props.parameter.schema, value)
+    textDraft.value = Array.isArray(next) ? value : undefined
+    emits('update:modelValue', next)
     return
   }
 

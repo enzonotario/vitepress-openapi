@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { coercePlaygroundParameterValue, schemaAcceptsStructuredJson } from '../../../src/lib/playground/coercePlaygroundParameterValue'
+import { coercePlaygroundParameterValue, schemaAcceptsStructuredJson, valueFromPlaygroundTextField } from '../../../src/lib/playground/coercePlaygroundParameterValue'
 
 const arraySchema = { type: 'array', items: { type: 'string' } }
 
@@ -44,5 +44,18 @@ describe('coercePlaygroundParameterValue', () => {
 
   it('does not parse an array for an object schema', () => {
     expect(coercePlaygroundParameterValue({ type: 'object' }, '["important"]')).toBe('["important"]')
+  })
+})
+
+describe('valueFromPlaygroundTextField', () => {
+  it('parses array JSON from the text field', () => {
+    expect(valueFromPlaygroundTextField(arraySchema, '["important","draft_edited"]')).toEqual([
+      'important',
+      'draft_edited',
+    ])
+  })
+
+  it('keeps object JSON text when the schema type is an object union', () => {
+    expect(valueFromPlaygroundTextField({ type: ['object', 'null'] }, '{"status":"active"}')).toBe('{"status":"active"}')
   })
 })

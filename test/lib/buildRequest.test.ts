@@ -759,6 +759,22 @@ describe('parameter serialization', () => {
       expect(request.query.q).toBe('["important","draft"]')
     })
 
+    it('keeps object JSON text as one query value', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'filter', in: 'query', schema: { type: ['object', 'null'] } } as any,
+        ],
+        variables: {
+          filter: '{"status":"active"}',
+        },
+      })
+
+      expect(request.query.filter).toBe('{"status":"active"}')
+    })
+
     it('serializes array with form style and explode false (comma-separated)', () => {
       const request = buildRequest({
         path: '/endpoint',

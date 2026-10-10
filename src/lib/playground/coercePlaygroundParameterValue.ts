@@ -85,3 +85,17 @@ export function coercePlaygroundParameterValue(schema: unknown, value: unknown):
 
   return value
 }
+
+/**
+ * Value stored from the playground text field.
+ * Only an array is parsed. Object JSON stays a string so query serialization
+ * does not switch to form-object keys.
+ */
+export function valueFromPlaygroundTextField(schema: unknown, value: unknown): unknown {
+  if (typeof value !== 'string') {
+    return value
+  }
+
+  const coerced = coercePlaygroundParameterValue(schema, value)
+  return Array.isArray(coerced) ? coerced : value
+}
