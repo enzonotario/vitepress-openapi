@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { buildHarRequest } from '../../src/lib/codeSamples/buildHarRequest'
 import { buildRequest } from '../../src/lib/codeSamples/buildRequest'
 
 describe('buildRequest', () => {
@@ -698,6 +699,66 @@ describe('parameter serialization', () => {
       expect(request.query.tags).toEqual(['tag1', 'tag2', 'tag3'])
     })
 
+    it('parses edited array JSON before form explode serialization', () => {
+      const request = buildRequest({
+        path: '/documents/{documentId}',
+        method: 'PUT',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'documentId', in: 'path', schema: { type: 'string' } } as any,
+          {
+            name: 'tags',
+            in: 'query',
+            style: 'form',
+            explode: true,
+            schema: { type: 'array', items: { type: 'string' } },
+          } as any,
+        ],
+        variables: {
+          documentId: 'doc-123',
+          tags: '["important","draft_edited"]',
+        },
+      })
+
+      expect(request.query.tags).toEqual(['important', 'draft_edited'])
+      expect(buildHarRequest(request).queryString).toEqual([
+        { name: 'tags', value: 'important' },
+        { name: 'tags', value: 'draft_edited' },
+      ])
+    })
+
+    it('keeps form explode false after parsing array JSON', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'tags', in: 'query', style: 'form', explode: false, schema: { type: 'array' } } as any,
+        ],
+        variables: {
+          tags: '["important","draft_edited"]',
+        },
+      })
+
+      expect(request.query.tags).toBe('important,draft_edited')
+    })
+
+    it('does not parse JSON text for a string query parameter', () => {
+      const request = buildRequest({
+        path: '/endpoint',
+        method: 'GET',
+        baseUrl: 'https://api.example.com',
+        parameters: [
+          { name: 'q', in: 'query', schema: { type: 'string' } } as any,
+        ],
+        variables: {
+          q: '["important","draft"]',
+        },
+      })
+
+      expect(request.query.q).toBe('["important","draft"]')
+    })
+
     it('serializes array with form style and explode false (comma-separated)', () => {
       const request = buildRequest({
         path: '/endpoint',
@@ -1007,6 +1068,30 @@ describe('jSON examples in query parameters', () => {
       variables: {},
     })
     expect(request.query.filter).toEqual(`{"status":"active","type":"user"}`)
+  })
+
+  it('explodes an array example when the schema type is array', () => {
+    const request = buildRequest({
+      path: '/documents/{documentId}',
+      method: 'PUT',
+      baseUrl: 'https://api.example.com',
+      parameters: [
+        {
+          name: 'tags',
+          in: 'query',
+          style: 'form',
+          explode: true,
+          schema: {
+            type: 'array',
+            items: { type: 'string' },
+            example: ['important', 'draft'],
+          },
+        } as any,
+      ],
+      variables: {},
+    })
+
+    expect(request.query.tags).toEqual(['important', 'draft'])
   })
 
   it('handles JSON array examples in query parameters', () => {

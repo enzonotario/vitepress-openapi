@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import { useI18n } from '@byjohann/vue-i18n'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
+import { coercePlaygroundParameterValue, schemaAcceptsStructuredJson } from '@/lib/playground/coercePlaygroundParameterValue'
 import { resolveExampleForPlaceholder, resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import OAJSONEditor from '../Common/OAJSONEditor.vue'
 import { Checkbox } from '../ui/checkbox'
@@ -65,11 +66,38 @@ const inputPlaceholder = computed(() =>
   formatValueForPlaceholder(exampleForPlaceholder.value ?? ''),
 )
 
+// Keep the text the user is typing. The stored value may already be an array.
+const textDraft = ref<string | undefined>(undefined)
+
 const displayValue = computed(() => {
+  if (textDraft.value !== undefined) {
+    return textDraft.value
+  }
   if (typeof props.modelValue === 'object' && props.modelValue !== null) {
     return JSON.stringify(props.modelValue)
   }
   return props.modelValue
+})
+
+function sameValue(left: unknown, right: unknown): boolean {
+  if (Object.is(left, right)) {
+    return true
+  }
+  if (typeof left === 'object' && left !== null && typeof right === 'object' && right !== null) {
+    return JSON.stringify(left) === JSON.stringify(right)
+  }
+  return false
+}
+
+watch(() => props.modelValue, (value) => {
+  if (textDraft.value === undefined) {
+    return
+  }
+
+  const fromDraft = coercePlaygroundParameterValue(props.parameter.schema, textDraft.value)
+  if (!sameValue(fromDraft, value)) {
+    textDraft.value = undefined
+  }
 })
 
 onMounted(() => {
@@ -83,7 +111,18 @@ function handleInputChange(value: any) {
     emits('update:enabled', true)
   }
 
+  if (typeof value === 'string' && schemaAcceptsStructuredJson(props.parameter.schema)) {
+    textDraft.value = value
+    emits('update:modelValue', coercePlaygroundParameterValue(props.parameter.schema, value))
+    return
+  }
+
+  textDraft.value = undefined
   emits('update:modelValue', value)
+}
+
+function onTextBlur() {
+  textDraft.value = undefined
 }
 
 function isBinary(parameter: any) {
@@ -207,6 +246,7 @@ function onFileChange(e: Event) {
             clearable
             class="bg-muted"
             @update:model-value="handleInputChange($event)"
+            @blur="onTextBlur"
             @keydown.enter="emits('submit')"
           />
         </template>

@@ -3,6 +3,7 @@ import type { PlaygroundSecurityScheme } from '../../types'
 import { unref } from 'vue'
 import { DEFAULT_BASE_URL } from '../../composables/useTheme'
 import { getPropertyExample } from '../examples/getPropertyExample'
+import { coercePlaygroundParameterValue } from '../playground/coercePlaygroundParameterValue'
 import { resolveBaseUrl } from '../utils/resolveBaseUrl'
 import { OARequest } from './request'
 
@@ -18,15 +19,23 @@ function processParameters(
   parameters: OpenAPIV3.ParameterObject[],
   callback: (key: string, value: string) => void,
 ) {
-  const parameterNames = new Set(parameters.map(parameter => parameter.name))
+  const parametersByName = new Map(
+    parameters.flatMap(parameter => parameter.name ? [[parameter.name, parameter] as const] : []),
+  )
+
   for (const [key, rawValue] of Object.entries(variables)) {
-    if (!parameterNames.has(key)) {
+    const parameter = parametersByName.get(key)
+    if (!parameter) {
       continue
     }
-    if (rawValue === undefined || rawValue === '') {
+
+    const coerced = coercePlaygroundParameterValue(parameter.schema, rawValue)
+    // Only arrays come from the JSON text field. Leave objects on the old path.
+    const value = Array.isArray(coerced) ? coerced : rawValue
+    if (value === undefined || value === '') {
       continue
     }
-    callback(key, String(rawValue))
+    callback(key, String(value))
   }
 }
 
@@ -245,12 +254,16 @@ function getQuery(
       return
     }
 
-    const value = variables[parameter.name]
+    const rawValue = variables[parameter.name]
+    const coerced = coercePlaygroundParameterValue(parameter.schema, rawValue)
+    // Arrays are edited as JSON text. Objects stay on the existing path.
+    const value = (Array.isArray(coerced) ? coerced : rawValue) as ParameterValue
     if (value === undefined || value === '') {
       return
     }
 
-    // Default style for query is form, explode is true
+    // Default style for query is form, explode is true.
+    // https://spec.openapis.org/oas/v3.1.2.html#style-examples
     const style = parameter.style || 'form'
     const explode = parameter.explode ?? true
 
