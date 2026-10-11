@@ -9,6 +9,7 @@ export {
 export { usePaths } from './composables/usePaths'
 export { useSidebar } from './composables/useSidebar'
 export { markdownToPlainText, type MarkdownToPlainTextOptions } from './lib/markdown/markdownToPlainText'
+export { operationToMarkdown, type OperationToMarkdownOptions } from './lib/markdown/operationToMarkdown'
 export { createOpenApiSpec, type OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
 export { minifyHtml } from './lib/utils/minifyHtml'
 export { parseSpec } from './lib/utils/parseSpec'
