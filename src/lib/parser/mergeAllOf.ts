@@ -1,10 +1,9 @@
 import { merge } from 'allof-merge'
 
 /**
- * Same result as allof-merge's `merge(spec)`, without crawling the whole document.
- * merge() walks and clones every node (~2s on GitHub's spec), yet only `paths` and
- * `components` entries containing allOf change. Merge a sparse copy holding just those
- * entries, at their original paths so the cycle $refs allof-merge emits stay valid.
+ * Merges `allOf` entries under `paths` and `components` without crawling the whole document.
+ * Merge a sparse copy holding just those entries, at their original paths so the cycle
+ * $refs allof-merge emits stay valid.
  */
 export function mergeAllOf(spec: any): any {
   const groups = [['paths'], ...Object.keys(spec.components ?? {}).map(section => ['components', section])]
