@@ -7,12 +7,13 @@ interface SchemaNode {
   parent: SchemaNode | null
 }
 
-// Nodes already walked, shared across calls: operations reference the same
-// dereferenced schemas, so each node only needs to be walked once per spec.
-const done = new WeakSet<object>()
-
-export function resolveCircularRef(schema: OpenAPI.SchemaObject): OpenAPI.SchemaObject {
-  traverseNode({ key: 'root', value: schema, parent: null }, new Map())
+// `done` holds nodes already walked. Pass the same set across calls within one parse
+// (operations reference the same dereferenced schemas) to walk each node only once.
+export function resolveCircularRef(
+  schema: OpenAPI.SchemaObject,
+  done = new WeakSet<object>(),
+): OpenAPI.SchemaObject {
+  traverseNode({ key: 'root', value: schema, parent: null }, new Map(), done)
 
   return schema
 }
@@ -21,7 +22,7 @@ export function resolveCircularRef(schema: OpenAPI.SchemaObject): OpenAPI.Schema
 // ancestor stack). Nodes already fully walked are skipped: removing every back
 // edge found by a DFS leaves an acyclic graph, so shared schemas don't need to be
 // re-expanded per path (which is exponential on specs like Stripe's).
-function traverseNode(node: SchemaNode, ancestors: Map<unknown, SchemaNode>): void {
+function traverseNode(node: SchemaNode, ancestors: Map<unknown, SchemaNode>, done: WeakSet<object>): void {
   const { value } = node
 
   if (typeof value !== 'object' || value === null) {
@@ -47,7 +48,7 @@ function traverseNode(node: SchemaNode, ancestors: Map<unknown, SchemaNode>): vo
 
   ancestors.set(origin, node)
   for (const [key, childValue] of Object.entries(value)) {
-    traverseNode({ key, value: childValue, parent: node }, ancestors)
+    traverseNode({ key, value: childValue, parent: node }, ancestors, done)
   }
   ancestors.delete(origin)
   done.add(value)

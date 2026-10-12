@@ -44,12 +44,17 @@ export interface OAProperty {
   meta?: Metadata
 }
 
-// Shared schemas are converted once and reused, so the output is a DAG instead of
-// an exponentially large tree. Safe across calls: resolveCircularRef never mutates
-// a node it has already walked.
-const memo = new WeakMap<object, OAProperty>()
+// Shared schemas are walked and converted once and reused, so the output is a DAG
+// instead of an exponentially large tree. Keyed by object identity, so a cache is
+// only valid while its schemas aren't mutated: share one within a single parse.
+export class SchemaUiCache {
+  walked = new WeakSet<object>()
+  ui = new WeakMap<object, OAProperty>()
+}
 
 class UiPropertyFactory {
+  constructor(private memo: WeakMap<object, OAProperty>) {}
+
   static createBaseProperty(
     name: string,
     property: Partial<OpenAPI.SchemaObject> = {},
@@ -102,7 +107,7 @@ class UiPropertyFactory {
     }
   }
 
-  static createUnionProperty(
+  createUnionProperty(
     unionProperties: Partial<OpenAPI.SchemaObject>[],
     unionType: 'oneOf' | 'anyOf',
     name: string = '',
@@ -130,7 +135,7 @@ class UiPropertyFactory {
     const metaKey = isOneOf ? 'isOneOf' : 'isAnyOf'
 
     baseProperty.properties = unionProperties.map((prop) => {
-      const property = UiPropertyFactory.schemaToUiProperty('', prop)
+      const property = this.schemaToUiProperty('', prop)
       property.meta = { ...(property.meta || {}), [metaItemKey]: true }
       return property
     })
@@ -140,25 +145,25 @@ class UiPropertyFactory {
     return baseProperty
   }
 
-  static createOneOfProperty(
+  createOneOfProperty(
     oneOfProperties: Partial<OpenAPI.SchemaObject>[],
     name: string = '',
     baseSchema: Partial<OpenAPI.SchemaObject> = {},
     required = false,
   ): OAProperty {
-    return UiPropertyFactory.createUnionProperty(oneOfProperties, 'oneOf', name, baseSchema, required)
+    return this.createUnionProperty(oneOfProperties, 'oneOf', name, baseSchema, required)
   }
 
-  static createAnyOfProperty(
+  createAnyOfProperty(
     anyOfProperties: Partial<OpenAPI.SchemaObject>[],
     name: string = '',
     baseSchema: Partial<OpenAPI.SchemaObject> = {},
     required = false,
   ): OAProperty {
-    return UiPropertyFactory.createUnionProperty(anyOfProperties, 'anyOf', name, baseSchema, required)
+    return this.createUnionProperty(anyOfProperties, 'anyOf', name, baseSchema, required)
   }
 
-  static schemaToUiProperty(
+  schemaToUiProperty(
     name: string,
     schema: Partial<OpenAPI.SchemaObject>,
     required = false,
@@ -175,27 +180,27 @@ class UiPropertyFactory {
       return UiPropertyFactory.createCircularReferenceProperty(name, schema.circularReference)
     }
 
-    let property = memo.get(schema)
+    let property = this.memo.get(schema)
     if (!property) {
-      property = UiPropertyFactory.buildUiProperty(schema)
-      memo.set(schema, property)
+      property = this.buildUiProperty(schema)
+      this.memo.set(schema, property)
     }
 
     // Shallow copy: callers reassign `meta`/`required` on the returned object.
     return { ...property, name, required }
   }
 
-  static buildUiProperty(
+  buildUiProperty(
     schema: Partial<OpenAPI.SchemaObject>,
     name = '',
     required = false,
   ): OAProperty {
     if (schema.oneOf) {
-      return UiPropertyFactory.createOneOfProperty(schema.oneOf, name, schema, required)
+      return this.createOneOfProperty(schema.oneOf, name, schema, required)
     }
 
     if (schema.anyOf) {
-      return UiPropertyFactory.createAnyOfProperty(schema.anyOf, name, schema, required)
+      return this.createAnyOfProperty(schema.anyOf, name, schema, required)
     }
 
     if (schema.const !== undefined) {
@@ -248,7 +253,7 @@ class UiPropertyFactory {
         const schemaType = determineSchemaType(schema.items)
 
         property.properties = schemaType === 'object'
-          ? UiPropertyFactory.extractProperties(
+          ? this.extractProperties(
               schema.items.properties,
               schema.items.required || [],
               schema.items.additionalProperties,
@@ -279,7 +284,7 @@ class UiPropertyFactory {
           property.properties = unionProperties.map((prop: any) => {
             const propSchema = { ...prop, type: schema.items.type }
             return {
-              ...UiPropertyFactory.schemaToUiProperty('', propSchema),
+              ...this.schemaToUiProperty('', propSchema),
               meta: { ...(prop.meta || {}), [metaItemKey]: true },
             }
           })
@@ -292,7 +297,7 @@ class UiPropertyFactory {
           && !schema.items.oneOf
           && !schema.items.anyOf
         ) {
-          const itemProperty = UiPropertyFactory.schemaToUiProperty('[item]', schema.items)
+          const itemProperty = this.schemaToUiProperty('[item]', schema.items)
           if (
             itemProperty.description
             || itemProperty.enum
@@ -306,7 +311,7 @@ class UiPropertyFactory {
 
       if (schema.prefixItems && Array.isArray(schema.prefixItems)) {
         property.properties = schema.prefixItems.map((prefixItem, index) => {
-          const prefixItemProperty = UiPropertyFactory.schemaToUiProperty(
+          const prefixItemProperty = this.schemaToUiProperty(
             `[${index}]`,
             prefixItem,
             false,
@@ -329,7 +334,7 @@ class UiPropertyFactory {
 
       // Handle case when both prefixItems and items are present.
       if (schema.prefixItems && Array.isArray(schema.prefixItems) && schema.items) {
-        const additionalItemsProperty = UiPropertyFactory.schemaToUiProperty(
+        const additionalItemsProperty = this.schemaToUiProperty(
           '[n+]', // Name indicating "additional items".
           schema.items,
           false,
@@ -349,7 +354,7 @@ class UiPropertyFactory {
         property.subtype = undefined
       }
     } else if (Array.isArray(schema.type) ? schema.type.includes('object') : schema.type === 'object') {
-      property.properties = UiPropertyFactory.extractProperties(
+      property.properties = this.extractProperties(
         schema.properties,
         schema.required || [],
         schema.additionalProperties,
@@ -358,7 +363,7 @@ class UiPropertyFactory {
     } else if (schema.type === undefined) {
       if (schema.properties || schema.additionalProperties) {
         property.types = ['object']
-        property.properties = UiPropertyFactory.extractProperties(
+        property.properties = this.extractProperties(
           schema.properties,
           schema.required || [],
           schema.additionalProperties,
@@ -370,7 +375,7 @@ class UiPropertyFactory {
     return property
   }
 
-  static extractProperties(
+  extractProperties(
     propertiesNode?: Record<string, OpenAPI.SchemaObject>,
     requiredProperties: string[] = [],
     additionalPropertiesNode?: OpenAPI.SchemaObject | boolean,
@@ -381,7 +386,7 @@ class UiPropertyFactory {
     if (propertiesNode) {
       Object.entries(propertiesNode).forEach(([key, value]) => {
         const isRequired = requiredProperties.includes(key)
-        properties.push(UiPropertyFactory.schemaToUiProperty(key, value, isRequired))
+        properties.push(this.schemaToUiProperty(key, value, isRequired))
       })
     }
 
@@ -391,7 +396,7 @@ class UiPropertyFactory {
         : { type: 'string' }
 
       const name = additionalPropertiesName || 'additionalProperties'
-      const property = UiPropertyFactory.schemaToUiProperty(name, additionalProps)
+      const property = this.schemaToUiProperty(name, additionalProps)
       property.required = false
       property.meta = { ...(property.meta || {}), isAdditionalProperties: true }
       properties.push(property)
@@ -401,14 +406,17 @@ class UiPropertyFactory {
   }
 }
 
-export function getSchemaUi(jsonSchema: OpenAPI.SchemaObject): OAProperty | OAProperty[] {
+export function getSchemaUi(
+  jsonSchema: OpenAPI.SchemaObject,
+  cache = new SchemaUiCache(),
+): OAProperty | OAProperty[] {
   if (!jsonSchema || Object.keys(jsonSchema).length === 0) {
     return []
   }
 
-  const resolvedSchema = resolveCircularRef(jsonSchema)
+  const resolvedSchema = resolveCircularRef(jsonSchema, cache.walked)
 
-  return UiPropertyFactory.schemaToUiProperty('', resolvedSchema)
+  return new UiPropertyFactory(cache.ui).schemaToUiProperty('', resolvedSchema)
 }
 
 function inferTypesFromEnum(values: unknown[]): JSONSchemaType[] {

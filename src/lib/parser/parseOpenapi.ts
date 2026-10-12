@@ -11,6 +11,7 @@ import { generateMissingTags } from './generateMissingTags'
 import { generateRequestBodyUi } from './generateRequestBodyUi'
 import { generateResponseUi } from './generateResponseUi'
 import { generateSecurityUi } from './generateSecurityUi'
+import { SchemaUiCache } from './getSchemaUi'
 import { mergeAllOf } from './mergeAllOf'
 
 export function parseOpenapi() {
@@ -94,10 +95,13 @@ export function parseOpenapi() {
     const [securitySpec, errSecurity] = $trycatch(() => generateSecurityUi(parsedSpec))
     parsedSpec = errSecurity ? parsedSpec : securitySpec
 
-    const [requestBodySpec, errRequestBody] = $trycatch(() => generateRequestBodyUi(parsedSpec))
+    // Requests and responses share schemas: convert each once per parse.
+    const schemaUiCache = new SchemaUiCache()
+
+    const [requestBodySpec, errRequestBody] = $trycatch(() => generateRequestBodyUi(parsedSpec, schemaUiCache))
     parsedSpec = errRequestBody ? parsedSpec : requestBodySpec
 
-    const [responseSpec, errResponse] = $trycatch(() => generateResponseUi(parsedSpec))
+    const [responseSpec, errResponse] = $trycatch(() => generateResponseUi(parsedSpec, schemaUiCache))
     parsedSpec = errResponse ? parsedSpec : responseSpec
 
     parsedSpec.externalDocs = parsedSpec.externalDocs || parsedSpec.externalDocs || {}

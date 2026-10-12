@@ -42,3 +42,16 @@ describe('parseOpenapi shared schemas', () => {
     expect(node.properties.find((p: any) => p.name === 'back').meta.isCircularReference).toBe(true)
   })
 })
+
+describe('getSchemaUi cache scope', () => {
+  it('reflects in-place schema mutations between calls', () => {
+    const schema: any = { type: 'object', properties: { a: { type: 'string' } } }
+    getSchemaUi(schema)
+
+    // A stale UI cache would miss `self`; a stale walked set would leave the cycle uncut.
+    schema.properties.self = schema
+    const ui: any = getSchemaUi(schema)
+
+    expect(ui.properties.find((p: any) => p.name === 'self').meta.isCircularReference).toBe(true)
+  })
+})
