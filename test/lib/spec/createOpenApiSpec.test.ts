@@ -341,3 +341,14 @@ describe('createOpenApiSpec with different servers for specific path', () => {
     ])
   })
 })
+
+describe('createOpenApiSpec operation lookup', () => {
+  it('reflects the new spec after setSpec', () => {
+    const instance = createOpenApiSpec({ spec: { openapi: '3.0.0', paths: { '/a': { get: { operationId: 'op' } } } } as any })
+    expect(instance.getOperationPath('op')).toBe('/a')
+
+    instance.setSpec({ openapi: '3.0.0', paths: { '/b': { post: { operationId: 'op' } } } } as any)
+    expect(instance.getOperationPath('op')).toBe('/b')
+    expect(instance.getOperationMethod('op')).toBe('post')
+  })
+})
