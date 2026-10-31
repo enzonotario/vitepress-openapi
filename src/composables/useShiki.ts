@@ -19,56 +19,7 @@ const FALLBACK_HTML = (content: string) => `<pre><code>${content}</code></pre>`
 let shiki: HighlighterCore | null = null
 let initPromise: Promise<void> | null = null
 const languageLoadPromises = new Map<string, Promise<boolean>>()
-/** In-flight load id -> languages that load is currently waiting on. */
-const languageLoadDependencies = new Map<string, Set<string>>()
 const loading = ref(true)
-
-function addLoadDependency(from: string, to: string) {
-  let deps = languageLoadDependencies.get(from)
-  if (!deps) {
-    deps = new Set()
-    languageLoadDependencies.set(from, deps)
-  }
-  deps.add(to)
-}
-
-function loadDependsOn(from: string, target: string, seen = new Set<string>()): boolean {
-  if (seen.has(from)) {
-    return false
-  }
-  seen.add(from)
-
-  const deps = languageLoadDependencies.get(from)
-  if (!deps) {
-    return false
-  }
-  if (deps.has(target)) {
-    return true
-  }
-
-  for (const dep of deps) {
-    if (loadDependsOn(dep, target, seen)) {
-      return true
-    }
-  }
-
-  return false
-}
-
-function wouldDeadlockAwaiting(lang: string, chain: Set<string>): boolean {
-  for (const ancestor of chain) {
-    if (loadDependsOn(lang, ancestor)) {
-      return true
-    }
-  }
-  return false
-}
-
-function recordChainWaitingOn(chain: Set<string>, lang: string) {
-  for (const ancestor of chain) {
-    addLoadDependency(ancestor, lang)
-  }
-}
 
 async function importBundledLanguage(lang: BundledLanguage): Promise<LanguageRegistration[]> {
   const importer = highlighterImports[lang]
@@ -117,10 +68,10 @@ function isLanguageReady(lang: string): boolean {
 /**
  * Walk registered grammars (including circular embeds) into one batch, and
  * collect bundled embed ids that must be ensured before the batch load.
+ * Cycles among registered grammars are handled by `batch.has(lang)`.
  */
 async function collectRegisteredGrammarBatch(
   lang: string,
-  chain: Set<string>,
   batch: Map<string, LanguageRegistration[]>,
   bundledEmbeds: Set<string>,
 ): Promise<void> {
@@ -136,9 +87,6 @@ async function collectRegisteredGrammarBatch(
   const grammars = withRegistryAlias(await resolveShikiLanguageSource(source), lang) as LanguageRegistration[]
   batch.set(lang, grammars)
 
-  const nextChain = new Set(chain)
-  nextChain.add(lang)
-
   for (const embeddedLang of collectEmbeddedLangs(grammars)) {
     if (isLanguageReady(embeddedLang)) {
       continue
@@ -146,7 +94,7 @@ async function collectRegisteredGrammarBatch(
 
     if (useTheme().getShikiLanguage(embeddedLang)) {
       // Keep cyclic / nested registered grammars in the same loadLanguage call.
-      await collectRegisteredGrammarBatch(embeddedLang, nextChain, batch, bundledEmbeds)
+      await collectRegisteredGrammarBatch(embeddedLang, batch, bundledEmbeds)
       continue
     }
 
@@ -154,24 +102,24 @@ async function collectRegisteredGrammarBatch(
   }
 }
 
-async function loadRegisteredLanguage(lang: string, chain: Set<string>): Promise<boolean> {
+async function loadRegisteredLanguage(lang: string): Promise<boolean> {
   if (!shiki) {
     return false
   }
 
   const batch = new Map<string, LanguageRegistration[]>()
   const bundledEmbeds = new Set<string>()
-  await collectRegisteredGrammarBatch(lang, chain, batch, bundledEmbeds)
+  await collectRegisteredGrammarBatch(lang, batch, bundledEmbeds)
 
   if (!batch.has(lang)) {
     return false
   }
 
   for (const embeddedLang of bundledEmbeds) {
-    if (isLanguageReady(embeddedLang) || chain.has(embeddedLang)) {
+    if (isLanguageReady(embeddedLang)) {
       continue
     }
-    await ensureLanguageWithChain(embeddedLang, chain)
+    await ensureLanguage(embeddedLang)
   }
 
   // Register the whole registered subgraph together so circular embeds resolve.
@@ -194,10 +142,10 @@ async function loadBundledLanguage(lang: string): Promise<boolean> {
   return true
 }
 
-async function loadLanguage(lang: string, chain: Set<string>): Promise<boolean> {
+async function loadLanguage(lang: string): Promise<boolean> {
   try {
     if (useTheme().getShikiLanguage(lang)) {
-      return await loadRegisteredLanguage(lang, chain)
+      return await loadRegisteredLanguage(lang)
     }
     return await loadBundledLanguage(lang)
   }
@@ -207,7 +155,6 @@ async function loadLanguage(lang: string, chain: Set<string>): Promise<boolean> 
   }
   finally {
     languageLoadPromises.delete(lang)
-    languageLoadDependencies.delete(lang)
   }
 }
 
@@ -244,14 +191,6 @@ function init(): Promise<void> {
  * Returns true if the language is ready, false if it couldn't be loaded.
  */
 async function ensureLanguage(lang: string): Promise<boolean> {
-  return ensureLanguageWithChain(lang, new Set())
-}
-
-/**
- * Like ensureLanguage, but `chain` tracks ancestors in the current embed walk
- * so circular grammars do not self-await. Unrelated in-flight loads are still awaited.
- */
-async function ensureLanguageWithChain(lang: string, chain: Set<string>): Promise<boolean> {
   try {
     await init()
   }
@@ -268,26 +207,12 @@ async function ensureLanguageWithChain(lang: string, chain: Set<string>): Promis
     return true
   }
 
-  // Already loading in this dependency walk — do not await our own promise.
-  if (chain.has(lang)) {
-    return false
-  }
-
   const inFlight = languageLoadPromises.get(lang)
   if (inFlight) {
-    // Skip when that load already waits on us (directly or transitively).
-    if (wouldDeadlockAwaiting(lang, chain)) {
-      return isLanguageReady(lang)
-    }
-    recordChainWaitingOn(chain, lang)
     return inFlight
   }
 
-  const nextChain = new Set(chain)
-  nextChain.add(lang)
-  recordChainWaitingOn(chain, lang)
-
-  const loadPromise = loadLanguage(lang, nextChain)
+  const loadPromise = loadLanguage(lang)
   languageLoadPromises.set(lang, loadPromise)
   return loadPromise
 }
@@ -313,7 +238,6 @@ export function useShiki() {
     shiki = null
     initPromise = null
     languageLoadPromises.clear()
-    languageLoadDependencies.clear()
     loading.value = true
   }
 
