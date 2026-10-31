@@ -364,18 +364,24 @@ describe('useShiki lazy loading', () => {
     expect(shiki.isLanguageLoaded('host')).toBe(true)
   })
 
-  it('skips circular embedded language dependencies without hanging', async () => {
+  it('loads circular embedded grammars in one batch without errors', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
     useTheme().setShikiLanguages({
       a: {
         name: 'a',
         scopeName: 'source.a',
-        patterns: [],
+        patterns: [
+          { match: '\\b(alpha)\\b', name: 'keyword.control.a' },
+        ],
         embeddedLangs: ['b'],
       },
       b: {
         name: 'b',
         scopeName: 'source.b',
-        patterns: [],
+        patterns: [
+          { match: '\\b(beta)\\b', name: 'keyword.control.b' },
+        ],
         embeddedLangs: ['a'],
       },
     })
@@ -384,6 +390,11 @@ describe('useShiki lazy loading', () => {
     await expect(shiki.ensureLanguage('a')).resolves.toBe(true)
     expect(shiki.isLanguageLoaded('a')).toBe(true)
     expect(shiki.isLanguageLoaded('b')).toBe(true)
+    expect(shiki.renderShiki('alpha', { lang: 'a', theme: 'vitesse-dark' })).toMatch(/<span style="color:#[0-9A-F]+">alpha<\/span>/i)
+    expect(shiki.renderShiki('beta', { lang: 'b', theme: 'vitesse-dark' })).toMatch(/<span style="color:#[0-9A-F]+">beta<\/span>/i)
+    expect(errorSpy).not.toHaveBeenCalled()
+
+    errorSpy.mockRestore()
   })
 })
 

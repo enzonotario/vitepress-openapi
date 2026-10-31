@@ -65,28 +65,68 @@ function isLanguageReady(lang: string): boolean {
   return shiki?.getLoadedLanguages().includes(lang) ?? false
 }
 
+/**
+ * Walk registered grammars (including circular embeds) into one batch, and
+ * collect bundled embed ids that must be ensured before the batch load.
+ */
+async function collectRegisteredGrammarBatch(
+  lang: string,
+  chain: Set<string>,
+  batch: Map<string, LanguageRegistration[]>,
+  bundledEmbeds: Set<string>,
+): Promise<void> {
+  if (batch.has(lang) || isLanguageReady(lang)) {
+    return
+  }
+
+  const source = useTheme().getShikiLanguage(lang)
+  if (!source) {
+    return
+  }
+
+  const grammars = withRegistryAlias(await resolveShikiLanguageSource(source), lang) as LanguageRegistration[]
+  batch.set(lang, grammars)
+
+  const nextChain = new Set(chain)
+  nextChain.add(lang)
+
+  for (const embeddedLang of collectEmbeddedLangs(grammars)) {
+    if (isLanguageReady(embeddedLang)) {
+      continue
+    }
+
+    if (useTheme().getShikiLanguage(embeddedLang)) {
+      // Keep cyclic / nested registered grammars in the same loadLanguage call.
+      await collectRegisteredGrammarBatch(embeddedLang, nextChain, batch, bundledEmbeds)
+      continue
+    }
+
+    bundledEmbeds.add(embeddedLang)
+  }
+}
+
 async function loadRegisteredLanguage(lang: string, chain: Set<string>): Promise<boolean> {
   if (!shiki) {
     return false
   }
 
-  const source = useTheme().getShikiLanguage(lang)
-  if (!source) {
+  const batch = new Map<string, LanguageRegistration[]>()
+  const bundledEmbeds = new Set<string>()
+  await collectRegisteredGrammarBatch(lang, chain, batch, bundledEmbeds)
+
+  if (!batch.has(lang)) {
     return false
   }
 
-  const grammars = withRegistryAlias(await resolveShikiLanguageSource(source), lang)
-
-  for (const embeddedLang of collectEmbeddedLangs(grammars)) {
-    // Skip ready langs and the current dependency chain (circular embeds).
-    // Unrelated in-flight loads are awaited via ensureLanguageWithChain.
+  for (const embeddedLang of bundledEmbeds) {
     if (isLanguageReady(embeddedLang) || chain.has(embeddedLang)) {
       continue
     }
     await ensureLanguageWithChain(embeddedLang, chain)
   }
 
-  await shiki.loadLanguage(grammars as LanguageRegistration[])
+  // Register the whole registered subgraph together so circular embeds resolve.
+  await shiki.loadLanguage([...batch.values()].flat())
   return isLanguageReady(lang)
 }
 
