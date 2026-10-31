@@ -396,6 +396,31 @@ describe('useShiki lazy loading', () => {
 
     errorSpy.mockRestore()
   })
+
+  it('resolves concurrent circular loads without deadlock', async () => {
+    useTheme().setShikiLanguages({
+      a: {
+        name: 'a',
+        scopeName: 'source.a',
+        patterns: [],
+        embeddedLangs: ['b'],
+      },
+      b: {
+        name: 'b',
+        scopeName: 'source.b',
+        patterns: [],
+        embeddedLangs: ['a'],
+      },
+    })
+    const shiki = useShiki()
+
+    await expect(Promise.all([
+      shiki.ensureLanguage('a'),
+      shiki.ensureLanguage('b'),
+    ])).resolves.toEqual([true, true])
+    expect(shiki.isLanguageLoaded('a')).toBe(true)
+    expect(shiki.isLanguageLoaded('b')).toBe(true)
+  })
 })
 
 describe('useShiki error handling', () => {

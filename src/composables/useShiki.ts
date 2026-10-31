@@ -19,7 +19,56 @@ const FALLBACK_HTML = (content: string) => `<pre><code>${content}</code></pre>`
 let shiki: HighlighterCore | null = null
 let initPromise: Promise<void> | null = null
 const languageLoadPromises = new Map<string, Promise<boolean>>()
+/** In-flight load id -> languages that load is currently waiting on. */
+const languageLoadDependencies = new Map<string, Set<string>>()
 const loading = ref(true)
+
+function addLoadDependency(from: string, to: string) {
+  let deps = languageLoadDependencies.get(from)
+  if (!deps) {
+    deps = new Set()
+    languageLoadDependencies.set(from, deps)
+  }
+  deps.add(to)
+}
+
+function loadDependsOn(from: string, target: string, seen = new Set<string>()): boolean {
+  if (seen.has(from)) {
+    return false
+  }
+  seen.add(from)
+
+  const deps = languageLoadDependencies.get(from)
+  if (!deps) {
+    return false
+  }
+  if (deps.has(target)) {
+    return true
+  }
+
+  for (const dep of deps) {
+    if (loadDependsOn(dep, target, seen)) {
+      return true
+    }
+  }
+
+  return false
+}
+
+function wouldDeadlockAwaiting(lang: string, chain: Set<string>): boolean {
+  for (const ancestor of chain) {
+    if (loadDependsOn(lang, ancestor)) {
+      return true
+    }
+  }
+  return false
+}
+
+function recordChainWaitingOn(chain: Set<string>, lang: string) {
+  for (const ancestor of chain) {
+    addLoadDependency(ancestor, lang)
+  }
+}
 
 async function importBundledLanguage(lang: BundledLanguage): Promise<LanguageRegistration[]> {
   const importer = highlighterImports[lang]
@@ -158,6 +207,7 @@ async function loadLanguage(lang: string, chain: Set<string>): Promise<boolean> 
   }
   finally {
     languageLoadPromises.delete(lang)
+    languageLoadDependencies.delete(lang)
   }
 }
 
@@ -225,11 +275,17 @@ async function ensureLanguageWithChain(lang: string, chain: Set<string>): Promis
 
   const inFlight = languageLoadPromises.get(lang)
   if (inFlight) {
+    // Skip when that load already waits on us (directly or transitively).
+    if (wouldDeadlockAwaiting(lang, chain)) {
+      return isLanguageReady(lang)
+    }
+    recordChainWaitingOn(chain, lang)
     return inFlight
   }
 
   const nextChain = new Set(chain)
   nextChain.add(lang)
+  recordChainWaitingOn(chain, lang)
 
   const loadPromise = loadLanguage(lang, nextChain)
   languageLoadPromises.set(lang, loadPromise)
@@ -257,6 +313,7 @@ export function useShiki() {
     shiki = null
     initPromise = null
     languageLoadPromises.clear()
+    languageLoadDependencies.clear()
     loading.value = true
   }
 
