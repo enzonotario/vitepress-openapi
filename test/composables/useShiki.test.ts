@@ -332,12 +332,13 @@ describe('useShiki lazy loading', () => {
     const depStarted = new Promise<void>((resolve) => {
       markDepStarted = resolve
     })
+    const depLoader = vi.fn(async () => {
+      markDepStarted()
+      return depModule
+    })
 
     useTheme().setShikiLanguages({
-      dep: async () => {
-        markDepStarted()
-        return depModule
-      },
+      dep: depLoader,
       host: {
         name: 'host',
         scopeName: 'source.host',
@@ -360,6 +361,7 @@ describe('useShiki lazy loading', () => {
     })
 
     await expect(Promise.all([depLoad, hostLoad])).resolves.toEqual([true, true])
+    expect(depLoader).toHaveBeenCalledTimes(1)
     expect(shiki.isLanguageLoaded('dep')).toBe(true)
     expect(shiki.isLanguageLoaded('host')).toBe(true)
   })

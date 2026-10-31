@@ -19,7 +19,27 @@ const FALLBACK_HTML = (content: string) => `<pre><code>${content}</code></pre>`
 let shiki: HighlighterCore | null = null
 let initPromise: Promise<void> | null = null
 const languageLoadPromises = new Map<string, Promise<boolean>>()
+/** In-flight registered-grammar resolves, shared across concurrent batch walks. */
+const languageSourcePromises = new Map<string, Promise<LanguageRegistration[]>>()
 const loading = ref(true)
+
+async function resolveRegisteredGrammars(lang: string): Promise<LanguageRegistration[] | null> {
+  const cached = languageSourcePromises.get(lang)
+  if (cached) {
+    return cached
+  }
+
+  const source = useTheme().getShikiLanguage(lang)
+  if (!source) {
+    return null
+  }
+
+  const pending = Promise.resolve(resolveShikiLanguageSource(source))
+    .then(grammars => withRegistryAlias(grammars, lang) as LanguageRegistration[])
+
+  languageSourcePromises.set(lang, pending)
+  return pending
+}
 
 async function importBundledLanguage(lang: BundledLanguage): Promise<LanguageRegistration[]> {
   const importer = highlighterImports[lang]
@@ -79,12 +99,11 @@ async function collectRegisteredGrammarBatch(
     return
   }
 
-  const source = useTheme().getShikiLanguage(lang)
-  if (!source) {
+  const grammars = await resolveRegisteredGrammars(lang)
+  if (!grammars) {
     return
   }
 
-  const grammars = withRegistryAlias(await resolveShikiLanguageSource(source), lang) as LanguageRegistration[]
   batch.set(lang, grammars)
 
   for (const embeddedLang of collectEmbeddedLangs(grammars)) {
@@ -109,22 +128,30 @@ async function loadRegisteredLanguage(lang: string): Promise<boolean> {
 
   const batch = new Map<string, LanguageRegistration[]>()
   const bundledEmbeds = new Set<string>()
-  await collectRegisteredGrammarBatch(lang, batch, bundledEmbeds)
 
-  if (!batch.has(lang)) {
-    return false
-  }
+  try {
+    await collectRegisteredGrammarBatch(lang, batch, bundledEmbeds)
 
-  for (const embeddedLang of bundledEmbeds) {
-    if (isLanguageReady(embeddedLang)) {
-      continue
+    if (!batch.has(lang)) {
+      return false
     }
-    await ensureLanguage(embeddedLang)
-  }
 
-  // Register the whole registered subgraph together so circular embeds resolve.
-  await shiki.loadLanguage([...batch.values()].flat())
-  return isLanguageReady(lang)
+    for (const embeddedLang of bundledEmbeds) {
+      if (isLanguageReady(embeddedLang)) {
+        continue
+      }
+      await ensureLanguage(embeddedLang)
+    }
+
+    // Register the whole registered subgraph together so circular embeds resolve.
+    await shiki.loadLanguage([...batch.values()].flat())
+    return isLanguageReady(lang)
+  }
+  finally {
+    for (const key of batch.keys()) {
+      languageSourcePromises.delete(key)
+    }
+  }
 }
 
 async function loadBundledLanguage(lang: string): Promise<boolean> {
@@ -155,6 +182,7 @@ async function loadLanguage(lang: string): Promise<boolean> {
   }
   finally {
     languageLoadPromises.delete(lang)
+    languageSourcePromises.delete(lang)
   }
 }
 
@@ -238,6 +266,7 @@ export function useShiki() {
     shiki = null
     initPromise = null
     languageLoadPromises.clear()
+    languageSourcePromises.clear()
     loading.value = true
   }
 
