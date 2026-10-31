@@ -322,6 +322,69 @@ describe('useShiki lazy loading', () => {
     expect(await shiki.ensureLanguage('tiny')).toBe(true)
     expect(shiki.isLanguageLoaded('javascript')).toBe(true)
   })
+
+  it('awaits unrelated in-flight embedded language loads', async () => {
+    let resolveDep!: (value: { default: typeof tinyGrammar }) => void
+    const depModule = new Promise<{ default: typeof tinyGrammar }>((resolve) => {
+      resolveDep = resolve
+    })
+    let markDepStarted!: () => void
+    const depStarted = new Promise<void>((resolve) => {
+      markDepStarted = resolve
+    })
+
+    useTheme().setShikiLanguages({
+      dep: async () => {
+        markDepStarted()
+        return depModule
+      },
+      host: {
+        name: 'host',
+        scopeName: 'source.host',
+        patterns: [],
+        embeddedLangs: ['dep'],
+      },
+    })
+
+    const shiki = useShiki()
+    const depLoad = shiki.ensureLanguage('dep')
+    await depStarted
+    const hostLoad = shiki.ensureLanguage('host')
+
+    resolveDep({
+      default: {
+        name: 'dep',
+        scopeName: 'source.dep',
+        patterns: [],
+      },
+    })
+
+    await expect(Promise.all([depLoad, hostLoad])).resolves.toEqual([true, true])
+    expect(shiki.isLanguageLoaded('dep')).toBe(true)
+    expect(shiki.isLanguageLoaded('host')).toBe(true)
+  })
+
+  it('skips circular embedded language dependencies without hanging', async () => {
+    useTheme().setShikiLanguages({
+      a: {
+        name: 'a',
+        scopeName: 'source.a',
+        patterns: [],
+        embeddedLangs: ['b'],
+      },
+      b: {
+        name: 'b',
+        scopeName: 'source.b',
+        patterns: [],
+        embeddedLangs: ['a'],
+      },
+    })
+    const shiki = useShiki()
+
+    await expect(shiki.ensureLanguage('a')).resolves.toBe(true)
+    expect(shiki.isLanguageLoaded('a')).toBe(true)
+    expect(shiki.isLanguageLoaded('b')).toBe(true)
+  })
 })
 
 describe('useShiki error handling', () => {

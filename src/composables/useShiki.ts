@@ -65,16 +65,7 @@ function isLanguageReady(lang: string): boolean {
   return shiki?.getLoadedLanguages().includes(lang) ?? false
 }
 
-/**
- * Skip embeds that would re-enter an in-flight load (avoids circular await deadlocks).
- */
-function shouldDeferEmbeddedLoad(embeddedLang: string, parentLang: string): boolean {
-  return embeddedLang === parentLang
-    || languageLoadPromises.has(embeddedLang)
-    || isLanguageReady(embeddedLang)
-}
-
-async function loadRegisteredLanguage(lang: string): Promise<boolean> {
+async function loadRegisteredLanguage(lang: string, chain: Set<string>): Promise<boolean> {
   if (!shiki) {
     return false
   }
@@ -87,10 +78,12 @@ async function loadRegisteredLanguage(lang: string): Promise<boolean> {
   const grammars = withRegistryAlias(await resolveShikiLanguageSource(source), lang)
 
   for (const embeddedLang of collectEmbeddedLangs(grammars)) {
-    if (shouldDeferEmbeddedLoad(embeddedLang, lang)) {
+    // Skip ready langs and the current dependency chain (circular embeds).
+    // Unrelated in-flight loads are awaited via ensureLanguageWithChain.
+    if (isLanguageReady(embeddedLang) || chain.has(embeddedLang)) {
       continue
     }
-    await ensureLanguage(embeddedLang)
+    await ensureLanguageWithChain(embeddedLang, chain)
   }
 
   await shiki.loadLanguage(grammars as LanguageRegistration[])
@@ -112,10 +105,10 @@ async function loadBundledLanguage(lang: string): Promise<boolean> {
   return true
 }
 
-async function loadLanguage(lang: string): Promise<boolean> {
+async function loadLanguage(lang: string, chain: Set<string>): Promise<boolean> {
   try {
     if (useTheme().getShikiLanguage(lang)) {
-      return await loadRegisteredLanguage(lang)
+      return await loadRegisteredLanguage(lang, chain)
     }
     return await loadBundledLanguage(lang)
   }
@@ -161,6 +154,14 @@ function init(): Promise<void> {
  * Returns true if the language is ready, false if it couldn't be loaded.
  */
 async function ensureLanguage(lang: string): Promise<boolean> {
+  return ensureLanguageWithChain(lang, new Set())
+}
+
+/**
+ * Like ensureLanguage, but `chain` tracks ancestors in the current embed walk
+ * so circular grammars do not self-await. Unrelated in-flight loads are still awaited.
+ */
+async function ensureLanguageWithChain(lang: string, chain: Set<string>): Promise<boolean> {
   try {
     await init()
   }
@@ -177,12 +178,20 @@ async function ensureLanguage(lang: string): Promise<boolean> {
     return true
   }
 
+  // Already loading in this dependency walk — do not await our own promise.
+  if (chain.has(lang)) {
+    return false
+  }
+
   const inFlight = languageLoadPromises.get(lang)
   if (inFlight) {
     return inFlight
   }
 
-  const loadPromise = loadLanguage(lang)
+  const nextChain = new Set(chain)
+  nextChain.add(lang)
+
+  const loadPromise = loadLanguage(lang, nextChain)
   languageLoadPromises.set(lang, loadPromise)
   return loadPromise
 }
