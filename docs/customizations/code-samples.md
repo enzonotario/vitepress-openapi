@@ -37,7 +37,7 @@ Each language is defined as a `LanguageConfig` object:
 | `label` | Yes | Name shown in the language selector | `'cURL'`, `'Python'` |
 | `target` | No | Code generation target for [@scalar/snippetz](https://github.com/scalar/snippetz) | `'shell'`, `'js'`, `'python'` |
 | `client` | No | HTTP client library used in generated code | `'curl'`, `'fetch'`, `'axios'` |
-| `highlighter` | No | [Shiki language](https://shiki.style/languages) for syntax highlighting | `'bash'`, `'javascript'`, `'plain'` |
+| `highlighter` | No | [Shiki language](https://shiki.style/languages) id, or a custom grammar id registered with `theme.shikiLanguages` | `'bash'`, `'javascript'`, `'plain'` |
 | `icon` | No | Icon identifier for [vitepress-plugin-group-icons](https://github.com/yuyinws/vitepress-plugin-group-icons) | `'curl'`, `'.js'`, `'.py'` |
 
 ::: tip
@@ -124,6 +124,27 @@ title: vitepress-openapi
 </template>
 
 </ExampleBlock>
+
+## Custom highlighters
+
+`highlighter` loads any language Shiki bundles, even if it is not one of the defaults above. For a grammar Shiki does not ship, register the TextMate grammar and point `highlighter` at that id:
+
+```ts
+useTheme({
+  theme: {
+    shikiLanguages: {
+      bru: () => import('./grammars/bru'),
+    },
+  },
+  codeSamples: {
+    availableLanguages: [
+      { lang: 'bru', label: 'Bru', highlighter: 'bru' },
+    ],
+  },
+})
+```
+
+The grammar is the same shape VitePress accepts in `markdown.languages`. Register it in both places if you also highlight that language in Markdown. Samples, responses, and schemas share this registry.
 
 ## Using Icons with `vitepress-plugin-group-icons`
 

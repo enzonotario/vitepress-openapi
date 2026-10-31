@@ -51,11 +51,41 @@ export type PlaygroundJsonEditorMode = 'text' | 'tree' | 'table'
 export type Languages = 'es' | 'en' | 'ja' | 'pt-BR' | 'zh' | string
 export type Messages = Record<Languages, Record<string, string>>
 
+export interface ShikiGrammar {
+  name: string
+  scopeName: string
+  displayName?: string
+  aliases?: string[]
+  embeddedLangs?: string[]
+  embeddedLanguages?: string[]
+  patterns?: readonly unknown[]
+  repository?: Record<string, unknown>
+  injectTo?: string[]
+}
+
+export interface ShikiLanguageModule {
+  default: ShikiGrammar | ShikiGrammar[]
+}
+
+type ShikiLanguageResolved = ShikiLanguageModule | ShikiGrammar | ShikiGrammar[]
+
+export type ShikiLanguageSource
+  = | ShikiGrammar
+    | ShikiGrammar[]
+    | (() => ShikiLanguageResolved | Promise<ShikiLanguageResolved>)
+
+export type ShikiLanguages = Record<string, ShikiLanguageSource>
+
 export interface ThemeConfig {
   highlighterTheme?: {
     light?: any
     dark?: any
   }
+  /**
+   * TextMate grammars for languages that Shiki does not bundle.
+   * Keys are the ids passed as `LanguageConfig.highlighter` or `OACodeBlock` `lang`.
+   */
+  shikiLanguages?: ShikiLanguages
 }
 
 export interface PathConfig {
@@ -512,6 +542,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
       setHighlighterTheme(config.theme.highlighterTheme)
     }
 
+    if (config.theme?.shikiLanguages) {
+      setShikiLanguages(config.theme.shikiLanguages)
+    }
+
     // Path
     if (config.path?.showBaseURL !== undefined) {
       ensureRefProperty(themeConfig, 'path', 'showBaseURL', config.path.showBaseURL)
@@ -634,6 +668,9 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
   function reset() {
     setConfig(defaultValues)
+    if (themeConfig.theme) {
+      themeConfig.theme.shikiLanguages = {}
+    }
   }
 
   function getState() {
@@ -662,6 +699,22 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     themeConfig.theme.highlighterTheme = {
       ...themeConfig?.theme?.highlighterTheme,
       ...value,
+    }
+  }
+
+  function getShikiLanguages(): ShikiLanguages {
+    return themeConfig.theme?.shikiLanguages ?? {}
+  }
+
+  function getShikiLanguage(lang: string): ShikiLanguageSource | undefined {
+    return themeConfig.theme?.shikiLanguages?.[lang]
+  }
+
+  function setShikiLanguages(languages: ShikiLanguages) {
+    const theme = ensureNestedProperty(themeConfig, 'theme')
+    theme.shikiLanguages = {
+      ...theme.shikiLanguages,
+      ...languages,
     }
   }
 
@@ -1120,6 +1173,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
     getLocale,
     setLocale,
     getHighlighterTheme,
+    setHighlighterTheme,
+    getShikiLanguages,
+    getShikiLanguage,
+    setShikiLanguages,
     /** @deprecated Use `getRequestBodyDefaultView` instead. */
     getSchemaDefaultView: getRequestBodyDefaultView,
     getRequestBodyDefaultView,

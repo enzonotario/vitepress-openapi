@@ -246,6 +246,10 @@ export default defineConfigWithTheme({
               text: page.label,
               link: `/tests/${page.slug}`,
             })),
+            {
+              text: 'Custom Highlighter',
+              link: '/tests/custom-highlighter',
+            },
           ],
         },
         {

@@ -1,6 +1,15 @@
+import type { LanguageRegistration } from 'shiki/core'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useShiki } from '../../src/composables/useShiki'
 import { useTheme } from '../../src/composables/useTheme'
+
+const tinyGrammar: LanguageRegistration = {
+  name: 'tiny',
+  scopeName: 'source.tiny',
+  patterns: [
+    { match: '\\b(let)\\b', name: 'keyword.control.tiny' },
+  ],
+}
 
 vi.mock('shiki/core', async (importOriginal) => {
   const original = await importOriginal<typeof import('shiki/core')>()
@@ -271,6 +280,47 @@ describe('useShiki lazy loading', () => {
     const result = shiki.renderShiki(code, { lang: 'typescript', theme: 'vitesse-dark' })
 
     expect(result).toContain('shiki')
+  })
+
+  it('loads a registered TextMate grammar', async () => {
+    useTheme().setShikiLanguages({ tiny: tinyGrammar })
+    const shiki = useShiki()
+
+    const result = await shiki.ensureLanguage('tiny')
+
+    expect(result).toBe(true)
+    expect(shiki.renderShiki('let x', { lang: 'tiny', theme: 'vitesse-dark' })).toMatch(/<span style="color:#[0-9A-F]+">let<\/span>/i)
+  })
+
+  it('loads a grammar from an async module loader', async () => {
+    useTheme().setShikiLanguages({
+      tiny: async () => ({ default: tinyGrammar }),
+    })
+    const shiki = useShiki()
+
+    expect(await shiki.ensureLanguage('tiny')).toBe(true)
+    expect(shiki.isLanguageLoaded('tiny')).toBe(true)
+  })
+
+  it('aliases the registry key when the grammar name differs', async () => {
+    useTheme().setShikiLanguages({ 'tiny-alias': tinyGrammar })
+    const shiki = useShiki()
+
+    expect(await shiki.ensureLanguage('tiny-alias')).toBe(true)
+    expect(shiki.renderShiki('let x', { lang: 'tiny-alias', theme: 'vitesse-dark' })).toMatch(/<span style="color:#[0-9A-F]+">let<\/span>/i)
+  })
+
+  it('loads bundled languages embedded by a custom grammar', async () => {
+    useTheme().setShikiLanguages({
+      tiny: {
+        ...tinyGrammar,
+        embeddedLangs: ['javascript'],
+      },
+    })
+    const shiki = useShiki()
+
+    expect(await shiki.ensureLanguage('tiny')).toBe(true)
+    expect(shiki.isLanguageLoaded('javascript')).toBe(true)
   })
 })
 

@@ -211,6 +211,31 @@ useTheme({
 })
 ```
 
+Languages shipped by Shiki are loaded on demand from `highlighter`. For a TextMate grammar Shiki does not bundle, register it here. The same grammar object can be passed to VitePress `markdown.languages`; the two highlighters stay separate because samples are highlighted in the browser.
+
+| Function | Description |
+|---|---|
+| `setShikiLanguages` | Merges custom grammars into the registry. |
+| `getShikiLanguages` | Returns the registered grammars. |
+| `getShikiLanguage` | Returns one grammar by id. |
+
+Each value can be a TextMate grammar (`name`, `scopeName`, `patterns` — the same shape as Shiki's `LanguageRegistration`), an array of them, or a loader that returns either (including `{ default }` from `import()`). The object key is the id used by `LanguageConfig.highlighter`. If that key is not the grammar `name` or one of its `aliases`, it is added as an alias. `embeddedLangs` that Shiki already bundles are loaded first.
+
+```ts
+useTheme({
+  theme: {
+    shikiLanguages: {
+      bru: {
+        name: 'bru',
+        scopeName: 'source.bru',
+        patterns: [],
+      },
+      elm: () => import('./grammars/elm'),
+    },
+  },
+})
+```
+
 ## Path Configuration
 
 | Function          | Description                          | Default Value | Allowed Values  |

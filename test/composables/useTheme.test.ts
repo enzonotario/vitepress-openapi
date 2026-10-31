@@ -1106,3 +1106,33 @@ describe('storage configuration', () => {
     expect(themeConfig.getStoragePersistAuth()).toBe(false)
   })
 })
+
+describe('shiki languages', () => {
+  const themeConfig = useTheme()
+
+  beforeEach(() => {
+    themeConfig.reset()
+  })
+
+  it('merges registered grammars and reads them by id', () => {
+    const bru = { name: 'bru', scopeName: 'source.bru', patterns: [] }
+    const elm = { name: 'elm', scopeName: 'source.elm', patterns: [] }
+
+    themeConfig.setShikiLanguages({ bru })
+    themeConfig.setShikiLanguages({ elm })
+
+    expect(themeConfig.getShikiLanguage('bru')).toBe(bru)
+    expect(themeConfig.getShikiLanguages()).toMatchObject({ bru, elm })
+  })
+
+  it('accepts grammars from the theme config and clears them on reset', () => {
+    const bru = { name: 'bru', scopeName: 'source.bru', patterns: [] }
+    useTheme({ theme: { shikiLanguages: { bru } } })
+
+    expect(themeConfig.getShikiLanguage('bru')).toBe(bru)
+
+    themeConfig.reset()
+
+    expect(themeConfig.getShikiLanguages()).toEqual({})
+  })
+})
