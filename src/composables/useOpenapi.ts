@@ -2,7 +2,7 @@ import type { InjectionKey } from 'vue'
 import type { OpenApiSpecInstance } from '../lib/spec/createOpenApiSpec'
 import type { OpenAPIDocument, ParsedOpenAPI } from '../types'
 import type { PartialUseThemeConfig } from './useTheme'
-import { inject } from 'vue'
+import { hasInjectionContext, inject } from 'vue'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
 import { createOpenApiSpec } from '../lib/spec/createOpenApiSpec'
 import { parseSpec } from '../lib/utils/parseSpec'
@@ -48,7 +48,7 @@ async function createInstanceAsync(options: {
 }
 
 export function injectOpenapi(): OpenApiSpecInstance | null {
-  return inject(OPENAPI_LOCAL_KEY, null)
+  return hasInjectionContext() ? inject(OPENAPI_LOCAL_KEY, null) : null
 }
 
 export function getGlobalOpenapi(): OpenApiSpecInstance | null {

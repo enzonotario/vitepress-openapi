@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationData } from '../lib/operation/operationData'
-import { inject, ref } from 'vue'
+import { hasInjectionContext, inject, ref } from 'vue'
 import { OPERATION_DATA_KEY } from '../lib/operation/operationData'
 import { isResponseDownloadable } from '../lib/playground/responseDownloadable'
 import { serializeRequestBody } from '../lib/playground/serializeRequestBody'
@@ -47,7 +47,9 @@ export function usePlayground() {
   const loading = ref(false)
   const response = ref<PlaygroundResponse | null>(null)
   const imageUrls = ref<string[]>([])
-  const operationData = inject<OperationData | undefined>(OPERATION_DATA_KEY)
+  const operationData = hasInjectionContext()
+    ? inject<OperationData | undefined>(OPERATION_DATA_KEY, undefined)
+    : undefined
 
   function setSecuritySchemeDefaultValues(values: Partial<SecuritySchemeDefaultValues>) {
     securitySchemeDefaultValues = {

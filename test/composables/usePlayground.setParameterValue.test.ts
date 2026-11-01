@@ -11,6 +11,8 @@ vi.mock('vue', async () => {
     get inject() {
       return mockInject
     },
+    // usePlayground() only injects inside an injection context.
+    hasInjectionContext: () => true,
   }
 })
 
