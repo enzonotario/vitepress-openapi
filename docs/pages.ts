@@ -105,4 +105,26 @@ export const examplesPages = [
     specUrl: 'https://raw.githubusercontent.com/Redocly/redoc/refs/heads/main/demo/openapi-3-1.yaml',
     themeConfig: {},
   },
+  {
+    slug: 'stripe',
+    label: 'Stripe',
+    specUrl: 'https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json',
+    themeConfig: {
+      spec: {
+        lazyRendering: true,
+      },
+      jsonViewer: {
+        deep: 1,
+      },
+      schemaViewer: {
+        deep: 1,
+      },
+      requestBody: {
+        defaultView: 'schema',
+      },
+      operation: {
+        hiddenSlots: ['playground'],
+      },
+    },
+  },
 ]
