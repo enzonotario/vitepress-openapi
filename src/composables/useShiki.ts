@@ -36,6 +36,13 @@ async function resolveRegisteredGrammars(lang: string): Promise<LanguageRegistra
 
   const pending = Promise.resolve(resolveShikiLanguageSource(source))
     .then(grammars => withRegistryAlias(grammars, lang) as LanguageRegistration[])
+    .catch((error) => {
+      // Drop only this attempt so a later ensureLanguage can retry the loader.
+      if (languageSourcePromises.get(lang) === pending) {
+        languageSourcePromises.delete(lang)
+      }
+      throw error
+    })
 
   languageSourcePromises.set(lang, pending)
   return pending

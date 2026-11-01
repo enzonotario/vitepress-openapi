@@ -423,6 +423,40 @@ describe('useShiki lazy loading', () => {
     expect(shiki.isLanguageLoaded('a')).toBe(true)
     expect(shiki.isLanguageLoaded('b')).toBe(true)
   })
+
+  it('retries embedded grammar resolution after a failed loader', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    let attempts = 0
+
+    useTheme().setShikiLanguages({
+      a: {
+        name: 'a',
+        scopeName: 'source.a',
+        patterns: [],
+        embeddedLangs: ['b'],
+      },
+      b: async () => {
+        attempts++
+        if (attempts === 1) {
+          throw new Error('loader failed')
+        }
+        return {
+          name: 'b',
+          scopeName: 'source.b',
+          patterns: [],
+        }
+      },
+    })
+    const shiki = useShiki()
+
+    expect(await shiki.ensureLanguage('a')).toBe(false)
+    expect(await shiki.ensureLanguage('a')).toBe(true)
+    expect(shiki.isLanguageLoaded('a')).toBe(true)
+    expect(shiki.isLanguageLoaded('b')).toBe(true)
+    expect(attempts).toBe(2)
+
+    errorSpy.mockRestore()
+  })
 })
 
 describe('useShiki error handling', () => {
