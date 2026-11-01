@@ -1,6 +1,15 @@
+import type { LanguageRegistration } from 'shiki/core'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useShiki } from '../../src/composables/useShiki'
 import { useTheme } from '../../src/composables/useTheme'
+
+const tinyGrammar: LanguageRegistration = {
+  name: 'tiny',
+  scopeName: 'source.tiny',
+  patterns: [
+    { match: '\\b(let)\\b', name: 'keyword.control.tiny' },
+  ],
+}
 
 vi.mock('shiki/core', async (importOriginal) => {
   const original = await importOriginal<typeof import('shiki/core')>()
@@ -271,6 +280,182 @@ describe('useShiki lazy loading', () => {
     const result = shiki.renderShiki(code, { lang: 'typescript', theme: 'vitesse-dark' })
 
     expect(result).toContain('shiki')
+  })
+
+  it('loads a registered TextMate grammar', async () => {
+    useTheme().setShikiLanguages({ tiny: tinyGrammar })
+    const shiki = useShiki()
+
+    const result = await shiki.ensureLanguage('tiny')
+
+    expect(result).toBe(true)
+    expect(shiki.renderShiki('let x', { lang: 'tiny', theme: 'vitesse-dark' })).toMatch(/<span style="color:#[0-9A-F]+">let<\/span>/i)
+  })
+
+  it('loads a grammar from an async module loader', async () => {
+    useTheme().setShikiLanguages({
+      tiny: async () => ({ default: tinyGrammar }),
+    })
+    const shiki = useShiki()
+
+    expect(await shiki.ensureLanguage('tiny')).toBe(true)
+    expect(shiki.isLanguageLoaded('tiny')).toBe(true)
+  })
+
+  it('aliases the registry key when the grammar name differs', async () => {
+    useTheme().setShikiLanguages({ 'tiny-alias': tinyGrammar })
+    const shiki = useShiki()
+
+    expect(await shiki.ensureLanguage('tiny-alias')).toBe(true)
+    expect(shiki.renderShiki('let x', { lang: 'tiny-alias', theme: 'vitesse-dark' })).toMatch(/<span style="color:#[0-9A-F]+">let<\/span>/i)
+  })
+
+  it('loads bundled languages embedded by a custom grammar', async () => {
+    useTheme().setShikiLanguages({
+      tiny: {
+        ...tinyGrammar,
+        embeddedLangs: ['javascript'],
+      },
+    })
+    const shiki = useShiki()
+
+    expect(await shiki.ensureLanguage('tiny')).toBe(true)
+    expect(shiki.isLanguageLoaded('javascript')).toBe(true)
+  })
+
+  it('awaits unrelated in-flight embedded language loads', async () => {
+    let resolveDep!: (value: { default: typeof tinyGrammar }) => void
+    const depModule = new Promise<{ default: typeof tinyGrammar }>((resolve) => {
+      resolveDep = resolve
+    })
+    let markDepStarted!: () => void
+    const depStarted = new Promise<void>((resolve) => {
+      markDepStarted = resolve
+    })
+    const depLoader = vi.fn(async () => {
+      markDepStarted()
+      return depModule
+    })
+
+    useTheme().setShikiLanguages({
+      dep: depLoader,
+      host: {
+        name: 'host',
+        scopeName: 'source.host',
+        patterns: [],
+        embeddedLangs: ['dep'],
+      },
+    })
+
+    const shiki = useShiki()
+    const depLoad = shiki.ensureLanguage('dep')
+    await depStarted
+    const hostLoad = shiki.ensureLanguage('host')
+
+    resolveDep({
+      default: {
+        name: 'dep',
+        scopeName: 'source.dep',
+        patterns: [],
+      },
+    })
+
+    await expect(Promise.all([depLoad, hostLoad])).resolves.toEqual([true, true])
+    expect(depLoader).toHaveBeenCalledTimes(1)
+    expect(shiki.isLanguageLoaded('dep')).toBe(true)
+    expect(shiki.isLanguageLoaded('host')).toBe(true)
+  })
+
+  it('loads circular embedded grammars in one batch without errors', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    useTheme().setShikiLanguages({
+      a: {
+        name: 'a',
+        scopeName: 'source.a',
+        patterns: [
+          { match: '\\b(alpha)\\b', name: 'keyword.control.a' },
+        ],
+        embeddedLangs: ['b'],
+      },
+      b: {
+        name: 'b',
+        scopeName: 'source.b',
+        patterns: [
+          { match: '\\b(beta)\\b', name: 'keyword.control.b' },
+        ],
+        embeddedLangs: ['a'],
+      },
+    })
+    const shiki = useShiki()
+
+    await expect(shiki.ensureLanguage('a')).resolves.toBe(true)
+    expect(shiki.isLanguageLoaded('a')).toBe(true)
+    expect(shiki.isLanguageLoaded('b')).toBe(true)
+    expect(shiki.renderShiki('alpha', { lang: 'a', theme: 'vitesse-dark' })).toMatch(/<span style="color:#[0-9A-F]+">alpha<\/span>/i)
+    expect(shiki.renderShiki('beta', { lang: 'b', theme: 'vitesse-dark' })).toMatch(/<span style="color:#[0-9A-F]+">beta<\/span>/i)
+    expect(errorSpy).not.toHaveBeenCalled()
+
+    errorSpy.mockRestore()
+  })
+
+  it('resolves concurrent circular loads without deadlock', async () => {
+    useTheme().setShikiLanguages({
+      a: {
+        name: 'a',
+        scopeName: 'source.a',
+        patterns: [],
+        embeddedLangs: ['b'],
+      },
+      b: {
+        name: 'b',
+        scopeName: 'source.b',
+        patterns: [],
+        embeddedLangs: ['a'],
+      },
+    })
+    const shiki = useShiki()
+
+    await expect(Promise.all([
+      shiki.ensureLanguage('a'),
+      shiki.ensureLanguage('b'),
+    ])).resolves.toEqual([true, true])
+    expect(shiki.isLanguageLoaded('a')).toBe(true)
+    expect(shiki.isLanguageLoaded('b')).toBe(true)
+  })
+
+  it('retries embedded grammar resolution after a failed loader', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    let attempts = 0
+
+    useTheme().setShikiLanguages({
+      a: {
+        name: 'a',
+        scopeName: 'source.a',
+        patterns: [],
+        embeddedLangs: ['b'],
+      },
+      b: async () => {
+        attempts++
+        if (attempts === 1) {
+          throw new Error('loader failed')
+        }
+        return {
+          name: 'b',
+          scopeName: 'source.b',
+          patterns: [],
+        }
+      },
+    })
+    const shiki = useShiki()
+
+    expect(await shiki.ensureLanguage('a')).toBe(false)
+    expect(await shiki.ensureLanguage('a')).toBe(true)
+    expect(shiki.isLanguageLoaded('a')).toBe(true)
+    expect(shiki.isLanguageLoaded('b')).toBe(true)
+    expect(attempts).toBe(2)
+
+    errorSpy.mockRestore()
   })
 })
 

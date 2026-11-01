@@ -1,158 +1,279 @@
-import type { HighlighterCore } from 'shiki/core'
+import type { HighlighterCore, LanguageRegistration } from 'shiki/core'
 import type { BundledLanguage } from 'shiki/langs'
 import { createHighlighterCore } from 'shiki/core'
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
 import { bundledLanguages as highlighterImports } from 'shiki/langs'
 import { ref } from 'vue'
+import {
+  collectEmbeddedLangs,
+  resolveShikiLanguageSource,
+  withRegistryAlias,
+} from '../lib/shiki/resolveGrammar'
 import { useTheme } from './useTheme'
 
-// Core highlighters always loaded for response body highlighting (not shown in code samples UI)
+/** Always loaded for response / schema bodies (not the code-samples UI). */
 const CORE_HIGHLIGHTERS: BundledLanguage[] = ['json', 'xml', 'markdown']
+
+const FALLBACK_HTML = (content: string) => `<pre><code>${content}</code></pre>`
 
 let shiki: HighlighterCore | null = null
 let initPromise: Promise<void> | null = null
-
-// Track in-flight language loads to avoid duplicate requests
 const languageLoadPromises = new Map<string, Promise<boolean>>()
-
+/** In-flight registered-grammar resolves, shared across concurrent batch walks. */
+const languageSourcePromises = new Map<string, Promise<LanguageRegistration[]>>()
 const loading = ref(true)
 
-export function useShiki() {
-  /**
-   * Initialize Shiki with core highlighters only (json, xml, markdown).
-   * Additional languages are loaded on-demand via ensureLanguage().
-   */
-  function init(): Promise<void> {
-    if (initPromise) {
-      return initPromise
+async function resolveRegisteredGrammars(lang: string): Promise<LanguageRegistration[] | null> {
+  const cached = languageSourcePromises.get(lang)
+  if (cached) {
+    return cached
+  }
+
+  const source = useTheme().getShikiLanguage(lang)
+  if (!source) {
+    return null
+  }
+
+  const pending = Promise.resolve(resolveShikiLanguageSource(source))
+    .then(grammars => withRegistryAlias(grammars, lang) as LanguageRegistration[])
+    .catch((error) => {
+      // Drop only this attempt so a later ensureLanguage can retry the loader.
+      if (languageSourcePromises.get(lang) === pending) {
+        languageSourcePromises.delete(lang)
+      }
+      throw error
+    })
+
+  languageSourcePromises.set(lang, pending)
+  return pending
+}
+
+async function importBundledLanguage(lang: BundledLanguage): Promise<LanguageRegistration[]> {
+  const importer = highlighterImports[lang]
+  if (!importer) {
+    return []
+  }
+
+  try {
+    const mod = await importer()
+    return mod.default
+  }
+  catch {
+    return []
+  }
+}
+
+async function loadCoreLanguages(): Promise<LanguageRegistration[]> {
+  const modules = await Promise.all(CORE_HIGHLIGHTERS.map(importBundledLanguage))
+  return modules.flat()
+}
+
+async function createHighlighter(): Promise<HighlighterCore> {
+  const themeConfig = useTheme()
+  const highlighter = await createHighlighterCore({
+    themes: [
+      themeConfig.getHighlighterTheme()?.light,
+      themeConfig.getHighlighterTheme()?.dark,
+    ],
+    langs: await loadCoreLanguages(),
+    engine: createJavaScriptRegexEngine({
+      target: 'ES2018',
+    }),
+  })
+
+  if (!highlighter) {
+    throw new Error('Failed to create Shiki highlighter')
+  }
+
+  return highlighter
+}
+
+function isLanguageReady(lang: string): boolean {
+  return shiki?.getLoadedLanguages().includes(lang) ?? false
+}
+
+/**
+ * Walk registered grammars (including circular embeds) into one batch, and
+ * collect bundled embed ids that must be ensured before the batch load.
+ * Cycles among registered grammars are handled by `batch.has(lang)`.
+ */
+async function collectRegisteredGrammarBatch(
+  lang: string,
+  batch: Map<string, LanguageRegistration[]>,
+  bundledEmbeds: Set<string>,
+): Promise<void> {
+  if (batch.has(lang) || isLanguageReady(lang)) {
+    return
+  }
+
+  const grammars = await resolveRegisteredGrammars(lang)
+  if (!grammars) {
+    return
+  }
+
+  batch.set(lang, grammars)
+
+  for (const embeddedLang of collectEmbeddedLangs(grammars)) {
+    if (isLanguageReady(embeddedLang)) {
+      continue
     }
 
-    initPromise = (async () => {
-      try {
-        if (shiki) {
-          loading.value = false
-          return
-        }
+    if (useTheme().getShikiLanguage(embeddedLang)) {
+      // Keep cyclic / nested registered grammars in the same loadLanguage call.
+      await collectRegisteredGrammarBatch(embeddedLang, batch, bundledEmbeds)
+      continue
+    }
 
-        const themeConfig = useTheme()
+    bundledEmbeds.add(embeddedLang)
+  }
+}
 
-        // Load only core highlighters during init
-        const coreLangModules = await Promise.all(
-          CORE_HIGHLIGHTERS.map(async (lang) => {
-            const importer = highlighterImports[lang]
-            if (!importer) {
-              return []
-            }
-            try {
-              const mod = await importer()
-              return mod.default
-            } catch {
-              return []
-            }
-          }),
-        )
+async function loadRegisteredLanguage(lang: string): Promise<boolean> {
+  if (!shiki) {
+    return false
+  }
 
-        shiki = await createHighlighterCore({
-          themes: [
-            themeConfig.getHighlighterTheme()?.light,
-            themeConfig.getHighlighterTheme()?.dark,
-          ],
-          langs: coreLangModules.filter(Boolean).flat(),
-          engine: createJavaScriptRegexEngine({
-            target: 'ES2018',
-          }),
-        })
+  const batch = new Map<string, LanguageRegistration[]>()
+  const bundledEmbeds = new Set<string>()
 
-        if (!shiki) {
-          throw new Error('Failed to create Shiki highlighter')
-        }
+  try {
+    await collectRegisteredGrammarBatch(lang, batch, bundledEmbeds)
 
-        loading.value = false
-      } catch (error) {
-        initPromise = null
-        throw error
+    if (!batch.has(lang)) {
+      return false
+    }
+
+    for (const embeddedLang of bundledEmbeds) {
+      if (isLanguageReady(embeddedLang)) {
+        continue
       }
-    })()
+      await ensureLanguage(embeddedLang)
+    }
 
+    // Register the whole registered subgraph together so circular embeds resolve.
+    await shiki.loadLanguage([...batch.values()].flat())
+    return isLanguageReady(lang)
+  }
+  finally {
+    for (const key of batch.keys()) {
+      languageSourcePromises.delete(key)
+    }
+  }
+}
+
+async function loadBundledLanguage(lang: string): Promise<boolean> {
+  if (!shiki) {
+    return false
+  }
+
+  const grammars = await importBundledLanguage(lang as BundledLanguage)
+  if (grammars.length === 0) {
+    console.warn(`Shiki language "${lang}" not available.`)
+    return false
+  }
+
+  await shiki.loadLanguage(grammars)
+  return true
+}
+
+async function loadLanguage(lang: string): Promise<boolean> {
+  try {
+    if (useTheme().getShikiLanguage(lang)) {
+      return await loadRegisteredLanguage(lang)
+    }
+    return await loadBundledLanguage(lang)
+  }
+  catch (error) {
+    console.error(`Failed to load Shiki language "${lang}":`, error)
+    return false
+  }
+  finally {
+    languageLoadPromises.delete(lang)
+    languageSourcePromises.delete(lang)
+  }
+}
+
+/**
+ * Initialize Shiki with core highlighters only (json, xml, markdown).
+ * Additional languages are loaded on-demand via ensureLanguage().
+ */
+function init(): Promise<void> {
+  if (initPromise) {
     return initPromise
   }
 
-  /**
-   * Ensure a language is loaded. Loads it on-demand if not already available.
-   * Returns true if the language is ready, false if it couldn't be loaded.
-   */
-  async function ensureLanguage(lang: string): Promise<boolean> {
-    // Make sure shiki is initialized first
+  initPromise = (async () => {
     try {
-      await init()
-    } catch (e) {
-      console.error('Failed to initialize Shiki:', e)
-      return false
-    }
-
-    if (!shiki) {
-      return false
-    }
-
-    // Already loaded
-    if (shiki.getLoadedLanguages().includes(lang)) {
-      return true
-    }
-
-    // Check if already loading
-    const existingPromise = languageLoadPromises.get(lang)
-    if (existingPromise) {
-      return existingPromise
-    }
-
-    // Start loading
-    const loadPromise = (async () => {
-      const importer = highlighterImports[lang as BundledLanguage]
-
-      if (!importer) {
-        console.warn(`Shiki language "${lang}" not available.`)
-        return false
+      if (shiki) {
+        loading.value = false
+        return
       }
 
-      try {
-        const mod = await importer()
-        await shiki!.loadLanguage(mod.default)
-        return true
-      } catch (e) {
-        console.error(`Failed to load Shiki language "${lang}":`, e)
-        return false
-      } finally {
-        languageLoadPromises.delete(lang)
-      }
-    })()
+      shiki = await createHighlighter()
+      loading.value = false
+    }
+    catch (error) {
+      initPromise = null
+      throw error
+    }
+  })()
 
-    languageLoadPromises.set(lang, loadPromise)
-    return loadPromise
+  return initPromise
+}
+
+/**
+ * Ensure a language is loaded. Loads it on-demand if not already available.
+ * Returns true if the language is ready, false if it couldn't be loaded.
+ */
+async function ensureLanguage(lang: string): Promise<boolean> {
+  try {
+    await init()
+  }
+  catch (error) {
+    console.error('Failed to initialize Shiki:', error)
+    return false
   }
 
+  if (!shiki) {
+    return false
+  }
+
+  if (isLanguageReady(lang)) {
+    return true
+  }
+
+  const inFlight = languageLoadPromises.get(lang)
+  if (inFlight) {
+    return inFlight
+  }
+
+  const loadPromise = loadLanguage(lang)
+  languageLoadPromises.set(lang, loadPromise)
+  return loadPromise
+}
+
+export function useShiki() {
   function isReady(): boolean {
     return shiki !== null
   }
 
   function isLanguageLoaded(lang: string): boolean {
-    return shiki?.getLoadedLanguages().includes(lang) ?? false
+    return isLanguageReady(lang)
   }
 
   function renderShiki(content: string, { lang, theme }: { lang: string, theme: string }) {
-    if (shiki && shiki.getLoadedLanguages().includes(lang)) {
-      return shiki.codeToHtml(content, {
-        lang,
-        theme,
-      })
-    } else {
-      return `<pre><code>${content}</code></pre>`
+    if (!shiki || !isLanguageReady(lang)) {
+      return FALLBACK_HTML(content)
     }
+
+    return shiki.codeToHtml(content, { lang, theme })
   }
 
   function reset() {
     shiki = null
     initPromise = null
     languageLoadPromises.clear()
+    languageSourcePromises.clear()
     loading.value = true
   }
 
