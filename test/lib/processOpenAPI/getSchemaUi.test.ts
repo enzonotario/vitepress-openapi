@@ -2134,6 +2134,144 @@ const fixtures: Record<string, FixtureTest> = {
       status: 'active',
     },
   },
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/349
+  'nullable anyOf parent example (#349)': {
+    jsonSchema: {
+      anyOf: [
+        { type: 'string' },
+        { type: 'null' },
+      ],
+      example: 'Ada',
+    },
+    schemaUi: {
+      name: '',
+      types: ['string', 'null'],
+      required: false,
+      examples: ['Ada'],
+      properties: [
+        {
+          name: '',
+          types: ['string'],
+          required: false,
+          meta: { isAnyOfItem: true },
+        },
+        {
+          name: '',
+          types: ['null'],
+          required: false,
+          meta: { isAnyOfItem: true },
+        },
+      ],
+      meta: { isAnyOf: true },
+    },
+    useExample: true,
+    schemaUiJson: 'Ada',
+  },
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/349
+  'nullable anyOf parent default (#349)': {
+    jsonSchema: {
+      anyOf: [
+        { type: 'string' },
+        { type: 'null' },
+      ],
+      default: 'Bob',
+    },
+    schemaUi: {
+      name: '',
+      types: ['string', 'null'],
+      required: false,
+      defaultValue: 'Bob',
+      constraints: { default: 'Bob' },
+      properties: [
+        {
+          name: '',
+          types: ['string'],
+          required: false,
+          meta: { isAnyOfItem: true },
+        },
+        {
+          name: '',
+          types: ['null'],
+          required: false,
+          meta: { isAnyOfItem: true },
+        },
+      ],
+      meta: { isAnyOf: true },
+    },
+    useExample: true,
+    schemaUiJson: 'Bob',
+  },
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/349
+  'array items enum (#349)': {
+    jsonSchema: {
+      type: 'array',
+      items: {
+        type: 'string',
+        enum: ['active', 'inactive'],
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['array'],
+      required: false,
+      subtype: 'string',
+      items: {
+        name: '[item]',
+        types: ['string'],
+        required: false,
+        enum: ['active', 'inactive'],
+      },
+    },
+    useExample: true,
+    schemaUiJson: ['active'],
+  },
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/349
+  'array items format (#349)': {
+    jsonSchema: {
+      type: 'array',
+      items: {
+        type: 'string',
+        format: 'email',
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['array'],
+      required: false,
+      subtype: 'string',
+      items: {
+        name: '[item]',
+        types: ['string'],
+        required: false,
+        constraints: { format: 'email' },
+      },
+    },
+    useExample: true,
+    schemaUiJson: ['user@example.com'],
+  },
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/349
+  'enum prefers explicit default over first value (#349)': {
+    jsonSchema: {
+      type: 'string',
+      enum: ['cat', 'dog'],
+      default: 'dog',
+    },
+    schemaUi: {
+      name: '',
+      types: ['string'],
+      required: false,
+      enum: ['cat', 'dog'],
+      constraints: { default: 'dog' },
+      defaultValue: 'dog',
+    },
+    useExample: true,
+    schemaUiJson: 'dog',
+  },
 }
 
 describe('getSchemaUi and getSchemaUiJson from fixtures', () => {

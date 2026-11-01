@@ -75,6 +75,11 @@ function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
       return [uiPropertyObjectToJson(property.properties as OAProperty[], useExample)]
     }
 
+    // Primitive item enum/format live on `property.items`, not the array node.
+    if (property.items) {
+      return [uiPropertyToJson(property.items, useExample)]
+    }
+
     if (useExample) {
       const format = property.constraints?.format as string | undefined
       return [
@@ -106,6 +111,11 @@ function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any
     const example = getPropertyExample(property)
     if (example != null) {
       return example
+    }
+
+    // Explicit schema default outranks the first enum value.
+    if (property.defaultValue !== undefined) {
+      return property.defaultValue
     }
 
     const enumDefault = getEnumDefaultValue(property)
@@ -229,6 +239,18 @@ function isUnionProperty(property: OAProperty): boolean {
 }
 
 function resolveUnionProperty(property: OAProperty, useExample: boolean): any {
+  // Parent-level example/default on the anyOf/oneOf node win over member fallbacks.
+  if (useExample) {
+    const example = getPropertyExample(property)
+    if (example != null) {
+      return example
+    }
+  }
+
+  if (property.defaultValue !== undefined) {
+    return property.defaultValue
+  }
+
   if (property.properties && property.properties.length > 0) {
     const preferred
       = property.properties.find(member => !isSingleType(member, 'null'))
@@ -237,11 +259,6 @@ function resolveUnionProperty(property: OAProperty, useExample: boolean): any {
   }
 
   if (useExample) {
-    const example = getPropertyExample(property)
-    if (example != null) {
-      return example
-    }
-
     const enumDefault = getEnumDefaultValue(property)
     if (enumDefault !== undefined) {
       return enumDefault
