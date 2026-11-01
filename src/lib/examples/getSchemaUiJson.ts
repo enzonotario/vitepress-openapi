@@ -26,6 +26,12 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
     return uiPropertyArrayToJson(property, useExample)
   }
 
+  // Resolve oneOf/anyOf before literal-type collapsing so nested member
+  // examples/enums/formats (e.g. OAS 3.1 nullable anyOf) are not skipped.
+  if (isUnionProperty(property)) {
+    return resolveUnionProperty(property, useExample)
+  }
+
   if (isLiteralType(property)) {
     return uiPropertyLiteralToJson(property, useExample)
   }
@@ -38,15 +44,15 @@ function uiPropertyToJson(property: OAProperty, useExample: boolean): any {
     }, useExample)
   }
 
-  if (isUnionProperty(property)) {
-    return resolveUnionProperty(property, useExample)
-  }
-
   if (containsType(property, 'object')) {
     return uiPropertyObjectToJson(property.properties || [], useExample)
   }
 
-  return getDefaultValueForType(property.types[0] ?? 'string', property.defaultValue)
+  return getDefaultValueForType(
+    property.types[0] ?? 'string',
+    property.defaultValue,
+    useExample ? property.constraints?.format as string | undefined : undefined,
+  )
 }
 
 function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
@@ -69,7 +75,21 @@ function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
       return [uiPropertyObjectToJson(property.properties as OAProperty[], useExample)]
     }
 
-    return useExample ? [getPropertyExample(property) ?? getDefaultValueForType(property.subtype, property.defaultValue)] : [getDefaultValueForType(property.subtype, property.defaultValue)]
+    // Primitive item enum/format live on `property.items`, not the array node.
+    if (property.items) {
+      return [uiPropertyToJson(property.items, useExample)]
+    }
+
+    if (useExample) {
+      const format = property.constraints?.format as string | undefined
+      return [
+        getPropertyExample(property)
+        ?? getEnumDefaultValue(property)
+        ?? getDefaultValueForType(property.subtype, property.defaultValue, format),
+      ]
+    }
+
+    return [getDefaultValueForType(property.subtype, property.defaultValue)]
   }
 
   return []
@@ -92,13 +112,28 @@ function uiPropertyLiteralToJson(property: OAProperty, useExample: boolean): any
     if (example != null) {
       return example
     }
+
+    // Explicit schema default outranks the first enum value.
+    if (property.defaultValue !== undefined) {
+      return property.defaultValue
+    }
+
+    const enumDefault = getEnumDefaultValue(property)
+    if (enumDefault !== undefined) {
+      return enumDefault
+    }
   }
 
   if (property.constraints?.format === 'binary') {
     return ''
   }
 
-  return getDefaultValueForType(property.types[0] ?? 'string', property.defaultValue)
+  return getDefaultValueForType(
+    property.types[0] ?? 'string',
+    property.defaultValue,
+    // Format placeholders are sample-oriented (same as examples/enums).
+    useExample ? property.constraints?.format as string | undefined : undefined,
+  )
 }
 
 /**
@@ -111,17 +146,30 @@ function uiPropertyConstantToJson(property: OAProperty): any {
     return example
   }
 
-  return getDefaultValueForType(property.types[0] ?? 'string', property.defaultValue)
+  return getDefaultValueForType(
+    property.types[0] ?? 'string',
+    property.defaultValue,
+    property.constraints?.format as string | undefined,
+  )
 }
 
-function getDefaultValueForType(type: string, defaultValue: unknown): any {
+function getEnumDefaultValue(property: OAProperty): unknown {
+  if (!property.enum || property.enum.length === 0) {
+    return undefined
+  }
+
+  const nonNull = property.enum.find(value => value !== null && value !== undefined)
+  return nonNull !== undefined ? nonNull : property.enum[0]
+}
+
+function getDefaultValueForType(type: string, defaultValue: unknown, format?: string): any {
   if (defaultValue !== undefined) {
     return defaultValue
   }
 
   switch (type) {
     case 'string':
-      return 'string'
+      return getDefaultStringForFormat(format)
     case 'number':
     case 'integer':
       return 0
@@ -137,6 +185,28 @@ function getDefaultValueForType(type: string, defaultValue: unknown): any {
       return {}
     default:
       return undefined
+  }
+}
+
+function getDefaultStringForFormat(format?: string): string {
+  switch (format) {
+    case 'date-time':
+      return '2024-01-01T00:00:00Z'
+    case 'date':
+      return '2024-01-01'
+    case 'time':
+      return '00:00:00'
+    case 'uuid':
+      return '123e4567-e89b-12d3-a456-426614174000'
+    case 'email':
+      return 'user@example.com'
+    case 'uri':
+    case 'url':
+      return 'https://example.com'
+    case 'binary':
+      return ''
+    default:
+      return 'string'
   }
 }
 
@@ -169,9 +239,35 @@ function isUnionProperty(property: OAProperty): boolean {
 }
 
 function resolveUnionProperty(property: OAProperty, useExample: boolean): any {
-  if (property.properties && property.properties.length > 0) {
-    return uiPropertyToJson(property.properties[0], useExample)
-  } else {
-    return useExample ? getPropertyExample(property) : getDefaultValueForType(property.types[0] ?? 'string', property.defaultValue)
+  // Parent-level example/default on the anyOf/oneOf node win over member fallbacks.
+  if (useExample) {
+    const example = getPropertyExample(property)
+    if (example != null) {
+      return example
+    }
   }
+
+  if (property.defaultValue !== undefined) {
+    return property.defaultValue
+  }
+
+  if (property.properties && property.properties.length > 0) {
+    const preferred
+      = property.properties.find(member => !isSingleType(member, 'null'))
+        ?? property.properties[0]
+    return uiPropertyToJson(preferred, useExample)
+  }
+
+  if (useExample) {
+    const enumDefault = getEnumDefaultValue(property)
+    if (enumDefault !== undefined) {
+      return enumDefault
+    }
+  }
+
+  return getDefaultValueForType(
+    property.types.find(type => type !== 'null') ?? property.types[0] ?? 'string',
+    property.defaultValue,
+    useExample ? property.constraints?.format as string | undefined : undefined,
+  )
 }
