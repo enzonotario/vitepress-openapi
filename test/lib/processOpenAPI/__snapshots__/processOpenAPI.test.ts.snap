@@ -4279,7 +4279,7 @@ Possible Reasons
   --request POST \\
   --header 'Content-Type: application/json' \\
   --data '{
-  "email": "string",
+  "email": "user@example.com",
   "password": "string"
 }'",
             "target": "shell",
@@ -4296,7 +4296,7 @@ Possible Reasons
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    email: 'string',
+    email: 'user@example.com',
     password: 'string'
   })
 })",
@@ -4313,7 +4313,7 @@ Possible Reasons
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-  'email' => 'string',
+  'email' => 'user@example.com',
   'password' => 'string'
 ]));
 
@@ -4334,7 +4334,7 @@ curl_close($ch);",
       "Content-Type": "application/json"
     },
     json={
-      "email": "string",
+      "email": "user@example.com",
       "password": "string"
     }
 )",
@@ -4360,7 +4360,7 @@ curl_close($ch);",
                   "lang": "json",
                   "summary": "JSON",
                   "value": {
-                    "email": "string",
+                    "email": "user@example.com",
                     "password": "string",
                   },
                 },
@@ -4439,7 +4439,7 @@ curl_close($ch);",
                     "summary": "JSON",
                     "value": {
                       "api_key": "string",
-                      "expires_at": "string",
+                      "expires_at": "2024-01-01T00:00:00Z",
                       "token": "string",
                       "user": {
                         "email": "carlos@rock-legends.com",
