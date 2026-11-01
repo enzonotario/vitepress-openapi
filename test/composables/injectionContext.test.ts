@@ -42,7 +42,8 @@ describe('composables called outside a component', () => {
   it('usePlayground still reads provided operation data', () => {
     const app = createApp({})
     app.provide(OPERATION_DATA_KEY, {} as never)
-    app.runWithContext(() => usePlayground())
+    const { hasOperationData } = app.runWithContext(() => usePlayground())
+    expect(hasOperationData).toBe(true)
     expect(warn).not.toHaveBeenCalled()
   })
 })
