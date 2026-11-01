@@ -145,9 +145,9 @@ const fixtures: Record<string, FixtureTest> = {
 
   'schema with x-additionalPropertiesName': {
     jsonSchema: {
-      type: 'object',
+      'type': 'object',
       'x-additionalPropertiesName': '{key}',
-      additionalProperties: {
+      'additionalProperties': {
         type: 'object',
         properties: {
           name: { type: 'string' },
@@ -1944,8 +1944,194 @@ const fixtures: Record<string, FixtureTest> = {
         },
       ],
     },
+    // Resolves the first non-null oneOf member (const → its value).
     schemaUiJson: {
-      role: 'string',
+      role: 'admin',
+    },
+  },
+
+  'nullable anyOf member example': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        deadline: {
+          anyOf: [
+            { type: 'string', format: 'date-time', examples: ['2024-01-01T14:00:00Z'] },
+            { type: 'null' },
+          ],
+        },
+        requirement: { type: 'string', enum: ['optional', 'required'] },
+        id: { type: 'string', format: 'uuid' },
+        createdAt: { type: 'string', format: 'date-time' },
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'deadline',
+          types: ['string', 'null'],
+          required: false,
+          properties: [
+            {
+              name: '',
+              types: ['string'],
+              required: false,
+              examples: ['2024-01-01T14:00:00Z'],
+              constraints: { format: 'date-time' },
+              meta: { isAnyOfItem: true },
+            },
+            {
+              name: '',
+              types: ['null'],
+              required: false,
+              meta: { isAnyOfItem: true },
+            },
+          ],
+          meta: { isAnyOf: true },
+        },
+        {
+          name: 'requirement',
+          types: ['string'],
+          required: false,
+          enum: ['optional', 'required'],
+        },
+        {
+          name: 'id',
+          types: ['string'],
+          required: false,
+          constraints: { format: 'uuid' },
+        },
+        {
+          name: 'createdAt',
+          types: ['string'],
+          required: false,
+          constraints: { format: 'date-time' },
+        },
+      ],
+    },
+    useExample: true,
+    schemaUiJson: {
+      deadline: '2024-01-01T14:00:00Z',
+      requirement: 'optional',
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      createdAt: '2024-01-01T00:00:00Z',
+    },
+  },
+
+  'nullable anyOf with null listed first': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        name: {
+          anyOf: [
+            { type: 'null' },
+            { type: 'string', examples: ['Ada'] },
+          ],
+        },
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'name',
+          types: ['null', 'string'],
+          required: false,
+          properties: [
+            {
+              name: '',
+              types: ['null'],
+              required: false,
+              meta: { isAnyOfItem: true },
+            },
+            {
+              name: '',
+              types: ['string'],
+              required: false,
+              examples: ['Ada'],
+              meta: { isAnyOfItem: true },
+            },
+          ],
+          meta: { isAnyOf: true },
+        },
+      ],
+    },
+    useExample: true,
+    schemaUiJson: {
+      name: 'Ada',
+    },
+  },
+
+  'string format placeholders': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        date: { type: 'string', format: 'date' },
+        email: { type: 'string', format: 'email' },
+        uri: { type: 'string', format: 'uri' },
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'date',
+          types: ['string'],
+          required: false,
+          constraints: { format: 'date' },
+        },
+        {
+          name: 'email',
+          types: ['string'],
+          required: false,
+          constraints: { format: 'email' },
+        },
+        {
+          name: 'uri',
+          types: ['string'],
+          required: false,
+          constraints: { format: 'uri' },
+        },
+      ],
+    },
+    useExample: true,
+    schemaUiJson: {
+      date: '2024-01-01',
+      email: 'user@example.com',
+      uri: 'https://example.com',
+    },
+  },
+
+  'enum without example uses first non-null value': {
+    jsonSchema: {
+      type: 'object',
+      properties: {
+        status: { type: 'string', enum: [null, 'active', 'inactive'] },
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['object'],
+      required: false,
+      properties: [
+        {
+          name: 'status',
+          types: ['string'],
+          required: false,
+          enum: [null, 'active', 'inactive'],
+        },
+      ],
+    },
+    useExample: true,
+    schemaUiJson: {
+      status: 'active',
     },
   },
 }
