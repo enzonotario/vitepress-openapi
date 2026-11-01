@@ -27,7 +27,7 @@ export function resolveRefSync(schema: JSONSchema, ref: string): unknown {
 
   // The ref is a JSON pointer, so walk through the path segments to find the
   // referenced node in the schema. The leading "#" is removed by splitting.
-  const path = ref.split('/').slice(1)
+  const path = ref.split('/').slice(1).map(unescapePointerSegment)
 
   let current: any = schema
   // Walk segment by segment until we either reach the target or hit a dead end
@@ -42,6 +42,15 @@ export function resolveRefSync(schema: JSONSchema, ref: string): unknown {
 
   schemaCache.set(ref, current)
   return current
+}
+
+// RFC 6901: a URI-fragment JSON pointer is percent-encoded, with `~1` for `/` and `~0` for `~`.
+function unescapePointerSegment(segment: string): string {
+  try {
+    segment = decodeURIComponent(segment)
+  }
+  catch {}
+  return segment.replace(/~1/g, '/').replace(/~0/g, '~')
 }
 
 // Lightweight deep clone based on https://github.com/lukeed/klona, License - MIT;
@@ -129,17 +138,19 @@ export function dereferenceWithAnnotationsSync(schema: JSONSchema): JSONSchema {
     return cache.get(schema) as JSONSchema
   }
 
-  const visitedNodes = new Set<any>()
+  // Node -> what it resolved to. A `$ref` node reached again (e.g. a shared parameter
+  // cloned for a second operation) must yield its resolved value, not the raw `$ref`.
+  const resolvedNodes = new Map<any, any>()
   const cloned = klona(schema)
   markOrigins(cloned)
 
   const resolve = (current: any): any => {
     if (typeof current === 'object' && current !== null) {
       // Don't process the same object twice to prevent infinite recursion on circular structures
-      if (visitedNodes.has(current)) {
-        return current
+      if (resolvedNodes.has(current)) {
+        return resolvedNodes.get(current)
       }
-      visitedNodes.add(current)
+      resolvedNodes.set(current, current)
 
       if (Array.isArray(current)) {
         // Recurse into array items
@@ -154,6 +165,11 @@ export function dereferenceWithAnnotationsSync(schema: JSONSchema): JSONSchema {
             ref = resolveRefSync(cloned, ref.$ref)
           } while (ref?.$ref)
 
+          // Leave unresolvable refs in place instead of aborting the whole dereference.
+          if (ref == null) {
+            return current
+          }
+
           // Clone the referenced object so that adding annotations doesn't mutate the cache
           // and keep track of where it originated from
           ref = cloneWithOrigins(ref)
@@ -165,6 +181,7 @@ export function dereferenceWithAnnotationsSync(schema: JSONSchema): JSONSchema {
               ref[key] = current[key]
             }
           }
+          resolvedNodes.set(current, ref)
           return ref
         }
 

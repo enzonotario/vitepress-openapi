@@ -32,9 +32,13 @@ export function createOpenApiSpec(options: {
 } = {}): OpenApiSpecInstance {
   let innerSpec: OpenAPIDocument | null = null
   let innerOriginalSpec: OpenAPIDocument | null = options.originalSpec ?? null
+  // operationId -> location, built on first lookup so repeated lookups (one per
+  // rendered operation, per operation link) don't rescan every path and verb.
+  let operationIndex: Map<string, { path: string, method: string, operation: any }> | null = null
 
   function setSpec(spec: OpenAPIDocument) {
     innerSpec = spec
+    operationIndex = null
   }
 
   function getSpec(): OpenAPIDocument {
@@ -55,53 +59,32 @@ export function createOpenApiSpec(options: {
     innerOriginalSpec = spec
   }
 
-  function findOperation(paths: OpenAPIV3.PathsObject, operationId: string) {
-    for (const path of Object.values(paths)) {
-      for (const verb of httpVerbs) {
-        if (path && path[verb]?.operationId === operationId) {
-          return path[verb]
+  function findOperation(operationId: string) {
+    if (!operationIndex) {
+      operationIndex = new Map()
+      for (const [path, methods] of Object.entries(getPaths())) {
+        for (const verb of httpVerbs) {
+          const operation = methods?.[verb]
+          // First match wins, like the linear scan this replaces.
+          if (operation?.operationId !== undefined && !operationIndex.has(operation.operationId)) {
+            operationIndex.set(operation.operationId, { path, method: verb, operation })
+          }
         }
       }
     }
-    return null
+    return operationIndex.get(operationId) ?? null
   }
 
   function getOperation(operationId: string) {
-    const paths = getSpec().paths as OpenAPIV3.PathsObject
-    if (!paths) {
-      return null
-    }
-    return findOperation(paths, operationId)
+    return findOperation(operationId)?.operation ?? null
   }
 
   function getOperationPath(operationId: string) {
-    const paths = getSpec().paths as OpenAPIV3.PathsObject
-    if (!paths) {
-      return null
-    }
-    for (const [path, methods] of Object.entries(paths)) {
-      for (const verb of httpVerbs) {
-        if (methods && methods[verb]?.operationId === operationId) {
-          return path
-        }
-      }
-    }
-    return null
+    return findOperation(operationId)?.path ?? null
   }
 
   function getOperationMethod(operationId: string) {
-    const paths = getSpec().paths as OpenAPIV3.PathsObject
-    if (!paths) {
-      return null
-    }
-    for (const path of Object.values(paths)) {
-      for (const verb of httpVerbs) {
-        if (path && path[verb]?.operationId === operationId) {
-          return verb
-        }
-      }
-    }
-    return null
+    return findOperation(operationId)?.method ?? null
   }
 
   function getOperationParameters(operationId: string) {
@@ -152,13 +135,12 @@ export function createOpenApiSpec(options: {
   }
 
   function getOperationServers(operationId: string): OpenAPIV3.ServerObject[] {
-    const operation = findOperation(getPaths(), operationId)
-    if (!operation) {
+    const entry = findOperation(operationId)
+    if (!entry) {
       return []
     }
-    const operationPath = getOperationPath(operationId)
-    const paths = getSpec().paths as OpenAPIV3.PathsObject
-    const pathServers = paths[(operationPath ?? '')]?.servers
+    const operation = entry.operation
+    const pathServers = getPaths()[entry.path]?.servers
 
     if (operation?.servers !== undefined) {
       return operation.servers as OpenAPIV3.ServerObject[]
@@ -173,19 +155,13 @@ export function createOpenApiSpec(options: {
     if (!getSpec().paths) {
       return []
     }
-    const paths = getSpec().paths as OpenAPIV3.PathsObject
-    return Object.values(paths).reduce((tags: string[], path) => {
+    const tags = new Set<string>()
+    for (const path of Object.values(getPaths())) {
       for (const verb of httpVerbs) {
-        if (path && path[verb]?.tags) {
-          path[verb].tags.forEach((tag: string) => {
-            if (!tags.includes(tag)) {
-              tags.push(tag)
-            }
-          })
-        }
+        path?.[verb]?.tags?.forEach((tag: string) => tags.add(tag))
       }
-      return tags
-    }, [])
+    }
+    return [...tags]
   }
 
   function filterPaths(predicate: (operation: any) => boolean) {

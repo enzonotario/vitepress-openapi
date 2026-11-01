@@ -1,9 +1,9 @@
 import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../../types'
 import { httpVerbs } from '../../index'
 import { getSchemaExample } from '../examples/getSchemaExample'
-import { getSchemaUi } from './getSchemaUi'
+import { getSchemaUi, SchemaUiCache } from './getSchemaUi'
 
-export function generateRequestBodyUi(spec: ParsedOpenAPI): ParsedOpenAPI {
+export function generateRequestBodyUi(spec: ParsedOpenAPI, cache = new SchemaUiCache()): ParsedOpenAPI {
   if (!spec.paths) {
     return spec
   }
@@ -27,7 +27,7 @@ export function generateRequestBodyUi(spec: ParsedOpenAPI): ParsedOpenAPI {
           continue
         }
 
-        parsedContent.ui = getSchemaUi(parsedContent.schema)
+        parsedContent.ui = getSchemaUi(parsedContent.schema, cache)
         parsedContent.examples = {
           ...(parsedContent.examples || {}),
           ...getSchemaExample(contentType, parsedContent.ui, true),

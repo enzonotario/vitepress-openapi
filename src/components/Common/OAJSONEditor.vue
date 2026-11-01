@@ -5,7 +5,8 @@ import { useTheme } from '../../composables/useTheme'
 
 const props = defineProps({
   modelValue: {
-    type: Object,
+    // '' is an unset optional parameter in the playground.
+    type: [Object, Array, String],
     required: true,
   },
   options: {

@@ -2,7 +2,6 @@ import type { JSONSchema } from '@trojs/openapi-dereference'
 import type { OpenAPIDocument, ParsedOpenAPI } from '../../types'
 
 import { $trycatch } from '@tszen/trycatch'
-import { merge } from 'allof-merge'
 import { parseSpec } from '../utils/parseSpec'
 import { dereferenceWithAnnotationsSync } from './dereferenceWithAnnotations'
 import { generateCodeSamples } from './generateCodeSamples'
@@ -12,6 +11,8 @@ import { generateMissingTags } from './generateMissingTags'
 import { generateRequestBodyUi } from './generateRequestBodyUi'
 import { generateResponseUi } from './generateResponseUi'
 import { generateSecurityUi } from './generateSecurityUi'
+import { SchemaUiCache } from './getSchemaUi'
+import { mergeAllOf } from './mergeAllOf'
 
 export function parseOpenapi() {
   function transformSync({
@@ -78,13 +79,14 @@ export function parseOpenapi() {
 
     let parsedSpec = { ...specContent } as ParsedOpenAPI
 
-    const [mergedSpec, errMerge] = $trycatch(() => merge(
-      transformSync({
+    const [mergedSpec, errMerge] = $trycatch(() => {
+      const transformed = transformSync({
         spec,
         defaultTag,
         defaultTagDescription,
-      }),
-    ) as ParsedOpenAPI)
+      })
+      return mergeAllOf(transformed) as ParsedOpenAPI
+    })
     parsedSpec = errMerge ? parsedSpec : mergedSpec
 
     const [dereferencedSpec, errDereference] = $trycatch(() => dereferenceWithAnnotationsSync(parsedSpec as JSONSchema) as ParsedOpenAPI)
@@ -93,10 +95,13 @@ export function parseOpenapi() {
     const [securitySpec, errSecurity] = $trycatch(() => generateSecurityUi(parsedSpec))
     parsedSpec = errSecurity ? parsedSpec : securitySpec
 
-    const [requestBodySpec, errRequestBody] = $trycatch(() => generateRequestBodyUi(parsedSpec))
+    // Requests and responses share schemas: convert each once per parse.
+    const schemaUiCache = new SchemaUiCache()
+
+    const [requestBodySpec, errRequestBody] = $trycatch(() => generateRequestBodyUi(parsedSpec, schemaUiCache))
     parsedSpec = errRequestBody ? parsedSpec : requestBodySpec
 
-    const [responseSpec, errResponse] = $trycatch(() => generateResponseUi(parsedSpec))
+    const [responseSpec, errResponse] = $trycatch(() => generateResponseUi(parsedSpec, schemaUiCache))
     parsedSpec = errResponse ? parsedSpec : responseSpec
 
     parsedSpec.externalDocs = parsedSpec.externalDocs || parsedSpec.externalDocs || {}

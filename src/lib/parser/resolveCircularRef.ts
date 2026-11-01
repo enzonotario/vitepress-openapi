@@ -7,19 +7,22 @@ interface SchemaNode {
   parent: SchemaNode | null
 }
 
-export function resolveCircularRef(schema: OpenAPI.SchemaObject): OpenAPI.SchemaObject {
-  const rootNode: SchemaNode = {
-    key: 'root',
-    value: schema,
-    parent: null,
-  }
-
-  traverseNode(rootNode)
+// `done` holds nodes already walked. Pass the same set across calls within one parse
+// (operations reference the same dereferenced schemas) to walk each node only once.
+export function resolveCircularRef(
+  schema: OpenAPI.SchemaObject,
+  done = new WeakSet<object>(),
+): OpenAPI.SchemaObject {
+  traverseNode({ key: 'root', value: schema, parent: null }, new Map(), done)
 
   return schema
 }
 
-function traverseNode(node: SchemaNode): void {
+// Depth-first walk that cuts back edges (a node whose origin is already on the
+// ancestor stack). Nodes already fully walked are skipped: removing every back
+// edge found by a DFS leaves an acyclic graph, so shared schemas don't need to be
+// re-expanded per path (which is exponential on specs like Stripe's).
+function traverseNode(node: SchemaNode, ancestors: Map<unknown, SchemaNode>, done: WeakSet<object>): void {
   const { value } = node
 
   if (typeof value !== 'object' || value === null) {
@@ -27,51 +30,28 @@ function traverseNode(node: SchemaNode): void {
     return
   }
 
-  const circularReference = detectCircularReference(node.parent, value)
+  const origin = (value as any)[originSymbol] ?? value
+  const ancestor = ancestors.get(origin)
 
-  if (circularReference) {
+  if (ancestor) {
     // Replace the circular reference with a descriptor object.
     node.parent!.value[node.key] = {
       type: 'object',
-      circularReference,
+      circularReference: buildReferencePath(ancestor),
     }
-  } else {
-    // Recursively traverse child nodes.
-    for (const [key, childValue] of Object.entries(value)) {
-      const childNode: SchemaNode = {
-        key,
-        value: childValue,
-        parent: node,
-      }
-
-      traverseNode(childNode)
-    }
-  }
-}
-
-function detectCircularReference(
-  ancestor: SchemaNode | null,
-  value: any,
-): string | null {
-  const target
-    = value && (value as any)[originSymbol]
-      ? (value as any)[originSymbol]
-      : value
-
-  while (ancestor) {
-    const ancestorValue = ancestor.value
-    const ancestorTarget
-      = ancestorValue && (ancestorValue as any)[originSymbol]
-        ? (ancestorValue as any)[originSymbol]
-        : ancestorValue
-
-    if (ancestorTarget === target) {
-      return buildReferencePath(ancestor)
-    }
-    ancestor = ancestor.parent
+    return
   }
 
-  return null
+  if (done.has(value)) {
+    return
+  }
+
+  ancestors.set(origin, node)
+  for (const [key, childValue] of Object.entries(value)) {
+    traverseNode({ key, value: childValue, parent: node }, ancestors, done)
+  }
+  ancestors.delete(origin)
+  done.add(value)
 }
 
 function buildReferencePath(node: SchemaNode | null): string {

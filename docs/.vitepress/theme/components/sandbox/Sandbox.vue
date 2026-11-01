@@ -19,7 +19,9 @@ const { hash } = useData()
 
 const queryParams = useUrlSearchParams('history')
 
-const themeConfig = useTheme()
+// The sandbox is client-only and may load large specs (e.g. Stripe's 612 operations):
+// mount operations progressively instead of all at once. A `themeConfig` query overrides it.
+const themeConfig = useTheme({ spec: { lazyRendering: true } })
 
 const { toast } = useToast()
 
