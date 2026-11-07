@@ -88,6 +88,36 @@ function getHeaders(
   return Object.fromEntries(resolvedHeaders)
 }
 
+const HTTP_AUTH_PREFIXES: Record<string, string> = {
+  bearer: 'Bearer',
+  basic: 'Basic',
+}
+
+const HTTP_AUTH_PLACEHOLDERS: Record<string, string> = {
+  bearer: '<token>',
+  basic: '<credentials>',
+}
+
+/**
+ * Build the `Authorization` value for an `http` scheme: `Bearer <token>`, `Basic <credentials>`.
+ * Values that already carry the prefix are kept as is. Other schemes (e.g. digest) pass through.
+ */
+function getHttpAuthorizationValue(authorization: PlaygroundSecurityScheme): string {
+  const scheme = (authorization.scheme || 'bearer').toLowerCase()
+  const rawValue = unref(authorization.value)
+  // `name` holds the scheme id (e.g. `bearerAuth`), not a credential, so use a placeholder.
+  const value = rawValue == null
+    ? (HTTP_AUTH_PLACEHOLDERS[scheme] ?? '<credentials>')
+    : String(rawValue)
+
+  const prefix = HTTP_AUTH_PREFIXES[scheme]
+  if (!value || !prefix || value.toLowerCase().startsWith(`${scheme} `)) {
+    return value
+  }
+
+  return `${prefix} ${value}`
+}
+
 export function getAuthorizationsHeaders(authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[]) {
   const headers = new Headers()
 
@@ -106,7 +136,9 @@ export function getAuthorizationsHeaders(authorizations: PlaygroundSecuritySchem
       continue
     }
 
-    const value = unref(authorization.value ?? authorization.name ?? '')
+    const value = authorization.type === 'http'
+      ? getHttpAuthorizationValue(authorization)
+      : unref(authorization.value ?? authorization.name ?? '')
 
     if (!value) {
       console.warn('Empty value for authorization scheme:', authorization.type)

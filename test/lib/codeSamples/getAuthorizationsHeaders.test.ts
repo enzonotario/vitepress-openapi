@@ -57,6 +57,46 @@ describe('getAuthorizationsHeaders', () => {
     })
   })
 
+  // https://github.com/enzonotario/vitepress-openapi/issues/350
+  it('prefixes a raw http bearer token with Bearer (#350)', () => {
+    const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'bearer', value: 'token123' } as any)
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'Bearer token123',
+    })
+  })
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/350
+  it('prefixes raw http basic credentials with Basic (#350)', () => {
+    const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'Basic', value: 'dXNlcjpwYXNz' } as any)
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'Basic dXNlcjpwYXNz',
+    })
+  })
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/350
+  it('does not duplicate an existing prefix, case-insensitively (#350)', () => {
+    const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'bearer', value: 'bearer token123' } as any)
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'bearer token123',
+    })
+  })
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/350
+  it('uses a bearer placeholder instead of the scheme name when no value is set (#350)', () => {
+    const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'bearer', name: 'bearerAuth' } as any)
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'Bearer <token>',
+    })
+  })
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/350
+  it('uses a basic placeholder instead of the scheme name when no value is set (#350)', () => {
+    const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'basic', name: 'basicAuth' } as any)
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'Basic <credentials>',
+    })
+  })
+
   it('handles apiKey authorization in header', () => {
     const headers = getAuthorizationsHeaders({ type: 'apiKey', in: 'header', name: 'x-api-key', value: 'key123' })
     const entries = Object.fromEntries(headers.entries())
