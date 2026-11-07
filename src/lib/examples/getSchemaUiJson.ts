@@ -70,6 +70,14 @@ function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
     return [uiPropertyObjectToJson(property.properties, useExample)]
   }
 
+  if (useExample) {
+    // Explicit array example wins; ignore `subexamples`, which hold item examples.
+    const example = getPropertyExample({ ...property, subexamples: undefined })
+    if (Array.isArray(example)) {
+      return example
+    }
+  }
+
   // Primitive item enum/format live on `property.items`, not the array node.
   // Untyped items (e.g. `items: { enum: [...] }`) have no `subtype`, so check first.
   if (property.items) {

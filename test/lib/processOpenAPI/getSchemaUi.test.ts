@@ -2278,6 +2278,33 @@ const fixtures: Record<string, FixtureTest> = {
   },
 
   // https://github.com/enzonotario/vitepress-openapi/issues/349
+  'array explicit example wins over items format (#349)': {
+    jsonSchema: {
+      type: 'array',
+      example: ['ada@example.com'],
+      items: {
+        type: 'string',
+        format: 'email',
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['array'],
+      required: false,
+      examples: [['ada@example.com']],
+      subtype: 'string',
+      items: {
+        name: '[item]',
+        types: ['string'],
+        required: false,
+        constraints: { format: 'email' },
+      },
+    },
+    useExample: true,
+    schemaUiJson: ['ada@example.com'],
+  },
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/349
   'enum prefers explicit default over first value (#349)': {
     jsonSchema: {
       type: 'string',
