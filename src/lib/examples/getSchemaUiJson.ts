@@ -70,14 +70,15 @@ function uiPropertyArrayToJson(property: OAProperty, useExample: boolean): any {
     return [uiPropertyObjectToJson(property.properties, useExample)]
   }
 
+  // Primitive item enum/format live on `property.items`, not the array node.
+  // Untyped items (e.g. `items: { enum: [...] }`) have no `subtype`, so check first.
+  if (property.items) {
+    return [uiPropertyToJson(property.items, useExample)]
+  }
+
   if (property.subtype) {
     if (property.subtype === 'object' && property.properties) {
       return [uiPropertyObjectToJson(property.properties as OAProperty[], useExample)]
-    }
-
-    // Primitive item enum/format live on `property.items`, not the array node.
-    if (property.items) {
-      return [uiPropertyToJson(property.items, useExample)]
     }
 
     if (useExample) {

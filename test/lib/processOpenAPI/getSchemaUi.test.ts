@@ -2230,6 +2230,29 @@ const fixtures: Record<string, FixtureTest> = {
   },
 
   // https://github.com/enzonotario/vitepress-openapi/issues/349
+  'array untyped items enum (#349)': {
+    jsonSchema: {
+      type: 'array',
+      items: {
+        enum: ['active', 'inactive'],
+      },
+    },
+    schemaUi: {
+      name: '',
+      types: ['array'],
+      required: false,
+      items: {
+        name: '[item]',
+        types: ['string'],
+        required: false,
+        enum: ['active', 'inactive'],
+      },
+    },
+    useExample: true,
+    schemaUiJson: ['active'],
+  },
+
+  // https://github.com/enzonotario/vitepress-openapi/issues/349
   'array items format (#349)': {
     jsonSchema: {
       type: 'array',
