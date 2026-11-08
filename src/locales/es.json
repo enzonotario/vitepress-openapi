@@ -79,5 +79,8 @@
   "Pattern": "Patrón",
   "Unique Items": "Elementos únicos",
   "Add Field": "Agregar campo",
-  "Click to set in playground": "Clic para usar en el playground"
+  "Click to set in playground": "Clic para usar en el playground",
+  "Failed to load the JSON editor.": "No se pudo cargar el editor JSON.",
+  "Failed to download the OpenAPI Document.": "No se pudo descargar el Documento OpenAPI.",
+  "Reload page": "Recargar página"
 }

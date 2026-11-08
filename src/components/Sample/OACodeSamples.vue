@@ -35,6 +35,15 @@ const samples = ref<Sample[]>([])
 
 const activeSampleKey = ref('')
 
+// Highlighting is costly (e.g. PHP), so a tab is highlighted only once it has been shown.
+const shownSampleKeys = ref(new Set<string>())
+
+watch(activeSampleKey, (key) => {
+  if (key) {
+    shownSampleKeys.value.add(key)
+  }
+}, { immediate: true })
+
 const radioGroupName = `group-${props.operationId}`
 
 watch(operationData.playground.request, async (playgroundRequest, _, onInvalidate) => {
@@ -87,8 +96,17 @@ watch(operationData.playground.request, async (playgroundRequest, _, onInvalidat
     return
   }
 
-  // Preload all highlighter languages
-  const uniqueHighlighters = [...new Set(nextSamples.map(s => s.highlighter).filter(Boolean))]
+  let nextActiveKey = activeSampleKey.value
+  if (!nextActiveKey || !nextSamples.some(s => s.key === nextActiveKey)) {
+    const defaultLang = themeConfig.getCodeSamplesDefaultLang()
+    nextActiveKey = (nextSamples.find(s => s.lang === defaultLang) || nextSamples[0])?.key ?? ''
+  }
+
+  // Preload only the languages of tabs that are highlighted.
+  const uniqueHighlighters = [...new Set(nextSamples
+    .filter(s => s.key === nextActiveKey || shownSampleKeys.value.has(s.key))
+    .map(s => s.highlighter)
+    .filter(Boolean))]
   await Promise.all(uniqueHighlighters.map(lang => shiki.ensureLanguage(lang)))
 
   if (cancelled) {
@@ -96,13 +114,9 @@ watch(operationData.playground.request, async (playgroundRequest, _, onInvalidat
   }
 
   samples.value = nextSamples
-
-  if (!activeSampleKey.value || !samples.value.some(s => s.key === activeSampleKey.value)) {
-    const defaultLang = themeConfig.getCodeSamplesDefaultLang()
-    const defaultSample = samples.value.find(s => s.lang === defaultLang) || samples.value[0]
-    if (defaultSample) {
-      activeSampleKey.value = defaultSample.key
-    }
+  // Keep a tab the user selected while the languages were loading.
+  if (!nextSamples.some(s => s.key === activeSampleKey.value)) {
+    activeSampleKey.value = nextActiveKey
   }
 }, {
   deep: true,
@@ -140,6 +154,7 @@ watch(operationData.playground.request, async (playgroundRequest, _, onInvalidat
           :lang="sample.highlighter"
           :label="sample.label"
           :active="activeSampleKey === sample.key"
+          :disable-html-transform="!shownSampleKeys.has(sample.key)"
           :class="{ active: activeSampleKey === sample.key }"
           class="m-0!"
         />

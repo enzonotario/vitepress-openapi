@@ -1,5 +1,4 @@
 import type { LanguageConfig } from '../../composables/useTheme'
-import { snippetz } from '@scalar/snippetz'
 import { buildHarRequest } from './buildHarRequest'
 import { buildRequest } from './buildRequest'
 import { OARequest } from './request'
@@ -27,9 +26,11 @@ export async function generateCodeSample(
   }
 
   try {
+    // Lazy: keep @scalar/snippetz out of the initial client bundle.
+    const { snippetz } = await import('@scalar/snippetz')
     return snippetz().print(target as any, client as any, harRequest) ?? ''
   } catch (e) {
-    console.error(e, request)
+    console.error(e)
     return ''
   }
 }

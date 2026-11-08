@@ -1,7 +1,5 @@
 import type { HighlighterCore, LanguageRegistration } from 'shiki/core'
 import type { BundledLanguage } from 'shiki/langs'
-import { createHighlighterCore } from 'shiki/core'
-import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
 import { bundledLanguages as highlighterImports } from 'shiki/langs'
 import { ref } from 'vue'
 import {
@@ -14,7 +12,11 @@ import { useTheme } from './useTheme'
 /** Always loaded for response / schema bodies (not the code-samples UI). */
 const CORE_HIGHLIGHTERS: BundledLanguage[] = ['json', 'xml', 'markdown']
 
-const FALLBACK_HTML = (content: string) => `<pre><code>${content}</code></pre>`
+const RE_HTML_ESCAPE = /[&<>]/g
+const HTML_ESCAPES: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;' }
+
+// The result is inserted with v-html, so the code must be escaped (e.g. a playground response body).
+const FALLBACK_HTML = (content: string) => `<pre><code>${content.replace(RE_HTML_ESCAPE, char => HTML_ESCAPES[char])}</code></pre>`
 
 let shiki: HighlighterCore | null = null
 let initPromise: Promise<void> | null = null
@@ -70,6 +72,10 @@ async function loadCoreLanguages(): Promise<LanguageRegistration[]> {
 
 async function createHighlighter(): Promise<HighlighterCore> {
   const themeConfig = useTheme()
+  const [{ createHighlighterCore }, { createJavaScriptRegexEngine }] = await Promise.all([
+    import('shiki/core'),
+    import('shiki/engine/javascript'),
+  ])
   const highlighter = await createHighlighterCore({
     themes: [
       themeConfig.getHighlighterTheme()?.light,

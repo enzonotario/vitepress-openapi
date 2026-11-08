@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
-import { dump } from 'js-yaml'
+import { ref } from 'vue'
+import OALoadError from '../Common/OALoadError.vue'
 import { Badge } from '../ui/badge/index'
 
 const props = defineProps({
@@ -14,7 +15,10 @@ const RE_TITLE_SANITIZE = /[^\w\-]/g
 
 const { t } = useI18n()
 
-function downloadSpec(format: 'json' | 'yaml'): void {
+const downloadFailed = ref(false)
+
+async function downloadSpec(format: 'json' | 'yaml'): Promise<void> {
+  downloadFailed.value = false
   try {
     const originalSpec = props.openapi.getOriginalSpec()
 
@@ -25,7 +29,8 @@ function downloadSpec(format: 'json' | 'yaml'): void {
 
     const content = format === 'json'
       ? JSON.stringify(originalSpec, null, 2)
-      : dump(originalSpec)
+      // Lazy: js-yaml is only needed when the user downloads YAML.
+      : (await import('js-yaml')).dump(originalSpec)
 
     const mimeType = format === 'json'
       ? 'application/json'
@@ -48,31 +53,41 @@ function downloadSpec(format: 'json' | 'yaml'): void {
     URL.revokeObjectURL(url)
   } catch (error) {
     console.error(`Error downloading OpenAPI spec as ${format}:`, error)
+    // e.g. the lazy js-yaml chunk failed to load after a new deploy.
+    downloadFailed.value = true
   }
 }
 </script>
 
 <template>
-  <div class="download-container group relative">
-    <a
-      href="#"
-      class="download-button relative flex items-center gap-2 no-underline!"
-      aria-label="Download OpenAPI Document as JSON"
-      @click.prevent="downloadSpec('json')"
-    >
-      <span class="underline mr-2">{{ t('Download OpenAPI Document') }}</span>
-      <Badge variant="outline" class="hidden group-hover:inline-block">JSON</Badge>
-    </a>
+  <div>
+    <div class="download-container group relative">
+      <a
+        href="#"
+        class="download-button relative flex items-center gap-2 no-underline!"
+        aria-label="Download OpenAPI Document as JSON"
+        @click.prevent="downloadSpec('json')"
+      >
+        <span class="underline mr-2">{{ t('Download OpenAPI Document') }}</span>
+        <Badge variant="outline" class="hidden group-hover:inline-block">JSON</Badge>
+      </a>
 
-    <a
-      href="#"
-      class="download-button yaml-button absolute hidden group-hover:flex items-center gap-2 no-underline!"
-      aria-label="Download OpenAPI Document as YAML"
-      @click.prevent="downloadSpec('yaml')"
-    >
-      <span class="underline mr-2">{{ t('Download OpenAPI Document') }}</span>
-      <Badge variant="outline">YAML</Badge>
-    </a>
+      <a
+        href="#"
+        class="download-button yaml-button absolute hidden group-hover:flex items-center gap-2 no-underline!"
+        aria-label="Download OpenAPI Document as YAML"
+        @click.prevent="downloadSpec('yaml')"
+      >
+        <span class="underline mr-2">{{ t('Download OpenAPI Document') }}</span>
+        <Badge variant="outline">YAML</Badge>
+      </a>
+    </div>
+
+    <OALoadError
+      v-if="downloadFailed"
+      class="mt-2"
+      :message="t('Failed to download the OpenAPI Document.')"
+    />
   </div>
 </template>
 

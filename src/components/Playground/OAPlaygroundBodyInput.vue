@@ -11,7 +11,7 @@ import {
   isMultipartFormData,
   isXml,
 } from '@/lib/utils/contentTypeUtils'
-import OAJSONEditor from '../Common/OAJSONEditor.vue'
+import { OAJSONEditorAsync as OAJSONEditor } from '../Common/OAJSONEditorAsync'
 import { Textarea } from '../ui/textarea'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
 
