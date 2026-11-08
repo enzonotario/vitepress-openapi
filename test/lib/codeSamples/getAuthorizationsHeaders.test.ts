@@ -97,6 +97,20 @@ describe('getAuthorizationsHeaders', () => {
     })
   })
 
+  it('ignores prototype keys for custom http scheme names without a value', () => {
+    const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'constructor', name: 'customAuth' } as any)
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: '<credentials>',
+    })
+  })
+
+  it('ignores prototype keys for custom http scheme names with a value', () => {
+    const headers = getAuthorizationsHeaders({ type: 'http', scheme: 'constructor', value: 'secret' } as any)
+    expect(Object.fromEntries(headers.entries())).toEqual({
+      authorization: 'secret',
+    })
+  })
+
   it('handles apiKey authorization in header', () => {
     const headers = getAuthorizationsHeaders({ type: 'apiKey', in: 'header', name: 'x-api-key', value: 'key123' })
     const entries = Object.fromEntries(headers.entries())

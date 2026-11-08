@@ -88,15 +88,16 @@ function getHeaders(
   return Object.fromEntries(resolvedHeaders)
 }
 
-const HTTP_AUTH_PREFIXES: Record<string, string> = {
-  bearer: 'Bearer',
-  basic: 'Basic',
-}
+// Maps, not object literals: custom scheme names like `constructor` must not hit prototype keys.
+const HTTP_AUTH_PREFIXES = new Map([
+  ['bearer', 'Bearer'],
+  ['basic', 'Basic'],
+])
 
-const HTTP_AUTH_PLACEHOLDERS: Record<string, string> = {
-  bearer: '<token>',
-  basic: '<credentials>',
-}
+const HTTP_AUTH_PLACEHOLDERS = new Map([
+  ['bearer', '<token>'],
+  ['basic', '<credentials>'],
+])
 
 /**
  * Build the `Authorization` value for an `http` scheme: `Bearer <token>`, `Basic <credentials>`.
@@ -107,10 +108,10 @@ function getHttpAuthorizationValue(authorization: PlaygroundSecurityScheme): str
   const rawValue = unref(authorization.value)
   // `name` holds the scheme id (e.g. `bearerAuth`), not a credential, so use a placeholder.
   const value = rawValue == null
-    ? (HTTP_AUTH_PLACEHOLDERS[scheme] ?? '<credentials>')
+    ? (HTTP_AUTH_PLACEHOLDERS.get(scheme) ?? '<credentials>')
     : String(rawValue)
 
-  const prefix = HTTP_AUTH_PREFIXES[scheme]
+  const prefix = HTTP_AUTH_PREFIXES.get(scheme)
   if (!value || !prefix || value.toLowerCase().startsWith(`${scheme} `)) {
     return value
   }
