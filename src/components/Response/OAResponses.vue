@@ -44,7 +44,7 @@ const tabsSelector = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div class="OAResponses flex flex-col">
     <Tabs
       :default-value="vModel"
     >

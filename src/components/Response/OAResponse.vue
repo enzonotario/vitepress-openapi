@@ -37,10 +37,11 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="flex flex-col space-y-4">
+  <div class="OAResponse flex flex-col space-y-4">
     <OAMarkdown
       v-if="props.response.description"
       :content="props.response.description"
+      class="OAResponseDescription"
     />
 
     <div
