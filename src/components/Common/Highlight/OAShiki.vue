@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useShiki } from '../../../composables/useShiki'
 import { useTheme } from '../../../composables/useTheme'
 
@@ -24,12 +24,14 @@ const shiki = useShiki()
 
 const html = ref(null)
 
+// Rendered as plain code until the highlighted HTML is ready, so the code never disappears.
+const codeText = computed(() => typeof props.code === 'string' ? props.code : JSON.stringify(props.code, null, 2))
+
 watch(
   [() => props.code, () => props.lang, () => isDark.value],
   async () => {
-    const codeToHighlight = typeof props.code === 'string' ? props.code : JSON.stringify(props.code, null, 2)
     await shiki.ensureLanguage(props.lang)
-    const highlightedCode = shiki.renderShiki(codeToHighlight, {
+    const highlightedCode = shiki.renderShiki(codeText.value, {
       lang: props.lang,
       theme: isDark.value ? 'vitesse-dark' : 'vitesse-light',
     })
@@ -40,5 +42,6 @@ watch(
 </script>
 
 <template>
-  <div v-html="html" />
+  <div v-if="html" v-html="html" />
+  <pre v-else><code>{{ codeText }}</code></pre>
 </template>
