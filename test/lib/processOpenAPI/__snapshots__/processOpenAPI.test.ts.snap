@@ -996,7 +996,7 @@ The response includes:
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists \\
   --request POST \\
-  --header 'Authorization: bearerAuth' \\
+  --header 'Authorization: Bearer <token>' \\
   --header 'Content-Type: application/json' \\
   --data '{
   "id": 1,
@@ -1016,7 +1016,7 @@ The response includes:
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists', {
   method: 'POST',
   headers: {
-    Authorization: 'bearerAuth',
+    Authorization: 'Bearer <token>',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
@@ -1038,7 +1038,7 @@ The response includes:
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists");
 
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: bearerAuth', 'Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer <token>', 'Content-Type: application/json']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'id' => 1,
   'name' => 'Charly García',
@@ -1061,7 +1061,7 @@ curl_close($ch);",
             "source": "requests.post(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists",
     headers={
-      "Authorization": "bearerAuth",
+      "Authorization": "Bearer <token>",
       "Content-Type": "application/json"
     },
     json={
@@ -1753,7 +1753,7 @@ Possible Reasons
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
   --request DELETE \\
-  --header 'Authorization: bearerAuth'",
+  --header 'Authorization: Bearer <token>'",
             "target": "shell",
           },
           {
@@ -1765,7 +1765,7 @@ Possible Reasons
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1', {
   method: 'DELETE',
   headers: {
-    Authorization: 'bearerAuth'
+    Authorization: 'Bearer <token>'
   }
 })",
             "target": "js",
@@ -1779,7 +1779,7 @@ Possible Reasons
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
 
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: bearerAuth']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer <token>']);
 
 curl_exec($ch);
 
@@ -1795,7 +1795,7 @@ curl_close($ch);",
             "source": "requests.delete(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
     headers={
-      "Authorization": "bearerAuth"
+      "Authorization": "Bearer <token>"
     }
 )",
             "target": "python",
@@ -2489,7 +2489,7 @@ Possible Reasons
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1 \\
   --request PUT \\
-  --header 'Authorization: bearerAuth' \\
+  --header 'Authorization: Bearer <token>' \\
   --header 'Content-Type: application/json' \\
   --data '{
   "id": 1,
@@ -2509,7 +2509,7 @@ Possible Reasons
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1', {
   method: 'PUT',
   headers: {
-    Authorization: 'bearerAuth',
+    Authorization: 'Bearer <token>',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
@@ -2531,7 +2531,7 @@ Possible Reasons
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
 
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: bearerAuth', 'Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer <token>', 'Content-Type: application/json']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'id' => 1,
   'name' => 'Charly García',
@@ -2554,7 +2554,7 @@ curl_close($ch);",
             "source": "requests.put(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1",
     headers={
-      "Authorization": "bearerAuth",
+      "Authorization": "Bearer <token>",
       "Content-Type": "application/json"
     },
     json={
@@ -3617,7 +3617,7 @@ The response includes:
             "lang": "curl",
             "source": "curl https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums \\
   --request POST \\
-  --header 'Authorization: bearerAuth' \\
+  --header 'Authorization: Bearer <token>' \\
   --header 'Content-Type: application/json' \\
   --data '{
   "id": 1,
@@ -3636,7 +3636,7 @@ The response includes:
             "source": "fetch('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums', {
   method: 'POST',
   headers: {
-    Authorization: 'bearerAuth',
+    Authorization: 'Bearer <token>',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
@@ -3657,7 +3657,7 @@ The response includes:
             "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums");
 
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: bearerAuth', 'Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer <token>', 'Content-Type: application/json']);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'id' => 1,
   'name' => 'La Máquina de Hacer Pájaros',
@@ -3679,7 +3679,7 @@ curl_close($ch);",
             "source": "requests.post(
     "https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums",
     headers={
-      "Authorization": "bearerAuth",
+      "Authorization": "Bearer <token>",
       "Content-Type": "application/json"
     },
     json={
