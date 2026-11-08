@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OperationSlot } from '../../types'
+import type { OperationNestedSlot, OperationSlot } from '../../types'
 import { getGlobalOpenapi, injectOpenapi } from '../../composables/useOpenapi'
 import { useTheme } from '../../composables/useTheme'
 import OALazy from '../Common/Lazy/OALazy.vue'
@@ -12,7 +12,7 @@ const { paths } = defineProps({
   },
 })
 
-const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
+const slots = defineSlots<{ [K in OperationSlot | OperationNestedSlot]?: (props: any) => any }>()
 
 const themeConfig = useTheme()
 

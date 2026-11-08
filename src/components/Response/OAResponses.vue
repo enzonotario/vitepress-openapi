@@ -1,7 +1,8 @@
-<script setup>
+<script setup lang="ts">
+import type { ResponseDescriptionSlotProps } from '../../types'
 import { useI18n } from '@byjohann/vue-i18n'
 import { TabsIndicator } from 'reka-ui'
-import { computed, defineProps, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
@@ -23,12 +24,16 @@ const props = defineProps({
   },
 })
 
+const slots = defineSlots<{
+  'response-description'?: (props: ResponseDescriptionSlotProps) => any
+}>()
+
 const themeConfig = useTheme()
 const { t } = useI18n()
 
 const responsesCodes = Object.keys(props.responses)
 
-const vModel = ref(responsesCodes && responsesCodes.length > 0 ? responsesCodes[0] : null)
+const vModel = ref<string | undefined>(responsesCodes[0])
 
 const tabsSelector = computed(() => {
   const selector = themeConfig.getResponseCodeSelector()
@@ -121,7 +126,17 @@ const tabsSelector = computed(() => {
           :operation-id="props.operationId"
           :response="props.responses[responseCode]"
           :response-code="responseCode"
-        />
+        >
+          <template
+            v-if="slots['response-description']"
+            #response-description="responseDescription"
+          >
+            <slot
+              name="response-description"
+              v-bind="responseDescription"
+            />
+          </template>
+        </OAResponse>
       </TabsContent>
     </Tabs>
   </div>

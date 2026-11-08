@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OperationSlot } from '../../types'
+import type { OperationNestedSlot, OperationSlot } from '../../types'
 import OAProvider from '../Context/OAProvider.vue'
 import OAOperationContent from './OAOperationContent.vue'
 
@@ -49,7 +49,7 @@ const emits = defineEmits([
   'update:spec',
 ])
 
-const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
+const slots = defineSlots<{ [K in OperationSlot | OperationNestedSlot]?: (props: any) => any }>()
 </script>
 
 <template>

@@ -22,6 +22,19 @@ export type OperationSlot
 // | 'summary'
 // | 'servers'
 
+/**
+ * Slots for parts inside an operation section, forwarded like `OperationSlot`.
+ * They are not sections, so `operation.slots` and `operation.hiddenSlots` do not apply to them.
+ */
+export type OperationNestedSlot = 'response-description'
+
+export interface ResponseDescriptionSlotProps {
+  operationId: string
+  responseCode: string
+  response: Record<string, any>
+  description?: string
+}
+
 export type OpenAPIDocument = OpenAPIV3.Document & OpenAPIV3_1.Document
 
 export type ParsedPaths = OpenAPIV3.PathsObject & OpenAPIV3_1.PathsObject & {
