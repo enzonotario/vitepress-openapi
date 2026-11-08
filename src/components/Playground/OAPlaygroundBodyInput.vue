@@ -2,7 +2,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import type { OAExampleObject } from '../../types'
-import { computed, defineAsyncComponent, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { createCompositeKey } from '@/lib/playground/createCompositeKey'
 import { useExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import {
@@ -11,6 +11,7 @@ import {
   isMultipartFormData,
   isXml,
 } from '@/lib/utils/contentTypeUtils'
+import { OAJSONEditorAsync as OAJSONEditor } from '../Common/OAJSONEditorAsync'
 import { Textarea } from '../ui/textarea'
 import OAPlaygroundParameterInput from './OAPlaygroundParameterInput.vue'
 
@@ -41,9 +42,6 @@ const emits = defineEmits<{
   'update:enabled': [key: string, value: boolean]
   'submit': []
 }>()
-
-// Lazy: the JSON editor (vanilla-jsoneditor + CodeMirror) is ~1 MB and only needed for JSON inputs.
-const OAJSONEditor = defineAsyncComponent(() => import('../Common/OAJSONEditor.vue'))
 
 const bodyValue = computed({
   get: () => props.body,

@@ -79,5 +79,8 @@
   "Pattern": "パターン",
   "Unique Items": "ユニーク項目",
   "Add Field": "フィールドを追加",
-  "Click to set in playground": "クリックしてプレイグラウンドに設定"
+  "Click to set in playground": "クリックしてプレイグラウンドに設定",
+  "Failed to load the JSON editor.": "JSON エディターを読み込めませんでした。",
+  "Failed to download the OpenAPI Document.": "OpenAPI ドキュメントをダウンロードできませんでした。",
+  "Reload page": "ページを再読み込み"
 }

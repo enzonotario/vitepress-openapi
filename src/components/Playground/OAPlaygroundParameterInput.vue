@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import { useI18n } from '@byjohann/vue-i18n'
-import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
 import { valueFromPlaygroundTextField } from '@/lib/playground/coercePlaygroundParameterValue'
 import { resolveExampleForPlaceholder, resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
+import { OAJSONEditorAsync as OAJSONEditor } from '../Common/OAJSONEditorAsync'
 import { Checkbox } from '../ui/checkbox'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -46,9 +47,6 @@ const emits = defineEmits([
   'update:enabled',
   'submit',
 ])
-
-// Lazy: the JSON editor (vanilla-jsoneditor + CodeMirror) is ~1 MB and only needed for JSON inputs.
-const OAJSONEditor = defineAsyncComponent(() => import('../Common/OAJSONEditor.vue'))
 
 const { t } = useI18n()
 
