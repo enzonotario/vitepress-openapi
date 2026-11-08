@@ -1,5 +1,6 @@
 <script setup>
 import { cn } from '@/lib/utils/utils'
+import { vHydratableHtml } from '@/lib/utils/vHydratableHtml'
 import { useMarkdown } from '../../composables/useMarkdown'
 
 const props = defineProps({
@@ -19,7 +20,7 @@ const { render } = useMarkdown()
 
 <template>
   <div
+    v-hydratable-html="render(props.content)"
     :class="cn('OAMarkdown oa-doc', props.class)"
-    v-html="render(props.content)"
   />
 </template>
