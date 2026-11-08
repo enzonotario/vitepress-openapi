@@ -30,7 +30,7 @@ export async function generateCodeSample(
     const { snippetz } = await import('@scalar/snippetz')
     return snippetz().print(target as any, client as any, harRequest) ?? ''
   } catch (e) {
-    console.error(e, request)
+    console.error(e)
     return ''
   }
 }
