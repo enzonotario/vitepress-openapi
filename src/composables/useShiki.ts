@@ -1,7 +1,5 @@
 import type { HighlighterCore, LanguageRegistration } from 'shiki/core'
 import type { BundledLanguage } from 'shiki/langs'
-import { createHighlighterCore } from 'shiki/core'
-import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
 import { bundledLanguages as highlighterImports } from 'shiki/langs'
 import { ref } from 'vue'
 import {
@@ -70,6 +68,10 @@ async function loadCoreLanguages(): Promise<LanguageRegistration[]> {
 
 async function createHighlighter(): Promise<HighlighterCore> {
   const themeConfig = useTheme()
+  const [{ createHighlighterCore }, { createJavaScriptRegexEngine }] = await Promise.all([
+    import('shiki/core'),
+    import('shiki/engine/javascript'),
+  ])
   const highlighter = await createHighlighterCore({
     themes: [
       themeConfig.getHighlighterTheme()?.light,
