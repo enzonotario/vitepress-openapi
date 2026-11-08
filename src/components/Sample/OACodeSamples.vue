@@ -114,7 +114,10 @@ watch(operationData.playground.request, async (playgroundRequest, _, onInvalidat
   }
 
   samples.value = nextSamples
-  activeSampleKey.value = nextActiveKey
+  // Keep a tab the user selected while the languages were loading.
+  if (!nextSamples.some(s => s.key === activeSampleKey.value)) {
+    activeSampleKey.value = nextActiveKey
+  }
 }, {
   deep: true,
   immediate: true,
