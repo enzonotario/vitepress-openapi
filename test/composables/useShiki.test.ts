@@ -97,6 +97,15 @@ describe('useShiki', () => {
     expect(result).toBe(`<pre><code>${code}</code></pre>`)
   })
 
+  it('renderShiki escapes HTML in the fallback', () => {
+    const shiki = useShiki()
+    const code = '<img src=x onerror="alert(1)"> & more'
+
+    const result = shiki.renderShiki(code, { lang: 'unsupported-lang', theme: 'vitesse-dark' })
+
+    expect(result).toBe('<pre><code>&lt;img src=x onerror="alert(1)"&gt; &amp; more</code></pre>')
+  })
+
   it('reset clears the shiki instance', async () => {
     const shiki = useShiki()
 
