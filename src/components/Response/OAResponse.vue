@@ -1,6 +1,7 @@
-<script setup>
+<script setup lang="ts">
+import type { ResponseDescriptionSlotProps } from '../../types'
 import { useI18n } from '@byjohann/vue-i18n'
-import { computed, defineProps, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useTheme } from '../../composables/useTheme'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
@@ -22,6 +23,10 @@ const props = defineProps({
   },
 })
 
+defineSlots<{
+  'response-description'?: (props: ResponseDescriptionSlotProps) => any
+}>()
+
 const contentTypes = Object.keys(props.response.content ?? {})
 
 const contentType = ref(contentTypes[0] ?? undefined)
@@ -37,11 +42,20 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="flex flex-col space-y-4">
-    <OAMarkdown
-      v-if="props.response.description"
-      :content="props.response.description"
-    />
+  <div class="OAResponse flex flex-col space-y-4">
+    <slot
+      name="response-description"
+      :operation-id="props.operationId"
+      :response-code="props.responseCode"
+      :response="props.response"
+      :description="props.response.description"
+    >
+      <OAMarkdown
+        v-if="props.response.description"
+        :content="props.response.description"
+        class="OAResponseDescription"
+      />
+    </slot>
 
     <div
       v-if="props.response?.content && contentTypes.length"

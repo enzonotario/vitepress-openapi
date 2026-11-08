@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OperationSlot } from '../../types'
+import type { OperationNestedSlot, OperationSlot } from '../../types'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed } from 'vue'
 import OAFooter from '../Common/OAFooter.vue'
@@ -53,7 +53,7 @@ const props = defineProps({
   },
 })
 
-const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
+const slots = defineSlots<{ [K in OperationSlot | OperationNestedSlot]?: (props: any) => any }>()
 
 const { t } = useI18n()
 
@@ -239,7 +239,17 @@ function hasSlot(name: OperationSlot): boolean {
         :responses="responses.responses"
         :response-type="responses.responseType"
         :heading-prefix="headingPrefix"
-      />
+      >
+        <template
+          v-if="slots['response-description']"
+          #response-description="responseDescription"
+        >
+          <slot
+            name="response-description"
+            v-bind="responseDescription"
+          />
+        </template>
+      </OAResponses>
     </template>
 
     <template

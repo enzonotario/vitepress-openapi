@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { OperationSlot, PathsGroupView } from '../../types'
+import type { OperationNestedSlot, OperationSlot, PathsGroupView } from '../../types'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed } from 'vue'
 import { useTheme } from '../../composables/useTheme'
@@ -57,7 +57,7 @@ const props = defineProps({
   },
 })
 
-const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
+const slots = defineSlots<{ [K in OperationSlot | OperationNestedSlot]?: (props: any) => any }>()
 
 const { t } = useI18n()
 

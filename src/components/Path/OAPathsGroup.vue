@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OperationSlot, PathsGroupView } from '../../types'
+import type { OperationNestedSlot, OperationSlot, PathsGroupView } from '../../types'
 import { useI18n } from '@byjohann/vue-i18n'
 import { computed, nextTick, ref } from 'vue'
 import { scrollToHash } from '@/lib/utils/utils'
@@ -19,7 +19,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any }>()
+const slots = defineSlots<{ [K in OperationSlot | OperationNestedSlot]?: (props: any) => any }>()
 
 const themeConfig = useTheme()
 const { t } = useI18n()
