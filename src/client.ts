@@ -3,9 +3,10 @@ import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
 import type { OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
 import { createI18n } from '@byjohann/vue-i18n'
+import { useData } from 'vitepress'
 import { watch } from 'vue'
 import * as components from './components'
-import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
+import { DEFAULT_OPERATION_SLOTS, setIsDarkSource, useTheme } from './composables/useTheme'
 
 interface OAEnhanceAppContext extends EnhanceAppContext {
   openapi?: OpenApiSpecInstance | null
@@ -19,6 +20,14 @@ interface VPTheme {
 
 export const theme = {
   enhanceApp({ app }) {
+    // Follow VitePress' resolved appearance, including 'force-dark' and 'force-auto'.
+    try {
+      setIsDarkSource(app.runWithContext(() => useData()).isDark)
+    }
+    catch {
+      // Not inside a VitePress app: keep the useDark fallback.
+    }
+
     const themeConfig = useTheme()
 
     const i18nConfig = themeConfig.getI18nConfig()
