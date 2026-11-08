@@ -97,6 +97,33 @@ Custom responses section.
 | `operationId` | `String` | Unique operation identifier |
 | `responses` | `Object` | Parsed responses (status codes and content) |
 
+### `response-description`
+
+Custom description of each response, rendered for every status code. Unlike `responses`, it keeps the rest of the responses section (status codes, content type, schema and examples).
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `operationId` | `String` | Unique operation identifier |
+| `responseCode` | `String` | Response status code (e.g. `200`, `404`) |
+| `response` | `Object` | Parsed response object |
+| `description` | `String` | Response description (markdown), if any |
+
+```vue
+<OAOperation operationId="getArtist">
+  <template #response-description="{ responseCode, description }">
+    <OAMarkdown
+      v-if="description"
+      :content="description"
+      :class="responseCode.startsWith('2') ? 'text-lg' : ''"
+    />
+  </template>
+</OAOperation>
+```
+
+::: tip
+To change only the styles, you do not need a slot. Target these CSS classes instead: `.OAResponses` (responses section), `.OAResponse` (one response) and `.OAResponseDescription` (the response description).
+:::
+
 ### `playground`
 
 Custom playground / try-it section.
