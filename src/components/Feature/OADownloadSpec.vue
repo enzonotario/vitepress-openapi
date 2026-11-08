@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useI18n } from '@byjohann/vue-i18n'
-import { dump } from 'js-yaml'
 import { Badge } from '../ui/badge/index'
 
 const props = defineProps({
@@ -14,7 +13,7 @@ const RE_TITLE_SANITIZE = /[^\w\-]/g
 
 const { t } = useI18n()
 
-function downloadSpec(format: 'json' | 'yaml'): void {
+async function downloadSpec(format: 'json' | 'yaml'): Promise<void> {
   try {
     const originalSpec = props.openapi.getOriginalSpec()
 
@@ -25,7 +24,8 @@ function downloadSpec(format: 'json' | 'yaml'): void {
 
     const content = format === 'json'
       ? JSON.stringify(originalSpec, null, 2)
-      : dump(originalSpec)
+      // Lazy: js-yaml is only needed when the user downloads YAML.
+      : (await import('js-yaml')).dump(originalSpec)
 
     const mimeType = format === 'json'
       ? 'application/json'
