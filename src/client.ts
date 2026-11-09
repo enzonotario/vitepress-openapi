@@ -2,11 +2,9 @@ import type { Awaitable } from 'vitepress'
 import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
 import type { OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
-import { createI18n } from '@byjohann/vue-i18n'
 import { useData } from 'vitepress'
-import { watch } from 'vue'
-import * as components from './components'
-import { DEFAULT_OPERATION_SLOTS, setIsDarkSource, useTheme } from './composables/useTheme'
+import { setIsDarkSource } from './composables/useTheme'
+import { VitepressOpenapi } from './vue'
 
 interface OAEnhanceAppContext extends EnhanceAppContext {
   openapi?: OpenApiSpecInstance | null
@@ -28,41 +26,9 @@ export const theme = {
       // Not inside a VitePress app: keep the useDark fallback.
     }
 
-    const themeConfig = useTheme()
-
-    const i18nConfig = themeConfig.getI18nConfig()
-
-    const i18n = createI18n({
-      defaultLocale: i18nConfig.locale?.value || 'en',
-      messages: i18nConfig.messages || {},
-    })
-
-    app.use(i18n)
-
-    watch(
-      () => themeConfig.getLocale(),
-      () => {
-        i18n.setLocale(themeConfig.getLocale())
-      },
-      {
-        immediate: true,
-      },
-    )
-
-    Object.entries(components).forEach(([key, component]) => {
-      app.component(key, component)
-    })
+    app.use(VitepressOpenapi)
   },
 } as VPTheme
 
-export * from './components'
-export { useOpenapi } from './composables/useOpenapi'
-export { usePlayground } from './composables/usePlayground'
-export { DEFAULT_OPERATION_SLOTS }
-export { useShiki } from './composables/useShiki'
-export { useTheme } from './composables/useTheme'
-export { generateCodeSample } from './lib/codeSamples/generateCodeSample'
-export { OARequest } from './lib/codeSamples/request'
-export { createOpenApiSpec } from './lib/spec/createOpenApiSpec'
-export { minifyHtml } from './lib/utils/minifyHtml'
-export { locales } from './locales'
+// Everything that does not depend on VitePress lives in `vitepress-openapi/vue`.
+export * from './vue'
