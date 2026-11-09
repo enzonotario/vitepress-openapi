@@ -50,6 +50,7 @@
     "lint": "eslint src .github/workflows",
     "lint:fix": "eslint src .github/workflows --fix",
     "dev": "cd docs && VITE_DEBUG=1 pnpm run dev",
+    "dev:standalone": "cd e2e/local/standalone && vite --mode source --port 4175",
     "docs:build": "pnpm run build && cd docs && pnpm run build",
     "test": "vitest",
     "test:run": "vitest --run",
