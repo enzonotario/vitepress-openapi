@@ -26,7 +26,8 @@ export const theme = {
       // Not inside a VitePress app: keep the useDark fallback.
     }
 
-    app.use(VitepressOpenapi)
+    // VitePress already handles the copy buttons of code blocks.
+    app.use(VitepressOpenapi, { copyCode: false })
   },
 } as VPTheme
 

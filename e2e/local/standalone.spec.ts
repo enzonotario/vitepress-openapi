@@ -71,6 +71,20 @@ test.describe('standalone Vue app', () => {
     await expect(html).toHaveClass(/dark/)
   })
 
+  test('copies code samples with the copy button', async ({ page, context, browserName }) => {
+    test.skip(browserName !== 'chromium', 'Clipboard permissions are only available in Chromium.')
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+
+    await page.goto(`${STANDALONE_URL}/#/operations/getAllArtists`)
+
+    const block = page.locator('.vp-code-group .blocks > div.active')
+    await block.hover()
+    await block.locator('button.copy').click()
+
+    await expect(block.locator('button.copy')).toHaveClass(/copied/)
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('curl')
+  })
+
   test('follows the dark color scheme', async ({ browser }) => {
     const context = await browser.newContext({ colorScheme: 'dark' })
     const page = await context.newPage()

@@ -6,12 +6,15 @@ import { watch } from 'vue'
 import * as components from './components'
 import { useOpenapi } from './composables/useOpenapi'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
+import { setupCopyCode } from './lib/utils/copyCode'
 
 export interface VitepressOpenapiOptions {
   /** OpenAPI document (object, or a JSON/YAML string) used by components without their own `spec`. */
   spec?: OpenAPIDocument | string
   /** Theme configuration, the same as `useTheme(config)`. */
   config?: PartialUseThemeConfig
+  /** Handle the copy buttons of code blocks. VitePress already does it, so its theme disables this. Default: true. */
+  copyCode?: boolean
 }
 
 /**
@@ -22,6 +25,10 @@ export const VitepressOpenapi: Plugin<[VitepressOpenapiOptions?]> = {
   install(app: App, options: VitepressOpenapiOptions = {}) {
     if (options.spec || options.config) {
       useOpenapi(options)
+    }
+
+    if (options.copyCode !== false) {
+      setupCopyCode()
     }
 
     const themeConfig = useTheme()
