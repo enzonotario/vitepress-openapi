@@ -39,7 +39,8 @@ const operations = useOpenapi().getPathsByVerbs()
           <!-- App content (not a library component): it opts into the same document styles. -->
           <section class="vp-doc">
             <h2>Operations</h2>
-            <!-- Same output as docs/example/introduction.md: one list per operation, and a markdown slot. -->
+            <!-- Same output as docs/example/introduction.md (one list per operation, markdown slot), without its
+                 nested `[title]()` link: a link inside the OAOperationLink link is not clickable. -->
             <ul v-for="operation in operations" :key="operation.operationId">
               <li>
                 <OAOperationLink
@@ -48,7 +49,7 @@ const operations = useOpenapi().getPathsByVerbs()
                   :title="operation.summary"
                   :href="`/example/operations/${operation.operationId}`"
                 >
-                  [{{ operation.summary }}]() `{{ operation.path }}`
+                  {{ operation.summary }} `{{ operation.path }}`
                 </OAOperationLink>
               </li>
             </ul>
