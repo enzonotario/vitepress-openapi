@@ -14,7 +14,7 @@ test.describe('standalone Vue app', () => {
       }
     })
 
-    await page.goto(STANDALONE_URL)
+    await page.goto(`${STANDALONE_URL}/#/operations/createArtist`)
 
     await expect(page.locator('h1')).toContainText('Add a new artist')
     await expect(page.locator('.OAResponses')).toBeVisible()
@@ -29,6 +29,23 @@ test.describe('standalone Vue app', () => {
     await expect(page.locator('.oa-jse')).toBeVisible()
 
     expect(errors).toEqual([])
+  })
+
+  test('navigates from the sidebar and from operation links', async ({ page }) => {
+    await page.goto(STANDALONE_URL)
+
+    // Sidebar built from useSidebar(); the first operation is shown by default.
+    await expect(page.locator('h1')).toContainText('Get all artists')
+
+    await page.locator('nav a', { hasText: 'Add a new artist' }).click()
+    await expect(page).toHaveURL(/#\/operations\/createArtist$/)
+    await expect(page.locator('h1')).toContainText('Add a new artist')
+    await expect(page.locator('nav a[aria-current="page"]')).toContainText('Add a new artist')
+
+    // Operation link in a description, rewritten with markdown.operationLink.transformHref.
+    await page.locator('a.OAOperationLink', { hasText: 'Get an artist' }).first().click()
+    await expect(page).toHaveURL(/#\/operations\/getArtist$/)
+    await expect(page.locator('h1')).toContainText('Get an artist')
   })
 
   test('follows the dark color scheme', async ({ browser }) => {
