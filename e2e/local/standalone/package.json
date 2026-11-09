@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite --port 4174 --strictPort"
+  },
+  "dependencies": {
+    "vitepress-openapi": "workspace:*",
+    "vue": "^3.5.42"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.8",
+    "vite": "^8.2.2"
+  }
+}

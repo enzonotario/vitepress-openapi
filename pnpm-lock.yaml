@@ -184,6 +184,22 @@ importers:
         specifier: workspace:*
         version: link:../../..
 
+  e2e/local/standalone:
+    dependencies:
+      vitepress-openapi:
+        specifier: workspace:*
+        version: link:../../..
+      vue:
+        specifier: ^3.5.42
+        version: 3.5.42(typescript@6.0.3)
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.8
+        version: 6.0.8(vite@8.2.2(@types/node@26.4.1)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.42(typescript@6.0.3))
+      vite:
+        specifier: ^8.2.2
+        version: 8.2.2(@types/node@26.4.1)(jiti@2.7.0)(yaml@2.9.0)
+
 packages:
 
   '@algolia/abtesting@1.23.0':
