@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { useOpenapi, useTheme } from 'vitepress-openapi/vue'
 import { computed, watch } from 'vue'
+import { withBase, withoutBase } from './base'
 import AppNavbar from './components/AppNavbar.vue'
 import AppSidebar from './components/AppSidebar.vue'
 import { baseConfig } from './config'
 import { HOME_PATH, resolveRoute, sidebar, spec, testSpecUrl } from './pages'
 import { currentPath, navigate } from './router'
 
-if (currentPath.value === '/') {
+if (withoutBase(currentPath.value) === '/') {
   navigate(HOME_PATH, { replace: true })
 }
 
@@ -47,7 +48,7 @@ const operations = useOpenapi().getPathsByVerbs()
                   :operation-id="operation.operationId"
                   :method="operation.verb"
                   :title="operation.summary"
-                  :href="`/example/operations/${operation.operationId}`"
+                  :href="withBase(`/example/operations/${operation.operationId}`)"
                 >
                   {{ operation.summary }} `{{ operation.path }}`
                 </OAOperationLink>

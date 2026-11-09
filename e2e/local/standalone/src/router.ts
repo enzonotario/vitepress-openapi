@@ -1,6 +1,7 @@
 // Minimal history router for the example: links to the same origin are handled in-app,
 // and links that only change the hash (e.g. header anchors) keep the default behavior.
 import { nextTick, ref } from 'vue'
+import { withBase } from './base'
 
 export const currentPath = ref(window.location.pathname)
 
@@ -35,7 +36,8 @@ export function setupRouter() {
     }
 
     const url = new URL(link.href)
-    if (url.origin !== window.location.origin || url.pathname === window.location.pathname) {
+    const insideApp = url.pathname.startsWith(withBase('/'))
+    if (url.origin !== window.location.origin || !insideApp || url.pathname === window.location.pathname) {
       return
     }
 

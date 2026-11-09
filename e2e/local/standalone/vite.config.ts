@@ -8,7 +8,7 @@ const publicDir = fileURLToPath(new URL('../../../docs/public', import.meta.url)
 
 const src = (path: string) => fileURLToPath(new URL(`../../../src/${path}`, import.meta.url))
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   // `pnpm dev:standalone` (mode "source"): use the library sources with HMR instead of the built dist.
   if (mode === 'source') {
     return {
@@ -22,6 +22,16 @@ export default defineConfig(({ mode }) => {
           '@': src(''),
         },
       },
+    }
+  }
+
+  // Built into the docs site (see docs/.vitepress/config.mts): served at /standalone/, and the
+  // test specs come from the docs' own public files.
+  if (command === 'build') {
+    return {
+      plugins: [vue()],
+      base: '/standalone/',
+      publicDir: false,
     }
   }
 

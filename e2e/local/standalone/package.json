@@ -2,7 +2,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "vite --port 4174 --strictPort"
+    "dev": "vite --port 4174 --strictPort",
+    "build": "vite build"
   },
   "dependencies": {
     "vitepress-openapi": "workspace:*",

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { withBase } from '../base'
 import AppearanceSwitch from './AppearanceSwitch.vue'
 
 defineProps<{
@@ -9,7 +10,7 @@ defineProps<{
 
 <template>
   <header class="navbar">
-    <a class="title" href="/">
+    <a class="title" :href="withBase('/')">
       {{ title }}
       <span v-if="version" class="version">v{{ version }}</span>
     </a>

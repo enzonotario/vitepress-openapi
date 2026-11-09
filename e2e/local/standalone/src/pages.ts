@@ -2,6 +2,7 @@ import type { SidebarItem } from 'vitepress-openapi/vue'
 import { useSidebar } from 'vitepress-openapi/vue'
 import { examplesPages, testsPages } from '../../../../docs/pages'
 import spec from '../../../../docs/public/openapi.json'
+import { withBase, withoutBase } from './base'
 
 export { spec }
 
@@ -13,14 +14,16 @@ export type Route
     | { name: 'example', page: (typeof examplesPages)[number] }
     | { name: 'not-found' }
 
-export const HOME_PATH = '/example/introduction'
+export const HOME_PATH = withBase('/example/introduction')
 
 const RE_OPERATION = /^\/example\/operations\/([^/]+)$/
 const RE_TEST = /^\/tests\/([^/]+)$/
 const RE_EXAMPLE = /^\/examples\/([^/]+)$/
 
-export function resolveRoute(path: string): Route {
-  if (path === HOME_PATH) {
+export function resolveRoute(pathname: string): Route {
+  const path = withoutBase(pathname)
+
+  if (path === '/example/introduction') {
     return { name: 'introduction' }
   }
   if (path === '/example/one-page') {
@@ -45,7 +48,7 @@ export function resolveRoute(path: string): Route {
   return { name: 'not-found' }
 }
 
-/** Test specs live in docs/public, which is this app's public dir. */
+/** Test specs live in docs/public: this app's public dir locally, and the docs site root when deployed. */
 export function testSpecUrl(page: (typeof testsPages)[number]) {
   return page.specPath.replace('./public', '')
 }
@@ -56,16 +59,16 @@ export const sidebar: SidebarItem[] = [
     text: 'Example',
     items: [
       { text: 'Introduction', link: HOME_PATH },
-      ...useSidebar({ spec, linkPrefix: '/example/operations/' }).generateSidebarGroups(),
-      { text: 'One Page', link: '/example/one-page' },
+      ...useSidebar({ spec, linkPrefix: withBase('/example/operations/') }).generateSidebarGroups(),
+      { text: 'One Page', link: withBase('/example/one-page') },
     ],
   },
   {
     text: 'Tests',
-    items: testsPages.map(page => ({ text: page.label, link: `/tests/${page.slug}` })),
+    items: testsPages.map(page => ({ text: page.label, link: withBase(`/tests/${page.slug}`) })),
   },
   {
     text: 'Remote Examples',
-    items: examplesPages.map(page => ({ text: page.label, link: `/examples/${page.slug}` })),
+    items: examplesPages.map(page => ({ text: page.label, link: withBase(`/examples/${page.slug}`) })),
   },
 ]
