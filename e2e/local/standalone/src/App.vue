@@ -2,6 +2,7 @@
 import { useSidebar } from 'vitepress-openapi/vue'
 import { computed, onBeforeUnmount, ref } from 'vue'
 import spec from '../../../../docs/public/openapi.json'
+import AppNavbar from './components/AppNavbar.vue'
 import { OPERATION_PREFIX } from './routes'
 
 // The package provides the sidebar data; the app owns the UI and the routing.
@@ -25,40 +26,49 @@ const operationId = computed(() => decodeURIComponent(activeLink.value.slice(OPE
 </script>
 
 <template>
-  <div class="layout">
-    <nav class="sidebar" aria-label="Operations">
-      <section v-for="group in groups" :key="group.text">
-        <p class="group">
-          {{ group.text }}
-        </p>
-        <a
-          v-for="item in group.items"
-          :key="item.link"
-          :href="item.link"
-          :class="{ active: item.link === activeLink }"
-          :aria-current="item.link === activeLink ? 'page' : undefined"
-          v-html="item.text"
-        />
-      </section>
-    </nav>
+  <div class="app">
+    <AppNavbar :title="spec.info.title" :version="spec.info.version" />
 
-    <main class="content">
-      <OAOperation :key="operationId" :operation-id="operationId" />
-    </main>
+    <div class="layout">
+      <nav class="sidebar" aria-label="Operations">
+        <section v-for="group in groups" :key="group.text">
+          <p class="group">
+            {{ group.text }}
+          </p>
+          <a
+            v-for="item in group.items"
+            :key="item.link"
+            :href="item.link"
+            :class="{ active: item.link === activeLink }"
+            :aria-current="item.link === activeLink ? 'page' : undefined"
+            v-html="item.text"
+          />
+        </section>
+      </nav>
+
+      <main class="content">
+        <OAOperation :key="operationId" :operation-id="operationId" />
+      </main>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.app {
+  /* Used by the library for anchor scroll offsets, like VitePress' navbar height. */
+  --vp-nav-height: 64px;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 272px minmax(0, 1fr);
-  min-height: 100vh;
+  min-height: calc(100vh - var(--vp-nav-height));
 }
 
 .sidebar {
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: var(--vp-nav-height);
+  height: calc(100vh - var(--vp-nav-height));
   overflow-y: auto;
   padding: 24px 16px;
   border-right: 1px solid var(--vp-c-divider);

@@ -48,6 +48,29 @@ test.describe('standalone Vue app', () => {
     await expect(page.locator('h1')).toContainText('Get an artist')
   })
 
+  test('switches between light and dark from the navbar', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' })
+    await page.goto(`${STANDALONE_URL}/#/operations/createArtist`)
+
+    const html = page.locator('html')
+    const appearanceSwitch = page.getByRole('switch')
+    const codeBlock = page.locator('.vp-code-group pre.shiki').first()
+
+    await expect(page.locator('header.navbar')).toContainText('Argentine Rock Legends')
+    await expect(html).not.toHaveClass(/dark/)
+    await expect(codeBlock).toHaveClass(/vitesse-light/)
+
+    // The switch writes `useTheme().isDark`; the components follow it.
+    await appearanceSwitch.click()
+    await expect(html).toHaveClass(/dark/)
+    await expect(appearanceSwitch).toHaveAttribute('aria-checked', 'true')
+    await expect(codeBlock).toHaveClass(/vitesse-dark/)
+
+    // The choice is kept after a reload.
+    await page.reload()
+    await expect(html).toHaveClass(/dark/)
+  })
+
   test('follows the dark color scheme', async ({ browser }) => {
     const context = await browser.newContext({ colorScheme: 'dark' })
     const page = await context.newPage()
