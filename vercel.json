@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/standalone/:path*", "destination": "/standalone/index.html" }
+  ]
+}

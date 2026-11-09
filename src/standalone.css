@@ -1,0 +1,38 @@
+/**
+ * Styles for using vitepress-openapi outside VitePress (e.g. with `vitepress-openapi/vue`).
+ *
+ * Inside VitePress, its default theme provides these styles. Do not load this file there.
+ *
+ * Usage: import it before `vitepress-openapi/dist/style.css` (the same order as in VitePress).
+ * The `VitepressOpenapi` plugin wraps the components in a `.vp-doc` element, which these styles target.
+ * Override any `--vp-*` variable to match your design.
+ *
+ * The imports below are VitePress' own default theme styles (MIT, https://github.com/vuejs/vitepress).
+ * The build inlines them into dist/standalone.css, so VitePress is not needed at runtime.
+ */
+@import 'vitepress/dist/client/theme-default/styles/vars.css';
+@import 'vitepress/dist/client/theme-default/styles/icons.css';
+@import 'vitepress/dist/client/theme-default/styles/components/vp-doc.css';
+@import 'vitepress/dist/client/theme-default/styles/components/vp-code-group.css';
+
+/* Base text and page colors, like VitePress' base.css. Zero specificity: any app style on html/body wins. */
+:where(html) {
+  color: var(--vp-c-text-1);
+  background-color: var(--vp-c-bg);
+}
+
+.vp-doc {
+  line-height: 24px;
+}
+
+.vp-doc :is(pre, code, kbd, samp) {
+  font-family: var(--vp-font-family-mono);
+}
+
+/* Space between the operation columns (VitePress applies it through its .VPDoc layout). */
+@media (min-width: 640px) {
+  .OAPathContentEnd {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+}
