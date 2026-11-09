@@ -4,8 +4,9 @@ import { createApp } from 'vue'
 import spec from '../../../../docs/public/openapi.json'
 import App from './App.vue'
 import { OPERATION_PREFIX } from './routes'
-import 'vitepress-openapi/dist/style.css'
+// Same order as VitePress: theme styles first, then the library styles.
 import 'vitepress-openapi/dist/standalone.css'
+import 'vitepress-openapi/dist/style.css'
 
 createApp(App)
   .use(VitepressOpenapi, {

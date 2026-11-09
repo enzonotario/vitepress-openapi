@@ -46,7 +46,7 @@ const operationId = computed(() => decodeURIComponent(activeLink.value.slice(OPE
         </section>
       </nav>
 
-      <main class="content">
+      <main class="content vp-doc">
         <OAOperation :key="operationId" :operation-id="operationId" />
       </main>
     </div>
