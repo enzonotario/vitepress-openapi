@@ -36,18 +36,23 @@ const operations = useOpenapi().getPathsByVerbs()
         <template v-if="route.name === 'introduction'">
           <OAIntroduction />
 
-          <h2>Operations</h2>
-          <ul>
-            <li v-for="operation in operations" :key="operation.operationId">
-              <OAOperationLink
-                :operation-id="operation.operationId"
-                :method="operation.verb"
-                :title="operation.summary"
-                :href="`/example/operations/${operation.operationId}`"
-              />
-              <code>{{ operation.path }}</code>
-            </li>
-          </ul>
+          <!-- App content (not a library component): it opts into the same document styles. -->
+          <section class="vp-doc">
+            <h2>Operations</h2>
+            <!-- Same output as docs/example/introduction.md: one list per operation, and a markdown slot. -->
+            <ul v-for="operation in operations" :key="operation.operationId">
+              <li>
+                <OAOperationLink
+                  :operation-id="operation.operationId"
+                  :method="operation.verb"
+                  :title="operation.summary"
+                  :href="`/example/operations/${operation.operationId}`"
+                >
+                  [{{ operation.summary }}]() `{{ operation.path }}`
+                </OAOperationLink>
+              </li>
+            </ul>
+          </section>
         </template>
 
         <OAOperation v-else-if="route.name === 'operation'" :operation-id="route.operationId" />
