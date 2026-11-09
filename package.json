@@ -45,7 +45,7 @@
   "scripts": {
     "build": "vite build",
     "build-watch": "vite build --watch",
-    "postbuild": "vue-tsc --emitDeclarationOnly",
+    "postbuild": "vue-tsc --emitDeclarationOnly && node -e \"fs.copyFileSync('src/standalone.css', 'dist/standalone.css')\"",
     "prepublishOnly": "pnpm run build",
     "lint": "eslint src .github/workflows",
     "lint:fix": "eslint src .github/workflows --fix",

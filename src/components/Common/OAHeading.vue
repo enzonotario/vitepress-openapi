@@ -71,7 +71,7 @@ const hLevel = computed(() => {
     :is="hLevel"
     :id="id"
     tabindex="-1"
-    :class="cn(props.class)"
+    :class="cn('OAHeading', props.class)"
   >
     <slot />
 
