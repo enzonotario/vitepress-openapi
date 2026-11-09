@@ -85,6 +85,14 @@
   background-color: var(--vp-c-bg);
 }
 
+/* Space between the operation columns (VitePress applies it through its .VPDoc layout). */
+@media (min-width: 640px) {
+  .OAPathContentEnd {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+}
+
 /* Headings. */
 .OAHeading {
   position: relative;
