@@ -32,7 +32,7 @@ const operations = useOpenapi().getPathsByVerbs()
     <div class="layout">
       <AppSidebar :items="sidebar" :active-path="currentPath" />
 
-      <main :key="currentPath" class="content vp-doc">
+      <main :key="currentPath" class="content">
         <template v-if="route.name === 'introduction'">
           <OAIntroduction />
 

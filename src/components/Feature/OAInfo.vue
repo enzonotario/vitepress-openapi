@@ -1,4 +1,5 @@
 <script setup>
+import OADocRoot from '../Common/OADocRoot.vue'
 import OAProvider from '../Context/OAProvider.vue'
 import OAInfoContent from './OAInfoContent.vue'
 
@@ -11,9 +12,11 @@ const props = defineProps({
 </script>
 
 <template>
-  <OAProvider :spec="props.spec">
-    <template #default="{ openapi }">
-      <OAInfoContent :openapi="openapi" />
-    </template>
-  </OAProvider>
+  <OADocRoot>
+    <OAProvider :spec="props.spec">
+      <template #default="{ openapi }">
+        <OAInfoContent :openapi="openapi" />
+      </template>
+    </OAProvider>
+  </OADocRoot>
 </template>

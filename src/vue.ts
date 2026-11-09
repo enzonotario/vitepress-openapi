@@ -6,6 +6,7 @@ import { watch } from 'vue'
 import * as components from './components'
 import { useOpenapi } from './composables/useOpenapi'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
+import { DOC_ROOT_KEY } from './lib/docRoot'
 import { setupCopyCode } from './lib/utils/copyCode'
 
 export interface VitepressOpenapiOptions {
@@ -15,6 +16,12 @@ export interface VitepressOpenapiOptions {
   config?: PartialUseThemeConfig
   /** Handle the copy buttons of code blocks. VitePress already does it, so its theme disables this. Default: true. */
   copyCode?: boolean
+  /**
+   * Wrap the entry components (OAOperation, OASpec, OAIntroduction, OAInfo, OAServers) in a `.vp-doc`
+   * element, which `standalone.css` styles. VitePress pages are already inside `.vp-doc`, so its theme
+   * disables this. Default: true.
+   */
+  vpDoc?: boolean
 }
 
 /**
@@ -30,6 +37,8 @@ export const VitepressOpenapi: Plugin<[VitepressOpenapiOptions?]> = {
     if (options.copyCode !== false) {
       setupCopyCode()
     }
+
+    app.provide(DOC_ROOT_KEY, options.vpDoc !== false)
 
     const themeConfig = useTheme()
 

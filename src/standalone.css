@@ -3,9 +3,9 @@
  *
  * Inside VitePress, its default theme provides these styles. Do not load this file there.
  *
- * Usage: import it before `vitepress-openapi/dist/style.css` (the same order as in VitePress), and wrap the content that renders the
- * components in an element with the `vp-doc` class, like VitePress does. Override any `--vp-*`
- * variable to match your design.
+ * Usage: import it before `vitepress-openapi/dist/style.css` (the same order as in VitePress).
+ * The `VitepressOpenapi` plugin wraps the components in a `.vp-doc` element, which these styles target.
+ * Override any `--vp-*` variable to match your design.
  *
  * The imports below are VitePress' own default theme styles (MIT, https://github.com/vuejs/vitepress).
  * The build inlines them into dist/standalone.css, so VitePress is not needed at runtime.
