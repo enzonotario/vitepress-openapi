@@ -12,7 +12,7 @@ const OAJSONEditorLoadError = defineComponent({
 const OAJSONEditorLoading = defineComponent({
   setup() {
     const { t } = useI18n()
-    return () => h('div', { class: 'text-sm text-muted-foreground' }, t('Loading'))
+    return () => h('div', { class: 'OAJSONEditorLoading text-sm text-muted-foreground' }, t('Loading'))
   },
 })
 

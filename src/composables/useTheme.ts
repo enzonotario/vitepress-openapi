@@ -525,9 +525,20 @@ const themeConfig: UseThemeConfig = {
   },
 }
 
-const isDark = useDark({
-  storageKey: 'vitepress-theme-appearance',
-})
+// VitePress resolves `appearance` (e.g. 'force-dark', 'force-auto'), so the theme links its `isDark`
+// in enhanceApp. The fallback is created lazily, because useDark also writes the `dark` class on <html>.
+let isDark: Ref<boolean> | undefined
+
+function getIsDark(): Ref<boolean> {
+  isDark ??= useDark({
+    storageKey: 'vitepress-theme-appearance',
+  })
+  return isDark
+}
+
+export function setIsDarkSource(source: Ref<boolean>) {
+  isDark = source
+}
 
 export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   setConfig(initialConfig)
@@ -1166,7 +1177,9 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
   }
 
   return {
-    isDark,
+    get isDark() {
+      return getIsDark()
+    },
     schemaConfig: themeConfig.requestBody,
     reset,
     getState,

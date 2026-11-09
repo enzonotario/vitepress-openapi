@@ -5,10 +5,18 @@ const IDLE_DEADLINE_MS = 5000
 const SCROLL_STABLE_ROUNDS = 3
 const SCROLL_POLL_MS = 100
 const SCROLL_DEADLINE_MS = 5000
+const LAZY_COMPONENTS_DEADLINE_MS = 15000
 
 export async function waitForStablePage(page: Page) {
   await page.waitForLoadState('networkidle')
   await page.evaluate(() => document.fonts.ready)
+
+  // Lazy JSON editors show a loading state until their chunk is loaded.
+  await page.waitForFunction(
+    () => !document.querySelector('.OAJSONEditorLoading'),
+    undefined,
+    { timeout: LAZY_COMPONENTS_DEADLINE_MS },
+  )
 
   await page.evaluate(({ idleMs, deadlineMs }) => new Promise<void>((resolve, reject) => {
     const start = Date.now()
