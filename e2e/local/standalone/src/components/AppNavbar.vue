@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
   <header class="navbar">
-    <a class="title" href="#/">
+    <a class="title" href="/">
       {{ title }}
       <span v-if="version" class="version">v{{ version }}</span>
     </a>

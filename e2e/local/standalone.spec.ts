@@ -14,7 +14,7 @@ test.describe('standalone Vue app', () => {
       }
     })
 
-    await page.goto(`${STANDALONE_URL}/#/operations/createArtist`)
+    await page.goto(`${STANDALONE_URL}/example/operations/createArtist`)
 
     await expect(page.locator('h1')).toContainText('Add a new artist')
     await expect(page.locator('.OAResponses')).toBeVisible()
@@ -31,26 +31,49 @@ test.describe('standalone Vue app', () => {
     expect(errors).toEqual([])
   })
 
-  test('navigates from the sidebar and from operation links', async ({ page }) => {
+  test('mirrors the docs example pages', async ({ page }) => {
     await page.goto(STANDALONE_URL)
 
-    // Sidebar built from useSidebar(); the first operation is shown by default.
-    await expect(page.locator('h1')).toContainText('Get all artists')
+    // `/` redirects to the introduction (OAIntroduction + operations list).
+    await expect(page).toHaveURL(/\/example\/introduction$/)
+    await expect(page.locator('main h1').first()).toContainText('Argentine Rock Legends')
 
-    await page.locator('nav a', { hasText: 'Add a new artist' }).click()
-    await expect(page).toHaveURL(/#\/operations\/createArtist$/)
-    await expect(page.locator('h1')).toContainText('Add a new artist')
-    await expect(page.locator('nav a[aria-current="page"]')).toContainText('Add a new artist')
+    // Operation link in the introduction.
+    await page.locator('main a.OAOperationLink', { hasText: 'Add a new artist' }).first().click()
+    await expect(page).toHaveURL(/\/example\/operations\/createArtist$/)
+    await expect(page.locator('main h1')).toContainText('Add a new artist')
+    await expect(page.locator('nav [aria-current="page"]')).toContainText('Add a new artist')
 
     // Operation link in a description, rewritten with markdown.operationLink.transformHref.
-    await page.locator('a.OAOperationLink', { hasText: 'Get an artist' }).first().click()
-    await expect(page).toHaveURL(/#\/operations\/getArtist$/)
-    await expect(page.locator('h1')).toContainText('Get an artist')
+    await page.locator('main a.OAOperationLink', { hasText: 'Get an artist' }).first().click()
+    await expect(page).toHaveURL(/\/example\/operations\/getArtist$/)
+    await expect(page.locator('main h1')).toContainText('Get an artist')
+
+    // One Page: OASpec with every operation. Header anchors stay on the page.
+    await page.locator('nav a', { hasText: 'One Page' }).click()
+    await expect(page).toHaveURL(/\/example\/one-page$/)
+    await expect(page.locator('main .OAPath')).toHaveCount(9)
+    await page.locator('main h2 .header-anchor').first().click({ force: true })
+    await expect(page).toHaveURL(/\/example\/one-page#/)
+    await expect(page.locator('main .OAPath')).toHaveCount(9)
+
+    // Browser back.
+    await page.goBack()
+    await page.goBack()
+    await expect(page).toHaveURL(/\/example\/operations\/getArtist$/)
+  })
+
+  test('renders the docs test pages', async ({ page }) => {
+    await page.goto(`${STANDALONE_URL}/tests/parameters`)
+
+    await expect(page.locator('main h1').first()).toContainText('Parameter Testing API')
+    await expect(page.locator('main .OAPath')).not.toHaveCount(0)
+    await expect(page.locator('nav [aria-current="page"]')).toHaveText('Parameters')
   })
 
   test('switches between light and dark from the navbar', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' })
-    await page.goto(`${STANDALONE_URL}/#/operations/createArtist`)
+    await page.goto(`${STANDALONE_URL}/example/operations/createArtist`)
 
     const html = page.locator('html')
     const appearanceSwitch = page.getByRole('switch')
@@ -75,7 +98,7 @@ test.describe('standalone Vue app', () => {
     test.skip(browserName !== 'chromium', 'Clipboard permissions are only available in Chromium.')
     await context.grantPermissions(['clipboard-read', 'clipboard-write'])
 
-    await page.goto(`${STANDALONE_URL}/#/operations/getAllArtists`)
+    await page.goto(`${STANDALONE_URL}/example/operations/getAllArtists`)
 
     const block = page.locator('.vp-code-group .blocks > div.active')
     await block.hover()
@@ -89,7 +112,7 @@ test.describe('standalone Vue app', () => {
     const context = await browser.newContext({ colorScheme: 'dark' })
     const page = await context.newPage()
 
-    await page.goto(STANDALONE_URL)
+    await page.goto(`${STANDALONE_URL}/example/operations/getAllArtists`)
 
     await expect(page.locator('html')).toHaveClass(/dark/)
     await expect(page.locator('.vp-code-group pre.shiki').first()).toHaveClass(/vitesse-dark/)

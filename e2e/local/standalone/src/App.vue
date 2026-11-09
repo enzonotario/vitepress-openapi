@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { useSidebar } from 'vitepress-openapi/vue'
-import { computed, onBeforeUnmount, ref } from 'vue'
-import spec from '../../../../docs/public/openapi.json'
+import { useOpenapi, useTheme } from 'vitepress-openapi/vue'
+import { computed, watch } from 'vue'
 import AppNavbar from './components/AppNavbar.vue'
-import { OPERATION_PREFIX } from './routes'
+import AppSidebar from './components/AppSidebar.vue'
+import { baseConfig } from './config'
+import { HOME_PATH, resolveRoute, sidebar, spec, testSpecUrl } from './pages'
+import { currentPath, navigate } from './router'
 
-// The package provides the sidebar data; the app owns the UI and the routing.
-const groups = useSidebar({ spec, linkPrefix: OPERATION_PREFIX }).generateSidebarGroups()
-
-const firstLink = groups.flatMap(group => group.items ?? [])[0]?.link ?? ''
-
-const hash = ref(window.location.hash)
-
-function onHashChange() {
-  hash.value = window.location.hash
-  window.scrollTo({ top: 0 })
+if (currentPath.value === '/') {
+  navigate(HOME_PATH, { replace: true })
 }
 
-window.addEventListener('hashchange', onHashChange)
-onBeforeUnmount(() => window.removeEventListener('hashchange', onHashChange))
+const route = computed(() => resolveRoute(currentPath.value))
 
-const activeLink = computed(() => hash.value.startsWith(OPERATION_PREFIX) ? hash.value : firstLink)
+// Like the docs' test and example pages: each page sets its own theme config.
+watch(route, (value) => {
+  useTheme().reset()
+  useTheme(baseConfig)
+  if (value.name === 'test' || value.name === 'example') {
+    useTheme(structuredClone(value.page.themeConfig))
+  }
+}, { immediate: true, flush: 'pre' })
 
-const operationId = computed(() => decodeURIComponent(activeLink.value.slice(OPERATION_PREFIX.length)))
+const operations = useOpenapi().getPathsByVerbs()
 </script>
 
 <template>
@@ -30,24 +30,37 @@ const operationId = computed(() => decodeURIComponent(activeLink.value.slice(OPE
     <AppNavbar :title="spec.info.title" :version="spec.info.version" />
 
     <div class="layout">
-      <nav class="sidebar" aria-label="Operations">
-        <section v-for="group in groups" :key="group.text">
-          <p class="group">
-            {{ group.text }}
-          </p>
-          <a
-            v-for="item in group.items"
-            :key="item.link"
-            :href="item.link"
-            :class="{ active: item.link === activeLink }"
-            :aria-current="item.link === activeLink ? 'page' : undefined"
-            v-html="item.text"
-          />
-        </section>
-      </nav>
+      <AppSidebar :items="sidebar" :active-path="currentPath" />
 
-      <main class="content vp-doc">
-        <OAOperation :key="operationId" :operation-id="operationId" />
+      <main :key="currentPath" class="content vp-doc">
+        <template v-if="route.name === 'introduction'">
+          <OAIntroduction />
+
+          <h2>Operations</h2>
+          <ul>
+            <li v-for="operation in operations" :key="operation.operationId">
+              <OAOperationLink
+                :operation-id="operation.operationId"
+                :method="operation.verb"
+                :title="operation.summary"
+                :href="`/example/operations/${operation.operationId}`"
+              />
+              <code>{{ operation.path }}</code>
+            </li>
+          </ul>
+        </template>
+
+        <OAOperation v-else-if="route.name === 'operation'" :operation-id="route.operationId" />
+
+        <OASpec v-else-if="route.name === 'one-page'" />
+
+        <OASpec v-else-if="route.name === 'test'" :spec-url="testSpecUrl(route.page)" />
+
+        <OASpec v-else-if="route.name === 'example'" :spec-url="route.page.specUrl" />
+
+        <p v-else>
+          Page not found.
+        </p>
       </main>
     </div>
   </div>
@@ -65,38 +78,8 @@ const operationId = computed(() => decodeURIComponent(activeLink.value.slice(OPE
   min-height: calc(100vh - var(--vp-nav-height));
 }
 
-.sidebar {
-  position: sticky;
-  top: var(--vp-nav-height);
-  height: calc(100vh - var(--vp-nav-height));
-  overflow-y: auto;
-  padding: 24px 16px;
-  border-right: 1px solid var(--vp-c-divider);
-  background-color: var(--vp-c-bg-alt);
-}
-
-.group {
-  margin: 16px 8px 4px;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.sidebar a {
-  display: block;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 14px;
-  color: var(--vp-c-text-2);
-  text-decoration: none;
-}
-
-.sidebar a:hover,
-.sidebar a.active {
-  color: var(--vp-c-brand-1);
-  background-color: var(--vp-c-default-3);
-}
-
 .content {
+  min-width: 0;
   max-width: 1152px;
   padding: 32px 48px;
 }

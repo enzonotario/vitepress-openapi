@@ -3,6 +3,9 @@ import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import libraryConfig from '../../../vite.config'
 
+// The docs' public dir holds the specs of the test pages (served as /openapi-*.json).
+const publicDir = fileURLToPath(new URL('../../../docs/public', import.meta.url))
+
 const src = (path: string) => fileURLToPath(new URL(`../../../src/${path}`, import.meta.url))
 
 export default defineConfig(({ mode }) => {
@@ -10,6 +13,7 @@ export default defineConfig(({ mode }) => {
   if (mode === 'source') {
     return {
       plugins: libraryConfig.plugins,
+      publicDir,
       resolve: {
         alias: {
           'vitepress-openapi/vue': src('vue.ts'),
@@ -23,5 +27,6 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [vue()],
+    publicDir,
   }
 })
