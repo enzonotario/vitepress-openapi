@@ -28,7 +28,12 @@
       "types": "./dist/types/src/client.d.ts",
       "import": "./dist/vitepress-openapi.client.es.js"
     },
-    "./dist/style.css": "./dist/vitepress-openapi.css"
+    "./vue": {
+      "types": "./dist/types/src/vue.d.ts",
+      "import": "./dist/vitepress-openapi.vue.es.js"
+    },
+    "./dist/style.css": "./dist/vitepress-openapi.css",
+    "./dist/standalone.css": "./dist/standalone.css"
   },
   "main": "./dist/vitepress-openapi.node.es.js",
   "module": "./dist/vitepress-openapi.node.es.js",
@@ -57,6 +62,11 @@
   "peerDependencies": {
     "vitepress": ">=1.0.0",
     "vue": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vitepress": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@lucide/vue": "^1.39.0",
