@@ -56,6 +56,7 @@ export { useOpenapi } from './composables/useOpenapi'
 export { usePlayground } from './composables/usePlayground'
 export { DEFAULT_OPERATION_SLOTS }
 export { useShiki } from './composables/useShiki'
+export { type SidebarItem, useSidebar } from './composables/useSidebar'
 export { useTheme } from './composables/useTheme'
 export { generateCodeSample } from './lib/codeSamples/generateCodeSample'
 export { OARequest } from './lib/codeSamples/request'
