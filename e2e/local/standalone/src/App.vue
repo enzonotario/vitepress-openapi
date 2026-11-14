@@ -8,9 +8,12 @@ import { baseConfig } from './config'
 import { HOME_PATH, resolveRoute, sidebar, spec, testSpecUrl } from './pages'
 import { currentPath, navigate } from './router'
 
-if (withoutBase(currentPath.value) === '/') {
-  navigate(HOME_PATH, { replace: true })
-}
+// The app root (on load, or from a link like the navbar title) shows the introduction.
+watch(currentPath, (path) => {
+  if (withoutBase(path) === '/') {
+    navigate(HOME_PATH, { replace: true })
+  }
+}, { immediate: true })
 
 const route = computed(() => resolveRoute(currentPath.value))
 

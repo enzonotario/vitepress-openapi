@@ -58,6 +58,12 @@ export function defineStandaloneTests(STANDALONE_URL: string) {
       await expect(page).toHaveURL(/\/example\/one-page#/)
       await expect(page.locator('main .OAPath')).toHaveCount(9)
 
+      // The navbar title goes to the app root, which shows the introduction.
+      await page.locator('header.navbar a.title').click()
+      await expect(page).toHaveURL(/\/example\/introduction$/)
+      await expect(page.locator('main h1').first()).toContainText('Argentine Rock Legends')
+      await page.goBack()
+
       // Browser back.
       await page.goBack()
       await page.goBack()
