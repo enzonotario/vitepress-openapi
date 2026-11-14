@@ -32,6 +32,4 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # No --compact: it requires every package to be on npm with a repository field, and v-openapi
-      # gets it on its first release. Add --compact back after that.
-      - run: pnpm dlx pkg-pr-new@0.0 publish --pnpm ./ ./packages/v-openapi
+      - run: pnpm dlx pkg-pr-new@0.0 publish --compact --pnpm ./ ./packages/v-openapi
