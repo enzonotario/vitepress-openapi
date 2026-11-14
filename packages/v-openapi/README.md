@@ -13,7 +13,7 @@ npm install v-openapi
 ## Usage
 
 ```ts
-import { VitepressOpenapi } from 'v-openapi'
+import { VOpenapi } from 'v-openapi'
 import { createApp } from 'vue'
 import App from './App.vue'
 import spec from './openapi.json'
@@ -22,7 +22,7 @@ import 'v-openapi/standalone.css'
 import 'v-openapi/style.css'
 
 createApp(App)
-  .use(VitepressOpenapi, { spec })
+  .use(VOpenapi, { spec })
   .mount('#app')
 ```
 

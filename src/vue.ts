@@ -9,7 +9,7 @@ import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 import { DOC_ROOT_KEY } from './lib/docRoot'
 import { setupCopyCode } from './lib/utils/copyCode'
 
-export interface VitepressOpenapiOptions {
+export interface VOpenapiOptions {
   /** OpenAPI document (object, or a JSON/YAML string) used by components without their own `spec`. */
   spec?: OpenAPIDocument | string
   /** Theme configuration, the same as `useTheme(config)`. */
@@ -28,8 +28,8 @@ export interface VitepressOpenapiOptions {
  * Vue plugin to use the components in any Vue 3 app, without VitePress.
  * It installs i18n and registers the components globally.
  */
-export const VitepressOpenapi: Plugin<[VitepressOpenapiOptions?]> = {
-  install(app: App, options: VitepressOpenapiOptions = {}) {
+export const VOpenapi: Plugin<[VOpenapiOptions?]> = {
+  install(app: App, options: VOpenapiOptions = {}) {
     if (options.spec || options.config) {
       useOpenapi(options)
     }

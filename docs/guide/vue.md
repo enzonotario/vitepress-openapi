@@ -32,10 +32,10 @@ bun add v-openapi
 
 ## Setup
 
-Install the `VitepressOpenapi` plugin with your OpenAPI document, and import the two stylesheets:
+Install the `VOpenapi` plugin with your OpenAPI document, and import the two stylesheets:
 
 ```ts
-import { VitepressOpenapi } from 'v-openapi'
+import { VOpenapi } from 'v-openapi'
 import { createApp } from 'vue'
 import App from './App.vue'
 import spec from './openapi.json'
@@ -45,7 +45,7 @@ import 'v-openapi/standalone.css'
 import 'v-openapi/style.css'
 
 createApp(App)
-  .use(VitepressOpenapi, { spec })
+  .use(VOpenapi, { spec })
   .mount('#app')
 ```
 
@@ -99,7 +99,7 @@ Item texts include the HTML of the method badge, so render them with `v-html`.
 Links to operations in descriptions point to `/operations/:operationId`. Change them to match your routes with `transformHref`:
 
 ```ts
-app.use(VitepressOpenapi, {
+app.use(VOpenapi, {
   spec,
   config: {
     markdown: {

@@ -1,5 +1,5 @@
 // A plain Vue app (no VitePress) using the v-openapi package.
-import { VitepressOpenapi } from 'v-openapi'
+import { VOpenapi } from 'v-openapi'
 import { createApp } from 'vue'
 import App from './App.vue'
 import { baseConfig } from './config'
@@ -12,5 +12,5 @@ import 'v-openapi/style.css'
 setupRouter()
 
 createApp(App)
-  .use(VitepressOpenapi, { spec, config: baseConfig })
+  .use(VOpenapi, { spec, config: baseConfig })
   .mount('#app')

@@ -4,7 +4,7 @@ import type { Component } from 'vue'
 import type { OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
 import { useData } from 'vitepress'
 import { setIsDarkSource } from './composables/useTheme'
-import { VitepressOpenapi } from './vue'
+import { VOpenapi } from './vue'
 
 interface OAEnhanceAppContext extends EnhanceAppContext {
   openapi?: OpenApiSpecInstance | null
@@ -27,7 +27,7 @@ export const theme = {
     }
 
     // VitePress already handles the copy buttons of code blocks, and its pages are already inside `.vp-doc`.
-    app.use(VitepressOpenapi, { copyCode: false, vpDoc: false })
+    app.use(VOpenapi, { copyCode: false, vpDoc: false })
   },
 } as VPTheme
 
