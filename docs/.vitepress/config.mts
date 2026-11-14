@@ -1,5 +1,7 @@
 import { execFileSync } from 'node:child_process'
+import { createRequire } from 'node:module'
 import { dirname, resolve } from 'node:path'
+import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfigWithTheme } from 'vitepress'
@@ -312,16 +314,18 @@ export default defineConfigWithTheme({
   // Build the standalone Vue demo (e2e/local/standalone) into /standalone/ of the docs site.
   // VitePress empties outDir before building, so this runs after it.
   buildEnd(siteConfig) {
-    execFileSync('pnpm', [
-      '--dir',
-      resolve(rootDir, 'e2e/local/standalone'),
-      'exec',
-      'vite',
+    const standaloneDir = resolve(rootDir, 'e2e/local/standalone')
+    // Run Vite's own bin with this Node: no shell or `pnpm.cmd` shim needed on Windows.
+    const vitePackage = createRequire(resolve(standaloneDir, 'package.json')).resolve('vite/package.json')
+    const viteBin = resolve(dirname(vitePackage), 'bin/vite.js')
+
+    execFileSync(process.execPath, [
+      viteBin,
       'build',
       '--outDir',
       resolve(siteConfig.outDir, 'standalone'),
       '--emptyOutDir',
-    ], { stdio: 'inherit' })
+    ], { cwd: standaloneDir, stdio: 'inherit' })
   },
   vite: {
     plugins: [tailwindcss()],
