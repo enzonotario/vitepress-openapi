@@ -4,6 +4,9 @@ import OAProvider from '../Context/OAProvider.vue'
 import OAInfoContent from './OAInfoContent.vue'
 import OAServersContent from './OAServersContent.vue'
 
+// Attrs (e.g. `spec-url`) go to OAProvider, not to the OADocRoot wrapper.
+defineOptions({ inheritAttrs: false })
+
 const props = defineProps({
   spec: {
     type: [Object, String],
@@ -14,7 +17,7 @@ const props = defineProps({
 
 <template>
   <OADocRoot>
-    <OAProvider :spec="props.spec">
+    <OAProvider v-bind="$attrs" :spec="props.spec">
       <template #default="{ openapi }">
         <OAInfoContent :openapi="openapi" />
         <OAServersContent :openapi="openapi" />
