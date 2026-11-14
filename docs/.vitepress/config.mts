@@ -53,6 +53,10 @@ export default defineConfigWithTheme({
           link: '/guide/getting-started',
         },
         {
+          text: 'Vue Apps',
+          link: '/guide/vue',
+        },
+        {
           text: 'Pages',
           items: [
             {

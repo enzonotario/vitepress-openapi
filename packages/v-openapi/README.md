@@ -2,7 +2,7 @@
 
 Vue 3 components to render OpenAPI documents, with a playground and code samples. No VitePress needed.
 
-Built on [vitepress-openapi](https://github.com/enzonotario/vitepress-openapi). [Live demo](https://vitepress-openapi.vercel.app/standalone/).
+Built on [vitepress-openapi](https://github.com/enzonotario/vitepress-openapi). [Docs](https://vitepress-openapi.vercel.app/guide/vue) · [Live demo](https://vitepress-openapi.vercel.app/standalone/).
 
 ## Install
 
