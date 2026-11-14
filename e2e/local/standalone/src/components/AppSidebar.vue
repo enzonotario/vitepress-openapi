@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SidebarItem } from 'vitepress-openapi/vue'
+import type { SidebarItem } from 'v-openapi'
 
 defineProps<{
   items: SidebarItem[]

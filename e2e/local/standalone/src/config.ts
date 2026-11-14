@@ -1,4 +1,4 @@
-import type { PartialUseThemeConfig } from 'vitepress-openapi/vue'
+import type { PartialUseThemeConfig } from 'v-openapi'
 import { withBase } from './base'
 
 // Same as the docs: operation links in descriptions point to the example pages.

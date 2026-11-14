@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 /**
  * Tests for the standalone Vue app (e2e/local/standalone), a plain Vue app that uses
- * `vitepress-openapi/vue` without VitePress. Shared by the local and staging (docs site) specs.
+ * `v-openapi` (no VitePress). Shared by the local and staging (docs site) specs.
  */
 export function defineStandaloneTests(STANDALONE_URL: string) {
   test.describe('standalone Vue app', () => {

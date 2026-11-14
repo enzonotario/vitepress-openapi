@@ -6,7 +6,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "vitepress-openapi": "workspace:*",
+    "v-openapi": "workspace:*",
     "vue": "^3.5.42"
   },
   "devDependencies": {

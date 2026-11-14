@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTheme } from 'vitepress-openapi/vue'
+import { useTheme } from 'v-openapi'
 
 // Outside VitePress, `isDark` is writable: it toggles the `dark` class on <html> and remembers the choice.
 const isDark = useTheme().isDark

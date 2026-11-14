@@ -15,12 +15,13 @@ export default defineConfig(({ command, mode }) => {
       plugins: libraryConfig.plugins,
       publicDir,
       resolve: {
-        alias: {
-          'vitepress-openapi/vue': src('vue.ts'),
-          'vitepress-openapi/dist/style.css': src('theme.ts'),
-          'vitepress-openapi/dist/standalone.css': src('standalone.css'),
-          '@': src(''),
-        },
+        // Regexes: `v-openapi` must not also match `v-openapi/style.css`.
+        alias: [
+          { find: /^v-openapi$/, replacement: src('vue.ts') },
+          { find: /^v-openapi\/style\.css$/, replacement: src('theme.ts') },
+          { find: /^v-openapi\/standalone\.css$/, replacement: src('standalone.css') },
+          { find: '@', replacement: src('') },
+        ],
       },
     }
   }

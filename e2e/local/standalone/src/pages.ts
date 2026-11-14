@@ -1,5 +1,5 @@
-import type { SidebarItem } from 'vitepress-openapi/vue'
-import { useSidebar } from 'vitepress-openapi/vue'
+import type { SidebarItem } from 'v-openapi'
+import { useSidebar } from 'v-openapi'
 import { examplesPages, testsPages } from '../../../../docs/pages'
 import spec from '../../../../docs/public/openapi.json'
 import { withBase, withoutBase } from './base'

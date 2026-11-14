@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useOpenapi, useTheme } from 'vitepress-openapi/vue'
+import { useOpenapi, useTheme } from 'v-openapi'
 import { computed, watch } from 'vue'
 import { withBase, withoutBase } from './base'
 import AppNavbar from './components/AppNavbar.vue'
