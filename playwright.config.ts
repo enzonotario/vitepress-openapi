@@ -4,6 +4,9 @@ const port = 4173
 
 const url = process.env.PLAYWRIGHT_BASE_URL || `http://localhost:${port}`
 
+/** Plain Vue app (no VitePress) used by e2e/local/standalone.spec.ts. */
+const standalonePort = 4174
+
 export default defineConfig({
   testDir: './e2e',
   /* Run tests in files in parallel */
@@ -60,9 +63,16 @@ export default defineConfig({
 
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
-    : {
-        command: 'pnpm e2e:local:dev',
-        port,
-        reuseExistingServer: !process.env.CI,
-      },
+    : [
+        {
+          command: 'pnpm e2e:local:dev',
+          port,
+          reuseExistingServer: !process.env.CI,
+        },
+        {
+          command: 'pnpm e2e:local:standalone',
+          port: standalonePort,
+          reuseExistingServer: !process.env.CI,
+        },
+      ],
 })

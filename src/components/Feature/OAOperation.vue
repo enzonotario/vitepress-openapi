@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OperationSlot, ResponseDescriptionSlotProps } from '../../types'
+import OADocRoot from '../Common/OADocRoot.vue'
 import OAProvider from '../Context/OAProvider.vue'
 import OAOperationContent from './OAOperationContent.vue'
 
@@ -55,23 +56,25 @@ const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any } & {
 </script>
 
 <template>
-  <OAProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
-    <template #default="{ openapi }">
-      <OAOperationContent
-        v-bind="{
-          ...$attrs,
-          operationId: props.operationId,
-          openapi,
-          prefixHeadings: props.prefixHeadings,
-          hideBranding: props.hideBranding,
-          hideDefaultFooter: props.hideDefaultFooter,
-        }"
-      >
-        <!-- Expose all slots upwards -->
-        <template v-for="(_, name) in slots" #[name]="slotProps">
-          <slot :name="name" v-bind="slotProps || {}" />
-        </template>
-      </OAOperationContent>
-    </template>
-  </OAProvider>
+  <OADocRoot>
+    <OAProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
+      <template #default="{ openapi }">
+        <OAOperationContent
+          v-bind="{
+            ...$attrs,
+            operationId: props.operationId,
+            openapi,
+            prefixHeadings: props.prefixHeadings,
+            hideBranding: props.hideBranding,
+            hideDefaultFooter: props.hideDefaultFooter,
+          }"
+        >
+          <!-- Expose all slots upwards -->
+          <template v-for="(_, name) in slots" #[name]="slotProps">
+            <slot :name="name" v-bind="slotProps || {}" />
+          </template>
+        </OAOperationContent>
+      </template>
+    </OAProvider>
+  </OADocRoot>
 </template>

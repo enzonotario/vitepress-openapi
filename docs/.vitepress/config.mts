@@ -1,10 +1,13 @@
+import { execFileSync } from 'node:child_process'
+import { createRequire } from 'node:module'
+import { dirname, resolve } from 'node:path'
+import process from 'node:process'
 import { fileURLToPath } from 'node:url'
-import { resolve, dirname } from 'node:path'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfigWithTheme } from 'vitepress'
 import { useSidebar } from 'vitepress-openapi'
 import { examplesPages, testsPages } from '../pages'
-import spec from '../public/openapi.json' with {type: 'json'}
+import spec from '../public/openapi.json' with { type: 'json' }
 import { sidebarExamplesConfigs } from '../sidebar-examples-configs'
 
 const sidebar = useSidebar({
@@ -31,6 +34,13 @@ export default defineConfigWithTheme({
         link: '/sandbox',
       },
       {
+        // Plain Vue app (no VitePress), built into /standalone/ by buildEnd below.
+        // `target` makes VitePress' router load it as a regular page.
+        text: 'Vue Demo',
+        link: '/standalone/',
+        target: '_self',
+      },
+      {
         component: 'OALocaleSelect',
       },
     ],
@@ -41,6 +51,10 @@ export default defineConfigWithTheme({
         {
           text: 'Getting Started',
           link: '/guide/getting-started',
+        },
+        {
+          text: 'Vue Apps',
+          link: '/guide/vue',
         },
         {
           text: 'Pages',
@@ -301,6 +315,22 @@ export default defineConfigWithTheme({
       gtag('config', '${gaId}');`,
     ],
   ],
+  // Build the standalone Vue demo (e2e/local/standalone) into /standalone/ of the docs site.
+  // VitePress empties outDir before building, so this runs after it.
+  buildEnd(siteConfig) {
+    const standaloneDir = resolve(rootDir, 'e2e/local/standalone')
+    // Run Vite's own bin with this Node: no shell or `pnpm.cmd` shim needed on Windows.
+    const vitePackage = createRequire(resolve(standaloneDir, 'package.json')).resolve('vite/package.json')
+    const viteBin = resolve(dirname(vitePackage), 'bin/vite.js')
+
+    execFileSync(process.execPath, [
+      viteBin,
+      'build',
+      '--outDir',
+      resolve(siteConfig.outDir, 'standalone'),
+      '--emptyOutDir',
+    ], { cwd: standaloneDir, stdio: 'inherit' })
+  },
   vite: {
     plugins: [tailwindcss()],
     resolve: {

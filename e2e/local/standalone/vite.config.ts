@@ -1,0 +1,43 @@
+import { fileURLToPath } from 'node:url'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
+import libraryConfig from '../../../vite.config'
+
+// The docs' public dir holds the specs of the test pages (served as /openapi-*.json).
+const publicDir = fileURLToPath(new URL('../../../docs/public', import.meta.url))
+
+const src = (path: string) => fileURLToPath(new URL(`../../../src/${path}`, import.meta.url))
+
+export default defineConfig(({ command, mode }) => {
+  // `pnpm dev:standalone` (mode "source"): use the library sources with HMR instead of the built dist.
+  if (mode === 'source') {
+    return {
+      plugins: libraryConfig.plugins,
+      publicDir,
+      resolve: {
+        // Regexes: `v-openapi` must not also match `v-openapi/style.css`.
+        alias: [
+          { find: /^v-openapi$/, replacement: src('vue.ts') },
+          { find: /^v-openapi\/style\.css$/, replacement: src('theme.ts') },
+          { find: /^v-openapi\/standalone\.css$/, replacement: src('standalone.css') },
+          { find: '@', replacement: src('') },
+        ],
+      },
+    }
+  }
+
+  // Built into the docs site (see docs/.vitepress/config.mts): served at /standalone/, and the
+  // test specs come from the docs' own public files.
+  if (command === 'build') {
+    return {
+      plugins: [vue()],
+      base: '/standalone/',
+      publicDir: false,
+    }
+  }
+
+  return {
+    plugins: [vue()],
+    publicDir,
+  }
+})

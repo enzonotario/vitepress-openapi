@@ -27,6 +27,8 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - run: pnpm install
+      # Publishes vitepress-openapi and v-openapi with the same version.
+      - run: node scripts/sync-versions.mjs
       - run: pnpm publish -r --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

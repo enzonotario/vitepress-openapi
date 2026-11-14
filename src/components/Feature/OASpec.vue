@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OperationSlot, ResponseDescriptionSlotProps } from '../../types'
+import OADocRoot from '../Common/OADocRoot.vue'
 import OAProvider from '../Context/OAProvider.vue'
 import OASpecContent from './OASpecContent.vue'
 
@@ -67,26 +68,28 @@ const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any } & {
 </script>
 
 <template>
-  <OAProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
-    <template #default="{ openapi }">
-      <OASpecContent
-        v-bind="{
-          ...$attrs,
-          openapi,
-          hideInfo: props.hideInfo,
-          hideServers: props.hideServers,
-          groupByTags: props.groupByTags,
-          tags: props.tags,
-          hideDefaultFooter: props.hideDefaultFooter,
-          hideBranding: props.hideBranding,
-          hidePathsSummary: props.hidePathsSummary,
-        }"
-      >
-        <!-- Expose all slots upwards -->
-        <template v-for="(_, name) in slots" #[name]="slotProps">
-          <slot :name="name" v-bind="slotProps || {}" />
-        </template>
-      </OASpecContent>
-    </template>
-  </OAProvider>
+  <OADocRoot>
+    <OAProvider :spec="props.spec" :spec-url="props.specUrl" @update:spec="emits('update:spec', $event)">
+      <template #default="{ openapi }">
+        <OASpecContent
+          v-bind="{
+            ...$attrs,
+            openapi,
+            hideInfo: props.hideInfo,
+            hideServers: props.hideServers,
+            groupByTags: props.groupByTags,
+            tags: props.tags,
+            hideDefaultFooter: props.hideDefaultFooter,
+            hideBranding: props.hideBranding,
+            hidePathsSummary: props.hidePathsSummary,
+          }"
+        >
+          <!-- Expose all slots upwards -->
+          <template v-for="(_, name) in slots" #[name]="slotProps">
+            <slot :name="name" v-bind="slotProps || {}" />
+          </template>
+        </OASpecContent>
+      </template>
+    </OAProvider>
+  </OADocRoot>
 </template>

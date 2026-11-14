@@ -37,6 +37,7 @@ export default defineConfig({
     lib: {
       entry: {
         client: resolve(__dirname, 'src/client.ts'),
+        vue: resolve(__dirname, 'src/vue.ts'),
         theme: resolve(__dirname, 'src/theme.ts'),
         node: resolve(__dirname, 'src/index.ts'),
       },

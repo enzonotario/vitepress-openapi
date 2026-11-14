@@ -1,5 +1,4 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
-import type { DefaultTheme } from 'vitepress'
 import type { OpenAPIDocument } from '../types'
 import { httpVerbs } from '../index'
 import { parseOpenapi } from '../lib/parser/parseOpenapi'
@@ -60,7 +59,22 @@ export interface SidebarGroupsConfig {
   sidebarGroupTemplate?: SidebarGroupTemplateFn
 }
 
-export interface OASidebarItem extends DefaultTheme.SidebarItem {
+/**
+ * Same shape as VitePress' `SidebarItem`, so it can be used as `themeConfig.sidebar`,
+ * without depending on VitePress types (e.g. in a plain Vue app).
+ */
+export interface SidebarItem {
+  text?: string
+  link?: string
+  items?: SidebarItem[]
+  collapsed?: boolean
+  base?: string
+  docFooterText?: string
+  rel?: string
+  target?: string
+}
+
+export interface OASidebarItem extends SidebarItem {
   path?: string
   isOperation?: boolean
   flattenedItems?: OASidebarItem[]
@@ -284,7 +298,7 @@ export function useSidebar({
     linkPrefix?: string
     sidebarItemTemplate?: SidebarItemTemplateFn
     sidebarGroupTemplate?: SidebarGroupTemplateFn
-  } = {}): DefaultTheme.SidebarItem[] {
+  } = {}): SidebarItem[] {
     const paths = getOpenApi().getPaths()
 
     const itemTemplateForMethodPath = ({
@@ -306,7 +320,7 @@ export function useSidebar({
       sidebarGroupTemplate,
     })
 
-    return cleanSidebarItems(sidebarItems) as DefaultTheme.SidebarItem[]
+    return cleanSidebarItems(sidebarItems) as SidebarItem[]
   }
 
   return {

@@ -184,6 +184,31 @@ importers:
         specifier: workspace:*
         version: link:../../..
 
+  e2e/local/standalone:
+    dependencies:
+      v-openapi:
+        specifier: workspace:*
+        version: link:../../../packages/v-openapi
+      vue:
+        specifier: ^3.5.42
+        version: 3.5.42(typescript@6.0.3)
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.8
+        version: 6.0.8(vite@8.2.2(@types/node@26.4.1)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.42(typescript@6.0.3))
+      vite:
+        specifier: ^8.2.2
+        version: 8.2.2(@types/node@26.4.1)(jiti@2.7.0)(yaml@2.9.0)
+
+  packages/v-openapi:
+    dependencies:
+      vitepress-openapi:
+        specifier: workspace:*
+        version: link:../..
+      vue:
+        specifier: ^3.0.0
+        version: 3.5.42(typescript@6.0.3)
+
 packages:
 
   '@algolia/abtesting@1.23.0':
@@ -351,6 +376,7 @@ packages:
 
   '@byjohann/vue-i18n@1.3.2':
     resolution: {integrity: sha512-BU1Bqc2Rl4vLCkLNoDOtwrhcrxKeXFlvs7qh7Q3LzzDdGOPQFPDN1zlJvL+FIpQaLRlzn245qbvjleP1FTzQ6w==}
+    deprecated: Use the official internationalization (i18n) plugin for Vue instead.
     peerDependencies:
       vue: ^3
 

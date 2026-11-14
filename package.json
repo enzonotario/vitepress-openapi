@@ -28,7 +28,12 @@
       "types": "./dist/types/src/client.d.ts",
       "import": "./dist/vitepress-openapi.client.es.js"
     },
-    "./dist/style.css": "./dist/vitepress-openapi.css"
+    "./vue": {
+      "types": "./dist/types/src/vue.d.ts",
+      "import": "./dist/vitepress-openapi.vue.es.js"
+    },
+    "./dist/style.css": "./dist/vitepress-openapi.css",
+    "./dist/standalone.css": "./dist/standalone.css"
   },
   "main": "./dist/vitepress-openapi.node.es.js",
   "module": "./dist/vitepress-openapi.node.es.js",
@@ -40,16 +45,18 @@
   "scripts": {
     "build": "vite build",
     "build-watch": "vite build --watch",
-    "postbuild": "vue-tsc --emitDeclarationOnly",
+    "postbuild": "vue-tsc --emitDeclarationOnly && node scripts/build-standalone-css.mjs",
     "prepublishOnly": "pnpm run build",
     "lint": "eslint src .github/workflows",
     "lint:fix": "eslint src .github/workflows --fix",
     "dev": "cd docs && VITE_DEBUG=1 pnpm run dev",
+    "dev:standalone": "cd e2e/local/standalone && vite --mode source --port 4175",
     "docs:build": "pnpm run build && cd docs && pnpm run build",
     "test": "vitest",
     "test:run": "vitest --run",
     "typecheck": "vue-tsc --noEmit",
     "e2e:local:dev": "cd e2e/local/dev && vitepress dev docs --port 4173",
+    "e2e:local:standalone": "cd e2e/local/standalone && vite --port 4174 --strictPort",
     "e2e:local:test": "playwright test local",
     "e2e:update-snapshots": "node scripts/update-snapshots.js",
     "e2e:staging:test": "playwright test staging"
@@ -57,6 +64,11 @@
   "peerDependencies": {
     "vitepress": ">=1.0.0",
     "vue": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vitepress": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@lucide/vue": "^1.39.0",

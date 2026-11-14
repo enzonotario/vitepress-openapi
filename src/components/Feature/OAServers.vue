@@ -1,6 +1,10 @@
 <script setup>
+import OADocRoot from '../Common/OADocRoot.vue'
 import OAProvider from '../Context/OAProvider.vue'
 import OAServersContent from './OAServersContent.vue'
+
+// Attrs (e.g. `spec-url`) go to OAProvider, not to the OADocRoot wrapper.
+defineOptions({ inheritAttrs: false })
 
 const props = defineProps({
   spec: {
@@ -11,9 +15,11 @@ const props = defineProps({
 </script>
 
 <template>
-  <OAProvider :spec="props.spec">
-    <template #default="{ openapi }">
-      <OAServersContent :openapi="openapi" />
-    </template>
-  </OAProvider>
+  <OADocRoot>
+    <OAProvider v-bind="$attrs" :spec="props.spec">
+      <template #default="{ openapi }">
+        <OAServersContent :openapi="openapi" />
+      </template>
+    </OAProvider>
+  </OADocRoot>
 </template>
