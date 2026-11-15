@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { OperationNestedSlot, OperationSlot } from '../../types'
+import { defineAsyncComponent, hydrateOnVisible } from 'vue'
 import { getGlobalOpenapi, injectOpenapi } from '../../composables/useOpenapi'
 import { useLazyRendering } from '../../lib/spec/lazyRendering'
 import OALazy from '../Common/Lazy/OALazy.vue'
@@ -13,6 +14,14 @@ const { paths } = defineProps({
 })
 
 const slots = defineSlots<{ [K in OperationSlot | OperationNestedSlot]?: (props: any) => any }>()
+
+// The server renders every operation (full HTML for SEO), but on the client each one hydrates only once it
+// is near the viewport, so large specs do not run all their components on load. Client-side renders are
+// not affected. The loader resolves immediately: this is about hydration, not code splitting.
+const OAOperationContentOnVisible = defineAsyncComponent({
+  loader: () => Promise.resolve(OAOperationContent),
+  hydrate: hydrateOnVisible({ rootMargin: '400px' }),
+})
 
 const operations = Object.entries(paths).reduce((acc: { operationId: string }[], [_, path]) => {
   return [
@@ -37,7 +46,7 @@ const openapi = injectOpenapi() ?? getGlobalOpenapi()
       :key="operation.operationId"
       :is-lazy="lazyRendering && operationIdx > 0"
     >
-      <OAOperationContent
+      <OAOperationContentOnVisible
         :openapi="openapi"
         :operation-id="operation.operationId"
         prefix-headings
@@ -53,7 +62,7 @@ const openapi = injectOpenapi() ?? getGlobalOpenapi()
             v-bind="slotProps || {}"
           />
         </template>
-      </OAOperationContent>
+      </OAOperationContentOnVisible>
 
       <hr>
     </OALazy>
