@@ -44,7 +44,7 @@ export interface MarkdownFile {
   content: string
 }
 
-interface OperationEntry {
+export interface OperationEntry {
   operationId: string
   method: string
   path: string
@@ -53,7 +53,7 @@ interface OperationEntry {
   tags: string[]
 }
 
-interface TagGroup {
+export interface TagGroup {
   name: string
   description: string
   fileName: string
@@ -80,9 +80,7 @@ export async function generateMarkdownFiles(
     ...operationOptions
   } = options
 
-  const openapi = toOpenApiSpecInstance(spec, defaultTag)
-  const operations = getOperations(openapi)
-  const groups = getTagGroups(openapi, operations, defaultTag)
+  const { openapi, operations, groups } = prepareMarkdownSpec(spec, defaultTag)
 
   const operationFileNames = new Map(
     createUniqueNames(operations.map(operation => operation.operationId))
@@ -164,29 +162,42 @@ export async function generateMarkdownFiles(
   }
 
   const info = openapi.getInfo() ?? {}
-  const title = String(info.title || 'API Reference')
 
   page('index.md', {
-    title,
+    title: String(info.title || 'API Reference'),
     description: plainText(info.description),
   }, renderIndex(openapi, groups, groupBy, fileFor, operationOptions.openapiUrl, rewriteLinks))
 
   if (llms) {
     files.push({
       path: 'llms.txt',
-      content: `${renderLlmsTxt(openapi, groups, fileFor, linkPrefix, operationOptions.openapiUrl)}\n`,
+      content: renderLlmsTxt(openapi, groups, {
+        operationUrl: (operation, group) => joinLink(linkPrefix, fileFor(operation, group)),
+        fullUrl: joinLink(linkPrefix, 'llms-full.txt'),
+        openapiUrl: operationOptions.openapiUrl,
+      }),
     })
-    const sections = [`${heading(1, title)}\n\n> ${llmsSummary(openapi)}`]
+    const sections: string[] = []
     for (const operation of operations) {
       sections.push(await render(operation, 1))
     }
-    files.push({
-      path: 'llms-full.txt',
-      content: `${sections.join('\n\n---\n\n')}\n`,
-    })
+    files.push({ path: 'llms-full.txt', content: renderLlmsFull(openapi, sections) })
   }
 
   return files
+}
+
+/**
+ * Parses the spec (unless it is already an instance) and lists its operations grouped by tag.
+ */
+export function prepareMarkdownSpec(spec: OpenAPIDocument | string | OpenApiSpecInstance, defaultTag = 'Default'): {
+  openapi: OpenApiSpecInstance
+  operations: OperationEntry[]
+  groups: TagGroup[]
+} {
+  const openapi = toOpenApiSpecInstance(spec, defaultTag)
+  const operations = getOperations(openapi)
+  return { openapi, operations, groups: getTagGroups(openapi, operations, defaultTag) }
 }
 
 function toOpenApiSpecInstance(spec: OpenAPIDocument | string | OpenApiSpecInstance, defaultTag: string): OpenApiSpecInstance {
@@ -332,13 +343,18 @@ function llmsSummary(openapi: OpenApiSpecInstance): string {
   return `API reference for ${info.title || 'this API'}${info.version ? ` (version ${info.version})` : ''}.`
 }
 
-function renderLlmsTxt(
-  openapi: OpenApiSpecInstance,
-  groups: TagGroup[],
-  fileFor: (operation: OperationEntry, group: TagGroup) => string,
-  linkPrefix: string,
-  openapiUrl: string | undefined,
-): string {
+export interface LlmsTxtLinks {
+  /** URL of an operation's Markdown file. */
+  operationUrl: (operation: OperationEntry, group: TagGroup) => string
+  /** URL of `llms-full.txt`. */
+  fullUrl: string
+  openapiUrl?: string
+}
+
+/**
+ * `llms.txt` (https://llmstxt.org): title, summary and one link per operation, grouped by tag.
+ */
+export function renderLlmsTxt(openapi: OpenApiSpecInstance, groups: TagGroup[], links: LlmsTxtLinks): string {
   const info = openapi.getInfo() ?? {}
   const blocks = [
     heading(1, String(info.title || 'API Reference')),
@@ -359,7 +375,7 @@ function renderLlmsTxt(
       group.operations.map((operation) => {
         const description = markdownToPlainText(operation.description, { maxLength: DESCRIPTION_MAX_LENGTH })
         const notes = `${endpoint(operation)}${description ? ` - ${description}` : ''}`
-        return `- [${operation.summary}](${joinLink(linkPrefix, fileFor(operation, group))}): ${notes}`
+        return `- [${operation.summary}](${links.operationUrl(operation, group)}): ${notes}`
       }).join('\n'),
     )
   }
@@ -367,10 +383,18 @@ function renderLlmsTxt(
   blocks.push(
     heading(2, 'Optional'),
     [
-      `- [Full documentation](${joinLink(linkPrefix, 'llms-full.txt')}): all operations in a single file`,
-      openapiUrl && `- [OpenAPI specification](${openapiUrl}): machine-readable source of truth`,
+      `- [Full documentation](${links.fullUrl}): all operations in a single file`,
+      links.openapiUrl && `- [OpenAPI specification](${links.openapiUrl}): machine-readable source of truth`,
     ].filter(Boolean).join('\n'),
   )
 
-  return blocks.join('\n\n')
+  return `${blocks.join('\n\n')}\n`
+}
+
+/**
+ * `llms-full.txt`: title and summary, then every rendered operation.
+ */
+export function renderLlmsFull(openapi: OpenApiSpecInstance, operations: string[]): string {
+  const title = String(openapi.getInfo()?.title || 'API Reference')
+  return `${[`${heading(1, title)}\n\n> ${llmsSummary(openapi)}`, ...operations].join('\n\n---\n\n')}\n`
 }

@@ -1,4 +1,4 @@
-import type { GenerateMarkdownFilesOptions } from '../lib/markdown/generateMarkdown'
+import type { GenerateMarkdownFilesOptions, MarkdownFile } from '../lib/markdown/generateMarkdown'
 import type { OpenAPIDocument } from '../types'
 import { generateMarkdownFiles } from '../lib/markdown/generateMarkdown'
 import { parseSpec } from '../lib/utils/parseSpec'
@@ -9,7 +9,7 @@ function importNodeModule(specifier: string): Promise<any> {
   return import(/* @vite-ignore */ specifier)
 }
 
-async function loadNodeModules() {
+export async function loadNodeModules() {
   const [fs, path, process] = await Promise.all([
     importNodeModule('node:fs/promises') as Promise<typeof import('node:fs/promises')>,
     importNodeModule('node:path') as Promise<typeof import('node:path')>,
@@ -18,13 +18,18 @@ async function loadNodeModules() {
   return { fs, path, process }
 }
 
-export interface GenerateMarkdownOptions extends GenerateMarkdownFilesOptions {
+type NodeModules = Awaited<ReturnType<typeof loadNodeModules>>
+
+export interface SpecSource {
   /** OpenAPI document (object, or JSON/YAML string). */
   spec?: OpenAPIDocument | string
   /** Path to a local JSON/YAML OpenAPI document. */
   specPath?: string
   /** URL of a JSON/YAML OpenAPI document. */
   specUrl?: string
+}
+
+export interface GenerateMarkdownOptions extends GenerateMarkdownFilesOptions, SpecSource {
   /** Output directory. Created if missing. */
   outDir: string
   /**
@@ -45,10 +50,11 @@ export async function generateMarkdown(options: GenerateMarkdownOptions): Promis
     throw new Error('[vitepress-openapi] `outDir` is required.')
   }
 
-  const { fs, path, process } = await loadNodeModules()
-  const { basename, dirname, join, resolve } = path
+  const modules = await loadNodeModules()
+  const { fs, path, process } = modules
+  const { resolve } = path
 
-  const document = await loadSpec({ spec, specPath, specUrl }, fs.readFile, resolve)
+  const document = await loadSpec({ spec, specPath, specUrl }, modules)
   const files = await generateMarkdownFiles(document, generateOptions)
   const root = resolve(outDir)
 
@@ -62,13 +68,24 @@ export async function generateMarkdown(options: GenerateMarkdownOptions): Promis
     await fs.rm(writeRoot, { recursive: true, force: true })
   }
 
-  await fs.mkdir(writeRoot, { recursive: true })
-  const realRoot = await fs.realpath(writeRoot)
+  return writeFilesSafely(writeRoot, files, modules)
+}
+
+/**
+ * Writes `files` (paths relative to `root`) without leaving `root`: targets must stay inside it,
+ * parent directories must resolve inside it, and symlinked files are never followed.
+ * Returns the absolute paths of the written files.
+ */
+export async function writeFilesSafely(root: string, files: MarkdownFile[], { fs, path }: NodeModules): Promise<string[]> {
+  const { basename, dirname, join, resolve } = path
+
+  await fs.mkdir(root, { recursive: true })
+  const realRoot = await fs.realpath(root)
 
   const written: string[] = []
   for (const file of files) {
-    const target = resolve(writeRoot, file.path)
-    if (!isInside(writeRoot, target, path)) {
+    const target = resolve(root, file.path)
+    if (!isInside(root, target, path)) {
       throw new Error(`[vitepress-openapi] Refusing to write outside of outDir: ${file.path}`)
     }
 
@@ -124,17 +141,13 @@ async function writeFileNoFollow(
   }
 }
 
-async function loadSpec(
-  { spec, specPath, specUrl }: Pick<GenerateMarkdownOptions, 'spec' | 'specPath' | 'specUrl'>,
-  readFile: (path: string, encoding: 'utf-8') => Promise<string>,
-  resolve: (path: string) => string,
-): Promise<OpenAPIDocument> {
+export async function loadSpec({ spec, specPath, specUrl }: SpecSource, { fs, path }: NodeModules): Promise<OpenAPIDocument> {
   if (spec) {
     return parseSpec(spec)
   }
 
   if (specPath) {
-    return parseSpec(await readFile(resolve(specPath), 'utf-8'))
+    return parseSpec(await fs.readFile(path.resolve(specPath), 'utf-8'))
   }
 
   if (specUrl) {
