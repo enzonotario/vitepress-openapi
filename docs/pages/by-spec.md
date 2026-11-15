@@ -51,3 +51,17 @@ import spec from '../public/openapi.json'
 </template>
 
 </ScopeConfigurationTabs>
+
+## Large Specs
+
+`OASpec` renders every operation on one page. The full HTML is generated at build time, so search engines see all of it, and on the client each operation only becomes interactive when it gets close to the viewport.
+
+For specs with hundreds of operations, the page itself gets heavy (HTML size and memory). Two options:
+
+- **One page per operation or per tag** (recommended): see [Page by Operation](/pages/by-operation) and [Page by Tag](/pages/by-tag). Each page only renders what it needs.
+- **`lazy-rendering`**: render only the first operation, and the rest when the browser is idle. The other operations are not in the build HTML, so prefer separate pages if you care about SEO.
+
+```markdown
+<OASpec :lazy-rendering="true" />
+```
+
