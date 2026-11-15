@@ -15,6 +15,13 @@ Each operation includes its endpoint, description, servers, authorization, param
 Generated pages are static Markdown: there is no interactive playground, no schema/JSON toggles and no theme customizations. If you need those, use [`OAOperation`](/pages/by-operation) or [`OASpec`](/pages/by-spec) pages instead (or in addition).
 :::
 
+## Demo
+
+This site generates both outputs from its <a href="/openapi.json" target="_self">example spec</a> on every build:
+
+- <a href="/markdown-demo/">Rendered pages</a>, grouped by tag, with frontmatter (static VitePress pages).
+- Raw files for AI agents: <a href="/markdown-demo/llms.txt" target="_self">llms.txt</a>, <a href="/markdown-demo/llms-full.txt" target="_self">llms-full.txt</a> and an operation such as <a href="/markdown-demo/createArtist.md" target="_self">createArtist.md</a>.
+
 ## CLI
 
 ```bash

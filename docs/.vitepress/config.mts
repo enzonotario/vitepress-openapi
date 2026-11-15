@@ -5,7 +5,7 @@ import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfigWithTheme } from 'vitepress'
-import { useSidebar } from 'vitepress-openapi'
+import { generateMarkdown, useSidebar } from 'vitepress-openapi'
 import { examplesPages, testsPages } from '../pages'
 import spec from '../public/openapi.json' with { type: 'json' }
 import { sidebarExamplesConfigs } from '../sidebar-examples-configs'
@@ -20,8 +20,33 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const rootDir = resolve(__dirname, '../..')
 
+// Live demo of the Markdown generator (docs/pages/markdown.md). Both outputs are git-ignored
+// and regenerated before VitePress scans the pages.
+await Promise.all([
+  // Static pages, rendered by VitePress.
+  generateMarkdown({
+    spec,
+    outDir: resolve(__dirname, '../markdown-demo'),
+    groupBy: 'tag',
+    llms: false,
+    openapiUrl: '/openapi.json',
+    clean: true,
+  }),
+  // Raw files for AI agents, served as they are from `public`.
+  generateMarkdown({
+    spec,
+    outDir: resolve(__dirname, '../public/markdown-demo'),
+    frontmatter: false,
+    linkPrefix: '/markdown-demo/',
+    openapiUrl: '/openapi.json',
+    clean: true,
+  }),
+])
+
 export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
+  // Raw demo files (no v-pre wrapper) are not pages.
+  srcExclude: ['public/markdown-demo/**'],
   description: 'Generate VitePress API Documentation from OpenAPI specs.',
   themeConfig: {
     nav: [
