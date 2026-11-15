@@ -74,6 +74,10 @@ export default defineConfigWithTheme({
                   link: '/pages/by-tag',
                 },
                 {
+                  text: 'Markdown & llms.txt',
+                  link: '/pages/markdown',
+                },
+                {
                   text: 'Introduction',
                   link: '/pages/introduction',
                 },
