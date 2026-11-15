@@ -46,26 +46,42 @@ export async function generateMarkdown(options: GenerateMarkdownOptions): Promis
   }
 
   const { fs, path, process } = await loadNodeModules()
-  const { dirname, isAbsolute, relative, resolve } = path
+  const { basename, dirname, join, resolve } = path
 
   const document = await loadSpec({ spec, specPath, specUrl }, fs.readFile, resolve)
   const files = await generateMarkdownFiles(document, generateOptions)
   const root = resolve(outDir)
 
   if (clean) {
-    assertSafeToClean(root, process.cwd(), path)
-    await fs.rm(root, { recursive: true, force: true })
+    // Compare canonical paths, so a symlink can't point `clean` at cwd or one of its parents.
+    const canonicalRoot = await canonicalPath(root, fs, path)
+    assertSafeToClean(canonicalRoot, await fs.realpath(process.cwd()), path)
+    await fs.rm(canonicalRoot, { recursive: true, force: true })
   }
+
+  await fs.mkdir(root, { recursive: true })
+  const realRoot = await fs.realpath(root)
 
   const written: string[] = []
   for (const file of files) {
     const target = resolve(root, file.path)
-    const relativePath = relative(root, target)
-    if (relativePath.startsWith('..') || isAbsolute(relativePath)) {
+    if (!isInside(root, target, path)) {
       throw new Error(`[vitepress-openapi] Refusing to write outside of outDir: ${file.path}`)
     }
+
+    // Don't follow symlinks: parent directories must resolve inside outDir, and the file itself can't be a link.
     await fs.mkdir(dirname(target), { recursive: true })
-    await fs.writeFile(target, file.content, 'utf-8')
+    const realParent = await fs.realpath(dirname(target))
+    if (!isInside(realRoot, realParent, path)) {
+      throw new Error(`[vitepress-openapi] Refusing to write through a symlink outside of outDir: ${file.path}`)
+    }
+    const realTarget = join(realParent, basename(target))
+    const stats = await fs.lstat(realTarget).catch(() => null)
+    if (stats?.isSymbolicLink()) {
+      throw new Error(`[vitepress-openapi] Refusing to overwrite a symlink: ${file.path}`)
+    }
+
+    await fs.writeFile(realTarget, file.content, 'utf-8')
     written.push(target)
   }
 
@@ -97,12 +113,46 @@ async function loadSpec(
 }
 
 /**
- * Guards `clean` against wiping the file system root, the working directory or one of its parents.
+ * Whether `child` is `parent` or inside it. Only `..` or `../…` count as upward,
+ * so a directory named `..project` is still inside.
  */
-function assertSafeToClean(dir: string, cwd: string, { isAbsolute, parse, relative }: typeof import('node:path')): void {
-  const fromDir = relative(dir, cwd)
-  const isCwdOrParent = fromDir === '' || (!fromDir.startsWith('..') && !isAbsolute(fromDir))
-  if (dir === parse(dir).root || isCwdOrParent) {
+function isInside(parent: string, child: string, { isAbsolute, relative, sep }: typeof import('node:path')): boolean {
+  const fromParent = relative(parent, child)
+  const isUpward = fromParent === '..' || fromParent.startsWith(`..${sep}`)
+  return !isUpward && !isAbsolute(fromParent)
+}
+
+/**
+ * `realpath` of `target`, or of its nearest existing ancestor joined with the missing segments.
+ */
+async function canonicalPath(
+  target: string,
+  fs: typeof import('node:fs/promises'),
+  { basename, dirname, join }: typeof import('node:path'),
+): Promise<string> {
+  const missing: string[] = []
+  let current = target
+  while (true) {
+    try {
+      return join(await fs.realpath(current), ...missing)
+    }
+    catch (error) {
+      const parent = dirname(current)
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT' || parent === current) {
+        throw error
+      }
+      missing.unshift(basename(current))
+      current = parent
+    }
+  }
+}
+
+/**
+ * Guards `clean` against wiping the file system root, the working directory or one of its parents.
+ * Both paths must be canonical.
+ */
+function assertSafeToClean(dir: string, cwd: string, path: typeof import('node:path')): void {
+  if (dir === path.parse(dir).root || isInside(dir, cwd, path)) {
     throw new Error(`[vitepress-openapi] Refusing to clean ${dir}: use a dedicated output directory.`)
   }
 }

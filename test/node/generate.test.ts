@@ -1,10 +1,16 @@
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import process from 'node:process'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { generateMarkdownFiles } from '../../src/lib/markdown/generateMarkdown'
 import { runCli } from '../../src/node/cli'
 import { generateMarkdown } from '../../src/node/generate'
+
+vi.mock('../../src/lib/markdown/generateMarkdown', async (importOriginal) => {
+  const original = await importOriginal<typeof import('../../src/lib/markdown/generateMarkdown')>()
+  return { ...original, generateMarkdownFiles: vi.fn(original.generateMarkdownFiles) }
+})
 
 const spec = {
   openapi: '3.0.0',
@@ -68,6 +74,55 @@ describe('generateMarkdown', () => {
 
   it('refuses to clean the working directory', async () => {
     await expect(generateMarkdown({ spec, outDir: process.cwd(), clean: true })).rejects.toThrow('Refusing to clean')
+  })
+
+  it('refuses to clean a symlink that points to the working directory', async () => {
+    const link = join(dir, 'link-to-cwd')
+    symlinkSync(process.cwd(), link)
+
+    await expect(generateMarkdown({ spec, outDir: link, clean: true })).rejects.toThrow('Refusing to clean')
+    expect(existsSync(join(process.cwd(), 'package.json'))).toBe(true)
+  })
+
+  it('refuses to clean a parent of cwd even when cwd starts with ".."', async () => {
+    const cwd = join(dir, '..project', 'docs')
+    mkdirSync(cwd, { recursive: true })
+    vi.spyOn(process, 'cwd').mockReturnValue(cwd)
+
+    await expect(generateMarkdown({ spec, outDir: dir, clean: true })).rejects.toThrow('Refusing to clean')
+    expect(existsSync(cwd)).toBe(true)
+  })
+
+  it('cleans a missing outDir below a symlinked ancestor', async () => {
+    const real = join(dir, 'real')
+    mkdirSync(real)
+    symlinkSync(real, join(dir, 'alias'))
+
+    await generateMarkdown({ spec, outDir: join(dir, 'alias', 'api'), codeSamples: false, clean: true })
+    expect(existsSync(join(real, 'api', 'index.md'))).toBe(true)
+  })
+
+  it('refuses to write through a symlinked file', async () => {
+    const outDir = join(dir, 'out')
+    const outside = join(dir, 'outside.md')
+    mkdirSync(outDir)
+    writeFileSync(outside, 'untouched')
+    symlinkSync(outside, join(outDir, 'index.md'))
+
+    await expect(generateMarkdown({ spec, outDir, codeSamples: false })).rejects.toThrow('Refusing to overwrite a symlink')
+    expect(readFileSync(outside, 'utf-8')).toBe('untouched')
+  })
+
+  it('refuses to write when outDir content resolves outside of it', async () => {
+    const outDir = join(dir, 'out')
+    const outside = join(dir, 'outside')
+    mkdirSync(outside)
+    mkdirSync(outDir)
+    symlinkSync(outside, join(outDir, 'nested'))
+    vi.mocked(generateMarkdownFiles).mockResolvedValueOnce([{ path: 'nested/escape.md', content: 'x' }])
+
+    await expect(generateMarkdown({ spec, outDir })).rejects.toThrow('Refusing to write through a symlink')
+    expect(existsSync(join(outside, 'escape.md'))).toBe(false)
   })
 
   it('requires a spec source', async () => {
