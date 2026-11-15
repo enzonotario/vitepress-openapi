@@ -1,4 +1,5 @@
 import type { GenerateMarkdownOptions } from './node/generate'
+import type { LlmsFilesOptions, LlmsSiteConfig } from './node/llms'
 import { createOpenApiSpec } from './lib/spec/createOpenApiSpec'
 
 export {
@@ -16,6 +17,8 @@ export { createOpenApiSpec, type OpenApiSpecInstance } from './lib/spec/createOp
 export { minifyHtml } from './lib/utils/minifyHtml'
 export { parseSpec } from './lib/utils/parseSpec'
 export type { GenerateMarkdownOptions } from './node/generate'
+export type { LlmsFilesOptions, LlmsSiteConfig } from './node/llms'
+export { llmsDevServer } from './node/llmsPlugin'
 
 /**
  * @deprecated Use `createOpenApiSpec` instead.
@@ -29,4 +32,13 @@ export const OpenApi: typeof createOpenApiSpec = createOpenApiSpec
 export async function generateMarkdown(options: GenerateMarkdownOptions): Promise<string[]> {
   const { generateMarkdown } = await import('./node/generate')
   return generateMarkdown(options)
+}
+
+/**
+ * Writes the Markdown of each built operation page next to its HTML (`{route}.md` or `.txt`),
+ * plus `llms.txt` and `llms-full.txt`. Call it from VitePress `buildEnd` (Node only, loaded lazily).
+ */
+export async function generateLlmsFiles(siteConfig: LlmsSiteConfig, options: LlmsFilesOptions): Promise<string[]> {
+  const { generateLlmsFiles } = await import('./node/llms')
+  return generateLlmsFiles(siteConfig, options)
 }
