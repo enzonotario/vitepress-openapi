@@ -55,3 +55,24 @@ describe('buildRequest body', () => {
     expect(request.headers['content-type']).toBeUndefined()
   })
 })
+
+describe('buildRequest parameter examples', () => {
+  const parameters: any[] = [
+    { name: 'id', in: 'path', example: 'abc' },
+    { name: 'id', in: 'header', example: 'trace123' },
+  ]
+
+  it('resolves examples per location', () => {
+    const request = buildRequest({ path: '/items/{id}', method: 'GET' as any, baseUrl: 'https://api.example.com', parameters })
+
+    expect(request.url.toString()).toBe('https://api.example.com/items/abc')
+    expect(request.headers.id).toBe('trace123')
+  })
+
+  it('lets caller variables (keyed by name, as in the playground) win', () => {
+    const request = buildRequest({ path: '/items/{id}', method: 'GET' as any, baseUrl: 'https://api.example.com', parameters, variables: { id: 'x' } })
+
+    expect(request.url.toString()).toBe('https://api.example.com/items/x')
+    expect(request.headers.id).toBe('x')
+  })
+})

@@ -317,6 +317,29 @@ describe('operationToMarkdown', () => {
     expect(markdown).toContain('https://api.example.com/items/abc')
   })
 
+  it('keeps examples of same-named parameters in different locations apart in code samples', async () => {
+    const spec = {
+      openapi: '3.0.0',
+      info: { title: 'Ids', version: '1.0.0' },
+      servers: [{ url: 'https://api.example.com' }],
+      paths: {
+        '/items/{id}': {
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' }, example: 'abc' }],
+          get: {
+            operationId: 'getItemById',
+            parameters: [{ name: 'id', in: 'header', schema: { type: 'string' }, example: 'trace123' }],
+            responses: { 200: { description: 'OK' } },
+          },
+        },
+      },
+    }
+    const markdown = await operationToMarkdown(createSpec(spec), 'getItemById')
+
+    expect(markdown).toContain('https://api.example.com/items/abc')
+    expect(markdown).toContain(`--header 'Id: trace123'`)
+    expect(markdown).not.toContain('Id: abc')
+  })
+
   it('renders primitive array item constraints apart from array constraints', async () => {
     const spec = {
       openapi: '3.0.0',
