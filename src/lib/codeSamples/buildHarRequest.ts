@@ -171,6 +171,11 @@ export function buildHarRequest(
           text: JSON.stringify(oaRequest.body),
         }
       }
+    } else if (typeof oaRequest.body === 'number' || typeof oaRequest.body === 'boolean') {
+      harRequest.postData = {
+        mimeType: oaRequest.contentType || 'application/json',
+        text: JSON.stringify(oaRequest.body),
+      }
     }
   }
 

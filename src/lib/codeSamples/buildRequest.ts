@@ -411,6 +411,15 @@ function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variabl
   return variables
 }
 
+/**
+ * Whether a body should be sent. Falsy JSON values (`false`, `0`) are valid bodies,
+ * but `''` is not: the playground uses it (and `null`) as the "no body" placeholder
+ * when an operation has no example, and it must not produce an empty `--data`.
+ */
+export function hasRequestBody(body: unknown): boolean {
+  return body !== undefined && body !== null && body !== ''
+}
+
 export function buildRequest({
   url = undefined,
   path,
@@ -471,9 +480,11 @@ export function buildRequest({
 
   const urlInstance = url ? new URL(url) : (baseUrl ? new URL(`${baseUrl}${resolvedPath}`) : new URL(resolvedPath, 'http://localhost'))
 
+  const bodyHasValue = hasRequestBody(body)
+
   if (contentType && !(body instanceof FormData)) {
     resolvedHeaders['content-type'] = contentType
-  } else if (body && !resolvedHeaders['content-type'] && !(body instanceof FormData)) {
+  } else if (bodyHasValue && !resolvedHeaders['content-type'] && !(body instanceof FormData)) {
     resolvedHeaders['content-type'] = 'application/json'
   }
 
@@ -490,7 +501,7 @@ export function buildRequest({
       'DELETE',
       'OPTIONS',
       'TRACE',
-    ].includes(resolveMethod) && body
+    ].includes(resolveMethod) && bodyHasValue
       ? body
       : undefined,
     variables: resolvedVariables,
