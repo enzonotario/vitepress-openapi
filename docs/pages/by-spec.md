@@ -54,7 +54,7 @@ import spec from '../public/openapi.json'
 
 ## Large Specs
 
-`OASpec` renders every operation on one page. The full HTML is generated at build time, so search engines see all of it, and on the client each operation only becomes interactive when it gets close to the viewport.
+`OASpec` renders every operation on one page. By default, the full HTML is generated at build time, so search engines see all of it, and on the client each operation only becomes interactive when it gets close to the viewport.
 
 For specs with hundreds of operations, the page itself gets heavy (HTML size and memory). Two options:
 
