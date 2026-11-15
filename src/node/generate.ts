@@ -52,20 +52,23 @@ export async function generateMarkdown(options: GenerateMarkdownOptions): Promis
   const files = await generateMarkdownFiles(document, generateOptions)
   const root = resolve(outDir)
 
+  // After `clean`, write through the checked canonical path: if `outDir` is a symlink,
+  // its target was removed and the link dangles until the directory is recreated.
+  let writeRoot = root
   if (clean) {
     // Compare canonical paths, so a symlink can't point `clean` at cwd or one of its parents.
-    const canonicalRoot = await canonicalPath(root, fs, path)
-    assertSafeToClean(canonicalRoot, await fs.realpath(process.cwd()), path)
-    await fs.rm(canonicalRoot, { recursive: true, force: true })
+    writeRoot = await canonicalPath(root, fs, path)
+    assertSafeToClean(writeRoot, await fs.realpath(process.cwd()), path)
+    await fs.rm(writeRoot, { recursive: true, force: true })
   }
 
-  await fs.mkdir(root, { recursive: true })
-  const realRoot = await fs.realpath(root)
+  await fs.mkdir(writeRoot, { recursive: true })
+  const realRoot = await fs.realpath(writeRoot)
 
   const written: string[] = []
   for (const file of files) {
-    const target = resolve(root, file.path)
-    if (!isInside(root, target, path)) {
+    const target = resolve(writeRoot, file.path)
+    if (!isInside(writeRoot, target, path)) {
       throw new Error(`[vitepress-openapi] Refusing to write outside of outDir: ${file.path}`)
     }
 
@@ -75,17 +78,50 @@ export async function generateMarkdown(options: GenerateMarkdownOptions): Promis
     if (!isInside(realRoot, realParent, path)) {
       throw new Error(`[vitepress-openapi] Refusing to write through a symlink outside of outDir: ${file.path}`)
     }
-    const realTarget = join(realParent, basename(target))
-    const stats = await fs.lstat(realTarget).catch(() => null)
-    if (stats?.isSymbolicLink()) {
-      throw new Error(`[vitepress-openapi] Refusing to overwrite a symlink: ${file.path}`)
-    }
 
-    await fs.writeFile(realTarget, file.content, 'utf-8')
+    await writeFileNoFollow(join(realParent, basename(target)), file.content, file.path, fs)
     written.push(target)
   }
 
   return written
+}
+
+/**
+ * Writes a file without following a symlink at its path. `O_NOFOLLOW` makes the check
+ * atomic with the open; where it doesn't exist (Windows), fall back to `lstat`.
+ */
+async function writeFileNoFollow(
+  target: string,
+  content: string,
+  label: string,
+  fs: typeof import('node:fs/promises'),
+): Promise<void> {
+  const symlinkError = () => new Error(`[vitepress-openapi] Refusing to overwrite a symlink: ${label}`)
+  const { O_CREAT, O_NOFOLLOW, O_TRUNC, O_WRONLY } = fs.constants
+
+  if (O_NOFOLLOW === undefined) {
+    const stats = await fs.lstat(target).catch(() => null)
+    if (stats?.isSymbolicLink()) {
+      throw symlinkError()
+    }
+    await fs.writeFile(target, content, 'utf-8')
+    return
+  }
+
+  let handle: Awaited<ReturnType<typeof fs.open>>
+  try {
+    handle = await fs.open(target, O_WRONLY | O_CREAT | O_TRUNC | O_NOFOLLOW)
+  }
+  catch (error) {
+    throw (error as NodeJS.ErrnoException).code === 'ELOOP' ? symlinkError() : error
+  }
+
+  try {
+    await handle.writeFile(content, 'utf-8')
+  }
+  finally {
+    await handle.close()
+  }
 }
 
 async function loadSpec(

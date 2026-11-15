@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import process from 'node:process'
@@ -100,6 +100,21 @@ describe('generateMarkdown', () => {
 
     await generateMarkdown({ spec, outDir: join(dir, 'alias', 'api'), codeSamples: false, clean: true })
     expect(existsSync(join(real, 'api', 'index.md'))).toBe(true)
+  })
+
+  it('cleans a symlinked outDir and writes through its canonical path', async () => {
+    const real = join(dir, 'real-out')
+    const link = join(dir, 'link-out')
+    mkdirSync(real)
+    writeFileSync(join(real, 'stale.md'), 'stale')
+    symlinkSync(real, link)
+
+    const written = await generateMarkdown({ spec, outDir: link, codeSamples: false, clean: true })
+
+    expect(existsSync(join(real, 'stale.md'))).toBe(false)
+    expect(existsSync(join(real, 'index.md'))).toBe(true)
+    expect(written).toContain(join(realpathSync(real), 'index.md'))
+    expect(readFileSync(join(link, 'users-get.md'), 'utf-8')).toContain('# Get user')
   })
 
   it('refuses to write through a symlinked file', async () => {
