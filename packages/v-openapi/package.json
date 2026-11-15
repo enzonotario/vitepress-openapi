@@ -35,7 +35,7 @@
     "style.css"
   ],
   "peerDependencies": {
-    "vue": "^3.0.0"
+    "vue": "^3.5.0"
   },
   "dependencies": {
     "vitepress-openapi": "workspace:*"
