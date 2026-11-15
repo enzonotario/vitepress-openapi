@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { OperationNestedSlot, OperationSlot, PathsGroupView } from '../../types'
-import { useTheme } from '../../composables/useTheme'
+import { useLazyRendering } from '../../lib/spec/lazyRendering'
 import OAPathsGroup from './OAPathsGroup.vue'
 
 const props = defineProps({
@@ -16,8 +16,7 @@ const props = defineProps({
 
 const slots = defineSlots<{ [K in OperationSlot | OperationNestedSlot]?: (props: any) => any }>()
 
-const themeConfig = useTheme()
-const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
+const lazyRendering = useLazyRendering()
 </script>
 
 <template>
