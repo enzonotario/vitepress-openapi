@@ -6,8 +6,8 @@ outline: 2
 
 `vitepress-openapi` can generate **plain Markdown** from your OpenAPI spec at build time. Use it for:
 
-- **Static, searchable pages**: plain `.md` files that VitePress renders like any other page, indexed by local search or Algolia, with almost no JavaScript.
-- **LLMs and AI agents**: one `.md` file per operation, plus [`llms.txt`](https://llmstxt.org) and `llms-full.txt`.
+- **LLMs and AI agents**: a `.md` file next to each operation page (e.g. `/operations/getPet.md` for `/operations/getPet.html`), plus [`llms.txt`](https://llmstxt.org) and `llms-full.txt`. This is the recommended setup for sites: see [Next to your pages](#next-to-your-pages).
+- **Static, searchable pages**: plain `.md` files in your repo that VitePress renders like any other page, indexed by local search or Algolia, with almost no JavaScript. See [CLI](#cli).
 
 Each operation includes its endpoint, description, servers, authorization, parameters, request body and responses (schemas and examples), and code samples (cURL by default).
 
@@ -17,10 +17,52 @@ Generated pages are static Markdown: there is no interactive playground, no sche
 
 ## Demo
 
-This site generates both outputs from its <a href="/openapi.json" target="_self">example spec</a> on every build:
+This site writes the Markdown of every example operation page next to its HTML, from its <a href="/openapi.json" target="_self">example spec</a>:
 
-- <a href="/markdown-demo/">Rendered pages</a>, grouped by tag, with frontmatter (static VitePress pages).
-- Raw files for AI agents: <a href="/markdown-demo/llms.txt" target="_self">llms.txt</a>, <a href="/markdown-demo/llms-full.txt" target="_self">llms-full.txt</a> and an operation such as <a href="/markdown-demo/createArtist.md" target="_self">createArtist.md</a>.
+- [Get all artists](/example/operations/getAllArtists) (page) and <a href="/example/operations/getAllArtists.md" target="_self">getAllArtists.md</a> (Markdown).
+- <a href="/example/one-page.md" target="_self">one-page.md</a>: the whole spec, for the [one-page example](/example/one-page).
+- <a href="/llms.txt" target="_self">llms.txt</a> and <a href="/llms-full.txt" target="_self">llms-full.txt</a>.
+
+## Next to your pages
+
+If your site has [operation pages](/pages/by-operation), `generateLlmsFiles` writes `{route}.md` next to each built page, and `llmsDevServer` serves the same files in dev. Share the options between both:
+
+```ts
+// .vitepress/config.mts
+import { defineConfig } from 'vitepress'
+import { generateLlmsFiles, llmsDevServer } from 'vitepress-openapi'
+import spec from '../public/openapi.json' with { type: 'json' }
+
+const llms = {
+  spec,
+  operationRoute: 'operations/{operationId}', // route of your [operationId].md pages
+  specRoutes: ['reference'], // optional: pages rendering the whole spec (OASpec)
+  openapiUrl: '/openapi.json',
+}
+
+export default defineConfig({
+  buildEnd: siteConfig => generateLlmsFiles(siteConfig, llms),
+  vite: {
+    plugins: [llmsDevServer(llms)],
+  },
+})
+```
+
+| Option           | Description                                                                                               |
+| ---------------- | --------------------------------------------------------------------------------------------------------- |
+| `spec`           | OpenAPI document (object or JSON/YAML string). Or use `specPath` / `specUrl`.                             |
+| `operationRoute` | Route of the operation pages, relative to the site root, with an `{operationId}` placeholder.             |
+| `specRoutes`     | Routes of pages rendering the whole spec: they get every operation in one file.                           |
+| `extension`      | `md` (default) or `txt`.                                                                                  |
+| `llmsTxt`        | Write `llms.txt` and `llms-full.txt` at the site root (default `true`).                                   |
+| `openapiUrl`     | URL of the OpenAPI document, linked from every file.                                                      |
+| `codeSamples`    | Languages of the code samples (default `['curl']`), or `false`. `baseUrl` sets the base URL used in them. |
+
+Files are only written for routes that exist as pages, and links (in `llms.txt` and between operations) include the site `base`. The files have no frontmatter: they are served as they are.
+
+::: tip vitepress-plugin-llms
+[vitepress-plugin-llms](https://github.com/okineadev/vitepress-plugin-llms) copies the Markdown source of each page, which for operation pages is just `<OAOperation />`. You can use both: `buildEnd` runs after Vite plugins, so these files overwrite theirs on operation routes. In dev, register `llmsDevServer` **before** `llmstxt()` in `vite.plugins`. To keep its `llms.txt` instead, set `llmsTxt: false`.
+:::
 
 ## CLI
 
@@ -93,7 +135,7 @@ Both modes generate `index.md` with links grouped by tag.
 
 ## llms.txt for AI agents
 
-VitePress turns `.md` files into HTML pages and does not serve `.txt` files from your docs folder. To expose the raw files to AI agents, generate them into `public` without frontmatter, so they are served as they are:
+For a site, prefer [Next to your pages](#next-to-your-pages). With the CLI, note that VitePress turns `.md` files into HTML pages and does not serve `.txt` files from your docs folder. To expose the raw files to AI agents, generate them into `public` without frontmatter, so they are served as they are:
 
 ```bash
 npx vitepress-openapi generate docs/public/openapi.json \

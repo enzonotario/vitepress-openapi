@@ -5,7 +5,7 @@ import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfigWithTheme } from 'vitepress'
-import { generateMarkdown, useSidebar } from 'vitepress-openapi'
+import { generateLlmsFiles, llmsDevServer, useSidebar } from 'vitepress-openapi'
 import { examplesPages, testsPages } from '../pages'
 import spec from '../public/openapi.json' with { type: 'json' }
 import { sidebarExamplesConfigs } from '../sidebar-examples-configs'
@@ -20,33 +20,17 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const rootDir = resolve(__dirname, '../..')
 
-// Live demo of the Markdown generator (docs/pages/markdown.md). Both outputs are git-ignored
-// and regenerated before VitePress scans the pages.
-await Promise.all([
-  // Static pages, rendered by VitePress.
-  generateMarkdown({
-    spec,
-    outDir: resolve(__dirname, '../markdown-demo'),
-    groupBy: 'tag',
-    llms: false,
-    openapiUrl: '/openapi.json',
-    clean: true,
-  }),
-  // Raw files for AI agents, served as they are from `public`.
-  generateMarkdown({
-    spec,
-    outDir: resolve(__dirname, '../public/markdown-demo'),
-    frontmatter: false,
-    linkPrefix: '/markdown-demo/',
-    openapiUrl: '/openapi.json',
-    clean: true,
-  }),
-])
+// Markdown for LLMs next to each example page (docs/pages/markdown.md): `buildEnd` writes
+// the files, `llmsDevServer` serves them in dev.
+const llms = {
+  spec,
+  operationRoute: 'example/operations/{operationId}',
+  specRoutes: ['example/one-page'],
+  openapiUrl: '/openapi.json',
+}
 
 export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
-  // Raw demo files (no v-pre wrapper) are not pages.
-  srcExclude: ['public/markdown-demo/**'],
   description: 'Generate VitePress API Documentation from OpenAPI specs.',
   themeConfig: {
     nav: [
@@ -346,7 +330,9 @@ export default defineConfigWithTheme({
   ],
   // Build the standalone Vue demo (e2e/local/standalone) into /standalone/ of the docs site.
   // VitePress empties outDir before building, so this runs after it.
-  buildEnd(siteConfig) {
+  async buildEnd(siteConfig) {
+    await generateLlmsFiles(siteConfig, llms)
+
     const standaloneDir = resolve(rootDir, 'e2e/local/standalone')
     // Run Vite's own bin with this Node: no shell or `pnpm.cmd` shim needed on Windows.
     const vitePackage = createRequire(resolve(standaloneDir, 'package.json')).resolve('vite/package.json')
@@ -361,7 +347,7 @@ export default defineConfigWithTheme({
     ], { cwd: standaloneDir, stdio: 'inherit' })
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), llmsDevServer(llms)],
     resolve: {
       alias: {
         '@': resolve(rootDir, 'src'),
