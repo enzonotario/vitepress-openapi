@@ -24,4 +24,5 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<OASpec :spec-url="specUrl" />
+<!-- The theme config above is applied on mount (client only); pass lazy-rendering as a prop so it also applies during SSR. -->
+<OASpec :spec-url="specUrl" :lazy-rendering="themeConfig.spec?.lazyRendering" />
