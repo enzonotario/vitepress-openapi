@@ -1,5 +1,5 @@
 import type { ParsedOpenAPI, ParsedOperation } from '../../types'
-import { httpVerbs } from '../../index'
+import { httpVerbs } from '../constants'
 import { getSecurityUi } from './getSecurityUi'
 
 export function generateSecurityUi(spec: ParsedOpenAPI): ParsedOpenAPI {

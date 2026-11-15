@@ -1,5 +1,5 @@
 import type { OpenAPIDocument, OperationObject } from '../../types'
-import { httpVerbs } from '../../index'
+import { httpVerbs } from '../constants'
 
 export function generateMissingSummary(spec: OpenAPIDocument): OpenAPIDocument {
   spec.paths = spec.paths || {}

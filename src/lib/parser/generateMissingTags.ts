@@ -1,5 +1,5 @@
 import type { OpenAPIDocument } from '../../types'
-import { httpVerbs } from '../../index'
+import { httpVerbs } from '../constants'
 
 export function generateMissingTags({
   spec,

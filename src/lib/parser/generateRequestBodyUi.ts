@@ -1,5 +1,5 @@
 import type { ParsedContent, ParsedOpenAPI, ParsedOperation } from '../../types'
-import { httpVerbs } from '../../index'
+import { httpVerbs } from '../constants'
 import { getSchemaExample } from '../examples/getSchemaExample'
 import { getSchemaUi, SchemaUiCache } from './getSchemaUi'
 

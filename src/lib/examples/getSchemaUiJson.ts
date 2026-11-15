@@ -1,5 +1,5 @@
 import type { JSONSchemaType, OAProperty } from '../parser/getSchemaUi'
-import { literalTypes } from '../../index'
+import { literalTypes } from '../constants'
 import { getPropertyExample } from './getPropertyExample'
 
 export function getSchemaUiJson(uiProperties: OAProperty[] | OAProperty, useExample = false): any {
