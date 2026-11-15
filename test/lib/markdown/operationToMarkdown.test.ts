@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { operationToMarkdown } from '../../../src/lib/markdown/operationToMarkdown'
+import { operationToMarkdown, rewriteOperationLinks } from '../../../src/lib/markdown/operationToMarkdown'
 import { parseOpenapi } from '../../../src/lib/parser/parseOpenapi'
 import { createOpenApiSpec } from '../../../src/lib/spec/createOpenApiSpec'
 
@@ -103,10 +103,10 @@ describe('operationToMarkdown', () => {
 
     expect(markdown).toContain('## Request body\n\nRequired. Pet to update\n\nContent type: `application/json`')
     expect(markdown).toContain('Type: `object`.')
-    expect(markdown).toContain('- `name` (string, required): Pet name. Constraints: minLength: 1. Example: `Fido`.')
-    expect(markdown).toContain('- `status` (string): Possible values: `available`, `sold`.')
-    expect(markdown).toContain('- `owner` (object)\n  - `email` (string<email>)')
-    expect(markdown).toContain('- `tags` (array<string>)')
+    expect(markdown).toContain('- `name` (`string`, required): Pet name. Constraints: minLength: 1. Example: `Fido`.')
+    expect(markdown).toContain('- `status` (`string`): Possible values: `available`, `sold`.')
+    expect(markdown).toContain('- `owner` (`object`)\n  - `email` (`string<email>`)')
+    expect(markdown).toContain('- `tags` (`array<string>`)')
     expect(markdown).toContain('Example:\n\n```json\n{\n  "name": "Fido",')
   })
 
@@ -217,7 +217,7 @@ describe('operationToMarkdown', () => {
     }
     const markdown = await operationToMarkdown(createSpec(spec), 'createNode', { codeSamples: false })
 
-    expect(markdown).toContain('- `name` (string)')
+    expect(markdown).toContain('- `name` (`string`)')
     expect(markdown).toContain('Circular reference')
     expect(markdown.length).toBeLessThan(5000)
   })
@@ -244,7 +244,7 @@ describe('operationToMarkdown', () => {
     }
     const markdown = await operationToMarkdown(createSpec(spec), 'deep', { codeSamples: false, schemaDepth: 2 })
 
-    expect(markdown).toContain('- `a` (object)\n  - `b` (object)\n    - …')
+    expect(markdown).toContain('- `a` (`object`)\n  - `b` (`object`)\n    - …')
     expect(markdown).not.toContain('`c`')
   })
 
@@ -276,13 +276,132 @@ describe('operationToMarkdown', () => {
     const markdown = await operationToMarkdown(createSpec(spec), 'createShape', { codeSamples: false })
 
     expect(markdown).toContain('Type: `object`. One of:')
-    expect(markdown).toContain('- Option 1 (Circle) (object)\n  - `radius` (number)')
-    expect(markdown).toContain('- Option 2 (Square) (object)\n  - `side` (number)')
+    expect(markdown).toContain('- Option 1 (Circle) (`object`)\n  - `radius` (`number`)')
+    expect(markdown).toContain('- Option 2 (Square) (`object`)\n  - `side` (`number`)')
   })
 
   it('returns an empty string for unknown operations', async () => {
     const openapi = createSpec(petSpec)
     expect(await operationToMarkdown(openapi, '')).toBe('')
     expect(await operationToMarkdown(openapi, 'missing')).toBe('')
+  })
+
+  it('merges path item parameters, operation parameters win', async () => {
+    const spec = {
+      openapi: '3.0.0',
+      info: { title: 'Params', version: '1.0.0' },
+      servers: [{ url: 'https://api.example.com' }],
+      paths: {
+        '/items/{id}': {
+          parameters: [
+            { name: 'id', in: 'path', required: true, description: 'Path item id', schema: { type: 'string' }, example: 'abc' },
+            { name: 'verbose', in: 'query', description: 'Path item verbose', schema: { type: 'boolean' } },
+          ],
+          get: {
+            operationId: 'getItem',
+            parameters: [
+              { name: 'verbose', in: 'query', description: 'Operation verbose', schema: { type: 'boolean' } },
+              { name: 'verbose', in: 'header', description: 'Header verbose', schema: { type: 'string' } },
+            ],
+            responses: { 200: { description: 'OK' } },
+          },
+        },
+      },
+    }
+    const markdown = await operationToMarkdown(createSpec(spec), 'getItem')
+
+    expect(markdown).toContain('| `id` | `string` | Yes | Path item id. Example: `abc`. |')
+    expect(markdown).toContain('| `verbose` | `boolean` | No | Operation verbose |')
+    expect(markdown).not.toContain('Path item verbose')
+    expect(markdown).toContain('| `verbose` | `string` | No | Header verbose |')
+    expect(markdown).toContain('https://api.example.com/items/abc')
+  })
+
+  it('renders primitive array item constraints apart from array constraints', async () => {
+    const spec = {
+      openapi: '3.0.0',
+      info: { title: 'Arrays', version: '1.0.0' },
+      paths: {
+        '/tags': {
+          post: {
+            operationId: 'setTags',
+            requestBody: {
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      tags: { type: 'array', minItems: 1, items: { type: 'string', minLength: 3, pattern: '^[a-z]+$' } },
+                    },
+                  },
+                },
+              },
+            },
+            responses: { 200: { description: 'OK' } },
+          },
+        },
+      },
+    }
+    const markdown = await operationToMarkdown(createSpec(spec), 'setTags', { codeSamples: false })
+
+    expect(markdown).toContain('- `tags` (`array<string>`): Constraints: minItems: 1. Items: minLength: 3, pattern: ^[a-z]+$.')
+  })
+})
+
+describe('rewriteOperationLinks', () => {
+  const openapi = createOpenApiSpec({
+    spec: {
+      openapi: '3.0.0',
+      info: { title: 'Links', version: '1.0.0' },
+      paths: { '/pets': { get: { operationId: 'listPets', summary: 'List pets', responses: {} } } },
+    } as any,
+  })
+  const rewrite = (markdown: string) => rewriteOperationLinks(markdown, openapi, { href: id => `./${id}.md` })
+
+  it('rewrites links outside code', () => {
+    expect(rewrite('See [](/operations/listPets).')).toBe('See [List pets](./listPets.md).')
+  })
+
+  it('skips links in inline code spans', () => {
+    expect(rewrite('Use `[](/operations/listPets)` or [](/operations/listPets).'))
+      .toBe('Use `[](/operations/listPets)` or [List pets](./listPets.md).')
+    expect(rewrite('``a ` [](/operations/listPets)`` [](/operations/listPets)'))
+      .toBe('``a ` [](/operations/listPets)`` [List pets](./listPets.md)')
+  })
+
+  it('treats unmatched backticks as literal text', () => {
+    expect(rewrite('a ` b [](/operations/listPets)')).toBe('a ` b [List pets](./listPets.md)')
+  })
+
+  it('only closes fences with the same character and enough length', () => {
+    const markdown = [
+      '````md',
+      '```',
+      '~~~~',
+      '[](/operations/listPets)',
+      '```` trailing',
+      '[](/operations/listPets)',
+      '`````  ',
+      '[](/operations/listPets)',
+    ].join('\n')
+
+    expect(rewrite(markdown).split('\n')).toEqual([
+      '````md',
+      '```',
+      '~~~~',
+      '[](/operations/listPets)',
+      '```` trailing',
+      '[](/operations/listPets)',
+      '`````  ',
+      '[List pets](./listPets.md)',
+    ])
+  })
+
+  it('does not treat a backtick line with backticks in the info string as a fence', () => {
+    expect(rewrite('``` `x` ```\n[](/operations/listPets)')).toBe('``` `x` ```\n[List pets](./listPets.md)')
+  })
+
+  it('keeps malformed URI escapes untouched', () => {
+    expect(rewrite('[](/operations/%E0%A4%A)')).toBe('[](/operations/%E0%A4%A)')
   })
 })

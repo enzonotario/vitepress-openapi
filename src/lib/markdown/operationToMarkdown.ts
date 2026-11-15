@@ -68,7 +68,9 @@ const DEFAULT_SCHEMA_DEPTH = 8
 const IGNORED_CONSTRAINTS = new Set(['format', 'default'])
 const DEFAULT_OPERATION_LINK_PREFIX = '/operations/'
 const RE_MARKDOWN_LINK = /\[([^\]]*)\]\(([^)\s]+)\)/g
-const RE_FENCE = /^\s*(?:`{3,}|~{3,})/
+// Leading whitespace is not limited to 3 spaces: fences can be nested in list items.
+const RE_FENCE_OPEN = /^\s*(`{3,}|~{3,})/
+const RE_BACKTICK_RUN = /`+/g
 const RE_OPERATION_ID_END = /[/?#]/
 
 interface RenderContext {
@@ -119,7 +121,7 @@ export async function operationToMarkdown(
   blocks.push(
     ...renderServers(openapi.getOperationServers(operationId), ctx),
     ...renderSecurity(openapi, operation, ctx),
-    ...renderParameters(openapi.getOperationParameters(operationId), ctx),
+    ...renderParameters(getMergedParameters(openapi, operationId), ctx),
     ...renderRequestBody(operation, ctx),
     ...renderResponses(operation, ctx),
     ...await renderCodeSamples(openapi, operationId, operation, options, ctx),
@@ -144,28 +146,103 @@ export async function operationToMarkdown(
  */
 export function rewriteOperationLinks(markdown: string, openapi: OpenApiSpecInstance, options: OperationLinkOptions = {}): string {
   const prefix = options.prefix ?? DEFAULT_OPERATION_LINK_PREFIX
-  let inFence = false
+  let fence: { char: string, length: number } | null = null
+
+  const rewriteLink = (match: string, text: string, href: string) => {
+    if (!href.startsWith(prefix)) {
+      return match
+    }
+    let operationId: string
+    try {
+      operationId = decodeURIComponent(href.slice(prefix.length).split(RE_OPERATION_ID_END)[0])
+    }
+    catch {
+      return match
+    }
+    const operation = openapi.getOperation(operationId)
+    if (!operation) {
+      return match
+    }
+    return `[${text || operation.summary || operationId}](${options.href?.(operationId) ?? href})`
+  }
 
   return markdown.split('\n').map((line) => {
-    if (RE_FENCE.test(line)) {
-      inFence = !inFence
+    if (fence) {
+      if (isClosingFence(line, fence)) {
+        fence = null
+      }
       return line
     }
-    if (inFence || !line.includes(prefix)) {
+
+    const opening = line.match(RE_FENCE_OPEN)
+    // A backtick fence's info string cannot contain backticks (CommonMark).
+    if (opening && !(opening[1][0] === '`' && line.slice(opening[0].length).includes('`'))) {
+      fence = { char: opening[1][0], length: opening[1].length }
       return line
     }
-    return line.replace(RE_MARKDOWN_LINK, (match, text: string, href: string) => {
-      if (!href.startsWith(prefix)) {
-        return match
-      }
-      const operationId = decodeURIComponent(href.slice(prefix.length).split(RE_OPERATION_ID_END)[0])
-      const operation = openapi.getOperation(operationId)
-      if (!operation) {
-        return match
-      }
-      return `[${text || operation.summary || operationId}](${options.href?.(operationId) ?? href})`
-    })
+
+    if (!line.includes(prefix)) {
+      return line
+    }
+
+    return mapOutsideCodeSpans(line, segment => segment.replace(RE_MARKDOWN_LINK, rewriteLink))
   }).join('\n')
+}
+
+/**
+ * A closing fence uses the opening character, is at least as long, and has nothing else but whitespace.
+ */
+function isClosingFence(line: string, fence: { char: string, length: number }): boolean {
+  const trimmed = line.trim()
+  return trimmed.length >= fence.length && [...trimmed].every(char => char === fence.char)
+}
+
+/**
+ * Applies `map` to the parts of a line that are not inline code spans.
+ * A span opens with a backtick run and closes with a run of the same length.
+ */
+function mapOutsideCodeSpans(line: string, map: (segment: string) => string): string {
+  const runs = [...line.matchAll(RE_BACKTICK_RUN)]
+  let result = ''
+  let cursor = 0
+  let index = 0
+
+  while (index < runs.length) {
+    const open = runs[index]
+    const closeIndex = runs.findIndex((run, i) => i > index && run[0].length === open[0].length)
+    if (closeIndex === -1) {
+      // Unmatched run: literal backticks.
+      index++
+      continue
+    }
+    const close = runs[closeIndex]
+    result += map(line.slice(cursor, open.index)) + line.slice(open.index, close.index! + close[0].length)
+    cursor = close.index! + close[0].length
+    index = closeIndex + 1
+  }
+
+  return result + map(line.slice(cursor))
+}
+
+/**
+ * Path item parameters plus operation parameters, keyed by `(name, in)`:
+ * an operation parameter overrides the path item one (OpenAPI 3.x).
+ */
+function getMergedParameters(openapi: OpenApiSpecInstance, operationId: string): any[] {
+  const path = openapi.getOperationPath(operationId)
+  const pathParameters = (path ? openapi.getPaths()[path]?.parameters : undefined) ?? []
+  const merged = new Map<string, any>()
+
+  for (const parameter of [...pathParameters, ...openapi.getOperationParameters(operationId)] as any[]) {
+    if (!parameter) {
+      continue
+    }
+    // Unresolved `$ref`s have no name/in: keep them apart.
+    const key = parameter.name && parameter.in ? `${parameter.in}:${parameter.name}` : `ref:${merged.size}`
+    merged.set(key, parameter)
+  }
+
+  return [...merged.values()]
 }
 
 function renderServers(servers: any[], ctx: RenderContext): string[] {
@@ -487,7 +564,8 @@ function renderChildren(property: OAProperty, depth: number, ctx: RenderContext,
 
 function renderProperty(property: OAProperty, label: string, depth: number, ctx: RenderContext, lines: string[]): void {
   const indent = '  '.repeat(depth)
-  const flags = [typeLabel(property)]
+  // In code: `<format>` would otherwise be parsed as HTML (e.g. `integer<int64>`).
+  const flags = [inlineCode(typeLabel(property))]
   if (property.required) {
     flags.push('required')
   }
@@ -569,11 +647,15 @@ function describeAttributes(property: OAProperty | undefined, example?: unknown)
     parts.push(`Default: ${inlineCode(formatInline(property.defaultValue))}.`)
   }
 
-  const constraints = Object.entries(property.constraints ?? {})
-    .filter(([key]) => !IGNORED_CONSTRAINTS.has(key))
-    .map(([key, value]) => `${key}: ${formatInline(value)}`)
-  if (constraints.length) {
-    parts.push(`Constraints: ${constraints.join(', ')}.`)
+  const constraints = formatConstraints(property.constraints)
+  if (constraints) {
+    parts.push(`Constraints: ${constraints}.`)
+  }
+
+  // Primitive array items keep their own constraints (e.g. `minLength`), apart from `minItems`.
+  const itemConstraints = formatConstraints(property.items?.constraints)
+  if (itemConstraints) {
+    parts.push(`Items: ${itemConstraints}.`)
   }
 
   const resolvedExample = example ?? getPropertyExample(property)
@@ -582,6 +664,13 @@ function describeAttributes(property: OAProperty | undefined, example?: unknown)
   }
 
   return parts
+}
+
+function formatConstraints(constraints: Record<string, unknown> | undefined): string {
+  return Object.entries(constraints ?? {})
+    .filter(([key]) => !IGNORED_CONSTRAINTS.has(key))
+    .map(([key, value]) => `${key}: ${formatInline(value)}`)
+    .join(', ')
 }
 
 function formatInline(value: unknown): string {
@@ -641,6 +730,7 @@ async function renderCodeSamples(
       path: openapi.getOperationPath(operationId) ?? '',
       method: openapi.getOperationMethod(operationId) ?? 'get',
       operation,
+      parameters: getMergedParameters(openapi, operationId),
       baseUrl,
     })
 

@@ -109,6 +109,14 @@ export async function generateMarkdownFiles(
         ...operationOptions.operationLink,
       }
 
+  // Tag and API descriptions can link to operations too.
+  const rewriteLinks = (markdown: string) => {
+    return operationLink === false ? markdown : rewriteOperationLinks(markdown, openapi, operationLink)
+  }
+  groups.forEach((group) => {
+    group.description = rewriteLinks(group.description)
+  })
+
   // Rendered once per heading level: an operation can belong to several tags.
   const rendered = new Map<string, string>()
   const render = async (operation: OperationEntry, headingLevel: number) => {
@@ -161,7 +169,7 @@ export async function generateMarkdownFiles(
   page('index.md', {
     title,
     description: plainText(info.description),
-  }, renderIndex(openapi, groups, groupBy, fileFor, operationOptions.openapiUrl))
+  }, renderIndex(openapi, groups, groupBy, fileFor, operationOptions.openapiUrl, rewriteLinks))
 
   if (llms) {
     files.push({
@@ -272,6 +280,7 @@ function renderIndex(
   groupBy: 'operation' | 'tag',
   fileFor: (operation: OperationEntry, group: TagGroup) => string,
   openapiUrl: string | undefined,
+  rewriteLinks: (markdown: string) => string,
 ): string {
   const info = openapi.getInfo() ?? {}
   const blocks = [heading(1, String(info.title || 'API Reference'))]
@@ -281,7 +290,7 @@ function renderIndex(
   }
 
   if (info.description) {
-    blocks.push(String(info.description).trim())
+    blocks.push(rewriteLinks(String(info.description).trim()))
   }
 
   if (openapiUrl) {
@@ -316,7 +325,7 @@ function renderIndex(
 
 function llmsSummary(openapi: OpenApiSpecInstance): string {
   const info = openapi.getInfo() ?? {}
-  const description = markdownToPlainText(info.description, { maxLength: 300 })
+  const description = markdownToPlainText(rewriteOperationLinks(String(info.description ?? ''), openapi), { maxLength: 300 })
   if (description) {
     return description
   }

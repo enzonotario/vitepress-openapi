@@ -168,6 +168,20 @@ paths:
     expect(getFile(files, 'ping.md')).toContain('# GET /ping')
   })
 
+  it('rewrites operation links in tag and API descriptions', async () => {
+    const files = await generateMarkdownFiles({
+      openapi: '3.0.0',
+      info: { title: 'Links', version: '1.0.0', description: 'Start with [](/operations/listPets).' },
+      tags: [{ name: 'Pets', description: 'Log in first: [](/operations/listPets).' }],
+      paths: { '/pets': { get: { operationId: 'listPets', summary: 'List pets', tags: ['Pets'], responses: {} } } },
+    }, { codeSamples: false, groupBy: 'tag', frontmatter: false })
+
+    expect(getFile(files, 'index.md')).toContain('Start with [List pets](./pets.md).')
+    expect(getFile(files, 'index.md')).toContain('Log in first: [List pets](./pets.md).')
+    expect(getFile(files, 'pets.md')).toContain('Log in first: [List pets](./pets.md).')
+    expect(getFile(files, 'llms.txt')).toContain('> Start with List pets.')
+  })
+
   it('throws on unsupported documents', async () => {
     await expect(generateMarkdownFiles({ swagger: '2.0' } as any)).rejects.toThrow('only OpenAPI 3.x')
   })
