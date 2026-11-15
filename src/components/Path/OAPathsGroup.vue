@@ -4,6 +4,7 @@ import { useI18n } from '@byjohann/vue-i18n'
 import { computed, nextTick, ref } from 'vue'
 import { scrollToHash } from '@/lib/utils/utils'
 import { useTheme } from '../../composables/useTheme'
+import { useLazyRendering } from '../../lib/spec/lazyRendering'
 import OAHeading from '../Common/OAHeading.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Button } from '../ui/button'
@@ -24,7 +25,7 @@ const slots = defineSlots<{ [K in OperationSlot | OperationNestedSlot]?: (props:
 const themeConfig = useTheme()
 const { t } = useI18n()
 
-const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
+const lazyRendering = useLazyRendering()
 
 const showPathsSummary = computed(() =>
   props.hidePathsSummary === undefined

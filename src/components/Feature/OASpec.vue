@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { OperationSlot, ResponseDescriptionSlotProps } from '../../types'
+import { provide } from 'vue'
+import { LAZY_RENDERING_KEY } from '../../lib/spec/lazyRendering'
 import OADocRoot from '../Common/OADocRoot.vue'
 import OAProvider from '../Context/OAProvider.vue'
 import OASpecContent from './OASpecContent.vue'
@@ -56,6 +58,14 @@ const props = defineProps({
     type: Boolean,
     default: undefined,
   },
+  /**
+   * Render only the first operation, and the rest when the browser is idle. Overrides `spec.lazyRendering`
+   * of the theme config for this instance, also during SSR (where page-level theme config may not apply).
+   */
+  lazyRendering: {
+    type: Boolean,
+    default: undefined,
+  },
 })
 
 const emits = defineEmits([
@@ -65,6 +75,8 @@ const emits = defineEmits([
 const slots = defineSlots<{ [K in OperationSlot]?: (props: any) => any } & {
   'response-description'?: (props: ResponseDescriptionSlotProps) => any
 }>()
+
+provide(LAZY_RENDERING_KEY, props.lazyRendering)
 </script>
 
 <template>

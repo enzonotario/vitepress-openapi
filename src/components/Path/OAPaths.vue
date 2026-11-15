@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { OperationNestedSlot, OperationSlot } from '../../types'
 import { getGlobalOpenapi, injectOpenapi } from '../../composables/useOpenapi'
-import { useTheme } from '../../composables/useTheme'
+import { useLazyRendering } from '../../lib/spec/lazyRendering'
 import OALazy from '../Common/Lazy/OALazy.vue'
 import OAOperationContent from '../Feature/OAOperationContent.vue'
 
@@ -14,8 +14,6 @@ const { paths } = defineProps({
 
 const slots = defineSlots<{ [K in OperationSlot | OperationNestedSlot]?: (props: any) => any }>()
 
-const themeConfig = useTheme()
-
 const operations = Object.entries(paths).reduce((acc: { operationId: string }[], [_, path]) => {
   return [
     ...acc,
@@ -27,7 +25,7 @@ const operations = Object.entries(paths).reduce((acc: { operationId: string }[],
   ]
 }, [])
 
-const lazyRendering = themeConfig.getSpecConfig()?.lazyRendering?.value
+const lazyRendering = useLazyRendering()
 
 const openapi = injectOpenapi() ?? getGlobalOpenapi()
 </script>

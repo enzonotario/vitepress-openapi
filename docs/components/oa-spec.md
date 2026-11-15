@@ -18,6 +18,7 @@ The `OASpec` component renders a complete OpenAPI specification, including all o
 | `tags` | `Array` | `undefined` | Filter operations to only show specific tags |
 | `hideBranding` | `Boolean` | `false` | Hide the `vitepress-openapi` branding footer |
 | `hidePathsSummary` | `Boolean` | `undefined` | Hide the paths summary when grouping by tags |
+| `lazyRendering` | `Boolean` | `undefined` | Render only the first operation, and the rest when the browser is idle. Overrides `spec.lazyRendering` for this instance, also during SSR |
 
 ## Events
 
