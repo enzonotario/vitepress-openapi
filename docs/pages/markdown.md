@@ -21,6 +21,8 @@ This site writes the Markdown of every example operation page next to its HTML, 
 
 - [Get all artists](/example/operations/getAllArtists) (page) and <a href="/example/operations/getAllArtists.md" target="_self">getAllArtists.md</a> (Markdown).
 - <a href="/example/one-page.md" target="_self">one-page.md</a>: the whole spec, for the [one-page example](/example/one-page).
+- <a href="/example/introduction.md" target="_self">introduction.md</a>: the API overview, for the [introduction example](/example/introduction).
+- <a href="/example/tags/Artists.md" target="_self">Artists.md</a>: every operation of a tag, for the [Artists tag page](/example/tags/Artists).
 - <a href="/llms.txt" target="_self">llms.txt</a> and <a href="/llms-full.txt" target="_self">llms-full.txt</a>.
 
 ## Next to your pages
@@ -37,6 +39,8 @@ const llms = {
   spec,
   operationRoute: 'operations/{operationId}', // route of your [operationId].md pages
   specRoutes: ['reference'], // optional: pages rendering the whole spec (OASpec)
+  introductionRoute: 'introduction', // optional: API overview page
+  tagRoute: 'tags/{tag}', // optional: route of your [tag].md pages
   openapiUrl: '/openapi.json',
 }
 
@@ -48,17 +52,20 @@ export default defineConfig({
 })
 ```
 
-| Option           | Description                                                                                               |
-| ---------------- | --------------------------------------------------------------------------------------------------------- |
-| `spec`           | OpenAPI document (object or JSON/YAML string). Or use `specPath` / `specUrl`.                             |
-| `operationRoute` | Route of the operation pages, relative to the site root, with an `{operationId}` placeholder.             |
-| `specRoutes`     | Routes of pages rendering the whole spec: they get every operation in one file.                           |
-| `extension`      | `md` (default) or `txt`.                                                                                  |
-| `llmsTxt`        | Write `llms.txt` and `llms-full.txt` at the site root (default `true`).                                   |
-| `openapiUrl`     | URL of the OpenAPI document, linked from every file.                                                      |
-| `codeSamples`    | Languages of the code samples (default `['curl']`), or `false`. `baseUrl` sets the base URL used in them. |
+| Option              | Description                                                                                                                                                    |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `spec`              | OpenAPI document (object or JSON/YAML string). Or use `specPath` / `specUrl`.                                                                                  |
+| `operationRoute`    | Route of the operation pages, relative to the site root, with an `{operationId}` placeholder.                                                                  |
+| `specRoutes`        | Routes of pages rendering the whole spec: they get every operation in one file.                                                                                |
+| `introductionRoute` | Route of an overview page: title, version, description, servers, authentication and operations by tag, linked to their pages.                                  |
+| `tagRoute`          | Route of the tag pages, with a `{tag}` placeholder. Each gets the tag description and all its operations.                                                      |
+| `tagParam`          | Value of `{tag}` for a tag name. Defaults to the name as is, like `usePaths().getTags()` in a `[tag].paths.js` file. Set it if your paths file slugifies tags. |
+| `extension`         | `md` (default) or `txt`.                                                                                                                                       |
+| `llmsTxt`           | Write `llms.txt` and `llms-full.txt` at the site root (default `true`).                                                                                        |
+| `openapiUrl`        | URL of the OpenAPI document, linked from every file.                                                                                                           |
+| `codeSamples`       | Languages of the code samples (default `['curl']`), or `false`. `baseUrl` sets the base URL used in them.                                                      |
 
-Files are only written for routes that exist as pages, and links (in `llms.txt` and between operations) include the site `base`. The files have no frontmatter: they are served as they are.
+Files are only written for routes that exist as pages, and links (in `llms.txt` and between operations) include the site `base`. `llms.txt` links the overview first and each tag page at the top of its section. The files have no frontmatter: they are served as they are.
 
 ::: tip vitepress-plugin-llms
 [vitepress-plugin-llms](https://github.com/okineadev/vitepress-plugin-llms) copies the Markdown source of each page, which for operation pages is just `<OAOperation />`. You can use both: `buildEnd` runs after Vite plugins, so these files overwrite theirs on operation routes. In dev, register `llmsDevServer` **before** `llmstxt()` in `vite.plugins`. To keep its `llms.txt` instead, set `llmsTxt: false`.

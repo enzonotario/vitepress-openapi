@@ -26,6 +26,9 @@ const llms = {
   spec,
   operationRoute: 'example/operations/{operationId}',
   specRoutes: ['example/one-page'],
+  introductionRoute: 'example/introduction',
+  // `[tag].paths.js` uses the tag name as is, which is the default `tagParam`.
+  tagRoute: 'example/tags/{tag}',
   openapiUrl: '/openapi.json',
 }
 
