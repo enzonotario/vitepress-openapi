@@ -22,6 +22,9 @@ const spec = {
       get: { operationId: 'hidden', summary: 'Hidden', tags: ['Internal'], responses: { 200: { description: 'OK' } } },
     },
   },
+  components: {
+    securitySchemes: { apiKey: { type: 'apiKey', in: 'header', name: 'X-API-Key' } },
+  },
 }
 
 const pages = new Set(['api/listPets', 'api/getPet', 'reference'])
@@ -87,6 +90,64 @@ describe('generateLlmsSiteFiles', () => {
 
   it('requires the operationId placeholder', async () => {
     await expect(generateLlmsSiteFiles(spec, { operationRoute: 'api/' })).rejects.toThrow('{operationId}')
+  })
+})
+
+describe('generateLlmsSiteFiles introduction and tags', () => {
+  const sitePages = new Set(['api/listPets', 'api/getPet', 'intro', 'tags/Pets', 'tags/pet-owners'])
+  const options = {
+    operationRoute: 'api/{operationId}',
+    introductionRoute: '/intro',
+    tagRoute: 'tags/{tag}',
+    hasPage: (route: string) => sitePages.has(route),
+    codeSamples: false as const,
+  }
+
+  it('writes the introduction with authentication and linked operations', async () => {
+    const files = await generateLlmsSiteFiles(spec, { ...options, base: '/docs/' })
+    const intro = getFile(files, 'intro.md')
+
+    expect(intro.startsWith('# Pets API\n\nVersion: `1.0.0`')).toBe(true)
+    expect(intro).toContain('## Security schemes\n\n- `apiKey`: API key in header `X-API-Key`.')
+    expect(intro).toContain('## Pets\n\nSee [Get a pet](/docs/api/getPet.md).\n\n- [Pets](/docs/tags/Pets.md)\n  - [List pets](/docs/api/listPets.md) `GET /pets`')
+    // No tag page and no operation page: listed without links.
+    expect(intro).toContain('## Internal\n\n- Hidden `GET /hidden`')
+  })
+
+  it('writes one file per tag page with its operations', async () => {
+    const files = await generateLlmsSiteFiles(spec, options)
+
+    expect(getFile(files, 'tags/Pets.md').startsWith('# Pets\n\nSee [Get a pet](/api/getPet.md).\n\n## List pets\n\n`GET /pets`')).toBe(true)
+    expect(getFile(files, 'tags/Pets.md')).toContain('## Get a pet')
+    expect(files.some(file => file.path === 'tags/Internal.md')).toBe(false)
+  })
+
+  it('builds the tag route with tagParam', async () => {
+    const files = await generateLlmsSiteFiles({
+      ...spec,
+      tags: [{ name: 'Pet Owners' }],
+      paths: { '/owners': { get: { operationId: 'listOwners', summary: 'List owners', tags: ['Pet Owners'], responses: {} } } },
+    }, { ...options, tagParam: tag => tag.toLowerCase().replaceAll(' ', '-') })
+
+    expect(files.map(file => file.path)).toContain('tags/pet-owners.md')
+  })
+
+  it('links the overview and tag pages from llms.txt', async () => {
+    const llms = getFile(await generateLlmsSiteFiles(spec, options), 'llms.txt')
+
+    expect(llms).toContain('- [Overview](/intro.md): API description, servers, authentication and all operations\n- Version: 1.0.0')
+    expect(llms).toContain('## Pets\n\n- [Pets](/tags/Pets.md): all Pets operations in a single file\n- [List pets](/api/listPets.md)')
+  })
+
+  it('skips the introduction and tags without a page', async () => {
+    const files = await generateLlmsSiteFiles(spec, { ...options, hasPage: route => pages.has(route) && route !== 'reference' })
+
+    expect(files.map(file => file.path)).toEqual(['api/listPets.md', 'api/getPet.md', 'llms.txt', 'llms-full.txt'])
+    expect(getFile(files, 'llms.txt')).not.toContain('Overview')
+  })
+
+  it('requires the tag placeholder', async () => {
+    await expect(generateLlmsSiteFiles(spec, { ...options, tagRoute: 'tags/' })).rejects.toThrow('{tag}')
   })
 })
 

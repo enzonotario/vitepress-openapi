@@ -113,6 +113,24 @@ describe('createLlmsDevMiddleware', () => {
     expect(llms.res.body).toContain('(/docs/ops/listPets.md)')
   })
 
+  it('serves the introduction and tag routes', async () => {
+    const siteMiddleware = createLlmsDevMiddleware({
+      spec: { ...spec, tags: [{ name: 'Pet Owners' }], paths: { '/pets': { get: { ...spec.paths['/pets'].get, tags: ['Pet Owners'] } } } },
+      operationRoute: 'ops/{operationId}',
+      introductionRoute: 'intro',
+      tagRoute: 'tags/{tag}',
+      codeSamples: false,
+    }, () => ({ outDir: dir, pages: ['ops/listPets.md', 'intro.md', 'tags/Pet Owners.md'], site: { base: '/docs/' } }))
+
+    const intro = await call(siteMiddleware, '/docs/intro.md')
+    expect(intro.res.headers['Content-Type']).toBe('text/markdown; charset=utf-8')
+    expect(intro.res.body).toContain('- [Pet Owners](/docs/tags/Pet%20Owners.md)')
+
+    const tag = await call(siteMiddleware, '/docs/tags/Pet%20Owners.md')
+    expect(tag.res.statusCode).toBe(200)
+    expect(tag.res.body!.startsWith('# Pet Owners\n\n## List pets')).toBe(true)
+  })
+
   it('passes other requests through', async () => {
     expect((await call(middleware, '/docs/ops/hidden.md')).next).toHaveBeenCalled()
     expect((await call(middleware, '/docs/ops/listPets.html')).next).toHaveBeenCalled()
