@@ -1,7 +1,7 @@
 {
   "name": "v-openapi",
   "type": "module",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "description": "Vue 3 components to render OpenAPI documents, with a playground and code samples.",
   "author": "Enzo Notario <hi@enzonotario.me>",
   "license": "MIT",
