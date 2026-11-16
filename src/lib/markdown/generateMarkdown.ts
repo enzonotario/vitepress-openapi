@@ -7,7 +7,7 @@ import { createOpenApiSpec } from '../spec/createOpenApiSpec'
 import { parseSpec } from '../utils/parseSpec'
 import { markdownToPlainText } from './markdownToPlainText'
 import { heading, inlineCode, sanitizeFileName, frontmatter as toFrontmatter } from './markdownUtils'
-import { operationToMarkdown, rewriteOperationLinks } from './operationToMarkdown'
+import { describeSecurityScheme, operationToMarkdown, rewriteOperationLinks } from './operationToMarkdown'
 
 export interface GenerateMarkdownFilesOptions extends Omit<OperationToMarkdownOptions, 'headingLevel'> {
   /**
@@ -137,10 +137,7 @@ export async function generateMarkdownFiles(
 
   if (groupBy === 'tag') {
     for (const group of groups) {
-      const sections = [heading(1, group.name)]
-      if (group.description) {
-        sections.push(group.description.trim())
-      }
+      const sections: string[] = []
       for (const operation of group.operations) {
         sections.push(await render(operation, 2))
       }
@@ -148,7 +145,7 @@ export async function generateMarkdownFiles(
         title: group.name,
         description: plainText(group.description),
         outline: [2, 3],
-      }, sections.join('\n\n'))
+      }, renderTagMarkdown(group, sections))
     }
   }
   else {
@@ -166,7 +163,13 @@ export async function generateMarkdownFiles(
   page('index.md', {
     title: String(info.title || 'API Reference'),
     description: plainText(info.description),
-  }, renderIndex(openapi, groups, groupBy, fileFor, operationOptions.openapiUrl, rewriteLinks))
+  }, renderIndex(openapi, groups, {
+    // Relative links: the files are in the same directory.
+    operationUrl: groupBy === 'operation' ? (operation, group) => `./${encodeURI(fileFor(operation, group))}` : undefined,
+    tagUrl: groupBy === 'tag' ? group => `./${encodeURI(`${group.fileName}.md`)}` : undefined,
+    openapiUrl: operationOptions.openapiUrl,
+    rewriteLinks,
+  }))
 
   if (llms) {
     files.push({
@@ -285,14 +288,20 @@ function endpoint(operation: OperationEntry): string {
   return `${operation.method.toUpperCase()} ${operation.path}`
 }
 
-function renderIndex(
-  openapi: OpenApiSpecInstance,
-  groups: TagGroup[],
-  groupBy: 'operation' | 'tag',
-  fileFor: (operation: OperationEntry, group: TagGroup) => string,
-  openapiUrl: string | undefined,
-  rewriteLinks: (markdown: string) => string,
-): string {
+export interface IndexLinks {
+  /** URL of an operation's file, or `undefined` to list it without a link. */
+  operationUrl?: (operation: OperationEntry, group: TagGroup) => string | undefined
+  /** URL of a tag's file. When set, operations are nested under a link to it. */
+  tagUrl?: (group: TagGroup) => string | undefined
+  openapiUrl?: string
+  /** Applied to the API description (e.g. to rewrite operation links). */
+  rewriteLinks?: (markdown: string) => string
+}
+
+/**
+ * API overview: title, version, description, servers, security schemes and operations grouped by tag.
+ */
+export function renderIndex(openapi: OpenApiSpecInstance, groups: TagGroup[], links: IndexLinks = {}): string {
   const info = openapi.getInfo() ?? {}
   const blocks = [heading(1, String(info.title || 'API Reference'))]
 
@@ -301,11 +310,12 @@ function renderIndex(
   }
 
   if (info.description) {
-    blocks.push(rewriteLinks(String(info.description).trim()))
+    const description = String(info.description).trim()
+    blocks.push(links.rewriteLinks ? links.rewriteLinks(description) : description)
   }
 
-  if (openapiUrl) {
-    blocks.push(`OpenAPI specification: [${openapiUrl}](${openapiUrl})`)
+  if (links.openapiUrl) {
+    blocks.push(`OpenAPI specification: [${links.openapiUrl}](${links.openapiUrl})`)
   }
 
   const servers = openapi.getServers()
@@ -316,22 +326,39 @@ function renderIndex(
     )
   }
 
+  const securitySchemes = Object.entries(openapi.getSpec().components?.securitySchemes ?? {})
+  if (securitySchemes.length) {
+    blocks.push(
+      // Not "Authentication": a tag often has that name.
+      heading(2, 'Security schemes'),
+      securitySchemes.map(([name, scheme]) => `- ${inlineCode(name)}: ${describeSecurityScheme(scheme)}`).join('\n'),
+    )
+  }
+
   for (const group of groups) {
     blocks.push(heading(2, group.name))
     if (group.description) {
       blocks.push(group.description.trim())
     }
 
-    const lines = groupBy === 'tag'
-      ? [
-          `- [${group.name}](./${encodeURI(fileFor(group.operations[0], group))})`,
-          ...group.operations.map(operation => `  - ${operation.summary} ${inlineCode(endpoint(operation))}`),
-        ]
-      : group.operations.map(operation => `- [${operation.summary}](./${encodeURI(fileFor(operation, group))}) ${inlineCode(endpoint(operation))}`)
-    blocks.push(lines.join('\n'))
+    const tagUrl = links.tagUrl?.(group)
+    const indent = tagUrl ? '  ' : ''
+    const lines = group.operations.map((operation) => {
+      const url = links.operationUrl?.(operation, group)
+      const title = url ? `[${operation.summary}](${url})` : operation.summary
+      return `${indent}- ${title} ${inlineCode(endpoint(operation))}`
+    })
+    blocks.push((tagUrl ? [`- [${group.name}](${tagUrl})`, ...lines] : lines).join('\n'))
   }
 
   return blocks.join('\n\n')
+}
+
+/**
+ * A tag page: tag name, description and its rendered operations (one heading level down).
+ */
+export function renderTagMarkdown(group: TagGroup, operations: string[]): string {
+  return [heading(1, group.name), group.description?.trim(), ...operations].filter(Boolean).join('\n\n')
 }
 
 function llmsSummary(openapi: OpenApiSpecInstance): string {
@@ -349,6 +376,10 @@ export interface LlmsTxtLinks {
   /** URL of `llms-full.txt`. */
   fullUrl: string
   openapiUrl?: string
+  /** URL of the API overview, listed first. */
+  overviewUrl?: string
+  /** URL of a tag's file, listed first in its section. */
+  tagUrl?: (group: TagGroup) => string | undefined
 }
 
 /**
@@ -362,6 +393,7 @@ export function renderLlmsTxt(openapi: OpenApiSpecInstance, groups: TagGroup[], 
   ]
 
   const details = [
+    links.overviewUrl && `[Overview](${links.overviewUrl}): API description, servers, authentication and all operations`,
     info.version && `Version: ${info.version}`,
     openapi.getServers()[0]?.url && `Base URL: ${openapi.getServers()[0].url}`,
   ].filter(Boolean)
@@ -370,14 +402,16 @@ export function renderLlmsTxt(openapi: OpenApiSpecInstance, groups: TagGroup[], 
   }
 
   for (const group of groups) {
-    blocks.push(
-      heading(2, group.name),
-      group.operations.map((operation) => {
-        const description = markdownToPlainText(operation.description, { maxLength: DESCRIPTION_MAX_LENGTH })
-        const notes = `${endpoint(operation)}${description ? ` - ${description}` : ''}`
-        return `- [${operation.summary}](${links.operationUrl(operation, group)}): ${notes}`
-      }).join('\n'),
-    )
+    const tagUrl = links.tagUrl?.(group)
+    const lines = group.operations.map((operation) => {
+      const description = markdownToPlainText(operation.description, { maxLength: DESCRIPTION_MAX_LENGTH })
+      const notes = `${endpoint(operation)}${description ? ` - ${description}` : ''}`
+      return `- [${operation.summary}](${links.operationUrl(operation, group)}): ${notes}`
+    })
+    if (tagUrl) {
+      lines.unshift(`- [${group.name}](${tagUrl}): all ${group.name} operations in a single file`)
+    }
+    blocks.push(heading(2, group.name), lines.join('\n'))
   }
 
   blocks.push(

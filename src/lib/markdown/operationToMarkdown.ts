@@ -300,7 +300,10 @@ function renderSecurity(openapi: OpenApiSpecInstance, operation: ParsedOperation
   return [heading(ctx.level + 1, 'Authorization'), 'Use one of the following options:', lines.join('\n')]
 }
 
-function describeSecurityScheme(scheme: any, scopes: string[], indent: string): string {
+/**
+ * One-line description of a security scheme (type, location, scopes), with OAuth flows as nested items.
+ */
+export function describeSecurityScheme(scheme: any, scopes: string[] = [], indent = '  '): string {
   const parts: string[] = []
   const nested: string[] = []
 
