@@ -23,6 +23,7 @@ This site writes the Markdown of every example operation page next to its HTML, 
 - <a href="/example/one-page.md" target="_self">one-page.md</a>: the whole spec, for the [one-page example](/example/one-page).
 - <a href="/example/introduction.md" target="_self">introduction.md</a>: the API overview, for the [introduction example](/example/introduction).
 - <a href="/example/tags/Artists.md" target="_self">Artists.md</a>: every operation of a tag, for the [Artists tag page](/example/tags/Artists).
+- <a href="/tests/response-statuses.md" target="_self">response-statuses.md</a>: a page rendering its own spec, for the [Response Statuses test page](/tests/response-statuses).
 - <a href="/llms.txt" target="_self">llms.txt</a> and <a href="/llms-full.txt" target="_self">llms-full.txt</a>.
 
 ## Next to your pages
@@ -45,7 +46,9 @@ const llms = {
 }
 
 export default defineConfig({
-  buildEnd: siteConfig => generateLlmsFiles(siteConfig, llms),
+  async buildEnd(siteConfig) {
+    await generateLlmsFiles(siteConfig, llms)
+  },
   vite: {
     plugins: [llmsDevServer(llms)],
   },
@@ -66,6 +69,36 @@ export default defineConfig({
 | `codeSamples`       | Languages of the code samples (default `['curl']`), or `false`. `baseUrl` sets the base URL used in them.                                                      |
 
 Files are only written for routes that exist as pages, and links (in `llms.txt` and between operations) include the site `base`. `llms.txt` links the overview first and each tag page at the top of its section. The files have no frontmatter: they are served as they are.
+
+### Each page with its own spec
+
+Pages that render their own spec (e.g. `<OASpec :spec="..." />` with the spec in route params) are covered by `resolvePage`. It is called for every built page with its `route` and dynamic route `params`, and returns what the page renders, or `undefined` to skip it:
+
+```ts
+const llms = [
+  { spec, operationRoute: 'operations/{operationId}' },
+  {
+    title: 'Examples', // section heading in llms.txt
+    resolvePage: ({ route, params }) => route.startsWith('examples/')
+      ? { specUrl: params.specUrl }
+      : undefined,
+  },
+]
+```
+
+| Returned field                  | Description                                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `spec` / `specPath` / `specUrl` | The page's spec. Defaults to the entry's spec. URLs are fetched once; a failed fetch skips the page with a warning. |
+| `mode`                          | `'spec'` (default, every operation), `'operation'`, `'introduction'` or `'tag'`.                                    |
+| `operationId` / `tag`           | For the `'operation'` and `'tag'` modes.                                                                            |
+
+Operation links inside these files are plain text, since the page's spec has no operation pages. Pass an array of options objects, each with its own spec, to `generateLlmsFiles` and `llmsDevServer`:
+
+- One `llms.txt` and one `llms-full.txt` are written. `extension` and `llmsTxt` are read from the first entry.
+- `llms.txt` starts with the first entry that has `operationRoute`. Other entries add a `## Section`: their operations, or the pages of `resolvePage` (titled with each spec's `info.title`).
+- `llms-full.txt` only contains the specs of entries with `operationRoute`. Pages of `resolvePage` are linked from `llms.txt`, not copied, to keep it small.
+
+In dev, the requested route is matched to a page and its params from VitePress' resolved dynamic routes.
 
 ::: tip vitepress-plugin-llms
 [vitepress-plugin-llms](https://github.com/okineadev/vitepress-plugin-llms) copies the Markdown source of each page, which for operation pages is just `<OAOperation />`. You can use both: `buildEnd` runs after Vite plugins, so these files overwrite theirs on operation routes. In dev, register `llmsDevServer` **before** `llmstxt()` in `vite.plugins`. To keep its `llms.txt` instead, set `llmsTxt: false`.

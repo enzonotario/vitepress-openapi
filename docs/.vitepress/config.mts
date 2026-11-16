@@ -20,17 +20,29 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const rootDir = resolve(__dirname, '../..')
 
-// Markdown for LLMs next to each example page (docs/pages/markdown.md): `buildEnd` writes
-// the files, `llmsDevServer` serves them in dev.
-const llms = {
-  spec,
-  operationRoute: 'example/operations/{operationId}',
-  specRoutes: ['example/one-page'],
-  introductionRoute: 'example/introduction',
-  // `[tag].paths.js` uses the tag name as is, which is the default `tagParam`.
-  tagRoute: 'example/tags/{tag}',
-  openapiUrl: '/openapi.json',
-}
+// Markdown for LLMs next to each page (docs/pages/markdown.md): `buildEnd` writes the files,
+// `llmsDevServer` serves them in dev. All entries are merged into one llms.txt.
+const llms = [
+  {
+    spec,
+    operationRoute: 'example/operations/{operationId}',
+    specRoutes: ['example/one-page'],
+    introductionRoute: 'example/introduction',
+    // `[tag].paths.js` uses the tag name as is, which is the default `tagParam`.
+    tagRoute: 'example/tags/{tag}',
+    openapiUrl: '/openapi.json',
+  },
+  {
+    // `tests/[testSlug].paths.js` passes each test spec as a route param.
+    title: 'Tests',
+    resolvePage: ({ route, params }) => route.startsWith('tests/') && params?.spec ? { spec: params.spec } : undefined,
+  },
+  {
+    // `examples/[exampleSlug].paths.js` passes a remote spec URL. Failed fetches skip the page.
+    title: 'Examples',
+    resolvePage: ({ route, params }) => route.startsWith('examples/') && params?.specUrl ? { specUrl: params.specUrl } : undefined,
+  },
+]
 
 export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
