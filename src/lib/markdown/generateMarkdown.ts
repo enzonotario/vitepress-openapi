@@ -437,6 +437,15 @@ export function renderLlmsTxt(openapi: OpenApiSpecInstance, groups: TagGroup[], 
  * `llms-full.txt`: title and summary, then every rendered operation.
  */
 export function renderLlmsFull(openapi: OpenApiSpecInstance, operations: string[]): string {
-  const title = String(openapi.getInfo()?.title || 'API Reference')
-  return `${[`${heading(1, title)}\n\n> ${llmsSummary(openapi)}`, ...operations].join('\n\n---\n\n')}\n`
+  return `${[renderLlmsFullHeader(openapi), ...operations].join(LLMS_FULL_SEPARATOR)}\n`
+}
+
+/** Separator between operations in `llms-full.txt`. */
+export const LLMS_FULL_SEPARATOR = '\n\n---\n\n'
+
+/**
+ * Title and summary at the top of `llms-full.txt`.
+ */
+export function renderLlmsFullHeader(openapi: OpenApiSpecInstance): string {
+  return `${heading(1, String(openapi.getInfo()?.title || 'API Reference'))}\n\n> ${llmsSummary(openapi)}`
 }

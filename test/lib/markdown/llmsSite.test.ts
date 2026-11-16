@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { generateLlmsSiteFiles, normalizeRoute, resolveLlmsRequest } from '../../../src/lib/markdown/llmsSite'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { generateLlmsSiteFiles, normalizeRoute, renderLlmsPage, resolveLlmsRequest, utf8Length } from '../../../src/lib/markdown/llmsSite'
 
 const spec = {
   openapi: '3.0.0',
@@ -180,6 +180,80 @@ describe('link labels and URLs', () => {
     expect(getFile(files, 'llms.txt')).toContain('- [C#](/docs/tags/C%23.md): all C# operations in a single file')
     expect(getFile(files, 'intro.md')).toContain('- [C#](/docs/tags/C%23.md)')
     expect(resolveLlmsRequest('/docs/tags/C%23.md', '/docs/', files)?.body.startsWith('# C#')).toBe(true)
+  })
+})
+
+describe('maxSize', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('writes a summary for a spec page over maxSize, with a one-line warning', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const page = await renderLlmsPage(spec, { codeSamples: false, maxSize: 100, label: 'reference.md', specUrl: 'https://x/spec.json' })
+
+    expect(page!.content).toBe([
+      '# Pets API',
+      '> **Note:** the full content is larger than 1 KB, so only a summary of each operation is included. See the [OpenAPI specification](https://x/spec.json) for every detail.',
+      'Version: `1.0.0`',
+      '## Security schemes\n\n- `apiKey`: API key in header `X-API-Key`.',
+      '## Pets\n\nSee Get a pet.',
+      '- `GET /pets` – List pets\n- `GET /pets/{id}` – Get a pet',
+      '## Internal\n\n- `GET /hidden` – Hidden',
+    ].join('\n\n').replace('## Pets\n\nSee Get a pet.\n\n', '## Pets\n\n').concat('\n'))
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls[0][0]).toMatch(/^\[vitepress-openapi\] reference\.md: over \d+ bytes, more than maxSize \(100 bytes\): wrote a summary instead\.$/)
+  })
+
+  it('keeps pages under maxSize, and disables the limit with false or Infinity', async () => {
+    const unlimited = await renderLlmsPage(spec, { codeSamples: false, maxSize: false })
+    expect(unlimited!.content).toContain('# List pets')
+    expect((await renderLlmsPage(spec, { codeSamples: false }))!.content).toBe(unlimited!.content)
+    expect((await renderLlmsPage(spec, { codeSamples: false, maxSize: Number.POSITIVE_INFINITY }))!.content).toBe(unlimited!.content)
+    expect((await renderLlmsPage(spec, { codeSamples: false, maxSize: utf8Length(unlimited!.content) }))!.content).toBe(unlimited!.content)
+  })
+
+  it('summarizes a tag page over maxSize', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const page = await renderLlmsPage(spec, { codeSamples: false, mode: 'tag', tag: 'Pets', maxSize: 100 })
+
+    expect(page!.content.startsWith('# Pets\n\n> **Note:** the full content is larger than 1 KB')).toBe(true)
+    expect(page!.content).toContain('- `GET /pets/{id}` – Get a pet')
+  })
+
+  it('guards spec routes, tag files and llms-full.txt of a site, linking operations with a page', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const files = await generateLlmsSiteFiles(spec, {
+      operationRoute: 'api/{operationId}',
+      specRoutes: ['reference'],
+      tagRoute: 'tags/{tag}',
+      hasPage: route => pages.has(route) || route === 'tags/Pets',
+      codeSamples: false,
+      openapiUrl: '/openapi.json',
+      maxSize: 100,
+    })
+
+    const full = getFile(files, 'llms-full.txt')
+    expect(full).toBe(getFile(files, 'reference.md'))
+    expect(full).toContain('See the [OpenAPI specification](/openapi.json) for every detail.')
+    expect(full).toContain('- `GET /pets` – [List pets](/api/listPets.md)')
+    expect(full).toContain('- `GET /hidden` – Hidden')
+    expect(getFile(files, 'tags/Pets.md')).toContain('- `GET /pets/{id}` – [Get a pet](/api/getPet.md)')
+    // Operation pages are not affected.
+    expect(getFile(files, 'api/listPets.md').startsWith('# List pets')).toBe(true)
+    expect(warn.mock.calls.map(call => String(call[0]).split(':')[0])).toEqual([
+      '[vitepress-openapi] tags/Pets.md',
+      '[vitepress-openapi] reference.md',
+      '[vitepress-openapi] llms-full.txt',
+    ])
+  })
+})
+
+describe('utf8Length', () => {
+  it('counts UTF-8 bytes', () => {
+    for (const text of ['abc', 'García', '–', '😀', 'a😀b']) {
+      expect(utf8Length(text)).toBe(new TextEncoder().encode(text).length)
+    }
   })
 })
 

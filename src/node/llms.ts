@@ -24,6 +24,8 @@ export interface LlmsResolvedPage extends SpecSource {
   mode?: LlmsPageMode
   operationId?: string
   tag?: string
+  /** Overrides the entry's `maxSize` for this page. */
+  maxSize?: number | false
 }
 
 export interface LlmsFilesOptions extends Omit<LlmsSiteOptions, 'operationRoute'>, SpecSource {
@@ -212,6 +214,9 @@ async function renderResolvedPage(entry: LlmsFilesOptions, index: number, page: 
       mode: resolved.mode,
       operationId: resolved.operationId,
       tag: resolved.tag,
+      maxSize: resolved.maxSize !== undefined ? resolved.maxSize : entry.maxSize,
+      specUrl: source.specUrl,
+      label: `${page.route}.${ctx.extension}`,
     })
     if (!rendered) {
       return undefined
@@ -285,6 +290,7 @@ async function buildLlmsFiles(entries: LlmsFilesOptions[], ctx: BuildContext): P
     const extraSections = [...siteEntries.slice(1).map(entry => entry.renderLlmsSection()), ...pageSections]
 
     if (siteEntries.length) {
+      siteEntries.forEach(entry => entry.warnFull())
       files.set('llms.txt', { path: 'llms.txt', content: siteEntries[0].renderLlmsTxt(extraSections) })
       files.set('llms-full.txt', { path: 'llms-full.txt', content: siteEntries.map(entry => entry.full).join('\n---\n\n') })
     }

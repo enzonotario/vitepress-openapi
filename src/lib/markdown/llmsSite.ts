@@ -2,8 +2,8 @@ import type { OpenAPIDocument } from '../../types'
 import type { OpenApiSpecInstance } from '../spec/createOpenApiSpec'
 import type { MarkdownFile, OperationEntry, TagGroup } from './generateMarkdown'
 import type { OperationToMarkdownOptions } from './operationToMarkdown'
-import { llmsOperationLink, prepareMarkdownSpec, renderIndex, renderLlmsFull, renderLlmsTxt, renderTagMarkdown } from './generateMarkdown'
-import { heading } from './markdownUtils'
+import { LLMS_FULL_SEPARATOR, llmsOperationLink, prepareMarkdownSpec, renderIndex, renderLlmsFullHeader, renderLlmsTxt } from './generateMarkdown'
+import { escapeLinkLabel, heading, inlineCode } from './markdownUtils'
 import { operationToMarkdown, rewriteOperationLinks } from './operationToMarkdown'
 
 export interface LlmsSiteOptions extends Omit<OperationToMarkdownOptions, 'headingLevel' | 'operationLink'> {
@@ -38,6 +38,13 @@ export interface LlmsSiteOptions extends Omit<OperationToMarkdownOptions, 'headi
   llmsTxt?: boolean
   /** Tag for operations without tags. */
   defaultTag?: string
+  /**
+   * Maximum size in bytes of a file with many operations (whole-spec pages, tag pages and
+   * `llms-full.txt`). Above it, a summary is written instead: the overview and one line per
+   * operation. `false` (or `Infinity`) disables the limit.
+   * @default 5 * 1024 * 1024
+   */
+  maxSize?: number | false
 }
 
 export interface LlmsSiteFilesOptions extends LlmsSiteOptions {
@@ -49,6 +56,8 @@ export interface LlmsSiteFilesOptions extends LlmsSiteOptions {
   /** Whether a route has a page. Routes without one get no file and no link. */
   hasPage?: (route: string) => boolean | Promise<boolean>
 }
+
+export const DEFAULT_LLMS_MAX_SIZE = 5 * 1024 * 1024
 
 const OPERATION_ID_PLACEHOLDER = '{operationId}'
 const TAG_PLACEHOLDER = '{tag}'
@@ -63,6 +72,105 @@ export function normalizeRoute(route: string): string {
 }
 
 /**
+ * UTF-8 byte length of a string, without encoding it.
+ */
+export function utf8Length(text: string): number {
+  let length = 0
+  for (let index = 0; index < text.length; index++) {
+    const code = text.charCodeAt(index)
+    if (code < 0x80) {
+      length += 1
+    }
+    else if (code < 0x800) {
+      length += 2
+    }
+    else if (code >= 0xD800 && code <= 0xDBFF) {
+      // Surrogate pair: one 4-byte character.
+      length += 4
+      index++
+    }
+    else {
+      length += 3
+    }
+  }
+  return length
+}
+
+function resolveMaxSize(maxSize: number | false | undefined): number {
+  return maxSize === false ? Number.POSITIVE_INFINITY : (maxSize ?? DEFAULT_LLMS_MAX_SIZE)
+}
+
+function formatSize(bytes: number): string {
+  return bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.ceil(bytes / 1024)} KB`
+}
+
+/**
+ * Joins `head` and `count` parts (rendered one at a time) with `separator`, plus a final newline.
+ * Stops as soon as the size exceeds `maxSize`, without building the whole string.
+ */
+async function joinWithinSize(
+  head: string,
+  count: number,
+  renderPart: (index: number) => string | Promise<string>,
+  separator: string,
+  maxSize: number,
+): Promise<{ content: string } | { exceeded: number }> {
+  const parts = [head]
+  let size = utf8Length(head) + 1
+  for (let index = 0; index < count; index++) {
+    const part = await renderPart(index)
+    size += utf8Length(separator) + utf8Length(part)
+    if (size > maxSize) {
+      return { exceeded: size }
+    }
+    parts.push(part)
+  }
+  return { content: `${parts.join(separator)}\n` }
+}
+
+function warnSize(label: string, size: number, maxSize: number): void {
+  console.warn(`[vitepress-openapi] ${label}: over ${size} bytes, more than maxSize (${maxSize} bytes): wrote a summary instead.`)
+}
+
+export interface LlmsSummaryOptions {
+  /** URL of an operation's page, or `undefined` to list it as plain text. */
+  operationUrl?: (operation: OperationEntry) => string | undefined
+  /** Link to the full spec, in the note. */
+  specUrl?: string
+  openapiUrl?: string
+  maxSize: number
+  /** Summarize a single tag (a tag page) instead of the whole spec. */
+  group?: TagGroup
+}
+
+/**
+ * Summary written instead of a file over `maxSize`: a note, the overview (or the tag) and
+ * one line per operation, grouped by tag.
+ */
+export function renderLlmsSummary(openapi: OpenApiSpecInstance, groups: TagGroup[], options: LlmsSummaryOptions): string {
+  const specUrl = options.specUrl ?? options.openapiUrl
+  const note = `> **Note:** the full content is larger than ${formatSize(options.maxSize)}, so only a summary of each operation is included.${
+    specUrl ? ` See the [OpenAPI specification](${specUrl}) for every detail.` : ''}`
+
+  const line = (operation: OperationEntry) => {
+    const url = options.operationUrl?.(operation)
+    const summary = url ? `[${escapeLinkLabel(operation.summary)}](${url})` : operation.summary
+    return `- ${inlineCode(`${operation.method.toUpperCase()} ${operation.path}`)} – ${summary}`
+  }
+
+  if (options.group) {
+    const group = options.group
+    return `${[heading(1, group.name), note, group.description?.trim(), group.operations.map(line).join('\n')].filter(Boolean).join('\n\n')}\n`
+  }
+
+  const [title, ...overview] = renderIndex(openapi, [], { openapiUrl: options.openapiUrl }).split('\n\n')
+  const sections = groups
+    .filter(group => group.operations.length)
+    .map(group => `${heading(2, group.name)}\n\n${group.operations.map(line).join('\n')}`)
+  return `${[title, note, ...overview, ...sections].join('\n\n')}\n`
+}
+
+/**
  * `base` + `path`, each path segment percent-encoded (so `?` and `#` in a tag or operationId stay in the path).
  */
 export function joinUrl(base: string, path: string): string {
@@ -72,8 +180,10 @@ export function joinUrl(base: string, path: string): string {
 export interface LlmsSiteEntry {
   /** Page files (no `llms.txt`/`llms-full.txt`). */
   files: MarkdownFile[]
-  /** `llms-full.txt` content: every operation of the spec. */
+  /** `llms-full.txt` content: every operation of the spec, or a summary when over `maxSize`. */
   full: string
+  /** Logs a warning if `full` is a summary (call it when writing `llms-full.txt`). */
+  warnFull: () => void
   /** `llms.txt` content, with optional extra `## Section` blocks. */
   renderLlmsTxt: (extraSections?: string[]) => string
   /** This spec as a single `llms.txt` section, to merge it into another one. */
@@ -91,11 +201,11 @@ export async function generateLlmsSiteFiles(
   const entry = await buildLlmsSiteEntry(spec, options)
   return options.llmsTxt === false
     ? entry.files
-    : [
+    : (entry.warnFull(), [
         ...entry.files,
         { path: 'llms.txt', content: entry.renderLlmsTxt() },
         { path: 'llms-full.txt', content: entry.full },
-      ]
+      ])
 }
 
 /**
@@ -116,8 +226,10 @@ export async function buildLlmsSiteEntry(
     base = '/',
     defaultTag,
     hasPage = () => true,
+    maxSize: maxSizeOption,
     ...operationOptions
   } = options
+  const maxSize = resolveMaxSize(maxSizeOption)
 
   if (!operationRoute?.includes(OPERATION_ID_PLACEHOLDER)) {
     throw new Error(`[vitepress-openapi] \`operationRoute\` must contain ${OPERATION_ID_PLACEHOLDER}.`)
@@ -175,7 +287,17 @@ export async function buildLlmsSiteEntry(
       content: `${rendered.get(operation.operationId)}\n`,
     }))
 
-  const full = renderLlmsFull(openapi, [...rendered.values()])
+  // `llms-full.txt` and whole-spec pages: every operation, or a summary when over `maxSize`.
+  const renderedOperations = [...rendered.values()]
+  const fullResult = await joinWithinSize(renderLlmsFullHeader(openapi), renderedOperations.length, index => renderedOperations[index], LLMS_FULL_SEPARATOR, maxSize)
+  const full = 'content' in fullResult
+    ? fullResult.content
+    : renderLlmsSummary(openapi, groups, { operationUrl, openapiUrl: operationOptions.openapiUrl, maxSize })
+  const warnFull = (label: string) => {
+    if ('exceeded' in fullResult) {
+      warnSize(label, fullResult.exceeded, maxSize)
+    }
+  }
 
   if (hasIntroduction) {
     files.push({
@@ -190,16 +312,30 @@ export async function buildLlmsSiteEntry(
   }
 
   for (const group of tagsWithPage) {
-    const sections: string[] = []
-    for (const operation of group.operations) {
-      sections.push(await operationToMarkdown(openapi, operation.operationId, { ...operationOptions, operationLink, headingLevel: 2 }))
+    const path = `${tagRouteFor(group)}.${extension}`
+    const result = await joinWithinSize(
+      [heading(1, group.name), group.description?.trim()].filter(Boolean).join('\n\n'),
+      group.operations.length,
+      index => operationToMarkdown(openapi, group.operations[index].operationId, { ...operationOptions, operationLink, headingLevel: 2 }),
+      '\n\n',
+      maxSize,
+    )
+    if ('exceeded' in result) {
+      warnSize(path, result.exceeded, maxSize)
     }
-    files.push({ path: `${tagRouteFor(group)}.${extension}`, content: `${renderTagMarkdown(group, sections)}\n` })
+    files.push({
+      path,
+      content: 'content' in result
+        ? result.content
+        : renderLlmsSummary(openapi, groups, { group, operationUrl, openapiUrl: operationOptions.openapiUrl, maxSize }),
+    })
   }
 
   for (const route of specRoutes.map(normalizeRoute)) {
     if (route && await hasPage(route)) {
-      files.push({ path: `${route}.${extension}`, content: full })
+      const path = `${route}.${extension}`
+      warnFull(path)
+      files.push({ path, content: full })
     }
   }
 
@@ -218,6 +354,7 @@ export async function buildLlmsSiteEntry(
   return {
     files,
     full,
+    warnFull: () => warnFull('llms-full.txt'),
     renderLlmsTxt: extraSections => renderLlmsTxt(openapi, linkedGroups, { ...links, extraSections }),
     renderLlmsSection: () => {
       const lines = [
@@ -237,6 +374,12 @@ export interface LlmsPageOptions extends Omit<OperationToMarkdownOptions, 'headi
   operationId?: string
   tag?: string
   defaultTag?: string
+  /** See `LlmsSiteOptions.maxSize`. Applies to the `'spec'` and `'tag'` modes. */
+  maxSize?: number | false
+  /** URL of the page's spec, linked from the summary note. */
+  specUrl?: string
+  /** Name of the file in warnings (e.g. its route). */
+  label?: string
 }
 
 /**
@@ -248,7 +391,8 @@ export async function renderLlmsPage(
   spec: OpenAPIDocument | string | OpenApiSpecInstance,
   options: LlmsPageOptions = {},
 ): Promise<{ title: string, content: string } | undefined> {
-  const { mode = 'spec', operationId, tag, defaultTag, ...operationOptions } = options
+  const { mode = 'spec', operationId, tag, defaultTag, maxSize: maxSizeOption, specUrl, label = 'page', ...operationOptions } = options
+  const maxSize = resolveMaxSize(maxSizeOption)
   const { openapi, operations, groups } = prepareMarkdownSpec(spec, defaultTag)
   const operationLink = { href: () => null }
   const title = String(openapi.getInfo()?.title || 'API Reference')
@@ -273,18 +417,26 @@ export async function renderLlmsPage(
       return undefined
     }
     group.description = rewriteOperationLinks(group.description, openapi, operationLink)
-    const sections: string[] = []
-    for (const operation of group.operations) {
-      sections.push(await render(operation.operationId, 2))
+    const result = await joinWithinSize(
+      [heading(1, group.name), group.description?.trim()].filter(Boolean).join('\n\n'),
+      group.operations.length,
+      index => render(group.operations[index].operationId, 2),
+      '\n\n',
+      maxSize,
+    )
+    if ('content' in result) {
+      return { title: group.name, content: result.content }
     }
-    return { title: group.name, content: `${renderTagMarkdown(group, sections)}\n` }
+    warnSize(label, result.exceeded, maxSize)
+    return { title: group.name, content: renderLlmsSummary(openapi, groups, { group, specUrl, openapiUrl: operationOptions.openapiUrl, maxSize }) }
   }
 
-  const sections: string[] = []
-  for (const operation of operations) {
-    sections.push(await render(operation.operationId, 1))
+  const result = await joinWithinSize(renderLlmsFullHeader(openapi), operations.length, index => render(operations[index].operationId, 1), LLMS_FULL_SEPARATOR, maxSize)
+  if ('content' in result) {
+    return { title, content: result.content }
   }
-  return { title, content: renderLlmsFull(openapi, sections) }
+  warnSize(label, result.exceeded, maxSize)
+  return { title, content: renderLlmsSummary(openapi, groups, { specUrl, openapiUrl: operationOptions.openapiUrl, maxSize }) }
 }
 
 /**

@@ -227,6 +227,23 @@ describe('resolvePage', () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('"ex/bad"'), expect.stringContaining('500'))
   })
 
+  it('lets resolvePage override maxSize per page, and links specUrl in the summary note', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify(pageSpec('Remote')))))
+
+    await generateLlmsFiles(siteConfig({ 'big.md': {}, 'small.md': {} }), {
+      codeSamples: false,
+      llmsTxt: false,
+      maxSize: 50,
+      resolvePage: ({ route }) => ({ specUrl: 'https://x/spec.json', maxSize: route === 'big' ? false : undefined }),
+    })
+
+    expect(readFileSync(join(dir, 'big.md'), 'utf-8')).toContain('# List things')
+    const small = readFileSync(join(dir, 'small.md'), 'utf-8')
+    expect(small).toContain('See the [OpenAPI specification](https://x/spec.json) for every detail.')
+    expect(small).toContain('- `GET /things` – List things')
+  })
+
   it('merges every entry into one llms.txt, with llms-full.txt from operationRoute entries only', async () => {
     await generateLlmsFiles(siteConfig({ 'ops/listPets.md': {}, 'tests/a.md': { spec: pageSpec('Spec A') } }), [
       { spec, operationRoute: 'ops/{operationId}', codeSamples: false },
