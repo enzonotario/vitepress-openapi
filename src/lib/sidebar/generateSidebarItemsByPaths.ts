@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OASidebarItem, SidebarGroupTemplateFn, SidebarItemTemplateFn } from '../../composables/useSidebar'
-import { httpVerbs } from '../../index'
+import { httpVerbs } from '../constants'
 import { ensureGroupTextSlashPrefix } from './ensureGroupTextSlashPrefix'
 import { flatSidebarItems } from './flatSidebarItems'
 import { mergeAdjacentGroups } from './mergeAdjacentGroups'

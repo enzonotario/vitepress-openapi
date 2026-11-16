@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OpenAPIDocument } from '../../types'
-import { httpVerbs } from '../../index'
+import { httpVerbs } from '../constants'
 
 const RE_SLASH = /\//g
 

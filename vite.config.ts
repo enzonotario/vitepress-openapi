@@ -40,16 +40,18 @@ export default defineConfig({
         vue: resolve(__dirname, 'src/vue.ts'),
         theme: resolve(__dirname, 'src/theme.ts'),
         node: resolve(__dirname, 'src/index.ts'),
+        cli: resolve(__dirname, 'src/cli.ts'),
       },
       name: 'vitepress-openapi',
       fileName: (format: string, entryName: string) => `vitepress-openapi.${entryName}.${format}.js`,
     },
     rolldownOptions: {
-      external: ['vue', 'vitepress', 'vitepress/client'],
+      external: ['vue', 'vitepress', 'vitepress/client', /^node:/],
       output: {
         globals: {
           vue: 'Vue',
         },
+        banner: chunk => chunk.name === 'cli' && chunk.isEntry ? '#!/usr/bin/env node' : '',
       },
     },
   },

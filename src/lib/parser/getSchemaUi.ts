@@ -50,10 +50,12 @@ export interface OAProperty {
 export class SchemaUiCache {
   walked = new WeakSet<object>()
   ui = new WeakMap<object, OAProperty>()
+  // Schema each returned property was built from (a side table, so properties stay plain data).
+  sources = new WeakMap<OAProperty, object>()
 }
 
 class UiPropertyFactory {
-  constructor(private memo: WeakMap<object, OAProperty>) {}
+  constructor(private memo: WeakMap<object, OAProperty>, private sources?: WeakMap<OAProperty, object>) {}
 
   static createBaseProperty(
     name: string,
@@ -187,7 +189,9 @@ class UiPropertyFactory {
     }
 
     // Shallow copy: callers reassign `meta`/`required` on the returned object.
-    return { ...property, name, required }
+    const copy = { ...property, name, required }
+    this.sources?.set(copy, schema)
+    return copy
   }
 
   buildUiProperty(
@@ -416,7 +420,7 @@ export function getSchemaUi(
 
   const resolvedSchema = resolveCircularRef(jsonSchema, cache.walked)
 
-  return new UiPropertyFactory(cache.ui).schemaToUiProperty('', resolvedSchema)
+  return new UiPropertyFactory(cache.ui, cache.sources).schemaToUiProperty('', resolvedSchema)
 }
 
 function inferTypesFromEnum(values: unknown[]): JSONSchemaType[] {
