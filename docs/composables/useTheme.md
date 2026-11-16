@@ -160,6 +160,8 @@ export default {
                 },
                 externalLinksNewTab: true,
                 config: md => md,
+                // Sanitize HTML in Markdown descriptions (default), or pass a custom sanitizer.
+                sanitize: true,
             },
         })
     }
@@ -465,7 +467,7 @@ useTheme({
 
 | Function               | Description                       | Default Value                                                                   | Allowed Values                                                                                                                                           |
 |------------------------|-----------------------------------|---------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `setMarkdownConfig`    | Sets the markdown configuration.  | `{ operationLink: { linkPrefix: '/operations/' }, externalLinksNewTab: false }` | `{ operationLink: { linkPrefix: string, transformHref: (href: string) => string } \| false, externalLinksNewTab: boolean, config: (md) => MarkdownIt }` |
+| `setMarkdownConfig`    | Sets the markdown configuration.  | `{ operationLink: { linkPrefix: '/operations/' }, externalLinksNewTab: false, sanitize: true }` | `{ operationLink: { linkPrefix: string, transformHref: (href: string) => string } \| false, externalLinksNewTab: boolean, config: (md) => MarkdownIt, sanitize: boolean \| ((html: string) => string) }` |
 | `getMarkdownConfig`    | Gets the markdown configuration.  | —                                                                               | —                                                                                                                                                        |
 | `getOperationLinkConfig` | Gets the operation link configuration. | `{ linkPrefix: '/operations/' }`                                           | `{ linkPrefix: string, transformHref: (href: string) => string } \| false`                                                                              |
 | `getExternalLinksNewTab` | Gets whether external links open in new tab. | `false`                                                               | `true`, `false`                                                                                                                                          |
@@ -491,3 +493,20 @@ useTheme({
 ```
 
 `md` is an instance of [markdown-it](https://github.com/markdown-it/markdown-it).
+
+### Sanitization
+
+HTML in Markdown descriptions is sanitized by default. Formatting markup such as headings, lists, tables, code blocks, links, images, `<br>` and `<details>` is kept, while scripts, event handler attributes (`onclick`, `onerror`, …), embedded frames and unsafe URLs (e.g. `javascript:`) are removed. Sanitization runs on the final HTML, so it also applies to plugins added with `config`.
+
+Use the `sanitize` option to change this behavior:
+
+```ts
+useTheme({
+  markdown: {
+    // Replace the built-in sanitizer with your own.
+    sanitize: html => mySanitizer(html),
+  },
+})
+```
+
+Setting `sanitize: false` renders the HTML from your descriptions as-is. Only disable it when the OpenAPI specs come from a fully trusted source.

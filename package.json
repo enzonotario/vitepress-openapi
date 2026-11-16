@@ -76,7 +76,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "markdown-it-link-attributes": "^4.0.1",
-    "reka-ui": "^2.10.4"
+    "reka-ui": "^2.10.4",
+    "xss": "^1.0.17"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.3.0",

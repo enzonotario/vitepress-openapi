@@ -61,14 +61,21 @@ function getOperationTitle(
   return title || operation?.summary || operation?.operationId || ''
 }
 
+const RE_HTML_ESCAPE = /[&<>"]/g
+const HTML_ESCAPES: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }
+
+function escapeHtml(value: string): string {
+  return value.replace(RE_HTML_ESCAPE, char => HTML_ESCAPES[char])
+}
+
 function createOperationLinkHtml(
   href: string,
   method: string,
   title: string,
 ): string {
-  return `<a href="${href}" class="OAOperationLink group/oaOperationLink">`
-    + `<span class="OAOperationLink-badge OAMethodBadge--${method.toLowerCase()}">${method.toUpperCase()}</span>`
-    + `<span class="OAOperationLink-title">${title}</span>`
+  return `<a href="${escapeHtml(href)}" class="OAOperationLink group/oaOperationLink">`
+    + `<span class="OAOperationLink-badge OAMethodBadge--${escapeHtml(method.toLowerCase())}">${escapeHtml(method.toUpperCase())}</span>`
+    + `<span class="OAOperationLink-title">${escapeHtml(title)}</span>`
     + `</a>`
 }
 

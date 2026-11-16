@@ -195,6 +195,12 @@ export interface MarkdownConfig {
   operationLink?: OperationLinkConfig | false
   externalLinksNewTab?: boolean
   config?: (md: MarkdownIt) => MarkdownIt | undefined
+  /**
+   * Sanitize the HTML rendered from Markdown descriptions.
+   * `true` (default) uses the built-in sanitizer, `false` disables it (only for fully trusted specs),
+   * and a function replaces the built-in sanitizer.
+   */
+  sanitize?: boolean | ((html: string) => string)
 }
 
 export interface UseThemeConfig {
@@ -425,6 +431,7 @@ const defaultValues = {
     },
     externalLinksNewTab: false,
     config: undefined,
+    sanitize: true,
   },
 }
 
@@ -522,6 +529,7 @@ const themeConfig: UseThemeConfig = {
     },
     externalLinksNewTab: defaultValues.markdown.externalLinksNewTab,
     config: defaultValues.markdown.config,
+    sanitize: defaultValues.markdown.sanitize,
   },
 }
 
@@ -1151,6 +1159,10 @@ export function useTheme(initialConfig: PartialUseThemeConfig = {}) {
 
     if (config.config !== undefined) {
       markdown.config = config.config
+    }
+
+    if (config.sanitize !== undefined) {
+      markdown.sanitize = config.sanitize
     }
   }
 
