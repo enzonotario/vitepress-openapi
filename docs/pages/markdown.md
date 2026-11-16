@@ -55,18 +55,19 @@ export default defineConfig({
 })
 ```
 
-| Option              | Description                                                                                                                                                    |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `spec`              | OpenAPI document (object or JSON/YAML string). Or use `specPath` / `specUrl`.                                                                                  |
-| `operationRoute`    | Route of the operation pages, relative to the site root, with an `{operationId}` placeholder.                                                                  |
-| `specRoutes`        | Routes of pages rendering the whole spec: they get every operation in one file.                                                                                |
-| `introductionRoute` | Route of an overview page: title, version, description, servers, authentication and operations by tag, linked to their pages.                                  |
-| `tagRoute`          | Route of the tag pages, with a `{tag}` placeholder. Each gets the tag description and all its operations.                                                      |
-| `tagParam`          | Value of `{tag}` for a tag name. Defaults to the name as is, like `usePaths().getTags()` in a `[tag].paths.js` file. Set it if your paths file slugifies tags. |
-| `extension`         | `md` (default) or `txt`.                                                                                                                                       |
-| `llmsTxt`           | Write `llms.txt` and `llms-full.txt` at the site root (default `true`).                                                                                        |
-| `openapiUrl`        | URL of the OpenAPI document, linked from every file.                                                                                                           |
-| `codeSamples`       | Languages of the code samples (default `['curl']`), or `false`. `baseUrl` sets the base URL used in them.                                                      |
+| Option              | Description                                                                                                                                                                                                                   |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `spec`              | OpenAPI document (object or JSON/YAML string). Or use `specPath` / `specUrl`.                                                                                                                                                 |
+| `operationRoute`    | Route of the operation pages, relative to the site root, with an `{operationId}` placeholder.                                                                                                                                 |
+| `specRoutes`        | Routes of pages rendering the whole spec: they get every operation in one file.                                                                                                                                               |
+| `introductionRoute` | Route of an overview page: title, version, description, servers, authentication and operations by tag, linked to their pages.                                                                                                 |
+| `tagRoute`          | Route of the tag pages, with a `{tag}` placeholder. Each gets the tag description and all its operations.                                                                                                                     |
+| `tagParam`          | Value of `{tag}` for a tag name. Defaults to the name as is, like `usePaths().getTags()` in a `[tag].paths.js` file. Set it if your paths file slugifies tags.                                                                |
+| `extension`         | `md` (default) or `txt`.                                                                                                                                                                                                      |
+| `llmsTxt`           | Write `llms.txt` and `llms-full.txt` at the site root (default `true`).                                                                                                                                                       |
+| `openapiUrl`        | URL of the OpenAPI document, linked from every file.                                                                                                                                                                          |
+| `codeSamples`       | Languages of the code samples (default `['curl']`), or `false`. `baseUrl` sets the base URL used in them.                                                                                                                     |
+| `maxSize`           | Maximum size in bytes of files with many operations: whole-spec pages, tag pages and `llms-full.txt` (default 5 MB, `5 * 1024 * 1024`). Above it, a summary is written instead, and a warning is logged. `false` disables it. |
 
 Files are only written for routes that exist as pages, and links (in `llms.txt` and between operations) include the site `base`. `llms.txt` links the overview first and each tag page at the top of its section. The files have no frontmatter: they are served as they are.
 
@@ -91,12 +92,14 @@ const llms = [
 | `spec` / `specPath` / `specUrl` | The page's spec. Defaults to the entry's spec. URLs are fetched once; a failed fetch skips the page with a warning. |
 | `mode`                          | `'spec'` (default, every operation), `'operation'`, `'introduction'` or `'tag'`.                                    |
 | `operationId` / `tag`           | For the `'operation'` and `'tag'` modes.                                                                            |
+| `maxSize`                       | Overrides the entry's `maxSize` for this page.                                                                      |
 
 Operation links inside these files are plain text, since the page's spec has no operation pages. Pass an array of options objects, each with its own spec, to `generateLlmsFiles` and `llmsDevServer`:
 
 - One `llms.txt` and one `llms-full.txt` are written. `extension` and `llmsTxt` are read from the first entry.
 - `llms.txt` starts with the first entry that has `operationRoute`. Other entries add a `## Section`: their operations, or the pages of `resolvePage` (titled with each spec's `info.title`).
 - `llms-full.txt` only contains the specs of entries with `operationRoute`. Pages of `resolvePage` are linked from `llms.txt`, not copied, to keep it small.
+- `maxSize` applies to each file, and to the part of `llms-full.txt` of each entry: a whole-spec or tag file over it becomes a summary (the overview, then one line per operation, linked to its page when there is one), with a note linking the spec. Very large specs (e.g. Stripe's) end up as summaries with the default limit.
 
 In dev, the requested route is matched to a page and its params from VitePress' resolved dynamic routes.
 
