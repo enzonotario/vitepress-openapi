@@ -12,7 +12,7 @@ import { formatValueForDisplay } from '../format/formatValueForDisplay'
 import { getSchemaUi } from '../parser/getSchemaUi'
 import { getSecurityUi } from '../parser/getSecurityUi'
 import { isJson, isXml } from '../utils/contentTypeUtils'
-import { codeBlock, heading, indentContinuation, inlineCode, table, withAttributes } from './markdownUtils'
+import { codeBlock, escapeLinkLabel, heading, indentContinuation, inlineCode, table, withAttributes } from './markdownUtils'
 
 export interface OperationToMarkdownOptions {
   /**
@@ -52,8 +52,11 @@ export interface OperationToMarkdownOptions {
 export interface OperationLinkOptions {
   /** @default '/operations/' */
   prefix?: string
-  /** Maps an operationId to the link href. Defaults to the original href. */
-  href?: (operationId: string) => string | undefined
+  /**
+   * Maps an operationId to the link href: `undefined` keeps the original href,
+   * `null` drops the link and keeps its text.
+   */
+  href?: (operationId: string) => string | null | undefined
 }
 
 const PARAMETER_LOCATIONS = [
@@ -115,7 +118,7 @@ export async function operationToMarkdown(
   }
 
   if (operation.externalDocs?.url) {
-    blocks.push(`See also: [${operation.externalDocs.description || operation.externalDocs.url}](${operation.externalDocs.url})`)
+    blocks.push(`See also: [${escapeLinkLabel(operation.externalDocs.description || operation.externalDocs.url)}](${operation.externalDocs.url})`)
   }
 
   blocks.push(
@@ -130,7 +133,7 @@ export async function operationToMarkdown(
   if (options.openapiUrl) {
     blocks.push(
       heading(ctx.level + 1, 'OpenAPI'),
-      `Machine-readable specification: [${options.openapiUrl}](${options.openapiUrl})`,
+      `Machine-readable specification: [${escapeLinkLabel(options.openapiUrl)}](${options.openapiUrl})`,
     )
   }
 
@@ -163,7 +166,9 @@ export function rewriteOperationLinks(markdown: string, openapi: OpenApiSpecInst
     if (!operation) {
       return match
     }
-    return `[${text || operation.summary || operationId}](${options.href?.(operationId) ?? href})`
+    const target = options.href?.(operationId)
+    const label = text || escapeLinkLabel(operation.summary || operationId)
+    return target === null ? label : `[${label}](${target ?? href})`
   }
 
   return markdown.split('\n').map((line) => {

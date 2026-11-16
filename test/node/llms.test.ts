@@ -137,3 +137,149 @@ describe('createLlmsDevMiddleware', () => {
     expect((await call(middleware, '/docs/ops/listPets.md', 'POST')).next).toHaveBeenCalled()
   })
 })
+
+describe('resolvePage', () => {
+  const pageSpec = (title: string) => ({
+    openapi: '3.0.0',
+    info: { title, version: '1.0.0' },
+    tags: [{ name: 'Things' }],
+    paths: {
+      '/things': {
+        get: {
+          operationId: 'listThings',
+          summary: 'List things',
+          description: 'See [](/operations/getThing).',
+          tags: ['Things'],
+          responses: { 200: { description: 'OK' } },
+        },
+      },
+      '/things/{id}': { get: { operationId: 'getThing', summary: 'Get a thing', tags: ['Things'], responses: {} } },
+    },
+  })
+
+  const siteConfig = (pages: Record<string, Record<string, any> | undefined>) => ({
+    outDir: dir,
+    pages: Object.keys(pages),
+    dynamicRoutes: { routes: Object.entries(pages).filter(([, params]) => params).map(([path, params]) => ({ path, params })) },
+    site: { base: '/docs/' },
+  })
+
+  const testsEntry = {
+    title: 'Tests',
+    codeSamples: false as const,
+    resolvePage: ({ route, params }: { route: string, params?: Record<string, any> }) => route.startsWith('tests/') ? { spec: params?.spec } : undefined,
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it('writes the spec from route params with plain operation links', async () => {
+    await generateLlmsFiles(siteConfig({
+      'tests/a.md': { spec: pageSpec('Spec A') },
+      'guide.md': undefined,
+    }), testsEntry)
+
+    const content = readFileSync(join(dir, 'tests/a.md'), 'utf-8')
+    expect(content.startsWith('# Spec A\n\n> API reference for Spec A (version 1.0.0).\n\n---\n\n# List things')).toBe(true)
+    expect(content).toContain('See Get a thing.')
+    expect(existsSync(join(dir, 'guide.md'))).toBe(false)
+    expect(readFileSync(join(dir, 'llms.txt'), 'utf-8')).toBe('# Documentation\n\n## Tests\n\n- [Spec A](/docs/tests/a.md)\n')
+  })
+
+  it('renders operation, introduction and tag modes', async () => {
+    const spec = pageSpec('Modes')
+    await generateLlmsFiles(siteConfig({ 'op.md': {}, 'intro.md': {}, 'tag.md': {}, 'missing.md': {} }), {
+      spec,
+      codeSamples: false,
+      llmsTxt: false,
+      resolvePage: ({ route }) => ({
+        op: { mode: 'operation' as const, operationId: 'getThing' },
+        intro: { mode: 'introduction' as const },
+        tag: { mode: 'tag' as const, tag: 'Things' },
+        missing: { mode: 'operation' as const, operationId: 'nope' },
+      })[route],
+    })
+
+    expect(readFileSync(join(dir, 'op.md'), 'utf-8').startsWith('# Get a thing')).toBe(true)
+    expect(readFileSync(join(dir, 'intro.md'), 'utf-8')).toContain('- List things `GET /things`')
+    expect(readFileSync(join(dir, 'tag.md'), 'utf-8').startsWith('# Things\n\n## List things')).toBe(true)
+    expect(existsSync(join(dir, 'missing.md'))).toBe(false)
+  })
+
+  it('fetches each specUrl once and skips pages whose spec fails to load', async () => {
+    const fetchMock = vi.fn(async (url: string) => url.includes('broken')
+      ? new Response('nope', { status: 500, statusText: 'Server Error' })
+      : new Response(JSON.stringify(pageSpec('Remote'))))
+    vi.stubGlobal('fetch', fetchMock)
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    await generateLlmsFiles(siteConfig({ 'ex/one.md': { url: 'https://x/spec.json' }, 'ex/two.md': { url: 'https://x/spec.json' }, 'ex/bad.md': { url: 'https://x/broken.json' } }), {
+      codeSamples: false,
+      resolvePage: ({ params }) => params?.url ? { specUrl: params.url } : undefined,
+    })
+
+    expect(fetchMock).toHaveBeenCalledTimes(2)
+    expect(readFileSync(join(dir, 'ex/one.md'), 'utf-8').startsWith('# Remote')).toBe(true)
+    expect(existsSync(join(dir, 'ex/two.md'))).toBe(true)
+    expect(existsSync(join(dir, 'ex/bad.md'))).toBe(false)
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('"ex/bad"'), expect.stringContaining('500'))
+  })
+
+  it('merges every entry into one llms.txt, with llms-full.txt from operationRoute entries only', async () => {
+    await generateLlmsFiles(siteConfig({ 'ops/listPets.md': {}, 'tests/a.md': { spec: pageSpec('Spec A') } }), [
+      { spec, operationRoute: 'ops/{operationId}', codeSamples: false },
+      testsEntry,
+    ])
+
+    const llms = readFileSync(join(dir, 'llms.txt'), 'utf-8')
+    expect(llms.startsWith('# Pets API')).toBe(true)
+    expect(llms).toContain('- [List pets](/docs/ops/listPets.md)')
+    expect(llms).toContain('## Tests\n\n- [Spec A](/docs/tests/a.md)\n\n## Optional')
+    const full = readFileSync(join(dir, 'llms-full.txt'), 'utf-8')
+    expect(full).toContain('# List pets')
+    expect(full).not.toContain('Spec A')
+  })
+
+  it('resolves page params in the dev middleware', async () => {
+    const middleware = createLlmsDevMiddleware(testsEntry, () => siteConfig({ 'tests/a.md': { spec: pageSpec('Spec A') } }))
+    const res = { statusCode: 0, headers: {} as Record<string, string>, body: undefined as string | undefined, setHeader(name: string, value: string) {
+      this.headers[name] = value
+    }, end(body?: string) {
+      this.body = body
+    } }
+    const next = vi.fn()
+
+    await middleware({ url: '/docs/tests/a.md', method: 'GET' }, res, next)
+    expect(next).not.toHaveBeenCalled()
+    expect(res.headers['Content-Type']).toBe('text/markdown; charset=utf-8')
+    expect(res.body!.startsWith('# Spec A')).toBe(true)
+
+    await middleware({ url: '/docs/llms.txt', method: 'GET' }, res, next)
+    expect(res.body).toContain('- [Spec A](/docs/tests/a.md)')
+
+    await middleware({ url: '/docs/tests/b.md', method: 'GET' }, res, next)
+    expect(next).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('dev middleware special characters', () => {
+  it('serves a tag route with # percent-encoded', async () => {
+    const middleware = createLlmsDevMiddleware({
+      spec: { ...spec, tags: [{ name: 'C#' }], paths: { '/pets': { get: { ...spec.paths['/pets'].get, tags: ['C#'] } } } },
+      operationRoute: 'ops/{operationId}',
+      tagRoute: 'tags/{tag}',
+      codeSamples: false,
+    }, () => ({ outDir: dir, pages: ['ops/listPets.md', 'tags/C#.md'], site: { base: '/' } }))
+    const res = { statusCode: 0, body: undefined as string | undefined, setHeader: () => {}, end(body?: string) {
+      this.body = body
+    } }
+
+    await middleware({ url: '/tags/C%23.md', method: 'GET' }, res, vi.fn())
+    expect(res.body!.startsWith('# C#')).toBe(true)
+
+    await middleware({ url: '/llms.txt', method: 'GET' }, res, vi.fn())
+    expect(res.body).toContain('(/tags/C%23.md)')
+  })
+})

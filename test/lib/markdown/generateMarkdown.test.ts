@@ -182,6 +182,17 @@ paths:
     expect(getFile(files, 'llms.txt')).toContain('> Start with List pets.')
   })
 
+  it('escapes brackets in link labels', async () => {
+    const files = await generateMarkdownFiles({
+      openapi: '3.0.0',
+      info: { title: 'Labels', version: '1.0.0' },
+      paths: { '/pets': { get: { operationId: 'getPet', summary: 'Get pet ]', responses: {} } } },
+    }, { codeSamples: false, frontmatter: false })
+
+    expect(getFile(files, 'index.md')).toContain('- [Get pet \\]](./getPet.md) `GET /pets`')
+    expect(getFile(files, 'llms.txt')).toContain('- [Get pet \\]](/getPet.md): GET /pets')
+  })
+
   it('throws on unsupported documents', async () => {
     await expect(generateMarkdownFiles({ swagger: '2.0' } as any)).rejects.toThrow('only OpenAPI 3.x')
   })

@@ -5,6 +5,14 @@ const RE_UNSAFE_FILE_CHARS = /[^\p{L}\p{N}_.-]+/gu
 const RE_REPEATED_DASHES = /-{2,}/g
 const RE_EDGE_DASHES_DOTS = /^[-.]+|[-.]+$/g
 const RE_ENDS_WITH_PUNCTUATION = /[.!?:;]$/
+const RE_LINK_LABEL_SPECIAL = /[\\[\]]/g
+
+/**
+ * Escapes a link label (`[label](url)`): backslashes and brackets would end or break it.
+ */
+export function escapeLinkLabel(label: unknown): string {
+  return String(label).replace(RE_LINK_LABEL_SPECIAL, '\\$&')
+}
 
 export function heading(level: number, text: string): string {
   return `${'#'.repeat(Math.min(Math.max(level, 1), 6))} ${text}`

@@ -2,7 +2,8 @@ import type { OpenAPIDocument } from '../../types'
 import type { OpenApiSpecInstance } from '../spec/createOpenApiSpec'
 import type { MarkdownFile, OperationEntry, TagGroup } from './generateMarkdown'
 import type { OperationToMarkdownOptions } from './operationToMarkdown'
-import { prepareMarkdownSpec, renderIndex, renderLlmsFull, renderLlmsTxt, renderTagMarkdown } from './generateMarkdown'
+import { llmsOperationLink, prepareMarkdownSpec, renderIndex, renderLlmsFull, renderLlmsTxt, renderTagMarkdown } from './generateMarkdown'
+import { heading } from './markdownUtils'
 import { operationToMarkdown, rewriteOperationLinks } from './operationToMarkdown'
 
 export interface LlmsSiteOptions extends Omit<OperationToMarkdownOptions, 'headingLevel' | 'operationLink'> {
@@ -61,8 +62,22 @@ export function normalizeRoute(route: string): string {
   return route.replace(RE_EDGE_SLASHES, '').replace(RE_PAGE_EXTENSION, '')
 }
 
-function joinUrl(base: string, path: string): string {
-  return `${base.endsWith('/') ? base : `${base}/`}${encodeURI(path)}`
+/**
+ * `base` + `path`, each path segment percent-encoded (so `?` and `#` in a tag or operationId stay in the path).
+ */
+export function joinUrl(base: string, path: string): string {
+  return `${base.endsWith('/') ? base : `${base}/`}${path.split('/').map(encodeURIComponent).join('/')}`
+}
+
+export interface LlmsSiteEntry {
+  /** Page files (no `llms.txt`/`llms-full.txt`). */
+  files: MarkdownFile[]
+  /** `llms-full.txt` content: every operation of the spec. */
+  full: string
+  /** `llms.txt` content, with optional extra `## Section` blocks. */
+  renderLlmsTxt: (extraSections?: string[]) => string
+  /** This spec as a single `llms.txt` section, to merge it into another one. */
+  renderLlmsSection: () => string
 }
 
 /**
@@ -73,6 +88,23 @@ export async function generateLlmsSiteFiles(
   spec: OpenAPIDocument | string | OpenApiSpecInstance,
   options: LlmsSiteFilesOptions,
 ): Promise<MarkdownFile[]> {
+  const entry = await buildLlmsSiteEntry(spec, options)
+  return options.llmsTxt === false
+    ? entry.files
+    : [
+        ...entry.files,
+        { path: 'llms.txt', content: entry.renderLlmsTxt() },
+        { path: 'llms-full.txt', content: entry.full },
+      ]
+}
+
+/**
+ * Like `generateLlmsSiteFiles`, but returns the `llms.txt` parts so several specs can be merged.
+ */
+export async function buildLlmsSiteEntry(
+  spec: OpenAPIDocument | string | OpenApiSpecInstance,
+  options: LlmsSiteFilesOptions,
+): Promise<LlmsSiteEntry> {
   const {
     operationRoute,
     specRoutes = [],
@@ -80,7 +112,7 @@ export async function generateLlmsSiteFiles(
     tagRoute,
     tagParam = (tag: string) => tag,
     extension = 'md',
-    llmsTxt = true,
+    llmsTxt: _llmsTxt,
     base = '/',
     defaultTag,
     hasPage = () => true,
@@ -171,28 +203,110 @@ export async function generateLlmsSiteFiles(
     }
   }
 
-  if (llmsTxt) {
-    // Only linked entries: operations with a page, and tags with a page or such operations.
-    const linkedGroups = groups
-      .filter(group => tagsWithPage.has(group) || group.operations.some(operation => withPage.has(operation.operationId)))
-      .map(group => ({ ...group, operations: group.operations.filter(operation => withPage.has(operation.operationId)) }))
-
-    files.push(
-      {
-        path: 'llms.txt',
-        content: renderLlmsTxt(openapi, linkedGroups, {
-          operationUrl: operation => urlFor(routeFor(operation.operationId)),
-          overviewUrl: hasIntroduction ? urlFor(introduction) : undefined,
-          tagUrl: group => tagUrl(groups.find(original => original.name === group.name)!),
-          fullUrl: joinUrl(base, 'llms-full.txt'),
-          openapiUrl: operationOptions.openapiUrl,
-        }),
-      },
-      { path: 'llms-full.txt', content: full },
-    )
+  // Only linked entries: operations with a page, and tags with a page or such operations.
+  const linkedGroups = groups
+    .filter(group => tagsWithPage.has(group) || group.operations.some(operation => withPage.has(operation.operationId)))
+    .map(group => ({ ...group, operations: group.operations.filter(operation => withPage.has(operation.operationId)) }))
+  const links = {
+    operationUrl: (operation: OperationEntry) => urlFor(routeFor(operation.operationId)),
+    overviewUrl: hasIntroduction ? urlFor(introduction) : undefined,
+    tagUrl: (group: TagGroup) => tagUrl(groups.find(original => original.name === group.name)!),
+    fullUrl: joinUrl(base, 'llms-full.txt'),
+    openapiUrl: operationOptions.openapiUrl,
   }
 
-  return files
+  return {
+    files,
+    full,
+    renderLlmsTxt: extraSections => renderLlmsTxt(openapi, linkedGroups, { ...links, extraSections }),
+    renderLlmsSection: () => {
+      const lines = [
+        links.overviewUrl && `- [Overview](${links.overviewUrl}): API description, servers, authentication and all operations`,
+        ...linkedGroups.flatMap(group => group.operations.map(operation => llmsOperationLink(operation, links.operationUrl(operation)))),
+      ].filter(Boolean)
+      return [heading(2, String(openapi.getInfo()?.title || 'API Reference')), lines.join('\n')].join('\n\n')
+    },
+  }
+}
+
+export type LlmsPageMode = 'spec' | 'operation' | 'introduction' | 'tag'
+
+export interface LlmsPageOptions extends Omit<OperationToMarkdownOptions, 'headingLevel' | 'operationLink'> {
+  /** @default 'spec' */
+  mode?: LlmsPageMode
+  operationId?: string
+  tag?: string
+  defaultTag?: string
+}
+
+/**
+ * Markdown of a page that renders its own spec: the whole spec, an operation, the overview or a tag.
+ * Operation links become plain text: they would point to pages of another spec.
+ * Returns `undefined` when the operation or tag doesn't exist.
+ */
+export async function renderLlmsPage(
+  spec: OpenAPIDocument | string | OpenApiSpecInstance,
+  options: LlmsPageOptions = {},
+): Promise<{ title: string, content: string } | undefined> {
+  const { mode = 'spec', operationId, tag, defaultTag, ...operationOptions } = options
+  const { openapi, operations, groups } = prepareMarkdownSpec(spec, defaultTag)
+  const operationLink = { href: () => null }
+  const title = String(openapi.getInfo()?.title || 'API Reference')
+  const render = (id: string, headingLevel: number) => operationToMarkdown(openapi, id, { ...operationOptions, operationLink, headingLevel })
+
+  if (mode === 'operation') {
+    const operation = operations.find(operation => operation.operationId === operationId)
+    return operation ? { title: operation.summary, content: `${await render(operation.operationId, 1)}\n` } : undefined
+  }
+
+  if (mode === 'introduction') {
+    const rewriteLinks = (markdown: string) => rewriteOperationLinks(markdown, openapi, operationLink)
+    groups.forEach((group) => {
+      group.description = rewriteLinks(group.description)
+    })
+    return { title, content: `${renderIndex(openapi, groups, { openapiUrl: operationOptions.openapiUrl, rewriteLinks })}\n` }
+  }
+
+  if (mode === 'tag') {
+    const group = groups.find(group => group.name === tag)
+    if (!group) {
+      return undefined
+    }
+    group.description = rewriteOperationLinks(group.description, openapi, operationLink)
+    const sections: string[] = []
+    for (const operation of group.operations) {
+      sections.push(await render(operation.operationId, 2))
+    }
+    return { title: group.name, content: `${renderTagMarkdown(group, sections)}\n` }
+  }
+
+  const sections: string[] = []
+  for (const operation of operations) {
+    sections.push(await render(operation.operationId, 1))
+  }
+  return { title, content: renderLlmsFull(openapi, sections) }
+}
+
+/**
+ * Path of a request relative to the site base (decoded, without query), or `undefined`.
+ */
+export function getLlmsRequestPath(url: string | undefined, base: string): string | undefined {
+  if (!url) {
+    return undefined
+  }
+  let pathname: string
+  try {
+    pathname = decodeURIComponent(url.split(/[?#]/)[0])
+  }
+  catch {
+    return undefined
+  }
+  const prefix = base.endsWith('/') ? base : `${base}/`
+  return pathname.startsWith(prefix) ? pathname.slice(prefix.length) : undefined
+}
+
+export function getLlmsContentType(path: string): string {
+  return path.endsWith('.md') ? 'text/markdown; charset=utf-8' : 'text/plain; charset=utf-8'
 }
 
 /**
@@ -203,31 +317,7 @@ export function resolveLlmsRequest(
   base: string,
   files: MarkdownFile[],
 ): { body: string, contentType: string } | undefined {
-  if (!url) {
-    return undefined
-  }
-
-  let pathname: string
-  try {
-    pathname = decodeURIComponent(url.split(/[?#]/)[0])
-  }
-  catch {
-    return undefined
-  }
-
-  const prefix = base.endsWith('/') ? base : `${base}/`
-  if (!pathname.startsWith(prefix)) {
-    return undefined
-  }
-
-  const path = pathname.slice(prefix.length)
-  const file = files.find(file => file.path === path)
-  if (!file) {
-    return undefined
-  }
-
-  return {
-    body: file.content,
-    contentType: path.endsWith('.md') ? 'text/markdown; charset=utf-8' : 'text/plain; charset=utf-8',
-  }
+  const path = getLlmsRequestPath(url, base)
+  const file = path === undefined ? undefined : files.find(file => file.path === path)
+  return file ? { body: file.content, contentType: getLlmsContentType(file.path) } : undefined
 }

@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import type { LlmsFilesOptions, LlmsSiteConfig } from './llms'
+import type { LlmsFilesInput, LlmsSiteConfig } from './llms'
 
 /**
  * Vite plugin for the VitePress dev server: answers `{base}{route}.{extension}`,
@@ -8,7 +8,7 @@ import type { LlmsFilesOptions, LlmsSiteConfig } from './llms'
  *
  * Register it before `vitepress-plugin-llms` so operation routes are served from here.
  */
-export function llmsDevServer(options: LlmsFilesOptions): Plugin {
+export function llmsDevServer(options: LlmsFilesInput): Plugin {
   let siteConfig: LlmsSiteConfig | undefined
   let base = '/'
 

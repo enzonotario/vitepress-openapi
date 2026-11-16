@@ -6,7 +6,7 @@ import { parseOpenapi } from '../parser/parseOpenapi'
 import { createOpenApiSpec } from '../spec/createOpenApiSpec'
 import { parseSpec } from '../utils/parseSpec'
 import { markdownToPlainText } from './markdownToPlainText'
-import { heading, inlineCode, sanitizeFileName, frontmatter as toFrontmatter } from './markdownUtils'
+import { escapeLinkLabel, heading, inlineCode, sanitizeFileName, frontmatter as toFrontmatter } from './markdownUtils'
 import { describeSecurityScheme, operationToMarkdown, rewriteOperationLinks } from './operationToMarkdown'
 
 export interface GenerateMarkdownFilesOptions extends Omit<OperationToMarkdownOptions, 'headingLevel'> {
@@ -315,7 +315,7 @@ export function renderIndex(openapi: OpenApiSpecInstance, groups: TagGroup[], li
   }
 
   if (links.openapiUrl) {
-    blocks.push(`OpenAPI specification: [${links.openapiUrl}](${links.openapiUrl})`)
+    blocks.push(`OpenAPI specification: [${escapeLinkLabel(links.openapiUrl)}](${links.openapiUrl})`)
   }
 
   const servers = openapi.getServers()
@@ -345,10 +345,10 @@ export function renderIndex(openapi: OpenApiSpecInstance, groups: TagGroup[], li
     const indent = tagUrl ? '  ' : ''
     const lines = group.operations.map((operation) => {
       const url = links.operationUrl?.(operation, group)
-      const title = url ? `[${operation.summary}](${url})` : operation.summary
+      const title = url ? `[${escapeLinkLabel(operation.summary)}](${url})` : operation.summary
       return `${indent}- ${title} ${inlineCode(endpoint(operation))}`
     })
-    blocks.push((tagUrl ? [`- [${group.name}](${tagUrl})`, ...lines] : lines).join('\n'))
+    blocks.push((tagUrl ? [`- [${escapeLinkLabel(group.name)}](${tagUrl})`, ...lines] : lines).join('\n'))
   }
 
   return blocks.join('\n\n')
@@ -380,6 +380,16 @@ export interface LlmsTxtLinks {
   overviewUrl?: string
   /** URL of a tag's file, listed first in its section. */
   tagUrl?: (group: TagGroup) => string | undefined
+  /** More `## Section` blocks, before the optional links. */
+  extraSections?: string[]
+}
+
+/**
+ * An `llms.txt` list item for an operation.
+ */
+export function llmsOperationLink(operation: OperationEntry, url: string): string {
+  const description = markdownToPlainText(operation.description, { maxLength: DESCRIPTION_MAX_LENGTH })
+  return `- [${escapeLinkLabel(operation.summary)}](${url}): ${endpoint(operation)}${description ? ` - ${description}` : ''}`
 }
 
 /**
@@ -403,16 +413,14 @@ export function renderLlmsTxt(openapi: OpenApiSpecInstance, groups: TagGroup[], 
 
   for (const group of groups) {
     const tagUrl = links.tagUrl?.(group)
-    const lines = group.operations.map((operation) => {
-      const description = markdownToPlainText(operation.description, { maxLength: DESCRIPTION_MAX_LENGTH })
-      const notes = `${endpoint(operation)}${description ? ` - ${description}` : ''}`
-      return `- [${operation.summary}](${links.operationUrl(operation, group)}): ${notes}`
-    })
+    const lines = group.operations.map(operation => llmsOperationLink(operation, links.operationUrl(operation, group)))
     if (tagUrl) {
-      lines.unshift(`- [${group.name}](${tagUrl}): all ${group.name} operations in a single file`)
+      lines.unshift(`- [${escapeLinkLabel(group.name)}](${tagUrl}): all ${group.name} operations in a single file`)
     }
     blocks.push(heading(2, group.name), lines.join('\n'))
   }
+
+  blocks.push(...(links.extraSections ?? []))
 
   blocks.push(
     heading(2, 'Optional'),

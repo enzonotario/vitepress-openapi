@@ -151,6 +151,38 @@ describe('generateLlmsSiteFiles introduction and tags', () => {
   })
 })
 
+describe('link labels and URLs', () => {
+  const special = {
+    openapi: '3.0.0',
+    info: { title: 'Special', version: '1.0.0' },
+    tags: [{ name: 'C#' }],
+    paths: { '/pets': { get: { operationId: 'getPet', summary: 'Get pet ]', tags: ['C#'], responses: {} } } },
+  }
+  const options = {
+    operationRoute: 'api/{operationId}',
+    tagRoute: 'tags/{tag}',
+    introductionRoute: 'intro',
+    hasPage: (route: string) => ['api/getPet', 'tags/C#', 'intro'].includes(route),
+    codeSamples: false as const,
+  }
+
+  it('escapes brackets in link labels', async () => {
+    const files = await generateLlmsSiteFiles(special, options)
+
+    expect(getFile(files, 'llms.txt')).toContain('- [Get pet \\]](/api/getPet.md): GET /pets')
+    expect(getFile(files, 'intro.md')).toContain('  - [Get pet \\]](/api/getPet.md) `GET /pets`')
+  })
+
+  it('percent-encodes ? and # in route segments', async () => {
+    const files = await generateLlmsSiteFiles(special, { ...options, base: '/docs/' })
+
+    expect(files.map(file => file.path)).toContain('tags/C#.md')
+    expect(getFile(files, 'llms.txt')).toContain('- [C#](/docs/tags/C%23.md): all C# operations in a single file')
+    expect(getFile(files, 'intro.md')).toContain('- [C#](/docs/tags/C%23.md)')
+    expect(resolveLlmsRequest('/docs/tags/C%23.md', '/docs/', files)?.body.startsWith('# C#')).toBe(true)
+  })
+})
+
 describe('normalizeRoute', () => {
   it('strips slashes and page extensions', () => {
     expect(normalizeRoute('/api/getPet.html')).toBe('api/getPet')
