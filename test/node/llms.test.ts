@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, 
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { createLlmsDevMiddleware, generateLlmsFiles, getPageRoutes } from '../../src/node/llms'
+import { createLlmsDevMiddleware, generateLlmsFiles, getPageRoutes, getRawFileRequestUrl } from '../../src/node/llms'
 
 const spec = {
   openapi: '3.0.0',
@@ -281,5 +281,72 @@ describe('dev middleware special characters', () => {
 
     await middleware({ url: '/llms.txt', method: 'GET' }, res, vi.fn())
     expect(res.body).toContain('(/tags/C%23.md)')
+  })
+})
+
+describe('getRawFileRequestUrl', () => {
+  it('accepts raw requests from curl, navigations and fetch()', () => {
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/tests/a.md', headers: { accept: '*/*' } })).toBe('/tests/a.md')
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/tests/a.md', headers: { 'sec-fetch-dest': 'document', 'accept': 'text/html,application/xhtml+xml' } })).toBe('/tests/a.md')
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/llms.txt', headers: { 'sec-fetch-dest': 'empty', 'accept': 'text/plain' } })).toBe('/llms.txt')
+    expect(getRawFileRequestUrl({ method: 'HEAD', url: '/tests/a.md' })).toBe('/tests/a.md')
+  })
+
+  it('leaves page module requests to Vite', () => {
+    // VitePress `pathToFile` in dev: `${path}.md?t=${Date.now()}`, imported as a script.
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/tests/a.md?t=1700000000000', headers: { 'sec-fetch-dest': 'script', 'accept': '*/*' } })).toBeUndefined()
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/tests/a.md?import' })).toBeUndefined()
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/tests/a.md?v=123' })).toBeUndefined()
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/tests/a.md', headers: { 'sec-fetch-dest': 'script' } })).toBeUndefined()
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/tests/a.md', headers: { accept: 'application/javascript' } })).toBeUndefined()
+    expect(getRawFileRequestUrl({ method: 'POST', url: '/tests/a.md' })).toBeUndefined()
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/tests/a.html' })).toBeUndefined()
+  })
+
+  it('uses the URL as sent, before rewrites', () => {
+    expect(getRawFileRequestUrl({ method: 'GET', url: '/src/guide.md', originalUrl: '/guide.md' })).toBe('/guide.md')
+  })
+})
+
+describe('dev middleware with rewrites', () => {
+  const rewriteSpec = {
+    openapi: '3.0.0',
+    info: { title: 'Rewritten', version: '1.0.0' },
+    paths: { '/x': { get: { operationId: 'x', summary: 'X', responses: {} } } },
+  }
+  const siteConfig = () => ({
+    outDir: dir,
+    pages: ['src/api.md'],
+    rewrites: { map: { 'src/api.md': 'api.md' } },
+    site: { base: '/' },
+  })
+  const middleware = createLlmsDevMiddleware({
+    spec: rewriteSpec,
+    codeSamples: false,
+    resolvePage: ({ route }) => route === 'api' ? {} : undefined,
+  }, siteConfig)
+
+  function call(req: Parameters<typeof middleware>[0]) {
+    const res = { statusCode: 0, body: undefined as string | undefined, setHeader: () => {}, end(body?: string) {
+      this.body = body
+    } }
+    const next = vi.fn()
+    return middleware(req, res, next).then(() => ({ res, next }))
+  }
+
+  it('serves the rewritten route even after the rewrites middleware changed url', async () => {
+    const { res, next } = await call({ method: 'GET', url: '/src/api.md', originalUrl: '/api.md' })
+    expect(next).not.toHaveBeenCalled()
+    expect(res.body!.startsWith('# Rewritten')).toBe(true)
+  })
+
+  it('does not serve the rewritten page for its source route', async () => {
+    const { next } = await call({ method: 'GET', url: '/src/api.md', originalUrl: '/src/api.md' })
+    expect(next).toHaveBeenCalled()
+  })
+
+  it('passes page module requests through', async () => {
+    const { next } = await call({ method: 'GET', url: '/src/api.md?t=1', originalUrl: '/api.md?t=1', headers: { 'sec-fetch-dest': 'script' } })
+    expect(next).toHaveBeenCalled()
   })
 })

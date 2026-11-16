@@ -57,7 +57,13 @@ export interface LlmsSiteConfig {
   site?: { base?: string }
 }
 
-interface MiddlewareRequest { url?: string, method?: string }
+export interface LlmsMiddlewareRequest {
+  url?: string
+  /** Set by Connect before any middleware: the URL as sent, before rewrites change `url`. */
+  originalUrl?: string
+  method?: string
+  headers?: Record<string, string | string[] | undefined>
+}
 interface MiddlewareResponse {
   statusCode: number
   setHeader: (name: string, value: string) => unknown
@@ -78,7 +84,42 @@ interface BuildContext {
   loadSpec: (source: SpecSource) => Promise<OpenAPIDocument>
 }
 
-const RE_LLMS_FILE = /\.(?:md|txt)(?:[?#]|$)/
+const RE_LLMS_FILE = /\.(?:md|txt)$/
+const RE_RAW_ACCEPT = /text\/markdown|text\/plain|text\/html|\*\/\*/
+// Fetch destinations of a raw file request: navigation, `fetch()`/curl-like, or frames.
+const RAW_FETCH_DESTS = new Set(['document', 'empty', 'iframe', 'frame'])
+
+function getHeader(req: LlmsMiddlewareRequest, name: string): string | undefined {
+  const value = req.headers?.[name]
+  return Array.isArray(value) ? value[0] : value
+}
+
+/**
+ * The path of a request for a raw `.md`/`.txt` file, or `undefined` for anything else.
+ * In dev, VitePress loads each page as a module from the same `.md` URL (always with a `?t=`
+ * query, see `pathToFile`), and Vite adds queries like `?import` or `?v=`: requests with a query,
+ * script-like fetch destinations or a non-text `Accept` are left to Vite.
+ * Uses `originalUrl` (the URL as sent), since VitePress rewrites change `url`.
+ */
+export function getRawFileRequestUrl(req: LlmsMiddlewareRequest): string | undefined {
+  const url = req.originalUrl ?? req.url
+  if ((req.method !== 'GET' && req.method !== 'HEAD') || !url || url.includes('?')) {
+    return undefined
+  }
+  const pathname = url.split('#')[0]
+  if (!RE_LLMS_FILE.test(pathname)) {
+    return undefined
+  }
+  const dest = getHeader(req, 'sec-fetch-dest')
+  if (dest && !RAW_FETCH_DESTS.has(dest)) {
+    return undefined
+  }
+  const accept = getHeader(req, 'accept')
+  if (accept && !RE_RAW_ACCEPT.test(accept)) {
+    return undefined
+  }
+  return pathname
+}
 const LLMS_FILES = new Set(['llms.txt', 'llms-full.txt'])
 
 function toEntries(input: LlmsFilesInput): LlmsFilesOptions[] {
@@ -355,12 +396,13 @@ export function createLlmsDevMiddleware(
     return pageFiles.get(path)
   }
 
-  return async (req: MiddlewareRequest, res: MiddlewareResponse, next: (error?: unknown) => void) => {
-    if ((req.method !== 'GET' && req.method !== 'HEAD') || !req.url || !RE_LLMS_FILE.test(req.url)) {
+  return async (req: LlmsMiddlewareRequest, res: MiddlewareResponse, next: (error?: unknown) => void) => {
+    const url = getRawFileRequestUrl(req)
+    if (!url) {
       return next()
     }
 
-    const path = getLlmsRequestPath(req.url, getSiteConfig()?.site?.base ?? fallbackBase)
+    const path = getLlmsRequestPath(url, getSiteConfig()?.site?.base ?? fallbackBase)
     if (path === undefined) {
       return next()
     }
