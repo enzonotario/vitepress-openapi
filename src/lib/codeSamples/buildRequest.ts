@@ -24,21 +24,20 @@ function joinParameterArray(value: readonly unknown[]): string {
   }).join(',')
 }
 
+type ParameterValueResolver = (parameter: OpenAPIV3.ParameterObject) => ParameterValue | undefined
+
 function processParameters(
-  variables: Record<string, ParameterValue>,
+  valueOf: ParameterValueResolver,
   parameters: OpenAPIV3.ParameterObject[],
   callback: (key: string, value: string) => void,
 ) {
+  // Last parameter wins on duplicate names within a location.
   const parametersByName = new Map(
     parameters.flatMap(parameter => parameter.name ? [[parameter.name, parameter] as const] : []),
   )
 
-  for (const [key, rawValue] of Object.entries(variables)) {
-    const parameter = parametersByName.get(key)
-    if (!parameter) {
-      continue
-    }
-
+  for (const [key, parameter] of parametersByName) {
+    const rawValue = valueOf(parameter)
     const coerced = coercePlaygroundParameterValue(parameter.schema, rawValue)
     // Only arrays come from the JSON text field. Leave objects on the old path.
     const value = Array.isArray(coerced) ? coerced : rawValue
@@ -49,9 +48,9 @@ function processParameters(
   }
 }
 
-function getPath(variables: Record<string, ParameterValue>, pathParameters: OpenAPIV3.ParameterObject[], path: string = '') {
+function getPath(valueOf: ParameterValueResolver, pathParameters: OpenAPIV3.ParameterObject[], path: string = '') {
   let resolvedPath = path
-  processParameters(variables, pathParameters, (key, value) => {
+  processParameters(valueOf, pathParameters, (key, value) => {
     resolvedPath = resolvedPath.replace(`{${key}}`, value)
   })
   return resolvedPath
@@ -59,7 +58,7 @@ function getPath(variables: Record<string, ParameterValue>, pathParameters: Open
 
 function getHeaders(
   headers: Record<string, string> | Headers | undefined,
-  variables: Record<string, ParameterValue>,
+  valueOf: ParameterValueResolver,
   headerParameters: OpenAPIV3.ParameterObject[],
   authorizations: PlaygroundSecurityScheme | PlaygroundSecurityScheme[],
 ): Record<string, string> {
@@ -77,7 +76,7 @@ function getHeaders(
     }
   }
 
-  processParameters(variables, headerParameters, (key: string, value: string) => {
+  processParameters(valueOf, headerParameters, (key: string, value: string) => {
     resolvedHeaders.set(key.toLowerCase(), value)
   })
 
@@ -287,7 +286,7 @@ function serializeParameter(
 }
 
 function getQuery(
-  variables: Record<string, ParameterValue>,
+  valueOf: ParameterValueResolver,
   queryParameters: OpenAPIV3.ParameterObject[],
 ): Record<string, string | string[]> {
   let query: Record<string, string | string[]> = {}
@@ -297,7 +296,7 @@ function getQuery(
       return
     }
 
-    const rawValue = variables[parameter.name]
+    const rawValue = valueOf(parameter)
     const coerced = coercePlaygroundParameterValue(parameter.schema, rawValue)
     // Arrays are edited as JSON text. Objects stay on the existing path.
     const value = (Array.isArray(coerced) ? coerced : rawValue) as ParameterValue
@@ -318,12 +317,12 @@ function getQuery(
 }
 
 function getCookies(
-  variables: Record<string, ParameterValue>,
+  valueOf: ParameterValueResolver,
   cookieParameters: OpenAPIV3.ParameterObject[],
 ) {
   const cookies: Record<string, string> = {}
 
-  processParameters(variables, cookieParameters, (key: string, value: string) => {
+  processParameters(valueOf, cookieParameters, (key: string, value: string) => {
     cookies[key] = value
   })
 
@@ -388,6 +387,14 @@ export function getAuthorizationsCookies(authorizations: PlaygroundSecuritySchem
   return cookies
 }
 
+function getExampleAsVariable(parameter: OpenAPIV3.ParameterObject): string | undefined {
+  const example = getPropertyExample(parameter)
+  if (example == null) {
+    return undefined
+  }
+  return typeof example === 'object' ? JSON.stringify(example) : String(example)
+}
+
 function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variables: Record<string, string>): Record<string, string> {
   parameters.forEach((parameter) => {
     if (!parameter.name) {
@@ -398,17 +405,22 @@ function setExamplesAsVariables(parameters: OpenAPIV3.ParameterObject[], variabl
       return
     }
 
-    const example = getPropertyExample(parameter)
-    if (example != null) {
-      if (typeof example === 'object' && example !== null) {
-        variables[parameter.name] = JSON.stringify(example)
-      } else {
-        variables[parameter.name] = String(example)
-      }
+    const example = getExampleAsVariable(parameter)
+    if (example !== undefined) {
+      variables[parameter.name] = example
     }
   })
 
   return variables
+}
+
+/**
+ * Whether a body should be sent. Falsy JSON values (`false`, `0`) are valid bodies,
+ * but `''` is not: the playground uses it (and `null`) as the "no body" placeholder
+ * when an operation has no example, and it must not produce an empty `--data`.
+ */
+export function hasRequestBody(body: unknown): boolean {
+  return body !== undefined && body !== null && body !== ''
 }
 
 export function buildRequest({
@@ -424,6 +436,13 @@ export function buildRequest({
   cookies = {},
   contentType = undefined,
 }: Partial<OARequest>): OARequest {
+  // Values set by the caller (e.g. the playground) are keyed by name. Examples are resolved
+  // per parameter instead, so `id` in path and `id` in header keep their own examples.
+  const providedVariables: Record<string, ParameterValue> = { ...variables }
+  const valueOf: ParameterValueResolver = parameter => parameter.name && providedVariables[parameter.name] !== undefined
+    ? providedVariables[parameter.name]
+    : getExampleAsVariable(parameter)
+
   const resolvedVariables = setExamplesAsVariables(parameters, variables)
 
   const pathParameters = parameters.filter(parameter => parameter.in === 'path')
@@ -446,24 +465,24 @@ export function buildRequest({
     })
   }
 
-  const resolvedPath = getPath(resolvedVariables, pathParameters, path)
+  const resolvedPath = getPath(valueOf, pathParameters, path)
   const resolveMethod = (method?.toUpperCase() || 'GET') as OpenAPIV3.HttpMethods
 
   const resolvedQuery = {
-    ...getQuery(resolvedVariables, queryParameters),
+    ...getQuery(valueOf, queryParameters),
     ...getAuthorizationsQuery(authorizations),
   }
 
   const resolvedHeaders = getHeaders(
     headers,
-    resolvedVariables,
+    valueOf,
     headerParameters,
     authorizations,
   )
 
   const resolvedCookies = {
     ...(cookies || {}),
-    ...getCookies(resolvedVariables, cookieParameters),
+    ...getCookies(valueOf, cookieParameters),
     ...getAuthorizationsCookies(authorizations),
   }
 
@@ -471,9 +490,11 @@ export function buildRequest({
 
   const urlInstance = url ? new URL(url) : (baseUrl ? new URL(`${baseUrl}${resolvedPath}`) : new URL(resolvedPath, 'http://localhost'))
 
+  const bodyHasValue = hasRequestBody(body)
+
   if (contentType && !(body instanceof FormData)) {
     resolvedHeaders['content-type'] = contentType
-  } else if (body && !resolvedHeaders['content-type'] && !(body instanceof FormData)) {
+  } else if (bodyHasValue && !resolvedHeaders['content-type'] && !(body instanceof FormData)) {
     resolvedHeaders['content-type'] = 'application/json'
   }
 
@@ -490,7 +511,7 @@ export function buildRequest({
       'DELETE',
       'OPTIONS',
       'TRACE',
-    ].includes(resolveMethod) && body
+    ].includes(resolveMethod) && bodyHasValue
       ? body
       : undefined,
     variables: resolvedVariables,

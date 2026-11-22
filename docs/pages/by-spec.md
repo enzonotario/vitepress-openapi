@@ -65,3 +65,4 @@ For specs with hundreds of operations, the page itself gets heavy (HTML size and
 <OASpec :lazy-rendering="true" />
 ```
 
+If you only need static, searchable pages (or docs for AI agents), you can also [generate plain Markdown](/pages/markdown) at build time.

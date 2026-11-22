@@ -5,7 +5,7 @@ import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfigWithTheme } from 'vitepress'
-import { useSidebar } from 'vitepress-openapi'
+import { generateLlmsFiles, llmsDevServer, useSidebar } from 'vitepress-openapi'
 import { examplesPages, testsPages } from '../pages'
 import spec from '../public/openapi.json' with { type: 'json' }
 import { sidebarExamplesConfigs } from '../sidebar-examples-configs'
@@ -19,6 +19,30 @@ const gaId = process.env.GA_ID || 'G-TEST'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const rootDir = resolve(__dirname, '../..')
+
+// Markdown for LLMs next to each page (docs/pages/markdown.md): `buildEnd` writes the files,
+// `llmsDevServer` serves them in dev. All entries are merged into one llms.txt.
+const llms = [
+  {
+    spec,
+    operationRoute: 'example/operations/{operationId}',
+    specRoutes: ['example/one-page'],
+    introductionRoute: 'example/introduction',
+    // `[tag].paths.js` uses the tag name as is, which is the default `tagParam`.
+    tagRoute: 'example/tags/{tag}',
+    openapiUrl: '/openapi.json',
+  },
+  {
+    // `tests/[testSlug].paths.js` passes each test spec as a route param.
+    title: 'Tests',
+    resolvePage: ({ route, params }) => route.startsWith('tests/') && params?.spec ? { spec: params.spec } : undefined,
+  },
+  {
+    // `examples/[exampleSlug].paths.js` passes a remote spec URL. Failed fetches skip the page.
+    title: 'Examples',
+    resolvePage: ({ route, params }) => route.startsWith('examples/') && params?.specUrl ? { specUrl: params.specUrl } : undefined,
+  },
+]
 
 export default defineConfigWithTheme({
   title: 'VitePress OpenAPI',
@@ -72,6 +96,10 @@ export default defineConfigWithTheme({
                 {
                   text: 'By Tag',
                   link: '/pages/by-tag',
+                },
+                {
+                  text: 'Markdown & llms.txt',
+                  link: '/pages/markdown',
                 },
                 {
                   text: 'Introduction',
@@ -317,7 +345,9 @@ export default defineConfigWithTheme({
   ],
   // Build the standalone Vue demo (e2e/local/standalone) into /standalone/ of the docs site.
   // VitePress empties outDir before building, so this runs after it.
-  buildEnd(siteConfig) {
+  async buildEnd(siteConfig) {
+    await generateLlmsFiles(siteConfig, llms)
+
     const standaloneDir = resolve(rootDir, 'e2e/local/standalone')
     // Run Vite's own bin with this Node: no shell or `pnpm.cmd` shim needed on Windows.
     const vitePackage = createRequire(resolve(standaloneDir, 'package.json')).resolve('vite/package.json')
@@ -332,7 +362,7 @@ export default defineConfigWithTheme({
     ], { cwd: standaloneDir, stdio: 'inherit' })
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), llmsDevServer(llms)],
     resolve: {
       alias: {
         '@': resolve(rootDir, 'src'),

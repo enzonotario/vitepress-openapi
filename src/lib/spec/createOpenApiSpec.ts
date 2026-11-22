@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OpenAPIDocument, ParsedOpenAPI, ParsedPaths } from '../../types'
-import { httpVerbs } from '../../index'
+import { httpVerbs } from '../constants'
 
 export interface OpenApiSpecInstance {
   spec: OpenAPIDocument

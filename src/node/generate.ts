@@ -1,0 +1,207 @@
+import type { GenerateMarkdownFilesOptions, MarkdownFile } from '../lib/markdown/generateMarkdown'
+import type { OpenAPIDocument } from '../types'
+import { generateMarkdownFiles } from '../lib/markdown/generateMarkdown'
+import { parseSpec } from '../lib/utils/parseSpec'
+
+// The package root entry is also bundled for the browser (e.g. `useSidebar` in a theme
+// component). Non-literal specifiers keep bundlers from resolving Node built-ins there.
+function importNodeModule(specifier: string): Promise<any> {
+  return import(/* @vite-ignore */ specifier)
+}
+
+export async function loadNodeModules() {
+  const [fs, path, process] = await Promise.all([
+    importNodeModule('node:fs/promises') as Promise<typeof import('node:fs/promises')>,
+    importNodeModule('node:path') as Promise<typeof import('node:path')>,
+    importNodeModule('node:process').then(module => module.default) as Promise<typeof import('node:process')>,
+  ])
+  return { fs, path, process }
+}
+
+type NodeModules = Awaited<ReturnType<typeof loadNodeModules>>
+
+export interface SpecSource {
+  /** OpenAPI document (object, or JSON/YAML string). */
+  spec?: OpenAPIDocument | string
+  /** Path to a local JSON/YAML OpenAPI document. */
+  specPath?: string
+  /** URL of a JSON/YAML OpenAPI document. */
+  specUrl?: string
+}
+
+export interface GenerateMarkdownOptions extends GenerateMarkdownFilesOptions, SpecSource {
+  /** Output directory. Created if missing. */
+  outDir: string
+  /**
+   * Remove the output directory before writing.
+   * @default false
+   */
+  clean?: boolean
+}
+
+/**
+ * Loads an OpenAPI document, generates Markdown files (see `generateMarkdownFiles`)
+ * and writes them to `outDir`. Returns the absolute paths of the written files.
+ */
+export async function generateMarkdown(options: GenerateMarkdownOptions): Promise<string[]> {
+  const { spec, specPath, specUrl, outDir, clean = false, ...generateOptions } = options
+
+  if (!outDir) {
+    throw new Error('[vitepress-openapi] `outDir` is required.')
+  }
+
+  const modules = await loadNodeModules()
+  const { fs, path, process } = modules
+  const { resolve } = path
+
+  const document = await loadSpec({ spec, specPath, specUrl }, modules)
+  const files = await generateMarkdownFiles(document, generateOptions)
+  const root = resolve(outDir)
+
+  // After `clean`, write through the checked canonical path: if `outDir` is a symlink,
+  // its target was removed and the link dangles until the directory is recreated.
+  let writeRoot = root
+  if (clean) {
+    // Compare canonical paths, so a symlink can't point `clean` at cwd or one of its parents.
+    writeRoot = await canonicalPath(root, fs, path)
+    assertSafeToClean(writeRoot, await fs.realpath(process.cwd()), path)
+    await fs.rm(writeRoot, { recursive: true, force: true })
+  }
+
+  return writeFilesSafely(writeRoot, files, modules)
+}
+
+/**
+ * Writes `files` (paths relative to `root`) without leaving `root`: targets must stay inside it,
+ * parent directories must resolve inside it, and symlinked files are never followed.
+ * Returns the absolute paths of the written files.
+ */
+export async function writeFilesSafely(root: string, files: MarkdownFile[], { fs, path }: NodeModules): Promise<string[]> {
+  const { basename, dirname, join, resolve } = path
+
+  await fs.mkdir(root, { recursive: true })
+  const realRoot = await fs.realpath(root)
+
+  const written: string[] = []
+  for (const file of files) {
+    const target = resolve(root, file.path)
+    if (!isInside(root, target, path)) {
+      throw new Error(`[vitepress-openapi] Refusing to write outside of outDir: ${file.path}`)
+    }
+
+    // Don't follow symlinks: parent directories must resolve inside outDir, and the file itself can't be a link.
+    await fs.mkdir(dirname(target), { recursive: true })
+    const realParent = await fs.realpath(dirname(target))
+    if (!isInside(realRoot, realParent, path)) {
+      throw new Error(`[vitepress-openapi] Refusing to write through a symlink outside of outDir: ${file.path}`)
+    }
+
+    await writeFileNoFollow(join(realParent, basename(target)), file.content, file.path, fs)
+    written.push(target)
+  }
+
+  return written
+}
+
+/**
+ * Writes a file without following a symlink at its path. `O_NOFOLLOW` makes the check
+ * atomic with the open; where it doesn't exist (Windows), fall back to `lstat`.
+ */
+async function writeFileNoFollow(
+  target: string,
+  content: string,
+  label: string,
+  fs: typeof import('node:fs/promises'),
+): Promise<void> {
+  const symlinkError = () => new Error(`[vitepress-openapi] Refusing to overwrite a symlink: ${label}`)
+  const { O_CREAT, O_NOFOLLOW, O_TRUNC, O_WRONLY } = fs.constants
+
+  if (O_NOFOLLOW === undefined) {
+    const stats = await fs.lstat(target).catch(() => null)
+    if (stats?.isSymbolicLink()) {
+      throw symlinkError()
+    }
+    await fs.writeFile(target, content, 'utf-8')
+    return
+  }
+
+  let handle: Awaited<ReturnType<typeof fs.open>>
+  try {
+    handle = await fs.open(target, O_WRONLY | O_CREAT | O_TRUNC | O_NOFOLLOW)
+  }
+  catch (error) {
+    throw (error as NodeJS.ErrnoException).code === 'ELOOP' ? symlinkError() : error
+  }
+
+  try {
+    await handle.writeFile(content, 'utf-8')
+  }
+  finally {
+    await handle.close()
+  }
+}
+
+export async function loadSpec({ spec, specPath, specUrl }: SpecSource, { fs, path }: NodeModules): Promise<OpenAPIDocument> {
+  if (spec) {
+    return parseSpec(spec)
+  }
+
+  if (specPath) {
+    return parseSpec(await fs.readFile(path.resolve(specPath), 'utf-8'))
+  }
+
+  if (specUrl) {
+    const response = await fetch(specUrl)
+    if (!response.ok) {
+      throw new Error(`[vitepress-openapi] Could not fetch ${specUrl}: ${response.status} ${response.statusText}`)
+    }
+    return parseSpec(await response.text())
+  }
+
+  throw new Error('[vitepress-openapi] One of `spec`, `specPath` or `specUrl` is required.')
+}
+
+/**
+ * Whether `child` is `parent` or inside it. Only `..` or `../…` count as upward,
+ * so a directory named `..project` is still inside.
+ */
+function isInside(parent: string, child: string, { isAbsolute, relative, sep }: typeof import('node:path')): boolean {
+  const fromParent = relative(parent, child)
+  const isUpward = fromParent === '..' || fromParent.startsWith(`..${sep}`)
+  return !isUpward && !isAbsolute(fromParent)
+}
+
+/**
+ * `realpath` of `target`, or of its nearest existing ancestor joined with the missing segments.
+ */
+async function canonicalPath(
+  target: string,
+  fs: typeof import('node:fs/promises'),
+  { basename, dirname, join }: typeof import('node:path'),
+): Promise<string> {
+  const missing: string[] = []
+  let current = target
+  while (true) {
+    try {
+      return join(await fs.realpath(current), ...missing)
+    }
+    catch (error) {
+      const parent = dirname(current)
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT' || parent === current) {
+        throw error
+      }
+      missing.unshift(basename(current))
+      current = parent
+    }
+  }
+}
+
+/**
+ * Guards `clean` against wiping the file system root, the working directory or one of its parents.
+ * Both paths must be canonical.
+ */
+function assertSafeToClean(dir: string, cwd: string, path: typeof import('node:path')): void {
+  if (dir === path.parse(dir).root || isInside(dir, cwd, path)) {
+    throw new Error(`[vitepress-openapi] Refusing to clean ${dir}: use a dedicated output directory.`)
+  }
+}

@@ -38,6 +38,9 @@
   "main": "./dist/vitepress-openapi.node.es.js",
   "module": "./dist/vitepress-openapi.node.es.js",
   "types": "./dist/types/src/index.d.ts",
+  "bin": {
+    "vitepress-openapi": "./dist/vitepress-openapi.cli.es.js"
+  },
   "files": [
     "dist",
     "src"
