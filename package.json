@@ -62,7 +62,8 @@
     "e2e:local:standalone": "cd e2e/local/standalone && vite --port 4174 --strictPort",
     "e2e:local:test": "playwright test local",
     "e2e:update-snapshots": "node scripts/update-snapshots.js",
-    "e2e:staging:test": "playwright test staging"
+    "e2e:staging:test": "playwright test staging",
+    "test:packed": "pnpm build && node scripts/test-packed.mjs"
   },
   "peerDependencies": {
     "vitepress": ">=1.0.0",
