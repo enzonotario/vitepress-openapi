@@ -8,8 +8,10 @@ export function getMissingPathParameters(path: string, url: URL | string): strin
     return []
   }
 
-  const pathname = safeDecode(new URL(String(url)).pathname)
-  return [...new Set(names)].filter(name => pathname.includes(`{${name}}`))
+  const pathname = new URL(String(url)).pathname
+  // The URL encodes braces. Restoring only them keeps detection working when another escape is malformed.
+  const candidates = [pathname.replace(/%7B/gi, '{').replace(/%7D/gi, '}'), safeDecode(pathname)]
+  return [...new Set(names)].filter(name => candidates.some(candidate => candidate.includes(`{${name}}`)))
 }
 
 function safeDecode(value: string): string {

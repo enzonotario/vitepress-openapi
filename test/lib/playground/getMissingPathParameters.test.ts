@@ -14,6 +14,14 @@ describe('getMissingPathParameters', () => {
     expect(getMissingPathParameters('/users/{userId}', new URL('https://api.example.com/users/{userId}'))).toEqual(['userId'])
   })
 
+  it('detects encoded placeholders when another escape is malformed', () => {
+    expect(getMissingPathParameters('/files/{name}/{id}', 'https://api.example.com/files/100%/{id}')).toEqual(['id'])
+  })
+
+  it('detects placeholders whose name needs decoding', () => {
+    expect(getMissingPathParameters('/items/{item id}', 'https://api.example.com/items/{item id}')).toEqual(['item id'])
+  })
+
   it('detects placeholders inside a segment', () => {
     expect(getMissingPathParameters('/files/{name}.json', 'https://api.example.com/files/{name}.json')).toEqual(['name'])
   })
