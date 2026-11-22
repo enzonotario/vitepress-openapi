@@ -2,7 +2,9 @@ import type { Awaitable } from 'vitepress'
 import type { EnhanceAppContext, Theme } from 'vitepress/client'
 import type { Component } from 'vue'
 import type { OpenApiSpecInstance } from './lib/spec/createOpenApiSpec'
-import { useData } from 'vitepress'
+// A namespace import: Node loads this file directly in VitePress' SSR build (`vitepress-openapi` is external
+// there), and resolves `vitepress` to its Node entry, which has no `useData`. A named import would throw.
+import * as vitepress from 'vitepress'
 import { setIsDarkSource } from './composables/useTheme'
 import { VOpenapi } from './vue'
 
@@ -19,8 +21,11 @@ interface VPTheme {
 export const theme = {
   enhanceApp({ app }) {
     // Follow VitePress' resolved appearance, including 'force-dark' and 'force-auto'.
+    const { useData } = vitepress as Partial<typeof vitepress>
     try {
-      setIsDarkSource(app.runWithContext(() => useData()).isDark)
+      if (useData) {
+        setIsDarkSource(app.runWithContext(() => useData()).isDark)
+      }
     }
     catch {
       // Not inside a VitePress app: keep the useDark fallback.
