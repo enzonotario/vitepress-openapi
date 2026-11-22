@@ -92,6 +92,11 @@ const request = props.shouldBuildRequest
         : undefined,
       variables: {},
       contentType: defaultRequestContentType,
+      // The playground rebuilds the request with these headers, but it is not mounted for operations without
+      // parameters, request body or security schemes.
+      headers: {
+        ...(themeConfig.getCodeSamplesDefaultHeaders() || {}),
+      },
     })
   : undefined
 
