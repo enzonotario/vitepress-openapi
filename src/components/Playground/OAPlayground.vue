@@ -2,8 +2,9 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationData } from '@/lib/operation/operationData'
 import { useI18n } from '@byjohann/vue-i18n'
-import { computed, inject, onBeforeUnmount } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
+import { getMissingPathParameters } from '@/lib/playground/getMissingPathParameters'
 import { usePlayground } from '../../composables/usePlayground'
 import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'
@@ -86,8 +87,21 @@ const examples = computed(() => {
   return props.requestBody?.content?.[selectedContentTypeValue]?.examples
 })
 
+// Path parameters left empty: their `{name}` placeholder would be sent as a literal path segment.
+const missingPathParameters = ref<string[]>([])
+
+watch(() => operationData.playground.request.value, () => {
+  missingPathParameters.value = []
+})
+
 async function onSubmit() {
-  if (!operationData.playground.request.value) {
+  const request = operationData.playground.request.value
+  if (!request) {
+    return
+  }
+
+  missingPathParameters.value = getMissingPathParameters(props.path, request.url)
+  if (missingPathParameters.value.length) {
     return
   }
 
@@ -137,6 +151,14 @@ onBeforeUnmount(() => {
       <Button variant="primary" @click="onSubmit">
         {{ t('Try it out') }}
       </Button>
+
+      <p
+        v-if="missingPathParameters.length"
+        role="alert"
+        class="text-sm text-destructive"
+      >
+        {{ t('playground.missingPathParameters', { names: missingPathParameters.join(', ') }) }}
+      </p>
 
       <OAPlaygroundResponse
         v-if="response || loading"
