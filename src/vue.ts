@@ -7,6 +7,7 @@ import * as components from './components'
 import { useOpenapi } from './composables/useOpenapi'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 import { DOC_ROOT_KEY } from './lib/docRoot'
+import { nestMessages } from './lib/i18n/nestMessages'
 import { setupCopyCode } from './lib/utils/copyCode'
 
 export interface VOpenapiOptions {
@@ -46,7 +47,9 @@ export const VOpenapi: Plugin<[VOpenapiOptions?]> = {
 
     const i18n = createI18n({
       defaultLocale: i18nConfig.locale?.value || 'en',
-      messages: i18nConfig.messages || {},
+      messages: Object.fromEntries(
+        Object.entries(i18nConfig.messages || {}).map(([locale, messages]) => [locale, nestMessages(messages)]),
+      ),
     })
 
     app.use(i18n)

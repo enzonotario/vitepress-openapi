@@ -82,5 +82,6 @@
   "Click to set in playground": "Clique para definir no playground",
   "Failed to load the JSON editor.": "Não foi possível carregar o editor JSON.",
   "Failed to download the OpenAPI Document.": "Não foi possível baixar o Documento OpenAPI.",
-  "Reload page": "Recarregar página"
+  "Reload page": "Recarregar página",
+  "playground.missingPathParameters": "Preencha os parâmetros de caminho: {names}"
 }

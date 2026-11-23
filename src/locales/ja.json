@@ -82,5 +82,6 @@
   "Click to set in playground": "クリックしてプレイグラウンドに設定",
   "Failed to load the JSON editor.": "JSON エディターを読み込めませんでした。",
   "Failed to download the OpenAPI Document.": "OpenAPI ドキュメントをダウンロードできませんでした。",
-  "Reload page": "ページを再読み込み"
+  "Reload page": "ページを再読み込み",
+  "playground.missingPathParameters": "パスパラメータを入力してください: {names}"
 }

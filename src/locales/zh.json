@@ -82,5 +82,6 @@
   "Click to set in playground": "点击在 Playground 中设置",
   "Failed to load the JSON editor.": "无法加载 JSON 编辑器。",
   "Failed to download the OpenAPI Document.": "无法下载 OpenAPI 文档。",
-  "Reload page": "重新加载页面"
+  "Reload page": "重新加载页面",
+  "playground.missingPathParameters": "请填写路径参数：{names}"
 }

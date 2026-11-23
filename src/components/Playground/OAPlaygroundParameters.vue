@@ -191,7 +191,9 @@ watch([variables, authorizations, body, selectedServer, enabledParameters], () =
       ...(useTheme().getCodeSamplesDefaultHeaders() || {}),
     },
   })
-}, { deep: true })
+  // Immediate: the initial request comes from the operation, without the playground's values (examples behavior,
+  // default headers, selected server) until one of them changes.
+}, { deep: true, immediate: true })
 
 watch(selectedSchemeId, (schemeId) => {
   const selectedScheme = props.securityUi.find((scheme: SecurityUiItem) => scheme.id === schemeId)
