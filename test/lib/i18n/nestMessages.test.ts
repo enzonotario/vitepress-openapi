@@ -30,4 +30,13 @@ describe('nestMessages', () => {
     expect(translate(messages, 'operation.badgePrefix.operationId')).toBe('ID: ')
     expect(translate(messages, 'operation.badgePrefix.method')).toBe('Method: ')
   })
+
+  it('does not write to Object.prototype', () => {
+    const toString = Object.prototype.toString
+    const nested = nestMessages({ '__proto__.toString': 'translated', 'constructor.prototype.polluted': 'yes' })
+    expect(Object.prototype.toString).toBe(toString)
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined()
+    expect(translate({ '__proto__.toString': 'translated' }, '__proto__.toString')).toBe('translated')
+    expect(Object.keys(nested)).toEqual(['__proto__', 'constructor'])
+  })
 })
