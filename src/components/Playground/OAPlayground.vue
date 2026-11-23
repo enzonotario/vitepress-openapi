@@ -155,7 +155,7 @@ onBeforeUnmount(() => {
       <p
         v-if="missingPathParameters.length"
         role="alert"
-        class="text-sm text-destructive"
+        class="my-0! text-sm text-destructive"
       >
         {{ t('playground.missingPathParameters', { names: missingPathParameters.join(', ') }) }}
       </p>
