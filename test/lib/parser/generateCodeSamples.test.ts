@@ -39,7 +39,7 @@ describe('generateCodeSamples apiKey authorizations', () => {
     expect(source).not.toContain('Managementkey:')
   })
 
-  it('renders cookie apiKey schemes as a Cookie request header in JS samples', async () => {
+  it('renders cookie apiKey schemes via document.cookie and credentials include in JS samples', async () => {
     const spec = await parseOpenapi().parseAsync({
       spec: {
         openapi: '3.0.0',
@@ -68,8 +68,9 @@ describe('generateCodeSamples apiKey authorizations', () => {
 
     const source = getJsSample(spec.paths!['/api/v2/torrents/info'].get as any)
 
-    expect(source).toMatch(/['"]?Cookie['"]?\s*:/)
+    expect(source).toContain('document.cookie')
     expect(source).toContain('SID=')
+    expect(source).toContain(`credentials: 'include'`)
     expect(source).not.toContain('Set-Cookie')
   })
 })

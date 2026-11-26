@@ -586,11 +586,9 @@ All descriptions *can* contain ~~tons of text~~ **Markdown**. [If GitHub support
             "icon": ".php",
             "label": "PHP",
             "lang": "php",
-            "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1");
+            "source": "$ch = curl_init('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists?limit=10&offset=1');
 
-curl_exec($ch);
-
-curl_close($ch);",
+curl_exec($ch);",
             "target": "php",
           },
           {
@@ -1035,7 +1033,7 @@ The response includes:
             "icon": ".php",
             "label": "PHP",
             "lang": "php",
-            "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists");
+            "source": "$ch = curl_init('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists');
 
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer <token>', 'Content-Type: application/json']);
@@ -1047,9 +1045,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'band' => 'Sui Generis'
 ]));
 
-curl_exec($ch);
-
-curl_close($ch);",
+curl_exec($ch);",
             "target": "php",
           },
           {
@@ -1776,14 +1772,12 @@ Possible Reasons
             "icon": ".php",
             "label": "PHP",
             "lang": "php",
-            "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
+            "source": "$ch = curl_init('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1');
 
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer <token>']);
 
-curl_exec($ch);
-
-curl_close($ch);",
+curl_exec($ch);",
             "target": "php",
           },
           {
@@ -2124,11 +2118,9 @@ Developers should use this information to understand what went wrong and how to 
             "icon": ".php",
             "label": "PHP",
             "lang": "php",
-            "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
+            "source": "$ch = curl_init('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1');
 
-curl_exec($ch);
-
-curl_close($ch);",
+curl_exec($ch);",
             "target": "php",
           },
           {
@@ -2528,7 +2520,7 @@ Possible Reasons
             "icon": ".php",
             "label": "PHP",
             "lang": "php",
-            "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1");
+            "source": "$ch = curl_init('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1');
 
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer <token>', 'Content-Type: application/json']);
@@ -2540,9 +2532,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'band' => 'Sui Generis'
 ]));
 
-curl_exec($ch);
-
-curl_close($ch);",
+curl_exec($ch);",
             "target": "php",
           },
           {
@@ -3240,11 +3230,9 @@ Possible Reasons
             "icon": ".php",
             "label": "PHP",
             "lang": "php",
-            "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1");
+            "source": "$ch = curl_init('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums?limit=10&offset=1');
 
-curl_exec($ch);
-
-curl_close($ch);",
+curl_exec($ch);",
             "target": "php",
           },
           {
@@ -3654,7 +3642,7 @@ The response includes:
             "icon": ".php",
             "label": "PHP",
             "lang": "php",
-            "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums");
+            "source": "$ch = curl_init('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/artists/1/albums');
 
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer <token>', 'Content-Type: application/json']);
@@ -3665,9 +3653,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'image' => 'https://cdn.rock-legends.com/photos/la-maquina.jpg'
 ]));
 
-curl_exec($ch);
-
-curl_close($ch);",
+curl_exec($ch);",
             "target": "php",
           },
           {
@@ -4308,7 +4294,7 @@ Possible Reasons
             "icon": ".php",
             "label": "PHP",
             "lang": "php",
-            "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/login");
+            "source": "$ch = curl_init('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/login');
 
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -4317,9 +4303,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'password' => 'string'
 ]));
 
-curl_exec($ch);
-
-curl_close($ch);",
+curl_exec($ch);",
             "target": "php",
           },
           {
@@ -4925,7 +4909,7 @@ Possible Reasons
             "icon": ".php",
             "label": "PHP",
             "lang": "php",
-            "source": "$ch = curl_init("https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup");
+            "source": "$ch = curl_init('https://stoplight.io/mocks/enzonotario/argentine-rock/122547792/api/v1/user/signup');
 
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -4935,9 +4919,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'password' => 'i-love-rock'
 ]));
 
-curl_exec($ch);
-
-curl_close($ch);",
+curl_exec($ch);",
             "target": "php",
           },
           {

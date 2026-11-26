@@ -29,18 +29,18 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '@': resolve(import.meta.dirname, 'src'),
     },
   },
   build: {
     target: 'es2019',
     lib: {
       entry: {
-        client: resolve(__dirname, 'src/client.ts'),
-        vue: resolve(__dirname, 'src/vue.ts'),
-        theme: resolve(__dirname, 'src/theme.ts'),
-        node: resolve(__dirname, 'src/index.ts'),
-        cli: resolve(__dirname, 'src/cli.ts'),
+        client: resolve(import.meta.dirname, 'src/client.ts'),
+        vue: resolve(import.meta.dirname, 'src/vue.ts'),
+        theme: resolve(import.meta.dirname, 'src/theme.ts'),
+        node: resolve(import.meta.dirname, 'src/index.ts'),
+        cli: resolve(import.meta.dirname, 'src/cli.ts'),
       },
       name: 'vitepress-openapi',
       fileName: (format: string, entryName: string) => `vitepress-openapi.${entryName}.${format}.js`,
