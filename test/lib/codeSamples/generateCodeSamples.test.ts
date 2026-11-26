@@ -248,11 +248,9 @@ describe('php', () => {
       method: 'GET',
     })
     const result = await generateCodeSample(langConfigs.php, request)
-    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
+    expect(result).toBe(`$ch = curl_init('https://api.example.com/resource');
 
-curl_exec($ch);
-
-curl_close($ch);`)
+curl_exec($ch);`)
   })
 
   it('generates PHP code for POST request with body', async () => {
@@ -263,7 +261,7 @@ curl_close($ch);`)
       body: { key: 'value' },
     })
     const result = await generateCodeSample(langConfigs.php, request)
-    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
+    expect(result).toBe(`$ch = curl_init('https://api.example.com/resource');
 
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -271,9 +269,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'key' => 'value'
 ]));
 
-curl_exec($ch);
-
-curl_close($ch);`)
+curl_exec($ch);`)
   })
 
   it('generates PHP code for POST request with deep body', async () => {
@@ -284,7 +280,7 @@ curl_close($ch);`)
       body: { key: { nested: 'value', nestedArray: [1, 2, { deep: 'value' }] } },
     })
     const result = await generateCodeSample(langConfigs.php, request)
-    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
+    expect(result).toBe(`$ch = curl_init('https://api.example.com/resource');
 
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -301,9 +297,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   ]
 ]));
 
-curl_exec($ch);
-
-curl_close($ch);`)
+curl_exec($ch);`)
   })
 
   it('generates PHP code with headers', async () => {
@@ -314,13 +308,11 @@ curl_close($ch);`)
       headers: { Authorization: 'Bearer token' },
     })
     const result = await generateCodeSample(langConfigs.php, request)
-    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource");
+    expect(result).toBe(`$ch = curl_init('https://api.example.com/resource');
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer token']);
 
-curl_exec($ch);
-
-curl_close($ch);`)
+curl_exec($ch);`)
   })
 
   it('generates PHP code with query parameters', async () => {
@@ -332,11 +324,9 @@ curl_close($ch);`)
       variables: { search: 'query' },
     })
     const result = await generateCodeSample(langConfigs.php, request)
-    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource?search=query");
+    expect(result).toBe(`$ch = curl_init('https://api.example.com/resource?search=query');
 
-curl_exec($ch);
-
-curl_close($ch);`)
+curl_exec($ch);`)
   })
 
   it('generates PHP code with all parameters', async () => {
@@ -350,7 +340,7 @@ curl_close($ch);`)
       variables: { search: 'query' },
     })
     const result = await generateCodeSample(langConfigs.php, request)
-    expect(result).toBe(`$ch = curl_init("https://api.example.com/resource?search=query");
+    expect(result).toBe(`$ch = curl_init('https://api.example.com/resource?search=query');
 
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -358,9 +348,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
   'key' => 'value'
 ]));
 
-curl_exec($ch);
-
-curl_close($ch);`)
+curl_exec($ch);`)
   })
 })
 
@@ -546,7 +534,7 @@ describe('apiKey authorizations', () => {
     expect(result).toContain(`'X-Management-Key': 'managementKey'`)
   })
 
-  it('renders cookie apiKey as Cookie header, not Set-Cookie, in javascript samples', async () => {
+  it('renders cookie apiKey via document.cookie and credentials include, not Set-Cookie, in javascript samples', async () => {
     const request = buildRequest({
       baseUrl: 'http://localhost:5225',
       path: '/api/v2/torrents/info',
@@ -561,8 +549,9 @@ describe('apiKey authorizations', () => {
 
     const result = await generateCodeSample(langConfigs.javascript, request)
 
-    expect(result).toMatch(/['"]?Cookie['"]?\s*:/)
+    expect(result).toContain('document.cookie')
     expect(result).toContain('SID=SID')
+    expect(result).toContain(`credentials: 'include'`)
     expect(result).not.toContain('Set-Cookie')
   })
 
