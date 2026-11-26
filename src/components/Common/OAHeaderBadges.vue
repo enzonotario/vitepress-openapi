@@ -1,6 +1,6 @@
 <script setup>
-import { useI18n } from '@byjohann/vue-i18n'
 import { computed, defineProps } from 'vue'
+import { useI18n } from '@/lib/i18n'
 import { useTheme } from '../../composables/useTheme'
 import { Badge } from '../ui/badge'
 

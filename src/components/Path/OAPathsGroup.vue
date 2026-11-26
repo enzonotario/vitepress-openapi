@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { OperationNestedSlot, OperationSlot, PathsGroupView } from '../../types'
-import { useI18n } from '@byjohann/vue-i18n'
 import { computed, nextTick, ref } from 'vue'
+import { useI18n } from '@/lib/i18n'
 import { scrollToHash } from '@/lib/utils/utils'
 import { useTheme } from '../../composables/useTheme'
 import { useLazyRendering } from '../../lib/spec/lazyRendering'

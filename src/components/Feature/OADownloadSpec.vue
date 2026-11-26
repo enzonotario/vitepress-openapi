@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useI18n } from '@byjohann/vue-i18n'
 import { ref } from 'vue'
+import { useI18n } from '@/lib/i18n'
 import OALoadError from '../Common/OALoadError.vue'
 import { Badge } from '../ui/badge/index'
 

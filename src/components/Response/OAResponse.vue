@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ResponseDescriptionSlotProps } from '../../types'
-import { useI18n } from '@byjohann/vue-i18n'
 import { computed, ref } from 'vue'
+import { useI18n } from '@/lib/i18n'
 import { useTheme } from '../../composables/useTheme'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
