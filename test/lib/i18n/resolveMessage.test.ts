@@ -64,12 +64,12 @@ describe('resolveMessage', () => {
       fallbackWarn: false,
       messageResolver: resolveMessage,
       messages: {
-        en: { 'Try it out': 'Try it out', 'Failed to load the JSON editor.': 'Failed to load the JSON editor.' },
+        en: { 'Try it out': 'Try it out', 'Failed to load the JSON editor.': 'Editor unavailable' },
         es: { 'Try it out': 'Probar' },
       },
     })
 
     expect(i18n.global.t('Try it out')).toBe('Probar')
-    expect(i18n.global.t('Failed to load the JSON editor.')).toBe('Failed to load the JSON editor.')
+    expect(i18n.global.t('Failed to load the JSON editor.')).toBe('Editor unavailable')
   })
 })

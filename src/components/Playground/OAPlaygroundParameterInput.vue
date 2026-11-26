@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
+import { useI18n } from '@/lib/i18n'
 import { valueFromPlaygroundTextField } from '@/lib/playground/coercePlaygroundParameterValue'
 import { resolveExampleForPlaceholder, resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'
 import { OAJSONEditorAsync as OAJSONEditor } from '../Common/OAJSONEditorAsync'

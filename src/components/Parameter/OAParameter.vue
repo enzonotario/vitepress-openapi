@@ -1,6 +1,6 @@
 <script setup>
 import { titleCase } from 'scule'
-import { useI18n } from 'vue-i18n'
+import { useI18n } from '@/lib/i18n'
 import { getConstraints } from '@/lib/parser/constraintsParser'
 import { usePlayground } from '../../composables/usePlayground'
 import OACodeValue from '../Common/OACodeValue.vue'

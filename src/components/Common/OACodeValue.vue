@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { formatValueForDisplay } from '@/lib/format/formatValueForDisplay'
+import { useI18n } from '@/lib/i18n'
 
 const props = defineProps({
   value: {

@@ -2,7 +2,7 @@
 import type { OARequestBody } from '../../types'
 import type { OperationData } from '@/lib/operation/operationData'
 import { computed, inject } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { useI18n } from '@/lib/i18n'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { useTheme } from '../../composables/useTheme'
 import OAContentTypeSelect from '../Common/OAContentTypeSelect.vue'

@@ -2,7 +2,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationNestedSlot, OperationSlot, PathsGroupView } from '../../types'
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { useI18n } from '@/lib/i18n'
 import { useTheme } from '../../composables/useTheme'
 import OAFooter from '../Common/OAFooter.vue'
 import OAPathsGroups from '../Path/OAPathsGroups.vue'

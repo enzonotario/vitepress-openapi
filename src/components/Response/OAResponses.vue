@@ -2,7 +2,7 @@
 import type { ResponseDescriptionSlotProps } from '../../types'
 import { TabsIndicator } from 'reka-ui'
 import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { useI18n } from '@/lib/i18n'
 import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'

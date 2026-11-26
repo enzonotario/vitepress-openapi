@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { useI18n } from '@/lib/i18n'
 import { useTheme } from '../../composables/useTheme'
 import OACodeBlock from '../Common/OACodeBlock.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'

@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { useI18n } from '@/lib/i18n'
 import OAParameter from './OAParameter.vue'
 
 const props = defineProps({

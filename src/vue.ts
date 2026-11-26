@@ -2,12 +2,11 @@ import type { App, Plugin } from 'vue'
 import type { PartialUseThemeConfig } from './composables/useTheme'
 import type { OpenAPIDocument } from './types'
 import { watch } from 'vue'
-import { createI18n } from 'vue-i18n'
 import * as components from './components'
 import { useOpenapi } from './composables/useOpenapi'
 import { DEFAULT_OPERATION_SLOTS, useTheme } from './composables/useTheme'
 import { DOC_ROOT_KEY } from './lib/docRoot'
-import { resolveMessage } from './lib/i18n/resolveMessage'
+import { createOpenapiI18n, OPENAPI_I18N_KEY } from './lib/i18n'
 import { setupCopyCode } from './lib/utils/copyCode'
 
 export interface VOpenapiOptions {
@@ -45,23 +44,18 @@ export const VOpenapi: Plugin<[VOpenapiOptions?]> = {
 
     const i18nConfig = themeConfig.getI18nConfig()
 
-    const i18n = createI18n({
-      legacy: false,
-      globalInjection: false,
+    const i18n = createOpenapiI18n({
       locale: i18nConfig.locale?.value || 'en',
       fallbackLocale: i18nConfig.fallbackLocale?.value || 'en',
-      missingWarn: false,
-      fallbackWarn: false,
-      messageResolver: resolveMessage,
-      messages: (i18nConfig.messages || {}) as Record<string, Record<string, string>>,
+      messages: i18nConfig.messages || {},
     })
 
-    app.use(i18n)
+    app.provide(OPENAPI_I18N_KEY, i18n)
 
     watch(
       () => themeConfig.getLocale(),
       () => {
-        i18n.global.locale.value = themeConfig.getLocale()
+        i18n.setLocale(themeConfig.getLocale())
       },
       {
         immediate: true,

@@ -1,5 +1,5 @@
 <script setup>
-import { useI18n } from 'vue-i18n'
+import { useI18n } from '@/lib/i18n'
 import { useTheme } from '../../composables/useTheme'
 import OAHeading from '../Common/OAHeading.vue'
 import OAMarkdown from '../Common/OAMarkdown.vue'
