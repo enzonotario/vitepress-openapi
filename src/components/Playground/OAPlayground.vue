@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 import type { OperationData } from '@/lib/operation/operationData'
-import { useI18n } from '@byjohann/vue-i18n'
 import { computed, inject, onBeforeUnmount, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { OPERATION_DATA_KEY } from '@/lib/operation/operationData'
 import { getMissingPathParameters } from '@/lib/playground/getMissingPathParameters'
 import { usePlayground } from '../../composables/usePlayground'

@@ -1,5 +1,5 @@
 <script setup>
-import { useI18n } from '@byjohann/vue-i18n'
+import { useI18n } from 'vue-i18n'
 import OAMethodBadge from '../Common/OAMethodBadge.vue'
 
 const props = defineProps({

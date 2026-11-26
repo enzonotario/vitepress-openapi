@@ -1,6 +1,6 @@
 <script setup>
-import { useI18n } from '@byjohann/vue-i18n'
 import { titleCase } from 'scule'
+import { useI18n } from 'vue-i18n'
 import OACodeValue from '../Common/OACodeValue.vue'
 
 const props = defineProps({

@@ -1,7 +1,7 @@
 <script setup>
-import { useI18n } from '@byjohann/vue-i18n'
 import { ChevronDown, ChevronRight, ChevronUp, Maximize2, Minimize2 } from '@lucide/vue'
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import OAMarkdown from '../Common/OAMarkdown.vue'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button/index'

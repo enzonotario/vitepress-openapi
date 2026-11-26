@@ -1,5 +1,5 @@
-import { useI18n } from '@byjohann/vue-i18n'
 import { defineAsyncComponent, defineComponent, h } from 'vue'
+import { useI18n } from 'vue-i18n'
 import OALoadError from './OALoadError.vue'
 
 const OAJSONEditorLoadError = defineComponent({

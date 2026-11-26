@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PlaygroundExampleBehavior } from '../../composables/useTheme'
-import { useI18n } from '@byjohann/vue-i18n'
 import { computed, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { formatValueForPlaceholder } from '@/lib/format/formatValueForDisplay'
 import { valueFromPlaygroundTextField } from '@/lib/playground/coercePlaygroundParameterValue'
 import { resolveExampleForPlaceholder, resolveExampleForValue } from '@/lib/playground/playgroundExampleBehavior'

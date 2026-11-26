@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { NormalizedExample } from '@/lib/examples/normalizeExamples'
-import { useI18n } from '@byjohann/vue-i18n'
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { getPropertyExamples } from '@/lib/examples/getPropertyExamples'
 import { hasNamedExamples } from '@/lib/examples/isNamedExample'
 import { normalizeExamples } from '@/lib/examples/normalizeExamples'
